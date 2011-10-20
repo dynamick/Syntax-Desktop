@@ -1,0 +1,46 @@
+#iconTable{
+ position:absolute;
+ top:10;
+ left:10;
+ cursor:default;
+ font-family:verdana;
+ font-size:10;
+ width:80;
+}
+.inactiveIcon{
+ background-color:transparent;
+ color:#0066CC;
+}
+.activeIcon{
+ background-color:#0066CC;
+ color:#E1E1E2;
+}
+.winStyle{
+ border-width:1;
+ border-style:solid;
+ border-color:#959394;
+ color:#0066CC;
+ background-color:#C7C5C7;
+ font-family:verdana;
+ font-size:10;
+ cursor:default;
+ scrollbar-face-color:#E1E1E2;
+ scrollbar-arrow-color:#E1E1E2;
+ scrollbar-track-color:#E1E1E2;
+ scrollbar-shadow-color:#E1E1E2;
+ scrollbar-highlight-color:#E1E1E2;
+ scrollbar-3dlight-color:#CBCBCB;
+ scrollbar-darkshadow-Color:#CBCBCB;
+}
+.activeBarStyle{
+ font-family:verdana;
+ font-size:10;
+ cursor:default;
+ color:#FFFFFF;
+}
+.inactiveBarStyle{
+ font-family:verdana;
+ font-size:10;
+ cursor:default;
+ color:#006699;
+}

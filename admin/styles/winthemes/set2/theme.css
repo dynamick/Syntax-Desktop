@@ -1,0 +1,52 @@
+body{
+ background-color:#C7C5C7;
+ border-width:0px;
+ margin:0px;
+ overflow:hidden;
+}
+#iconTable{
+ position:absolute;
+ top:10;
+ left:10;
+ cursor:default;
+ font-family:verdana;
+ font-size:10;
+ width:80;
+}
+.inactiveIcon{
+ background-color:transparent;
+ color:#000000;
+}
+.activeIcon{
+ background-color:#CC0000;
+ color:#FFFFFF;
+}
+.winStyle{
+ border-width:1;
+ border-style:solid;
+ border-color:#CC0000;
+ color:#000000;
+ background-color:#FFFFFF;
+ font-family:verdana;
+ font-size:10;
+ cursor:default;
+ scrollbar-face-color:#C7C5C7;
+ scrollbar-arrow-color:#C7C5C7;
+ scrollbar-track-color:#C7C5C7;
+ scrollbar-shadow-color:#C7C5C7;
+ scrollbar-highlight-color:#C7C5C7;
+ scrollbar-3dlight-color:#CC0000;
+ scrollbar-darkshadow-Color:#CC0000;
+}
+.activeBarStyle{
+ font-family:verdana;
+ font-size:10;
+ cursor:default;
+ color:#CC0000;
+}
+.inactiveBarStyle{
+ font-family:verdana;
+ font-size:10;
+ cursor:default;
+ color:#660000;
+}

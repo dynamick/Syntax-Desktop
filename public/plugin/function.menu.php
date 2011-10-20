@@ -1,0 +1,30 @@
+<?php
+/*
+* Smarty plugin
+* -------------------------------------------------------------
+* File:     function.menu.php
+* Type:     function
+* Name:     menu
+* Purpose:  output the menu in a list form
+* -------------------------------------------------------------
+*/
+/*
+  PARAMETERS: 
+
+  startPage=tree menu starting node. If null, the menu start from home page 
+  includeParent=show the starting node
+
+*/
+
+function smarty_function_menu($params, &$smarty){
+  global $db;
+
+  $nodeArr       = $smarty->synPageNode;
+  $startPage     = ($params["startPage"])     ? $params["startPage"]     : $nodeArr[0]["id"];
+  $includeParent = ($params["includeParent"]) ? $params["includeParent"] : true;
+  $firstChild    = ($params["firstChild"])    ? $params["firstChild"]    : false;
+
+  $ret=createMenu($startPage, $includeParent, $firstChild);
+  return "<ul id=\"nav\">".$ret."</ul>";
+}
+?>

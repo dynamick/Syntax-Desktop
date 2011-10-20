@@ -1,0 +1,497 @@
+<?php
+/*
+-----------------------------------------------------
+ SYNTAX DESKTOP installation wizard v. 1.3
+-----------------------------------------------------
+*/
+//error_reporting(E_ALL);
+ini_set('magic_quotes_runtime', 0);
+session_start();
+
+
+$page = ((isset($_GET) AND count($_GET)>0) ? $_GET['page'] : 1);
+
+page_contents($page);
+
+function page_contents(&$page) {
+  switch($page) {
+    case "2":
+
+      if (file_exists(dirname(__FILE__)."/config/config.php")) {
+        include ("config/config.php");
+      } elseif (file_exists(dirname(__FILE__)."/config/config.sample.php")) {
+        include ("config/config.sample.php");
+      } else {
+        die("Cannot find config_sample.php. Setup cannot proceed.");
+      }
+
+      $dati = array (
+        'synDbHost'           => $_SESSION["synDbHost"]?$_SESSION["synDbHost"]:$synDbHost,
+        'synDbUser'           => $_SESSION["synDbUser"]?$_SESSION["synDbUser"]:$synDbUser,
+        'synDbPassword'       => $_SESSION["synDbPassword"]?$_SESSION["synDbPassword"]:$synDbPassword,
+        'synDbName'           => $_SESSION["synDbName"]?$_SESSION["synDbName"]:$synDbName,
+        'synRootUser'         => $_SESSION["synRootUser"]?$_SESSION["synRootUser"]:$synRootUser,
+        'synRootPassword'     => $_SESSION["synRootPassword"]?$_SESSION["synRootPassword"]:$synRootPassword,
+        'synRootPasswordSalt' => md5(time()),
+        'synAdministrator'    => $_SESSION["synAdministrator"]?$_SESSION["synAdministrator"]:$synAdministrator,
+        'synWebsiteTitle'     => $_SESSION["synWebsiteTitle"]?$_SESSION["synWebsiteTitle"]:$synWebsiteTitle,
+        'synRowsPerPage'      => $synRowsPerPage,
+        'synWebsite'          => $synWebsite,
+        'synVersion'          => $synVersion,
+        'synInsertValueInAllLang' => $synInsertValueInAllLang,
+        'mat'                 => $mat,
+        'thumb'               => $thumb,
+        'synAdminPath'        => $synAdminPath,
+        'synPublicPath'       => $synPublicPath,
+        'synAbsolutePath'     => $synAbsolutePath,
+        'synPackagePath'      => $synPackagePath,
+        'synPluginPath'       => $synPluginPath
+      );
+
+      $contents = page_2($dati);
+      break;
+
+    case "3":
+      if (file_exists(dirname(__FILE__)."/config/config.php")) {
+        include ("config/config.php");
+      } elseif (file_exists(dirname(__FILE__)."/config/config.sample.php")) {
+        include ("config/config.sample.php");
+      } else {
+        die("Cannot find config_sample.php. Setup cannot proceed.");
+      }
+
+      $dir = dirname(__FILE__) . '/';
+      require_once $dir.'includes/php/ADODB-PDO.php';
+      require_once $dir.'includes/php/mysql_restore.class.php';
+
+      // get the values
+      $config = array(
+        'synDbHost'           => addslashes($_POST['synDbHost']),
+        'synDbUser'           => addslashes($_POST['synDbUser']),
+        'synDbPassword'       => addslashes($_POST['synDbPassword']),
+        'synDbName'           => addslashes($_POST['synDbName']),
+        'synRootUser'         => addslashes($_POST['synRootUser']),
+        'synRootPassword'     => addslashes($_POST['synRootPassword']),
+        'synRootPasswordSalt' => addslashes($_POST['synRootPasswordSalt']),
+        'synAdministrator'    => addslashes($_POST['synAdministrator']),
+        'synWebsiteTitle'     => addslashes($_POST['synWebsiteTitle']),
+        'synRowsPerPage'      => addslashes($_POST['synRowsPerPage']),
+        'synWebsite'          => addslashes($_POST['synWebsite']),
+        'synVersion'          => addslashes($_POST['synVersion']),
+        'mat'                 => addslashes($_POST['mat']),
+        'thumb'               => addslashes($_POST['thumb']),
+        'synAdminPath'        => addslashes($_POST['synAdminPath']),
+        'synPublicPath'       => addslashes($_POST['synPublicPath']),
+        'synAbsolutePath'     => addslashes($_POST['synAbsolutePath']),
+        'synPackagePath'      => addslashes($_POST['synPackagePath']),
+        'synPluginPath'       => addslashes($_POST['synPluginPath']),
+        'synInsertValueInAllLang' => $_POST['synInsertValueInAllLang']
+      );
+
+      // copy the POST array in the SESSION array
+      foreach ($_POST as $k=>$v) $_SESSION[$k]=$v;
+
+  		$error = array();
+
+      $db = NewADOConnection('mysql');
+      $result = @$db->Connect($config['synDbHost'], $config['synDbUser'], $config['synDbPassword'], $config['synDbName']);
+      if ($result===false) {
+        $error[] = "Unable to connect to your database server.\n";
+      }
+
+      // check if the database connection exists
+      if (count($error)==0) {
+
+        //read the database tables
+        $a = $db->MetaTables();
+
+        if (isset($_POST["db_drop"]) and $_POST["db_drop"]==1) {
+          if (is_array($a) and count($a)>0) {
+            foreach ($a as $t) {
+              $tables.="`".$t."`,";
+            }
+            $tables=substr($tables,0,-1);
+            $db->Execute("DROP TABLE ".$tables);
+          }
+        }
+
+        if ($a!==false AND count($a)==0 or !in_array("aa_services",$a) or (isset($_POST["db_drop"]) and $_POST["db_drop"]==1)) {
+
+          $dumpPath = $dir."/modules/phpMyBackupPro/export";
+
+          //get the dump file
+          if ($handle = opendir($dumpPath)) {
+            while ($file = readdir($handle)) {
+              if ($file!="." and $file!=".." and substr($file, -4)==".sql") {
+                $dumpFile = $file;
+              }
+            }
+            if ($dumpFile=="") $error[] = "Unable to find a suitable dumpfile.\n";
+            closedir($handle);
+          }
+
+          // restore the DB
+          $restore_obj = new MySQL_Restore();
+          $restore_obj ->server   = $config['synDbHost'];
+          $restore_obj ->username = $config['synDbUser'];
+          $restore_obj ->password = $config['synDbPassword'];
+          $restore_obj ->database = $config['synDbName'];
+          if (!$restore_obj->Execute($dumpPath."/".$dumpFile, MSR_FILE, false, false)) {
+            $error[] = $restore_obj->error;
+          }
+
+        }
+
+        // CREATE the admin user
+        $qry = "TRUNCATE TABLE `aa_users`";
+        $db->Execute($qry);
+        $qry = "INSERT INTO aa_users (`id`, `login`, `passwd`,`id_group`,`lang`,`owner`) VALUES (".rand(1,10000).",'".$config['synRootUser']."', '".md5($config['synRootPassword'].$config['synRootPasswordSalt'])."', 1, 1, 1)";
+        $db->Execute($qry);
+
+
+        // Write config file
+      	$conf  = "<?php\n\n";
+      	$conf .= "/* auto generated config file */\n\n";
+      	foreach ($config as $key => $val) {
+          if($key=='synRowsPerPage' || $key=='synInsertValueInAllLang'){
+            $val = intval($val);
+          } else {
+        		$val = str_replace('\\', '\\\\', $val);
+        		$val = str_replace("'", "\\'", $val);
+        		$val = str_replace("\"", "\\\"", $val);
+      		  $val = '"'.$val.'"';
+      		}
+      		$conf .= str_pad("\$".$key, 24, ' ', STR_PAD_LEFT)." = {$val};\n";
+      	}
+      	$conf .= "\n?".">";
+
+  	    $cfile = './config/config.php';
+      	if (!$fp = @fopen($cfile, 'w')) {
+      		$error[] = "Unable to write the config file.";
+
+      	} else {
+      		fwrite($fp, $conf, strlen($conf));
+      		fclose($fp);
+        }
+
+      } // end: if (count($error)==0)...
+
+      // render page
+      if(count($error)==0) {
+        $contents = page_3($config['synAdminPath']);
+        session_destroy();
+      } else {
+        $contents = page_error($error);
+      }
+      break;
+
+    case "1":
+    default:
+      session_destroy();
+      $contents = page_1();
+      break;
+  }
+
+  echo page_header();
+  echo $contents;
+  echo page_footer();
+
+} //end function page_contents
+
+
+/***---------------------   page header   ----------------------------------***/
+function page_header(){
+return <<<EOHEAD
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="it" lang="it">
+  <head profile="http://www.w3.org/2005/10/profile">
+    <title>Syntax Desktop - Installation</title>
+    <meta http-equiv="content-type"         content="text/html; charset=utf-8" />
+    <meta http-equiv="content-script-type"  content="text/javascript" />
+    <style type="text/css">
+    body {margin:0; padding:0; background-color:#DCDCDC; font:14px/18px Arial,Helvetica,sans-serif; text-align: center;}
+    h1 {margin:0 0 36px 0; padding:0; font:italic 40px/48px Georgia, Serif; color:#214B90;}
+    div#content {margin:0 auto; padding:24px; width:800px; height:528px; border:2px solid #9CAEE8; background-color:#f5f5f5; text-align:left;}
+    a {color:#1C8CD1;}
+    p.buttonbox {clear:both; text-align:center;}
+    p.buttonbox a, p.buttonbox span {padding:4px 18px; border:1px outset #9CAEE8; background-color:#4E6FD6; color:#fff; text-decoration:none; font-style:normal;}
+    form {margin:0; padding:0; width:100%; font-size:12px; overflow:hidden;}
+    form fieldset {float:left; margin:8px; padding:8px; border:2px inset #9CAEE8; width:364px;}
+    form legend {color:#214B90}
+    form label {display:block; font-weight:bold;}
+    form span {display:block; font-style:italic;}
+    form input.text {border:1px solid #9CAEE8;}
+    form button {margin:0; padding:0; border:none; background:none; cursor:pointer;}
+    ol.error li, .caution {color:darkred;}
+    ul.errors,
+    ul.warnings {margin:0; padding:0; list-style-type:none;}
+    ul.errors li,
+    ul.warnings li {margin:10px 0; padding:4px 4px 4px 32px; border:1px solid #aaa; background-color:#eee; background-repeat:no-repeat; background-position:8px 50%;}
+    ul.errors li {border-color:#900; background-color:#fee; background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABx0RVh0U29mdHdhcmUAQWRvYmUgRmlyZXdvcmtzIENTM5jWRgMAAAAVdEVYdENyZWF0aW9uIFRpbWUAMi8xNy8wOCCcqlgAAAQRdEVYdFhNTDpjb20uYWRvYmUueG1wADw/eHBhY2tldCBiZWdpbj0iICAgIiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+Cjx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDQuMS1jMDM0IDQ2LjI3Mjk3NiwgU2F0IEphbiAyNyAyMDA3IDIyOjExOjQxICAgICAgICAiPgogICA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgICAgICAgICB4bWxuczp4YXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iPgogICAgICAgICA8eGFwOkNyZWF0b3JUb29sPkFkb2JlIEZpcmV3b3JrcyBDUzM8L3hhcDpDcmVhdG9yVG9vbD4KICAgICAgICAgPHhhcDpDcmVhdGVEYXRlPjIwMDgtMDItMTdUMDI6MzY6NDVaPC94YXA6Q3JlYXRlRGF0ZT4KICAgICAgICAgPHhhcDpNb2RpZnlEYXRlPjIwMDgtMDMtMjRUMTk6MDA6NDJaPC94YXA6TW9kaWZ5RGF0ZT4KICAgICAgPC9yZGY6RGVzY3JpcHRpb24+CiAgICAgIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiCiAgICAgICAgICAgIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyI+CiAgICAgICAgIDxkYzpmb3JtYXQ+aW1hZ2UvcG5nPC9kYzpmb3JtYXQ+CiAgICAgIDwvcmRmOkRlc2NyaXB0aW9uPgogICA8L3JkZjpSREY+CjwveDp4bXBtZXRhPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDUdUmQAAAD5SURBVDiNpZMxagMxEEWfgiCXcB3IbXwD7zbaM0nNyjdIl1O4Dk7pbsslEFbEZFKsJsiJrGDy4YM0M//zRyAoINAJyB8cS43RwwIdMFrvaeE8DADxXqQ3Jstn6GaQ5L3M0GQxsyaZoJtA3r2XCS6o+FkvZkdOIG/eywl+UVHrqcYm4BNIjb1rPdXYBTivj3gVtZ5q/p8gAfPhcLOBamzKcW41UI1dgA/qez4bU6muUE0zwVYEgKeKkWruEnTHENg4R8pFZblCyY1zHEMgQTQAe9gB8cE5XkO4GhugmIk76L+z+Wzy6FzT4CWLXf5MF8upSdMB4gC9Xr4AiezTJHGxdq0AAAAASUVORK5CYII%3D);}
+    ul.warnings li {border-color:#c93; background-color:#ffc; background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAGGSURBVHjapFK7SgNREJ0VSQwKCroQUQsfGyNYmXSCmCofINHCH7CwtLLZtfEztDEiBD8ghWgTrAyWgsRWJYJFiryzzpnsvcldLYQMnN0zM2fmzu4dy/d9GsUsNHgrWH/ldhn3Ac8wHsKClRwfjgavN3hXDHCMUxVBwMN5qR1Dp06HH92axkt+1ZtJHmkfHLFhjdSwSYNuF12+Ndh355IH2gdHLKQZNGi38fgSPF9lvNn1feEFN0Pp7RPhiCGndFKjGsg47U8Bczee2On7ypgjhtyQLjRB650e88eeFDMXKAt85KABNybof4IE3UVnTThgL8xTanNK+8hBE2jNBnfXF96S4wxOZ9jxSUpt+EYMGmhVA1mk4rkskp/d2/rX9hVvy1KbPfX1BN6yM61vQqFwWab0ofUrDi1qhvfATTg9YxcEykJxaGUv2MbVNVY/amTb5qi5HPDEJ5jxapX0NUqDXo/OSiVyJyaIgFiMKBolikSCW2wRNZtE9TpRo9EHavRPHMV+BBgAs54vms2ZX4QAAAAASUVORK5CYII%3D);}
+    ul.errors h4,
+    ul.warnings h4 {margin:0;}
+    </style>
+  </head>
+  <body>
+    <div id="content">
+
+EOHEAD;
+}
+
+/***-------------------------  PAGE 1 OUTPUT  ------------------------------***/
+function page_1(){
+$check = checkfeatures();
+
+if(count($check['warnings'])>0){
+  $warnings = '<ul class="warnings">';
+  foreach($check['warnings'] as $w){
+    $warnings .= "<li><h4>{$w[0]}</h4>{$w[1]}</li>\n";
+  }
+  $warnings .= '</ul>';
+}
+
+if(count($check['errors'])>0){
+  $errors = '<ul class="errors">';
+  foreach($check['errors'] as $e){
+    $errors .= "<li><h4>{$e[0]}</h4>{$e[1]}</li>\n";
+  }
+  $errors .= '</ul>';
+
+  $body = <<<EOB
+  {$errors}
+  {$warnings}
+  <p>It appears your server isn't configured correctly, setup cannot continue.</p>
+
+EOB;
+
+} else {
+  $body = <<<EOB
+  {$warnings}
+  <p><strong class="caution">CAUTION:</strong> follow this installation wizard ONLY if you are installing Syntax Desktop for the first time. Please don't run this installation if you are already using Syntax and are updating to a newer version.</p>
+  <p>Please take a look at the <a href="readme.txt" onclick="window.open(this.href); return false;">readme</a>, if you have not done so already.</p>
+  <h3>Are you ready?</h3>
+  <p class="buttonbox"><a href="?page=2">clik here to start installation</a></p>
+
+EOB;
+}
+
+return <<<PAGE1
+  <h1>Syntax Desktop Installation Wizard</h1>
+  {$body}
+
+PAGE1;
+}
+
+/***-------------------------  PAGE 2 OUTPUT  ------------------------------***/
+function page_2($dati){
+return <<<PAGE2
+<h1>Syntax Desktop Installation Wizard</h1>
+<form method="post" action="setup.php?page=3">
+  <fieldset>
+    <legend>Database Settings</legend>
+    <p>
+      <label for="synDbHost">MySQL Server Address</label>
+      <span class="help">Normally it should be set to 'localhost'.</span>
+      <input type="text" class="text" name="synDbHost" id="synDbHost" value="$dati[synDbHost]" size="40" maxlength="60" />
+    </p>
+    <p>
+      <label for="synDbName">MySQL Database Name</label>
+      <span class="help">The name of the MySQL database you want to use.</span>
+      <input type="text" class="text" name="synDbName" id="synDbName" value="$dati[synDbName]" size="40" maxlength="60" />
+    </p>
+    <p>
+      <label for="synDbUser">MySQL Username</label>
+      <span class="help">The username you use to access your database.</span>
+      <input type="text" class="text" name="synDbUser" id="synDbUser" value="$dati[synDbUser]" size="40" maxlength="60" />
+    </p>
+    <p>
+      <label for="synDbPassword">MySQL Password</label>
+      <span class="help">The password you use to access your database.</span>
+      <input type="text" class="text" name="synDbPassword" id="synDbPassword" value="$dati[synDbPassword]" size="40" maxlength="60" />
+    </p>
+    <p>
+      <label for="db_drop">Drop Tables</label>
+      <span class="help">Check this field to empty the database.</span>
+      <input type="checkbox" name="db_drop" id="db_drop" value="1" />
+    </p>
+  </fieldset>
+
+  <fieldset>
+    <legend>Admin Account Settings</legend>
+    <p>
+      <label for="synRootUser">Username</label>
+      <span class="help">Please use at least four characters.</span>
+      <input type="text" class="text" name="synRootUser" id="synRootUser" value="$dati[synRootUser]" size="40" maxlength="60" />
+    </p>
+    <p>
+      <label for="synRootPassword">Password</label>
+      <span class="help">Please use at least five characters.</span>
+      <input type="text" class="text" name="synRootPassword" id="synRootPassword" value="$dati[synRootPassword]" size="40" maxlength="60" />
+    </p>
+    <p>
+      <label for="synRootPasswordSalt">Salt (Master Password)</label>
+      <span class="help">This improves the password's security; the longer it is, the better.</span>
+      <input type="text" class="text" name="synRootPasswordSalt" id="synRootPasswordSalt" value="$dati[synRootPasswordSalt]" size="40" maxlength="60" />
+    </p>
+    <p>
+      <label for="synAdministrator">Administrator's email</label>
+      <span class="help">Your email address.</span>
+      <input type="text" class="text" name="synAdministrator" id="synAdministrator" value="$dati[synAdministrator]" size="40" maxlength="60" />
+    </p>
+    <p>
+      <label for="synWebsiteTitle">Your site's name</label>
+      <span class="help">This will be shown on the admin desktop.</span>
+      <input type="text" class="text" name="synWebsiteTitle" id="synWebsiteTitle" value="$dati[synWebsiteTitle]" size="40" maxlength="60" />
+    </p>
+    <!-- these aren't customizable... yet -->
+    <input type="hidden" name="synVersion" value="$dati[synVersion]" />
+    <input type="hidden" name="synWebsite" value="$dati[synWebsite]" />
+    <input type="hidden" name="synRowsPerPage" value="$dati[synRowsPerPage]" />
+    <input type="hidden" name="mat" value="$dati[mat]" />
+    <input type="hidden" name="thumb" value="$dati[thumb]" />
+    <input type="hidden" name="synAdminPath" value="$dati[synAdminPath]" />
+    <input type="hidden" name="synPublicPath" value="$dati[synPublicPath]" />
+    <input type="hidden" name="synAbsolutePath" value="$dati[synAbsolutePath]" />
+    <input type="hidden" name="synPackagePath" value="$dati[synPackagePath]" />
+    <input type="hidden" name="synPluginPath" value="$dati[synPluginPath]" />
+    <input type="hidden" name="synInsertValueInAllLang" value="$dati[synInsertValueInAllLang]" />
+  </fieldset>
+  <p class="buttonbox">
+    <button type="submit"><span>install Syntax Desktop</span></button>
+  </p>
+</form>
+
+PAGE2;
+}
+
+/***-------------------------  PAGE 3 OUTPUT  ------------------------------***/
+function page_3($admin){
+return <<<PAGE3
+<h1>Syntax Desktop Installation Wizard</h1>
+<h3>Congratulations, Syntax Desktop has been installed!</h3>
+<p>Installation Wizard has just:</p>
+<ol>
+  <li>Populated the database</li>
+  <li>Created the Admin User</li>
+  <li>Generated a brand new config.php</li>
+</ol>
+<p>You can now <a href="$admin">log in the admin panel</a> or take a look at <a href="/index.php">the demo site</a>.</p>
+<p><strong class="caution">Caution:</strong> don't forget to delete <strong>$admin/setup.php</strong> to prevent security issues.</p>
+<p>Have fun!</p>
+
+PAGE3;
+}
+
+/***-------------------------   ERROR PAGE   ------------------------------***/
+function page_error($error){
+$list = "";
+foreach($error as $e) {
+  $list .= "  <li>".$e."</li>\n";
+}
+return <<<EPAGE
+<h1>Syntax Desktop Installation Wizard</h1>
+<h3>Whoops, something has gone wrong!</h3>
+<ol class="error">
+$list
+</ol>
+<p class="buttonbox"><a href="?page=2">change your settings and retry</a></p>
+
+EPAGE;
+}
+
+/***---------------------   page footer   ----------------------------------***/
+function page_footer(){
+return <<<EOFOOTR
+    </div>
+  </body>
+</html>
+EOFOOTR;
+}
+
+
+function checkfeatures(){
+	error_reporting(0);
+	ini_set('display_errors', '0');
+	$errors = array();
+	$warnings = array();
+	$allok = true;
+
+ 	if  (!in_array  ('mod_rewrite', apache_get_modules())) {
+		$errors[] = array("Apache Config Error","The Apache module 'mod_rewrite' is not enabled on this server.");
+		$allok = false;
+	}
+
+	$version = explode(".",phpversion());
+ 	if ($version[0] == "5" && $version[1] >= "2") {
+	} else {
+		$errors[] = array("PHP Version Error","The PHP version needs to be 5.2 or higher.");
+		$allok = false;
+	}
+
+	if  (!in_array  ('mysql', get_loaded_extensions())) {
+		$errors[] = array("PHP Config Error","The PHP extension 'mysql' needs to be enabled/installed.");
+		$allok = false;
+	}
+
+  if (stristr(strtolower(getenv("OS")), "windows")===false) {
+    $configDir="./config/";
+    $p = fileperms($configDir);
+    $canWrite = (($p & 0x0002) ? true : false);
+    if (!$canWrite){
+		  $errors[] = array("CONFIG not writeable","The <em>{$configDir}</em> directory permissions must be set to 777.");
+		  $allok = false;
+    }
+
+    $phpbackup="./modules/phpMyBackupPro/";
+    $p = fileperms($phpbackup);
+    $canWrite = (($p & 0x0002) ? true : false);
+    if (!$canWrite){
+		  $errors[] = array("PHPMYBACKUPPRO not writeable","The <em>{$phpbackup}</em> directory permissions must be set to 777.");
+		  $allok = false;
+    }
+
+    $export="./modules/phpMyBackupPro/export/";
+    $p = fileperms($export);
+    $canWrite = (($p & 0x0002) ? true : false);
+    if (!$canWrite){
+		  $errors[] = array("EXPORT not writeable","The <em>{$export}</em> directory permissions must be set to 777.");
+		  $allok = false;
+    }
+
+    $mat="../public/mat/";
+    $p = fileperms($mat);
+    $canWrite = (($p & 0x0002) ? true : false);
+    if (!$canWrite){
+		  $errors[] = array("MAT not writeable","The <em>{$mat}</em> directory permissions must be set to 777.");
+		  $allok = false;
+    }
+
+    $templates_c="../public/templates_c/";
+    $p = fileperms($templates_c);
+    $canWrite = (($p & 0x0002) ? true : false);
+    if (!$canWrite){
+		  $errors[] = array("TEMPLATES_C not writeable","The <em>{$templates_c}</em> directory permissions must be set to 777.");
+		  $allok = false;
+    }
+  }
+
+	$error_reporting = ini_get('error_reporting');
+  if ($error_reporting>0) {
+		$warnings[] = array("PHP Error reporting","The PHP error reporting is set to '{$error_reporting}'.");
+	}
+
+	$register_globals = strtolower(ini_get('register_globals'));
+  if ($register_globals!='on') {
+		$warnings[] = array("PHP Globals","The PHP register_globals is set to '{$register_globals}'.");
+	}
+
+	$actpr = strtolower(ini_get('allow_call_time_pass_reference'));
+  if ($actpr=='off'||$actpr==0) {
+		$warnings[] = array("PHP pass reference","The PHP allow_call_time_pass_reference is set to '{$actpr}'.");
+	}
+
+	return array('errors'=>$errors, 'warnings'=>$warnings);
+}
+?>

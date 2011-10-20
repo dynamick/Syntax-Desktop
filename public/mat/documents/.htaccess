@@ -1,0 +1,8 @@
+ # BEGIN
+ <IfModule mod_rewrite.c>
+ RewriteEngine On
+ RewriteCond %{REQUEST_URI} !/public/mat/documents/doc.php$ 
+ RewriteCond %{REQUEST_FILENAME} !-d
+ RewriteRule ^[^/]*.$ /public/mat/documents/doc.php [L]
+ </IfModule>
+ # END

@@ -1,0 +1,169 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta http-equiv="content-type"
+ content="text/html; charset=ISO-8859-1">
+  <title>Documentazione per gli sviluppatori</title>
+  <meta name="author" content="dynamick">
+</head>
+<body>
+<h1>Manuale per lo sviluppatore</h1>
+Questo testo vuole essere un documento di aiuto per chi vuole
+cominciare a personalizzare/modificare il codice sorgente di Syntax
+Desktop. Non tutte le parti sono complete. Per informazioni ulteriori
+scrivete a info_at_dynamick.it.<br>
+<br>
+<ul>
+  <li><a href="#DESKTOP">Desktop</a><br>
+  </li>
+  <li><a href="#MODULI">Moduli</a></li>
+  <ul>
+    <li><a href="#AutoAdmin_AA">AutoAdmin</a></li>
+    <ul>
+      <li><a href="#Prefazione">Prefazione</a></li>
+      <li><a href="#Linterfaccia">L'interfaccia</a></li>
+      <li><a href="#Modus_Operandi">Modus Operandi</a></li>
+      <li><a href="#Larchitettura">L'architettura</a></li>
+      <li><a href="#Il_database">Il Database</a></li>
+    </ul>
+    <li>Dump</li>
+    <li>Config</li>
+    <li>Login</li>
+  </ul>
+</ul>
+<br>
+<h2><a name="DESKTOP"></a>DESKTOP</h2>
+In lavorazione<br>
+<br>
+<h2><a name="MODULI"></a>MODULI</h2>
+Syntax &egrave; strutturato in modo modulare. I moduli hanno sfariate
+funzioni e solitamente ricoprono la zona centrale dell'interfaccia.<img
+ src="img/interfaccia.jpg" title=""
+ alt="zona dell'interfaccia per la visualizzazione dei moduli"
+ style="height: 276px; width: 510px;"><br>
+I moduli risiedono all'interno della cartella <span
+ style="font-weight: bold;">/moduli</span>. In questo momento questi
+sono i moduli installati:<br>
+<img src="img/moduli.gif" title=""
+ alt="moduli attualmente presenti su Syntax"
+ style="width: 144px; height: 290px;" align="left"><span
+ style="font-weight: bold;">aa (AutoAdmin)</span>: E' il modulo
+principe di tutta l'applicazione. Ha lo scopo di interfacciarsi con il
+database e di gestire i dati utente e di sistema. I dati di sistema
+comprendono l'anagrafica utente-gruppi, la struttura dei servizi e dei
+menu di ciascun utente. I dati utente sono invece dati che l'utente
+definisce e che deve gestire, come ad esempio le news, gli articoli,
+gli appuntamente e cos&igrave; via. AA <br>
+<span style="font-weight: bold;">config</span>: Questo modulo ha il
+compito di gestire la configurazione del sistema. Tramite config
+&egrave; possibile cambiare i dati di connessione al database. Apre,
+legge, e salva il file /config/cfg.php e quindi necessita dei permessi
+di scrittura su tale file.<br>
+<span style="font-weight: bold;">credits</span>: Pagina dei crediti<br>
+<span style="font-weight: bold;">dump</span>: Modulo dedito al
+salvataggio del database (index.php) e del suo ripristino (dosql.php). <br>
+<span style="font-weight: bold;">filemanager</span>: Pensato come
+web-ftp, ancora da sviluppare<br>
+<span style="font-weight: bold;">help</span>: Pagine di help<br>
+<span style="font-weight: bold;">login</span>: Modulo che gestisce
+l'autenticazione utente<br>
+<span style="font-weight: bold;">shell</span>: Implementazione di una
+shell via web<br>
+<span style="font-weight: bold;">windows</span>: Modulo che gestisce le
+icone e finestre dhtml sul desktop di syntax. Modulo dismesso per
+problemi di crossbrowsing.<br>
+<br>
+Di tutti questi moduli, &egrave; doveroso spendere un po' di tempo per
+analizzare AutoAdmin, il modulo pilastro su cui si basa tutta
+l'applicazione.<br>
+<br>
+<h3><a name="AutoAdmin_AA"></a>AutoAdmin (AA)</h3>
+<h4><a name="Prefazione"></a>Prefazione </h4>
+Nato da precedenti implementazioni, AutoAdmin ha ormai una storia di 3
+anni. <br>
+AA &egrave; mosso dall'idea di poter gestire qualsiasi tipo di dato e
+di adattarsi ad innumerevoli variet&agrave; di problemi in modo da
+rendere la vita di un programmatore web (quale sono io) molto
+pi&ugrave; semplice. Ho speso infatti la gran parte dei miei primi anni
+di lavoro ad implementare interfacce di amministrazione private (back
+office) per amministrare siti web. Col tempo per&ograve; ho scoperto
+che le funzionalit&agrave; da implementare erano grosso modo sempre le
+stesse (news, articoli, appuntamenti, ecc...). Ho pensato allora un
+modo per poter generare in modo dinamico, dalla stessa applicazione
+web, dei servizi per amministrare tali contenuti (e da qui il nome
+AutoAdmin). <br>
+<br>
+<h4><a name="Linterfaccia"></a>L'interfaccia</h4>
+E' stato scelto di implementare l'interfaccia di AA tramite frame in
+modo da allegerirla da continui reload completi della pagina. La
+struttura dei frame &egrave; cos&igrave; composta:<br>
+<img src="img/frame.gif" title="" alt="composizione dei frame"
+ style="width: 510px; height: 276px;"><br>
+I file che gestiscono incaricati di mostrare ciascun frame sono
+schematizzati dal seguente diagramma:<br>
+<img src="img/frame-file.gif" title="" alt="i file dei frame"
+ style="width: 159px; height: 297px;"><br>
+Il frame principale &egrave; il Content Frame dentro cui vengono
+istanziate le classi che muovono l'applicazione. In particolare,
+all'interno di questo frame, viene istanziata la classe SynContainer,
+di cui parleremo nella prossime sezioni.<br>
+<h4><a name="Modus_Operandi"></a>Modus Operandi</h4>
+Definiamo innanzittutto cosa intendiamo per servizio:<br>
+<span style="font-style: italic;"><span style="font-weight: bold;">servizio
+</span>= struttura specializzata ad amministrare uno specifico dato<br>
+</span>Pi&ugrave; semplicemente, si potranno creare servizi per la
+gestione delle news, servizi per la gestione degli appuntamenti, ecc...<br>
+<br>
+In una piattaforma multiutente come &egrave; Syntax Desktop, ho potuto
+assegnare all'amministratore lo strumento per la generazione dei
+servizi (anche questo &egrave; un servizio, eheheh). L'operazione di
+generazione/creazioni comporata tre azioni di basso livello
+(trasparenti all'utente):<br>
+1) Creazione una tabella sul database con i rispettivi campi (se
+pensiamo alle news, si crea la tabella news con i relativi campi: id,
+titolo, testo, data).<br>
+2) Salvataggio della struttura del servizio in apposite tabelle del
+database per una futura modifica del servizio<br>
+3) Tramite le informazioni sulla struttura del servizio, la
+visualizzazione dell'interfaccia per la gestione dei dati
+(l'interfaccia &egrave; generata dinamicamente).<br>
+<br>
+Un utente del sistema, al quale verranno dati i permessi di
+visualizzazione del servizio appena generato, potr&agrave; accedere ai
+dati, modificali e cancellarli.<br>
+<h4><a name="Larchitettura"></a>L'architettura<br>
+</h4>
+L'architettura dei servizi si modella su uno schema ad oggetti
+visualizzato nella seguente immagine:<br>
+<img
+ src="file:///C:/Documents%20and%20Settings/michele/Documenti/Sites/Open%20Project/syntax%20desktop%20project/Doc/img/uml.gif"
+ title="" alt="Diagramma Uml" style="height: 462px; width: 733px;"><br>
+Un servizio &egrave; sostanzialmente un contenitore di elementi.
+SynContainer ha infatti lo scopo di raggruppare le varie componenti del
+servizio e di fornire metodi comuni di gestione. Ogni SynContainer
+contiene uno o pi&ugrave; elementi (SynElement). Questi elementi si
+specializzano in base alla loro funzione. Nel diagramma sopra sono
+elencati solo tre elementi specializzati (synDate, synTextArea e
+SynPassword) ma allo stato attuale, sono implementati 16 elementi
+specializzati.<br>
+SynContainer rappresenta una tabella del database mentre SynElement
+sono i suoi campi. Aggiungendo o rimuovendo un SynElement dal
+SynContainer si opera anche sul database modificandone la struttura. E'
+anche chiaro che se aggiungo o cancello un SynContainer, aggiungo o
+cancello una tabella sul database.<br>
+SynContainer e le specializzazioni di SynElement (SynDate, SynTextArea,
+SynPassword, ecc) inoltre si occupano della gestione dell'interfaccia
+per la visualizzazione dei dati da essi rappresentati tramite opportuni
+metodi che mettono a disposizione.<br>
+All'interno del filesystem, le classi si trovano in questa posizione: <img
+ src="img/classi.gif" title="" alt="classi"
+ style="width: 159px; height: 54px;"><br>
+<h4><span style="font-weight: bold;"></span><a name="Il_database"></a>Il
+database</h4>
+Il modello del database &egrave; rappresentato dal seguente diagramma:<br>
+<img src="img/syntax-db-model.png" title="" alt="Modello del DB"
+ style="width: 734px; height: 728px;"><br>
+<br>
+<br>
+</body>
+</html>

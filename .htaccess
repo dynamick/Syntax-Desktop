@@ -1,0 +1,20 @@
+php_flag magic_quotes_gpc off
+
+# exclude unauthorized HTTP verbs
+<LimitExcept POST GET HEAD OPTIONS>
+Deny from all
+</LimitExcept>
+
+# BEGIN Syntax Desktop
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
+
+RewriteRule ^(.*)/([A-Za-z0-9-_]+)~(\d+)\.html$ $1/?title=$2&id=$3 [QSA]
+RewriteRule ^(.*)/index([0-9]+)\.html$           $1/?_next_page=$2&parent=$1 [QSA]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.php [L]
+</IfModule>
+# END Syntax Desktop

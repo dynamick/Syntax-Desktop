@@ -1,0 +1,86 @@
+		/*****************************
+		**   STILE PER IL DESKTOP   **
+		******************************/
+
+    html, body {margin:0; padding:0; height:100%; overflow:hidden;}
+    body.desktop {
+			background-color: #0160CA;
+		}
+		#desktopbar_top {
+			padding: 0px;
+			margin: 0px;
+			width: 100%;
+			background-image: url(img/desktopbar_bg.gif);
+			background-repeat: repeat-x;
+			height: 30px;
+      top: 0px;
+      position: absolute;
+		}
+		#desktopbar_clock {
+			background: url(img/desktopbar_clock.gif) no-repeat top left;
+			position: absolute;
+			top:0px;
+			right:0px;
+			width: 230px;
+			height: 30px;
+			text-align: right;
+      padding:1px 0;
+			line-height: 28px;
+		}
+    #desktopbar_clock a {float:left; padding:6px;}
+    #desktopbar_clock a img {display:block;}
+    #LiveClockIE {z-index:100; position:absolute; top:1px; right:0; text-align:center; line-height:28px;}
+
+		#desktopbar_bottom {
+			padding: 0px;
+			margin: 0px;
+			width: 100%;
+			background-image: url(img/desktopbar_bg2.gif);
+			background-repeat: repeat-x;
+			position: absolute;
+			bottom: 0px;
+			left: 0px;
+			height: 30px;
+			/*line-height: 25px;*/
+			font: 10px/1.1em menu, verdana;
+			color: white;
+		}
+
+    #userinfo { padding: 0px 0px 5px 30px;   position: absolute; bottom: 0px; background: url(img/bottomleft.gif) no-repeat bottom left;}
+    #userbutton {padding: 0px 50px 3px 0px; position: absolute; bottom: 0px; right: 0px; vertical-align: center; background: url(img/bottomright.gif) no-repeat bottom right;}
+    #closebutton, #closeBtn {position:absolute; top:35px; right:5px; vertical-align:center;}
+
+		/*****************************
+		**   STILI FINESTRE DESKTOP **
+		******************************/
+    #win1 {
+      width: 200px; height: 200px; border: 1px solid gray; background: lightyellow;
+      position: absolute; z-index: 1;
+    	-moz-opacity:.8;
+	    filter:alpha(opacity=80);
+    }
+    
+    
+		/*****************************
+		**   STILI GENERICI         **
+		******************************/
+    a img {border: 0px;}
+    
+    /* Style per il transmenus*/
+  #topbar {
+    width: 100%;
+    height: 30px;
+    margin: 0;
+    background-image: url(img/desktopbar_bg.gif);
+    background-repeat: repeat-x;
+  }
+  #synMenu {
+    padding: 9px 0 0 30px; 
+    color: white; 
+    font: 10px/1.1em menu, verdana;			
+    background: url(img/topleft.gif) top left no-repeat;
+    height: 30px;
+  }
+  #synMenu .synMenuItem {padding-left: 20px; display: inline;}
+  /*.synMenuItem {background: green;width: 1%;white-space: nowrap;}*/
+  .hover {background: black;width: 1%;white-space: nowrap;}

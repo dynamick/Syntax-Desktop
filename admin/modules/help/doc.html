@@ -1,0 +1,485 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta http-equiv="content-type"
+ content="text/html; charset=ISO-8859-1">
+  <title>Documentazione Syntax Desktop</title>
+<style>
+body {
+  line-height: 1.5em; background: #4E6FD6; color: #001; text-align: left;  font-family: "Lucida Grande", "Lucida Sans Unicode", verdana, lucida, helvetica, sans-serif; font-size: x-small; margin: 0;}
+  p {margin: 10px; float: left; width: 100%;}
+  img {display: block}
+  .testo {border-left: 4px solid black; border-right: 4px solid black; width: 500px; margin: 0 auto; background: white;padding: 25px;}
+</style>
+
+</head>
+<body>
+<div class="testo">
+<h1>Manuale Utente</h1>
+<p>Questo manuale vuole essere una guida all'utente che installa e usa per la prima
+volta Syntax Desktop.</p>
+<h1>Indice</h1>
+<ol>
+  <li><a href="#Prefazione">Prefazione<br>
+    </a></li>
+  <li><a href="#Per_iniziare">Per iniziare</a></li>
+  <ul>
+    <li><a href="#Licenza">Licenza<br>
+      </a></li>
+  </ul>
+  <ul>
+    <li><a href="#requisiti">Requisiti</a></li>
+    <li><a href="#Installazione">Installazione</a></li>
+  </ul>
+  <ul>
+    <li><a href="#Autenticazione">Autenticazione</a></li>
+  </ul>
+  <li><a href="#Il_desktop">Il Desktop</a></li>
+  <li><a href="#Gestione_contenuti">Gestione Contenuti</a><br>
+  </li>
+  <ul>
+    <li><a href="#Il_sistema_utente-gruppi-servizi">Il sistema
+utente-gruppi-servizi</a></li>
+  </ul>
+  <ul>
+    <ul>
+      <li><a href="#Esempio">Esempio<br>
+        </a></li>
+    </ul>
+  </ul>
+  <ul>
+    <ul>
+      <li><a href="#Service-o-matic">Service-o-matic</a></li>
+    </ul>
+    <li><a href="#Template_Engine">Template Engine</a></li>
+    <ul>
+      <li><a href="#Tag">Tag<br>
+        </a></li>
+    </ul>
+  </ul>
+  <li><a href="#Strumenti">Strumenti</a></li>
+  <li><a href="#Informazioni_aggiuntive">Informazioni aggiuntive</a><br>
+  </li>
+</ol>
+<h1><a name="Prefazione"></a>Prefazione</h1>
+Syntax Desktop &egrave; un sistema di gestione dei contenuti web based.<br>
+Nasce dalla necessit&agrave; di rendere il lavoro di un programmatore
+web (questa &egrave; la mia professione) molto pi&ugrave; semplice.
+Avevo infatti bisogno di uno strumento che mi facilitasse
+(=automatizzare) la creazione delle interfacce di gestione dei siti
+web. Ho creato per questo un'applicazione multiutente in grado di
+generare online servizi di gestione. Ecco quindi che, dopo aver
+installato Syntax, si deve solamente generare i servizi di cui si ha
+bisogno (news, articoli, prodotti...) collegarli l'un l'altro e
+assegnarli ad utenti voluti.<br>
+Ho iniziato lo sviluppo a met&agrave; del 2001 e ora, nel 2004 ha avuto
+il primo rilascio definitivo su internet.<br>
+<br>
+<h1><a name="Per_iniziare"></a>Per iniziare</h1>
+<h2><a name="Licenza"></a>Licenza</h2>
+Questo prodotto &egrave; coperto da licenza GNU. <br>
+Tutti coloro che useranno Syntax Desktop, <span
+ style="color: rgb(255, 0, 0);">dovranno includere</span> nell'home
+page del proprio sito questo codice:<br>
+<br>
+<code>&lt;a href="http://www.dynamick.it/syntax-desktop/" title="Syntax
+Desktop Content Management System"&gt;<br>
+&nbsp;&nbsp;&nbsp; &lt;img
+src="http://www.dynamick.it/syntax-desktop/logo.gif" alt="Syntax
+Desktop" border="0" /&gt;<br>
+&lt;/a&gt;<br>
+</code>
+<br>
+<h2><a name="requisiti"></a>Requisiti</h2>
+Syntax Desktop &egrave; un sistema di gestione dei contenuti web-based.
+Necessita di questi requisiti per poter funzionare<br>
+<span style="text-decoration: underline;">LATO SERVER</span>:<br>
+<ul>
+  <li>Apache <br>
+  </li>
+  <li>PHP (testato su versione 4.3.3) <br>
+NB: per ora si deve disporre del register_globals=yes (anche se gran
+parte dell'applicazione &egrave; gi&agrave; stata testata con tale
+direttiva settata a no).<br>
+  </li>
+  <li>MySQL (oppure un altro db supportato da AdoDB, da testare)</li>
+</ul>
+<span style="text-decoration: underline;">LATO CLIENT</span>:<br>
+<ul>
+  <li>Browser: <span style="font-weight: bold;">Internet Explorer 6
+&egrave; preferibile</span> (mi spiace dirlo, ma le funzionalit&agrave;
+che offre il browser di casa Micro$oft sono molto comode). <br>
+Testato anche
+su mozilla (netscape, firefox) ma hanno limitazioni di
+funzionalit&agrave;.<br>
+  </li>
+</ul>
+<h2><a name="Installazione"></a>Installazione</h2>
+<span style="font-weight: bold;">Copia Files</span><br>
+Syntax Desktop necessita di essere copiato nella document root del web
+server (p.e. se la document root &egrave; /var/www/html/, allora syntax
+deve essere installato all'interno di questa directory, generalmente in
+/var/www/html/syntax desktop/).<br>
+<br>
+<span style="font-weight: bold;">Permessi</span><br>
+A questo punto devono essere assegnati i permessi di scrittura alle
+seguenti directory:<br>
+<ul>
+  <li>modules/dump/backup (per consentire di salvare i dump del
+database)</li>
+  <li>modules/dump/err.log (per scrivere il log degli errori del db)</li>
+  <li>config/cfg.php (per consentire la modifica del file di
+configurazione)</li>
+  <li>modules/aa/custom (per generare i file "service" da poter
+personalizzare, solo per utenti avanzati)</li>
+</ul>
+<span style="font-weight: bold;">Database<br>
+</span>Accertarsi di disporre di un database Mysql gi&agrave; creato.
+Per si usano altri tipi di database, probabilmente syntax dovrebbe
+funzionare (non &egrave; mai stato testato), visto che usa il layer <a
+ href="http://php.weblogs.com/ADODB">AdoDB</a> che permette la
+connessione a diversi tipi di database. In questi casi configurare
+manualmente il file config/cfg.php. Altimenti procedere oltre.<span
+ style="font-weight: bold;"><br>
+<br>
+Configurazione<br>
+</span>Lanciare dal browser la directory http://www.miosito.it/syntax
+desktop/ . A questo punto Syntax mostrer&agrave; 2 schermate, una di
+seguito all'altra<br>
+<ol>
+  <li>Configurazione del db</li>
+  <li>Popolamento del database</li>
+</ol>
+<h2><a name="Autenticazione"></a>Autenticazione</h2>
+Per autenticarsi la prima volta, inserire questi dati<br>
+username: <span style="font-weight: bold;">root<br>
+</span>password: <span style="font-weight: bold;">syntax<br>
+<br>
+</span><span style="color: rgb(204, 0, 0);">Per rendere sicuro il
+sistema, consiglio di cambiare i dati di autenticazione prima possibile.</span><br>
+<h1><a name="Il_desktop"></a>Il desktop</h1>
+Il desktop &egrave; logicamente diviso in queste aree:<br>
+<ol>
+  <li><span style="font-weight: bold;">Menu</span>, &egrave; la zona da
+dove si scelgono i servizi da eseguire. Il menu ha una struttura ad
+albero, quindi sotto una voce potrebbe esserci un sottomenu e
+cos&igrave; via. Per queste versioni si utilizza un widget DHTML che
+prevede una compatibilit&agrave; solamente verso internet explorer. Un
+upgrade da fare &egrave; l'estensione della compatibilit&agrave; ai
+browser della famiglia mozilla.</li>
+  <li><span style="font-weight: bold;">Orologio</span>, semplice
+orologio<br>
+  </li>
+  <li><span style="font-weight: bold;">Desktop</span>, la scrivania
+vera e propria dove verranno caricati e visualizzati i pannelli di
+controllo delle varie aree del sito (servizi). All'interno di
+quest'area verranno visualizzati i vari moduli presenti in syntax. Il
+modulo pi&ugrave; importante &egrave; "AutoAdmin", un modulo integrato
+che gestisce l'intero desktop.<br>
+  </li>
+  <li><span style="font-weight: bold;">Dati account</span>, i dati con
+cui ci si &egrave; autenticati (utente e gruppo di appartenenza
+dell'utente)</li>
+  <li><span style="font-weight: bold;">Logoff</span>, il bottone di
+uscita dall'amministrazione</li>
+</ol>
+<h1><a name="Gestione_contenuti"></a>Gestione contenuti<br>
+</h1>
+<h2><a name="Il_sistema_utente-gruppi-servizi"></a>Il sistema
+utente-gruppi-servizi</h2>
+Definiamo innanzitutto questi tre termini:<br>
+<span style="font-weight: bold;">utente</span>: Entit&agrave; che fa
+capo ad una persona fisica. Un utente possiede uno username ed una
+password per accedere al sistema. Sono predisposti altri campi (lingua,
+stile, ecc) che per ora non sono utilizzati.<br>
+<span style="font-weight: bold;">gruppo</span>: Insieme di utenti. Il
+gruppo ha la funzione di raggruppare gli utenti e di fornire un menu
+personalizzato. Quindi gli utenti dello stesso gruppo avranno a
+disposizione lo stesso
+menu. Il menu di ogni gruppo si gestisce cliccando il bottone PERMESSI.<br>
+<span style="font-weight: bold;">servizio</span>: Motore di gestione di
+un particolare contenuto. I servizi hanno il compito di gestire una
+parte del sito, come per esempio le news, gli iscritti e cos&igrave;
+via. Vengono organizzati in una struttura ad albero e vengono assegnati
+ai gruppi sotto forma di voci del menu<br>
+<br>
+Ogni gruppo ha un proprio menu che pu&ograve; essere personalizzato
+dall'amministratore. Ogni menu contiene i servizi che sono abilitati al
+gruppo di utenti. Quindi al gruppo dei giornalisti, si inseriranno nel
+menu i servizi per la gestione degli articoli (articoli, news,
+editoriali). Al gruppo degli amministratori verranno abilitati i
+servizi di gestione degli utenti, gruppi e servizi.<br>
+<br>
+<h3><a name="Esempio"></a>Esempio</h3>
+Dobbiamo creare un nuovo utente "pino" che abbia esclusivamente accesso
+alla
+gestione delle news.<br>
+<span style="font-weight: bold;">Come fare</span><br>
+<ul>
+  <li>Creiamo un nuovo gruppo di utenti chiamato "gestori news".
+Clicchiamo sul menu [gestione contenuti-&gt;amministrazione-&gt;gruppi]
+per entrare nella
+sezione dedicata alla gestione dei gruppi. Qui clicchiamo sull'icona a
+destra per un creare nuovo gruppo (l'icona con un foglio bianco).
+Compare un modulo di inserimento dati. Nel campo name inseriamo la
+scritta "gestori news". Poi clicchiamo su "INSERISCI". Il nuovo gruppo
+ora &egrave; stato creato</li>
+  <li>Assegnamo i servizi al gruppo. Sempre rimanendo nella pagina dei
+gruppi [gestione contenuti-&gt;amministrazione-&gt;gruppi], clicchiamo
+sulla freccia verde
+PERMESSI in corrispondenza del nuovo gruppo appena creato. Vediamo che
+non ci sono servizi assegnati. Sempre tramite l'icona "nuovo" creiamo
+una nuova voce nel menu assegnandola al servizio "news".
+Comparir&agrave; un modulo di immissione dati: <br>
+  </li>
+  <ul>
+    <li>name: gestione news (&egrave; il nome che comparir&agrave; nel
+menu)</li>
+    <li>service: News (il servizio da caricare). Se si lascia vuoto si
+crea una cartella dentro cui mettere altre voci di menu<br>
+    </li>
+    <li>order: 1 (l'ordine di comparsa all'interno del menu)</li>
+    <li>Filtro SQL:&nbsp; (nulla, da lasciare vuoto). Serve per
+filtrare le righe. Da usare se volessimo visualizzare solo le news con
+la parola Verona.</li>
+    <li>Parent: [No Parent]. Indica dove posizionare la nuova voce di
+menu. Si pu&ograve; fare anche in modo visuale nella visualizzazione ad
+albero nella pagina principale.</li>
+  </ul>
+  <li>Creiamo ora un utente. Clicchiamo su [gestione
+contenuti-&gt;amministrazione-&gt;utenti] e creiamo un nuovo utente
+cliccando sull'icona "nuovo documento". <br>
+  </li>
+  <ul>
+    <li>login: pino (lo username dell'utente)</li>
+    <li>password: xxxxxx (la password che user&agrave; per l'accesso)</li>
+    <li>gruppo: gestori news (che abbiamo appena creato)</li>
+    <li>temaxx: -</li>
+    <li>lingua: -</li>
+  </ul>
+</ul>
+Ora il nuovo utente pino potr&agrave; entrare nel sistema e gestire le
+news.<br>
+<h3><a name="Service-o-matic"></a>Service-o-matic</h3>
+Questa sezione spiegher&agrave; in modo dettagliato come creare i
+servizi. Service-o-matic &egrave; lui stesso un servizio e lo si attiva
+cliccando su [Gestione contenuti-&gt;amministrazione-&gt;servizi-&gt;<span
+ style="font-weight: bold;">struttura</span>]. Tutti gli altri sono
+stati generati in modo automatico da lui stesso. E' per questo motivo
+che ritengo che la vera forza di Syntax sia proprio service-o-matic.<br>
+Quando si clicca su un servizio il motore di syntax cerca nel database
+la struttura del servizio e ne carica i dati. Quindi per aggiungere o
+togliere un campo, inserire, modficare o cancellare un servizio, basta
+semplicemente modificare la struttura presente sul db tramite
+service-o-matic.<br>
+Per iniziare clicchiamo su [gestione
+contenuti-&gt;amministrazione-&gt;Service-o-matic]. <br>
+Inizialmente service-o-matic si presenta normalmente come tutti gli
+altri servizi. Viene mostrata la lista dei servizi a disposizione. Ecco
+le colonne che identificano un servizio:<br>
+<ol>
+  <li>id: identificativo del servizio</li>
+  <li>nome: nome del servizio</li>
+  <li>tabella: tabella sul db che contiene la struttura e i dati
+gestiti dal servizio. Per esempio, il servizio news, conterr&agrave; i
+campi della news (struttura) e le news stesse (dati)</li>
+  <li>percorso: service-o-matic &egrave; in grado di generare
+fisicamente un file php con lo scopo di essere poi modificato
+manualmente per gli utenti esperti. Normalmente service-o-matic non
+genera il file ma la visualizzazione del servizio avviene in modo
+dinamico sulla base della struttura del servizio presente sul database.
+Come vedete solamente service-o-matic ha, alla voce percorso, la
+scritta /ihtml/serviceomatic.php .</li>
+  <li>Descrizione: descrizione del servizio</li>
+  <li>DB sync: ha la funzione di sincronizzare la struttura del
+servizio con la tabella nel db. Se &egrave; spuntata, allinea i campi
+nel DB con la struttura imposta al servizio. Questa opzione &egrave;
+molto pericolosa (ma molto potente) perch&egrave; modifica la struttura
+delle tabelle. Usatela con cautela.</li>
+  <li>Chiave inglese: serve per modificare la struttura del servizio</li>
+  <li>Modifica e Cancellazione</li>
+</ol>
+<span style="font-weight: bold;">Creazione di un nuovo servizio<br>
+</span>Procediamo alla creazione di un nuovo servizio per la gestione
+degli articoli di un negozio. Clicchiamo sull'icona "nuovo documento".<br>
+STEP INIZIALE: <br>
+<div style="margin-left: 40px;">In rosso vengono evidenziate i campi
+obbligatori. <br>
+<ul>
+  <li>nome: il nome del servizio</li>
+  <li>tabella: il nome della tabella sul database. Se si omette, la
+nuova tabella sul database avr&agrave; lo stesso nome del servizio</li>
+  <li>descrizione: la descrizione del servizio</li>
+  <li>parametri: il numero di paramentri (campi) da gestire. Da tener
+presente anche la necessit&agrave; di un campo chiave per identificare
+le righe. Quindi aggiungete sempre 1 al numero di parametri desiderato.
+(p.e. nome, descrizione, costo e in pi&ugrave; aggiungete un campo id,
+quindi 4)<br>
+  </li>
+  <li>Sincronizza il db: genera una tabella sul db con la struttura che
+dettaglieremo nei prossimi passi. Non spuntarla se si dispone
+gi&agrave; di una tabella popolata di dati. In questo caso si
+dovr&agrave; modellare il servizio in base alla tabella gi&agrave; fatta</li>
+  <li>icona: icona associata al servizio. Sceglierla direttamente dalla
+lista sotto cliccando su quella desiderata.</li>
+</ul>
+Andiamo avanti<br>
+<br>
+</div>
+STEP 1<br>
+<div style="margin-left: 40px;">Specializziamo i parametri del
+servizio. Vengono visualizzate un numero di righe pari al numero di
+parametri impostati al passo precedente.<br>
+Per ogni riga definiamo:<br>
+<ul>
+  <li>Il tipo: Pu&ograve; essere un campo di testo, un checkbox, un
+menu a tendina, un campo di immissione di file, ecc. Preferibilmente
+impostare il primo campo del tipo "chiave". Sar&agrave; un campo
+numerico gestito da syntax che identifica le righe di quel particolare
+servizio.</li>
+  <li>Il nome del campo. Pu&ograve; essere per esempio "nome",
+"descrizione", "id", ecc...</li>
+  <li>Etichetta: &egrave; la scritta che compare nel modulo di modifica
+dei dati.</li>
+  <li>Help: descrizione della funzione del campo</li>
+  <li>join: serve per poter unire questo campo ad un'altro campo di
+un'altro servizio. Verranno presentati una lista dei servizi gi&agrave;
+presenti.</li>
+  <li>Order: ordine di visualizzazione del campo all'interno del modulo
+di modifica dei dati<br>
+  </li>
+  <li>order by: ordinamento iniziale delle righe per il campo prescelto.</li>
+</ul>
+</div>
+STEP 2<br>
+<div style="margin-left: 40px;">Ultimo step. Sistemiamo gli ultimi
+valori. Ogni tipo di campo ha i propri dati da impostare. Quindi per un
+campo di testo imposteremo la lunghezza, per un campo di immissione di
+immagini, imposteremo la directory di destinazione, ecc<br>
+Lo spunto "genera il file php" impone a syntax di generare fisicamente
+un file autonomo che contiene il motore per la gestione del servizio.
+Questo permette la modifica direttamente sul codice per personalizzare
+il servizio.<br>
+Fine<br>
+Verr&agrave; infine chiesto a che gruppo aggiungere il servizio appena
+creato.<br>
+</div>
+<br>
+<span style="font-weight: bold;">Modifica del servizio<br>
+</span>La modifica del servizio avviene cliccando l'icona "chiave
+inglese" in corrispondenza del servizio desiderato. Si seguiranno gli
+stessi passi dell'inserimento, ma questa volta i campi saranno
+gi&agrave; popolati con i valori del servizio da modificare.<br>
+<h2><a name="Template_Engine"></a>Template Engine</h2>
+Il sistema di gestione delle pagine &egrave; semplice e lineare. I
+concetti da chiarire sono due:<br>
+<ul>
+  <li><span style="font-weight: bold;">pagine</span>: sono le pagine
+che formano il sito. All'interno della pagina inseriamo il contenuto
+tramite un form visuale WYSIWYG, simile alle normali applicazioni
+office. Ogni pagina, al momento della compilazione, &egrave; resa
+tramite una directory che ha lo stesso nome della pagina. All'interno
+della directory ci sar&agrave; un file index.php che conterr&agrave; il
+testo della pagina. Tutto questo per avere un url ghiotto per i motori
+di ricerca. Per esempio, http://www.miosito.it/la storia/ oppure
+http://www.miosito.it/i prodotti/</li>
+  <li><span style="font-weight: bold;">template</span>: &egrave; il
+modello grafico, la cornice che contiene il contenuto della pagina. Il
+template &egrave; gestito dal motore <a href="http://smarty.php.net">smarty.php.net</a>,
+quindi si possono inserire tutti i tag specifici di smarty.&nbsp; Il
+template pu&ograve; essere scelto tra i file della directory&nbsp;
+[syntaxroot]/public/template/&nbsp; oppure pu&ograve; essere creata al
+volo nell'apposita area di testo WYSIWYG. In quest'ultimo caso si deve
+avere l'accortezza di racchiudere il template tra due righe di comando<br>
+{include file="header.tpl" }<br>
+....template....<br>
+{include file="footer.tpl"}<br>
+dove header.tpl &egrave; un file messo nella dir
+[syntaxroot]/public/template/ che contiene l'header
+(&lt;html&gt;&lt;head&gt;....&lt;/head&gt;&lt;body&gt;) di un file html
+e<br>
+footer.tml &egrave; il file che contiene la chiusura del file html
+(&lt;/body&gt;&lt;/html&gt;)</li>
+</ul>
+La struttura delle pagine pu&ograve; essere gestita tramite la
+struttura ad albero nella parte sinistra del desktop. E' possibile fare
+un drag 'n drop delle pagine, per strutturare meglio il sito.
+Importante &egrave; ricordarsi di cliccare "salva le modifiche" posto
+sotto alla struttura dell'albero.<br>
+<span style="color: rgb(204, 0, 0);"><br>
+Importante: Per rendere effittive le modifiche sulla struttura bisogna <span
+ style="font-weight: bold;">compilare </span>le pagine cliccando sul
+bottone rosso "compila"</span><a name="Tag"></a><br>
+<h3><a name="Tag_"></a>Tag<br>
+</h3>
+All'interno dei template &egrave; possibile inserire tag specifici che
+poi il motore smarty interpreter&agrave;. <br>
+Questi tag hanno la seguente forma: <br>
+{nomefunzione parametro1="valore1" parametro2="valore2"}<br>
+dove:<br>
+<ul>
+  <li>nomefunzione &egrave; il nome della funzione da richiamare. Le
+funzioni risiedono nella directory [syntaxroot]/public/plugin e vengono
+caricate automaticamente da smarty. Per creare nuove funzioni basta
+inserire un nuovo file all'interno di questa directory col nome di
+function.nomefunzione.php<br>
+  </li>
+  <li>parametro1 &egrave; il nome del parametro da passare alla
+funzione nomefunzione</li>
+  <li>valore1 &egrave; il valore del parametro1</li>
+  <li>parametro2 e valore2 come parametro1 e valore1</li>
+</ul>
+Alcune funzioni sono gi&agrave; state create come:<br>
+<ul>
+  <li>{menu} restituisce la lista delle pagine del sito</li>
+  <li>{page} inserisce il contenuto della pagina</li>
+  <li>{news} inserisce il contenuto della news</li>
+  <li>{listaNews} elenca le ultime 3 news</li>
+</ul>
+<span style="font-weight: bold; color: rgb(255, 0, 0);">Per il momento,
+Syntax non prevede funzioni automatiche che uniscono i servizi creati
+dall'utente con il sistema a template. Occorre quindi, dopo aver creato
+il servizio, scrivere una funzione (plugin) che prenda il contenuto
+gestito dal servizio e che lo interfacci col sito. Come &egrave; stato
+fatto con {news} e {listaNews} per il servizio news.</span><br>
+<br>
+Per maggiori informazioni su smarty, visitate il sito ufficiale <a
+ href="http://smarty.php.net">http://smarty.php.net</a><br>
+<h1><a name="Strumenti"></a>Strumenti</h1>
+Alla voce strumenti, Syntax Desktop fornisce alcuni servizi per la
+manutenzione e personalizzazione dell'applicazione.<br>
+<ul>
+  <li>Visualizza il sito: per visualizzare il sito all'interno di
+Syntax Desktop</li>
+  <li>Contatta l'amministratore: per spedire un'email direttamente
+all'amministratore</li>
+  <li>FileManager: simile ad un piccolo client ftp per gestire i file
+(ancora da implementare)<br>
+  </li>
+  <li>Shell: una shell (dove &egrave; permessa) per gestire
+direttamente il server.</li>
+  <li>Ripristina il database: per caricare una copia di backup del
+database precedentemente salvata.</li>
+  <li>Salva il database: per creare un backup dello stato attuale del
+database</li>
+  <li>Impostazioni: per vedere i parametri di configurazione del db</li>
+  <li>Debug: flag per attivare il debug</li>
+  <li>Sfondo: per cambiare lo sfondo di Syntax</li>
+  <li>Stile: per modificare i colori di Syntax</li>
+  <li>Disconnetti: per cambiare identit&agrave; e ritornare anonimo<br>
+  </li>
+  <li>Esci: per chiudere la finestra.</li>
+</ul>
+<br>
+<h1><a name="Informazioni_aggiuntive"></a>Informazioni aggiuntive<br>
+</h1>
+Michele Gobbi<br>
+Verona, 24 Maggio 2004<br>
+<a href="http://www.dynamick.it">www.dynamick.it</a><br>
+<a href="mailto:info@dynamick.it">info@dynamick.it</a><br>
+<br>
+<br>
+<br>
+</div>
+</body>
+</html>

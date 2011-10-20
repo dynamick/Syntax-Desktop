@@ -1,0 +1,175 @@
+		/*****************************
+		**   STILE PER IL DESKTOP   **
+		******************************/
+		body.desktop {
+			padding: 0px;
+			margin: 0px;
+			background-color: #6880D9;
+			overflow: hidden;
+      overflow-y: hidden;
+		}
+		#desktopbar_top {
+			padding: 0px;
+			margin: 0px;
+			width: 100%;
+			background-image: url(img/desktopbar_bg.gif);
+			background-repeat: repeat-x;
+			height: 30px;
+      top: 0px;
+      position: absolute;
+		}
+		#desktopbar_clock {
+			background: url(img/desktopbar_clock.gif) no-repeat top right;
+			position: absolute;
+			top: 0px;
+			right: 0px;
+			width: 147px;
+			height: 30px;
+			text-align: right;
+      padding: 8px;
+			/*line-height: 25px;*/
+		}
+		#desktopbar_bottom {
+			padding: 0px;
+			margin: 0px;
+			width: 100%;
+			background-image: url(img/desktopbar_bg.gif);
+			background-repeat: repeat-x;
+			position: absolute;
+			bottom: 0px;
+			left: 0px;
+			height: 30px;
+			line-height: 25px;
+			font: menu;
+			color: black;
+		}
+
+    #userinfo { margin-left: 15px; }
+    #userbutton {position: absolute; bottom: 3px; right: 20px; vertical-align: center;}
+		/*****************************
+		**   STILE PER LE FINESTRE  **
+		******************************/
+		#window {
+			width: 100%;
+			height: 100%;
+			background-color: green;
+		}
+		/*****************************
+		**   STILI GENERICI         **
+		******************************/
+    a img {border: 0px;}
+    
+
+		/*****************************
+		**   MENU                   **
+		******************************/
+    
+	/* menu body */
+
+	.menu-body {color:		black;margin:		0; padding:	0;overflow:	hidden;	border:		0;	cursor:		default;}
+	.menu-body .outer-border {border:		1px solid #FFAF01; margin:		0; padding:	0;}
+	.menu-body .inner-border {width:			100%;	border:			1px solid #FFAF01;	border-width:	0px 0 0px 0;	padding:		0 1px 0 1px;	margin:			0;	background:	white url(img/menu_background.gif) repeat-y;}
+	/*****************************************************************************/
+	/* menu items */
+	.menu-body td {	font:			Menu;	color:		#0A246A;	font-size: xx-small;}
+	.menu-body .hover td {background-color:	white;	filter:	Alpha(Opacity=70);}
+	.menu-body .disabled-hover td {	background-color:	white;}
+	.menu-body td.empty-icon-cell {	padding:		2px;	border:		0;}
+	.menu-body td.empty-icon-cell span {	width:	16px;}
+	.menu-body td.icon-cell {	padding:	2px;	border:		0;}
+	.menu-body td.icon-cell img {	width:	16px;	height:	16px;	margin:	0;	filter:	Alpha(Opacity=70);}
+	.menu-body .hover td.icon-cell img {filter:	none;	position:	relative;	left:		-1px;	top:		-1px;	}
+	.menu-body .disabled-hover td.icon-cell img, .menu-body .disabled td.icon-cell img {
+  	display:	static;	filter:		Gray() Alpha(Opacity=40);	}
+	.menu-body .disabled-hover td.empty-icon-cell,.menu-body .hover td.empty-icon-cell,	.menu-body .disabled-hover td.icon-cell,	.menu-body .hover td.icon-cell 
+  {	border:			1px solid #0A246A;	border-right:	0;	padding:		1px 2px 1px 1px;}
+	.menu-body td.label-cell {		width:		100%;		padding:	2px 5px 2px 5px;		border:		0;	}
+	.menu-body .disabled-hover td.label-cell,	.menu-body .hover td.label-cell,	.menu-body .disabled-hover td.shortcut-cell,	.menu-body .hover td.shortcut-cell {
+		padding:		1px 5px 1px 5px;		border:			1px solid #0A246A;	border-left:	0;		border-right:	0;	}
+	.menu-body td.shortcut-cell {		padding:	2px 5px 2px 5px;	}
+	.menu-body td.arrow-cell {		width:			20px;		padding:		2px 2px 2px 0px;		font-family:	Webdings;	}
+	/* end menu items */
+	/*****************************************************************************/
+	/* disabled items */
+	.menu-body .disabled-hover td.arrow-cell,	.menu-body .hover td.arrow-cell {
+		padding:		1px 1px 1px 0px;		border:			1px solid #0A246A;		border-left:	0;	}
+	.menu-body #scroll-up-item td,	.menu-body #scroll-down-item td {
+  		font-family:	Webdings !important;		text-align:		center;		padding:		10px;	}
+	.menu-body .disabled td {		color:				#cccccc;	}
+	.menu-body .disabled-hover td {		background-color:	white;		color:				#cccccc;	}
+	/* end disabled items */
+	/*****************************************************************************/
+	/* separator */
+	.menu-body .separator td {font-size:	0.001mm;padding:	1px 0px 1px 27px;}
+	.menu-body .separator-line {		overflow:		hidden;		border-top:		1px solid #0A246A;		height:			1px;	}
+	/* end separator */
+	/*****************************************************************************/
+	/* Scroll buttons */
+	.menu-body #scroll-up-item,	.menu-body #scroll-down-item {		width:		100%;	}
+	.menu-body #scroll-up-item td,
+	.menu-body #scroll-down-item td {		font-family:	Webdings;		text-align:		center;		padding:		1px 5px 1px 5px;	}
+	.menu-body #scroll-up-item .disabled-hover td,
+	.menu-body #scroll-up-item .hover td,
+	.menu-body #scroll-down-item .disabled-hover td,
+	.menu-body #scroll-down-item .hover td {
+		border:		1px solid #0A246A;		padding:	0px 4px 0px 4px;	}
+	/* End scroll buttons */
+	/*****************************************************************************/
+	/* radio and check box items */
+	.menu-body .checked {		padding:	0px;	}
+	.menu-body .checked.hover {		padding:	0px;	}
+	.menu-body .checked .check-box,	.menu-body .checked .radio-button {
+		display:		inline-block;
+		font-family:	Webdings;
+		overflow:		hidden;
+		color:			MenuText;
+		text-align:		center;
+		vertical-align:	center;
+		background-color:	#b6bdd2;
+		border:				1px solid #0A246A;
+	}
+	.menu-body .check-box {
+		width:			19px;
+		height:			19px;
+		font-size:		133%;
+		padding-bottom:	5px;
+		padding-left:	1px;
+	}
+	.menu-body .radio-button {
+		width:			19px;
+		height:			19px;
+		font-size:		50%;
+		padding:		5px;
+	}
+	/* end radio and check box items */
+	/*****************************************************************************/
+	/* Menu Bar */
+	.menu-bar {	background:		transparent;cursor:			default;padding:		1px; display: inline;}
+	.menu-bar .menu-button {
+		background:transparent;
+		color:black;
+		font:Menu;
+		padding:7px 7px 3px 7px;
+		border:0;
+		margin:0;
+		display:inline-block;
+		white-space:nowrap;
+		cursor:default;
+ 		font-size: x-small;
+	}
+	.menu-bar .menu-button.active {
+		background:		#FF8A01; /*#dbd8d1;*/
+		padding:		2px 6px 3px 6px;
+		border:			1px solid #FFAF01;
+		border-bottom:	0;
+	}
+
+	.menu-bar .menu-button.hover {
+		background:		#FF8A01; /*#b6bdd2;*/
+		padding:		2px 6px 2px 6px;
+		border-width:	1px;
+		border-style:	solid;
+		border-color:	#FFAF01;
+	}
+	/* End Menu Bar */
+    

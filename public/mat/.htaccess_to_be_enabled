@@ -1,0 +1,13 @@
+# PROTECT YOUR FILES
+# 1) rename this file to .htaccess to protect files from direct or external link
+# 2) change the domain name in the below code
+
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteCond %{HTTP_REFERER} ^$
+RewriteRule . - [F]
+
+RewriteCond %{HTTP_REFERER} !^http://(.+\.)?yoursite\.com/ [NC]
+RewriteRule . - [F]
+</IfModule>
