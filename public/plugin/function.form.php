@@ -36,7 +36,7 @@ function smarty_function_form($params, &$smarty) {
           case 'radio':
           case 'select':
             foreach($fields[$k]['opzioni'] as $f=>$s){
-              $fields[$k]['opzioni'][$f]['selezionato'] = (in_array($f ,$v)) ? 1 : 0;
+              $fields[$k]['opzioni'][$f]['selezionato'] = (in_array($f,$s)) ? 1 : 0;
             }
             break;
           case 'text':
