@@ -115,6 +115,9 @@
   //aa schema
   $str["modify"]="Modify";
   $str["sure_delete"]="Are you sure you want to delete?";
+  $str["save"]="Save and continue";
+  $str["saveandclone"]="Save and clone object";
+  $str['saveandnext']="Save and open next object";
   $str["saveandexit"]="Save and Exit";
   $str["saveandadd"]="Save and Add new entry";
   $str["row_deleted"]="row deleted";

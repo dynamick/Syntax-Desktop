@@ -53,7 +53,8 @@ function __autoload($class) {
   //variabili globali
   $PHP_SELF=$_SERVER['PHP_SELF'];
 
-  if (isset($_REQUEST["cmd"])) $cmd=$_REQUEST["cmd"]; else $cmd="";
+  if (isset($_REQUEST['cmd'])) $cmd=$_REQUEST['cmd'];  else $cmd='';
+  if (isset($_POST['after']))  $after=$_POST['after']; else $after='stay';
   if (!defined("RPC")) define ("RPC", "rpcfunction");
 
 
@@ -180,11 +181,321 @@ function __autoload($class) {
 
   switch($cmd) {
     /**************************************************************************
+    *                             ADD A ROW
+    ***************************************************************************/
+
+    case ADD:
+      echo "<script src=\"../../includes/js/tooltip/tooltip.js\"></script>";
+      aaHeader($str["insertrow"],$str["insertrow_bis"]);
+
+  	  if(isset($_SESSION[$synTable]['clone'])){
+  	  	$data = unserialize($_SESSION[$synTable]['clone']);
+        $contenitore->updateValues($data); // fracco i valori in sessione nel contenitore
+  	  }
+
+      echo $synHtml->form("action='$PHP_SELF' method='POST' enctype='multipart/form-data' onsubmit='javascript: true || loading();' autocomplete=\"off\"");
+      $contenitore->getHtml();
+      $after_options = array(
+        'stay' => $str['save'],
+       'clone' => $str['saveandclone'],
+         'new' => $str['saveandadd'],
+        'exit' => $str['saveandexit']
+      );
+      $bottom  = "<table id=\"actions\">\n";
+      $bottom .= "  <tr>\n";
+      $bottom .= "    <td>";
+      $bottom .= $synHtml->hidden("name='changeto' value=''");
+      $bottom .= $synHtml->button("name='off' value='' class='cancel_button' onclick='document.location=\"{$PHP_SELF}\"; return false;'", $str["cancel"], 'reset');
+      $bottom .= "    </td>\n";
+      $bottom .= "    <td align=\"right\">";
+      $bottom .= $synHtml->select('name="after" class="submit-actions"', $after_options);
+      $bottom .= $synHtml->button("name='cmd' value='".INSERT."' class='action_button'", 'OK');
+      $bottom .= "    </td>\n";
+      $bottom .= "  </tr>\n";
+      $bottom .= "</table>\n";
+
+      echo $bottom;
+      echo $synHtml->form_c();
+
+      //initToolbar ( newBtn, saveBtn, removeBtn, switchBtn, refreshBtn, homeBtn, backBtn)
+      echo "<script>initToolbar (false,true,false,true,true,true);</script>\n";
+
+      //echo the multilang option
+      echo $contenitore->getMultilangBox(2);
+
+      break;
+
+    /**************************************************************************
+    *                             MODIFY A ROW
+    ***************************************************************************/
+
+    case MODIFY:
+      aaHeader($str["modifyrow"],$str["modifyrow_bis"]);
+      $synPrimaryKey=stripslashes(urldecode(trim($_REQUEST["synPrimaryKey"])));
+
+      echo $synHtml->form("action=\"$PHP_SELF\" method=\"post\" enctype=\"multipart/form-data\" autocomplete=\"off\"");
+      $res=$db->Execute("select * from $synTable where $synPrimaryKey");
+      $contenitore->updateValues($res->FetchRow());
+      $contenitore->getHtml();
+
+      $after_options = array(
+        'stay' => $str['save'],
+       'clone' => $str['saveandclone'],
+        'next' => $str['saveandnext'],
+         'new' => $str['saveandadd'],
+        'exit' => $str['saveandexit']
+      );
+      $bottom  = "<table id=\"actions\">\n";
+      $bottom .= "  <tr>\n";
+      $bottom .= "    <td>";
+      $bottom .= $synHtml->hidden("name='synPrimaryKey' value='".urlencode($synPrimaryKey)."'");
+      $bottom .= $synHtml->hidden("name='changeto' value=''");
+      $bottom .= $synHtml->button("name='off' value='' class='cancel_button' onclick='document.location=\"{$PHP_SELF}\"; return false;'", $str["cancel"], 'reset');
+      $bottom .= "    </td>\n";
+      $bottom .= "    <td align=\"right\">";
+      $bottom .= $synHtml->select('name="after" class="submit-actions"', $after_options);
+      $bottom .= $synHtml->button("name='cmd' value='".CHANGE."' class='action_button'", 'OK');
+      $bottom .= "    </td>\n";
+      $bottom .= "  </tr>\n";
+      $bottom .= "</table>\n";
+
+      echo $bottom;
+      echo $synHtml->form_c();
+
+      //initToolbar ( newBtn, saveBtn, removeBtn, switchBtn, refreshBtn, homeBtn, backBtn)
+      $script = "<script type=\"text/javascript\">\n";
+      $script.= "  initToolbar (false, true, true, true, true, true);\n";
+      $script.= "  action('removeBtn', 'if (confirm(top.str[\"aa_confirmDel\"])) window.parent.content.document.location=\"content.php?cmd=delrow&synPrimaryKey=".urlencode($synPrimaryKey)."\";');\n";
+      $script.= "</script>\n";
+
+      echo $script;
+
+      //echo the multilang option
+      echo $contenitore->getMultilangBox(2);
+
+      break;
+
+    /**************************************************************************
+    *                             CHANGE A ROW
+    ***************************************************************************/
+
+    case CHANGE:
+
+      $synPrimaryKey=urldecode(trim($_POST["synPrimaryKey"]));
+
+      $contenitore->uploadDocument();
+      $upd = $contenitore->getUpdateString();
+      $ok = true;
+
+      if ($upd!="") {
+        $qry = "UPDATE `$synTable` SET $upd WHERE $synPrimaryKey";
+        $ok = $db->Execute($qry);
+        $ok = $ok && $contenitore->execute_callbacks('update');
+      }
+
+      #die('done');
+      //controllo errori
+      if (!$ok) echo "<script>alert(\"$err\"); history.go(-1);</script>";
+      //else echo 'ok';
+
+      //set the next page
+      if ($_REQUEST["changeto"]!='') {
+        $after = 'changelang';
+      }
+
+      switch ($after) {
+        case 'changelang': // salva & cambia lingua
+          resetClone($synTable);
+          $jumpTo = $PHP_SELF."?cmd=".MODIFY."&synPrimaryKey={$synPrimaryKey}&synSetLang=".$_REQUEST["changeto"];
+          break;
+
+        case 'exit': // salva & torna alla lista
+          resetClone($synTable);
+          $jumpTo = $PHP_SELF;
+          break;
+
+        case 'clone': // salva & duplica
+	  	    unset($_POST['id']); //altrimenti continua a lavorare sullo stesso record
+          $_SESSION[$synTable]['clone'] = serialize($_POST);
+		      $jumpTo = $PHP_SELF."?cmd=".ADD;
+          break;
+
+        case 'next': // salva & prossimo
+          resetClone($synTable);
+          $nextqry = "SELECT `{$synTable}`.id FROM `{$synTable}` WHERE id>".intval($_POST['id'])." ORDER BY id LIMIT 0,1";
+          $res = $db->Execute($nextqry);
+          if($arr = $res->FetchRow()){
+            $jumpTo = $PHP_SELF."?cmd=".MODIFY."&synPrimaryKey=".urlencode("`id`=\"{$arr['id']}\"");
+          } else {
+            $jumpTo = $PHP_SELF; //non esiste un record successivo, torno alla lista
+          }
+          break;
+
+        case 'new': // salva & nuovo
+          resetClone($synTable);
+          $jumpTo = $PHP_SELF."?cmd=".ADD;
+          break;
+
+        case 'stay': // salva & continua
+        default:
+          resetClone($synTable);
+          $jumpTo = $PHP_SELF."?cmd=".MODIFY."&synPrimaryKey={$synPrimaryKey}";
+          break;
+      }
+      break;
+
+    /**************************************************************************
+    *                             INSERT A ROW
+    ***************************************************************************/
+
+    case INSERT:
+      $synPrimaryKey=$contenitore->getKeyURLString();
+      $err = '';
+      //upload available documents
+      $contenitore->uploadDocument();
+
+      $contenitore->execute_callbacks('insert');
+      //execute insert qry
+      $qry = "INSERT INTO $synTable (".$contenitore->getFieldsString().") VALUES (".$contenitore->getInsertString().")";
+      $err = $res = $db->Execute($qry);
+
+      //$insertId = $db->Insert_Id();
+      $insertId = $db->Insert_Id();
+
+      // DA IMPLEMENTARE
+      //$err = $err && $contenitore->execute_callbacks('insert');
+
+      //error check
+      if (!$err) {
+        //echo "<script>alert(\"$err\"); history.go(-1);</script>";
+        echo "<script>alert(\"$err\");</script>";
+      }
+
+      //set the next page
+      if ($_REQUEST["changeto"]!='') {
+        $after = 'changelang';
+      }
+
+      switch ($after) {
+        case 'changelang': // salva & cambia lingua
+          resetClone($synTable);
+          $jumpTo = $PHP_SELF."?cmd=".MODIFY."&synPrimaryKey={$synPrimaryKey}&synSetLang=".$_REQUEST["changeto"];
+          break;
+
+        case 'exit': // salva & torna alla lista
+          resetClone($synTable);
+          $jumpTo = $PHP_SELF;
+          break;
+
+        case 'clone': // salva & duplica
+	  	    unset($_POST['id']); //altrimenti continua a lavorare sullo stesso record
+          $_SESSION[$synTable]['clone'] = serialize($_POST);
+		      $jumpTo = $PHP_SELF."?cmd=".ADD;
+          break;
+
+        case 'new': // salva & nuovo
+          resetClone($synTable);
+          $jumpTo = $PHP_SELF."?cmd=".ADD;
+          break;
+
+        case 'stay': // salva & continua
+        default:
+          resetClone($synTable);
+          $jumpTo = $PHP_SELF."?cmd=".MODIFY."&synPrimaryKey={$synPrimaryKey}";
+          break;
+      }
+
+      break;
+
+    /**************************************************************************
+    *                             DELETE A ROW
+    ***************************************************************************/
+
+    case DELETE:
+
+      $synPrimaryKey=stripslashes(urldecode($_REQUEST["synPrimaryKey"]));
+      $res=$db->Execute("select * from $synTable where $synPrimaryKey");
+
+      //delete if the user has the owner permission
+      $arr=$res->FetchRow();
+      $contenitore->updateValues($arr);
+      //if ($contenitore->ownerField=="" OR in_array($arr[$contenitore->ownerField],$_SESSION["synGroupChild"]) OR $arr[$contenitore->ownerField]==0) {
+      $canDelete=$contenitore->isDeletable();
+      if ($canDelete===true) {
+        $contenitore->deleteDocument();
+        $res = $db->Execute("DELETE FROM $synTable WHERE $synPrimaryKey" );
+        $contenitore->execute_callbacks('delete');
+
+      } else {
+        echo "<script>alert(\"".$canDelete."\");</script>";
+      }
+
+      //set the next page
+      $jumpTo=$PHP_SELF;
+
+      break;
+
+    /**************************************************************************
+    *                        DELETE MULTIPLE ROWS
+    ***************************************************************************/
+
+    case MULTIPLEDELETE:
+      //TODO: attenzione alle chiavi. Prende solamente l'id!!!!!!!!!
+      $i=0;
+      if (isset($checkrow)) {
+      foreach ($checkrow as $id) {
+          $key=urldecode($id);
+          $res=$db->Execute("select * from $synTable where $key");
+          $contenitore->updateValues($res->FetchRow());
+
+          $canDelete=$contenitore->isDeletable();
+          if ($canDelete===true) {
+            @$contenitore->deleteDocument();
+            //$res=$db->Execute("DELETE FROM $synTable WHERE $synPrimaryKey" );
+            $res=$db->Execute("DELETE FROM $synTable WHERE $key" );
+            $i++;
+          } else {
+            echo "<script>alert(\"Row $key: ".$canDelete."\");</script>";
+          }
+
+        }
+        echo "<script>alert(\"$i ".$str["row_deleted"]."\");</script>";
+      }
+
+      //set the next page
+      $jumpTo=$PHP_SELF;
+
+      break;
+
+
+    /**************************************************************************
+    *                        RPC - set values
+    ***************************************************************************/
+    case RPC:
+      global $contenitore, $debug;
+
+      $synPrimaryKey=stripslashes($_GET["synPrimaryKey"]);
+      $field=$_GET["field"];
+      $value=$_GET["value"];
+      $synTable=$contenitore->getTable();
+
+      $qry = "update $synTable set `$field`='$value' where $synPrimaryKey";
+      $err = $db->Execute($qry);
+
+      //controllo errori
+      if (!$err) echo "<script>alert(\"".htmlentities($err)."\");</script>";
+    break;
+
+
+    /**************************************************************************
     *                             LIST OF THE ROWS
     ***************************************************************************/
-    case "":
+    default:
       global $treeFrame;
       echo "<!-- *** inclusione di schema.php *** -->\n";
+
+      resetClone($synTable);
+      unset($_POST); //in caso di edit abortito
 
       //Change the rows mod and del button
       # EDIT button
@@ -247,208 +558,6 @@ function __autoload($class) {
       }
 
       break;
-
-    /**************************************************************************
-    *                             ADD A ROW
-    ***************************************************************************/
-
-    case ADD:
-      echo "<script src=\"../../includes/js/tooltip/tooltip.js\"></script>";
-      aaHeader($str["insertrow"],$str["insertrow_bis"]);
-
-      echo $synHtml->form("action='$PHP_SELF' method='POST' enctype='multipart/form-data' onsubmit='javascript: true || loading();' autocomplete=\"off\"");
-      $contenitore->getHtml();
-      echo $synHtml->hidden("name='cmd'     value='".INSERT."'");
-      echo $synHtml->hidden("name='changeto' value=''");
-      echo $synHtml->button("value='".$str["cancel"]."'   class=\"cancel_button\" onclick=\"document.location='".$PHP_SELF."'; return false;\" ");
-      echo $synHtml->button("value='".$str["saveandexit"]."' class=\"action_button\" ");
-      echo $synHtml->button("name='saveandadd' value='".$str["saveandadd"]."' class=\"action_button\" ");
-      echo $synHtml->form_c();
-
-      //initToolbar ( newBtn, saveBtn, removeBtn, switchBtn, refreshBtn, homeBtn, backBtn)
-      echo "<script>initToolbar (false,true,false,true,true,true);</script>\n";
-
-      //echo the multilang option
-      echo $contenitore->getMultilangBox(2);
-
-      break;
-
-    /**************************************************************************
-    *                             MODIFY A ROW
-    ***************************************************************************/
-
-    case MODIFY:
-      aaHeader($str["modifyrow"],$str["modifyrow_bis"]);
-      $synPrimaryKey=stripslashes(urldecode(trim($_REQUEST["synPrimaryKey"])));
-
-      echo $synHtml->form("action=\"$PHP_SELF\" method=\"post\" enctype=\"multipart/form-data\" autocomplete=\"off\"");
-      $res=$db->Execute("select * from $synTable where $synPrimaryKey");
-      $contenitore->updateValues($res->FetchRow());
-      $contenitore->getHtml();
-      echo $synHtml->hidden("name='synPrimaryKey'      value='".urlencode($synPrimaryKey)."'");
-      echo $synHtml->hidden("name='cmd'      value='".CHANGE."'");
-      echo $synHtml->hidden("name='changeto' value=''");
-      echo $synHtml->button("value='".$str["cancel"]."' style='margin: 20px 0 20px 20px;' class=\"cancel_button\" onclick=\"document.location='".$PHP_SELF."'; return false;\" ");
-      echo $synHtml->button("value='".$str["modify"]."' style='margin: 20px 0 20px 0'  class=\"action_button\"");
-      echo $synHtml->form_c();
-
-      //initToolbar ( newBtn, saveBtn, removeBtn, switchBtn, refreshBtn, homeBtn, backBtn)
-      $script = "<script type=\"text/javascript\">\n";
-      $script.= "  initToolbar (false, true, true, true, true, true);\n";
-      $script.= "  action('removeBtn', 'if (confirm(top.str[\"aa_confirmDel\"])) window.parent.content.document.location=\"content.php?cmd=delrow&synPrimaryKey=".urlencode($synPrimaryKey)."\";');\n";
-      $script.= "</script>\n";
-
-      echo $script;
-
-      //echo the multilang option
-      echo $contenitore->getMultilangBox(2);
-
-      break;
-
-    /**************************************************************************
-    *                             CHANGE A ROW
-    ***************************************************************************/
-
-    case CHANGE:
-
-      $synPrimaryKey=urldecode(trim($_POST["synPrimaryKey"]));
-
-      $contenitore->uploadDocument();
-      $upd = $contenitore->getUpdateString();
-      $ok = true;
-
-      if ($upd!="") {
-        $qry = "UPDATE `$synTable` SET $upd WHERE $synPrimaryKey";
-        $ok = $db->Execute($qry);
-        $ok = $ok && $contenitore->execute_callbacks('update');
-      }
-
-      #die('done');
-      //controllo errori
-      if (!$ok) echo "<script>alert(\"$err\"); history.go(-1);</script>";
-      //else echo 'ok';
-
-      //set the next page
-      if ($_REQUEST["changeto"]!="") {
-        $jumpTo = $PHP_SELF."?cmd=".MODIFY."&synPrimaryKey=$synPrimaryKey&synSetLang=".$_REQUEST["changeto"];
-      } else {
-        $jumpTo = $PHP_SELF;
-      }
-      break;
-
-    /**************************************************************************
-    *                             INSERT A ROW
-    ***************************************************************************/
-
-    case INSERT:
-      $synPrimaryKey=$contenitore->getKeyURLString();
-      $err = '';
-      //upload available documents
-      $contenitore->uploadDocument();
-
-      $contenitore->execute_callbacks('insert');
-      //execute insert qry
-      $qry = "INSERT INTO $synTable (".$contenitore->getFieldsString().") VALUES (".$contenitore->getInsertString().")";
-      $err = $res = $db->Execute($qry);
-
-      //$insertId = $db->Insert_Id();
-      $insertId = $db->Insert_Id();
-
-      // DA IMPLEMENTARE
-      //$err = $err && $contenitore->execute_callbacks('insert');
-
-      //error check
-      if (!$err) {
-        //echo "<script>alert(\"$err\"); history.go(-1);</script>";
-        echo "<script>alert(\"$err\");</script>";
-      }
-      //set the next page
-
-      if (isset($_REQUEST["saveandadd"])) $jumpTo=$PHP_SELF."?cmd=".ADD;
-      else if ($_REQUEST["changeto"]!="") $jumpTo=$PHP_SELF."?cmd=".MODIFY."&synPrimaryKey=$synPrimaryKey&synSetLang=".$_REQUEST["changeto"];
-      else $jumpTo=$PHP_SELF;
-
-      break;
-
-    /**************************************************************************
-    *                             DELETE A ROW
-    ***************************************************************************/
-
-    case DELETE:
-
-
-
-      $synPrimaryKey=stripslashes(urldecode($_REQUEST["synPrimaryKey"]));
-      $res=$db->Execute("select * from $synTable where $synPrimaryKey");
-
-      //delete if the user has the owner permission
-      $arr=$res->FetchRow();
-      $contenitore->updateValues($arr);
-      //if ($contenitore->ownerField=="" OR in_array($arr[$contenitore->ownerField],$_SESSION["synGroupChild"]) OR $arr[$contenitore->ownerField]==0) {
-      $canDelete=$contenitore->isDeletable();
-      if ($canDelete===true) {
-        $contenitore->deleteDocument();
-        $res = $db->Execute("DELETE FROM $synTable WHERE $synPrimaryKey" );
-        $contenitore->execute_callbacks('delete');
-
-      } else {
-        echo "<script>alert(\"".$canDelete."\");</script>";
-      }
-
-      //set the next page
-      $jumpTo=$PHP_SELF;
-
-      break;
-
-    /**************************************************************************
-    *                        DELETE MULTIPLE ROWS
-    ***************************************************************************/
-
-    case MULTIPLEDELETE:
-      //TODO: attenzione alle chiavi. Prende solamente l'id!!!!!!!!!
-      $i=0;
-      if (isset($checkrow)) {
-      foreach ($checkrow as $id) {
-          $key=urldecode($id);
-          $res=$db->Execute("select * from $synTable where $key");
-          $contenitore->updateValues($res->FetchRow());
-
-          $canDelete=$contenitore->isDeletable();
-          if ($canDelete===true) {
-            @$contenitore->deleteDocument();
-            //$res=$db->Execute("DELETE FROM $synTable WHERE $synPrimaryKey" );
-            $res=$db->Execute("DELETE FROM $synTable WHERE $key" );
-            $i++;
-          } else {
-            echo "<script>alert(\"Row $key: ".$canDelete."\");</script>";
-          }
-
-        }
-        echo "<script>alert(\"$i ".$str["row_deleted"]."\");</script>";
-      }
-
-      //set the next page
-      $jumpTo=$PHP_SELF;
-
-      break;
-
-    /**************************************************************************
-    *                        RPC - set values
-    ***************************************************************************/
-    case RPC:
-      global $contenitore, $debug;
-
-      $synPrimaryKey=stripslashes($_GET["synPrimaryKey"]);
-      $field=$_GET["field"];
-      $value=$_GET["value"];
-      $synTable=$contenitore->getTable();
-
-      $qry = "update $synTable set `$field`='$value' where $synPrimaryKey";
-      $err = $db->Execute($qry);
-
-      //controllo errori
-      if (!$err) echo "<script>alert(\"".htmlentities($err)."\");</script>";
-    break;
   }
 
   //jump to the next page
@@ -461,5 +570,11 @@ function __autoload($class) {
     echo "  <h4>$tit</h4>\n";
     echo "  <div >$tit2</div>\n";
     echo "</div>\n";
+  }
+  
+  function resetClone($synTable){
+    if(!isset($_SESSION)) session_start();
+    if(isset($_SESSION[$synTable]['clone']))
+       unset($_SESSION[$synTable]['clone']);
   }
 ?>

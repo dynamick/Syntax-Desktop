@@ -9,8 +9,14 @@ td,
 textarea {font:menu; color:#036;}
 input { padding-left: 5px;}
 input.serviceomatic {border: 1px solid #AAA;}
-input.action_button {margin: 10px 0px 10px 20px; background: #00C800; color: white; width: 150px; font-weight: bold;border: 0px solid #000; }
-input.cancel_button {margin: 10px 0px 10px 20px; background: #999; color: white; width: 100px; border: 0px solid #000; }
+.action_button,
+.cancel_button {margin:0; padding:5px 50px; border:1px solid #333; font:bold 13px Arial,sans-serif; cursor:pointer; border-radius:3px; box-shadow:0px 1px 2px #fff;}
+.action_button {background:#cfc; color:#090; border-color:#090;}
+.action_button:hover {background-color:#3c3; color:#fff;}
+.cancel_button {background:#ddd; border-color:#999; }
+.cancel_button:hover {background-color:#bbb; color:#fff;}
+#actions {margin:20px 0 30px 20px; width:95%}
+#actions select {margin-right:10px; padding:5px; border-width:1px; border-radius:3px; }
 .label {color:black;}
 .normal {height:25px; background:#ffffff; vertical-align:middle; text-align:left; border:0px; margin:0 5px 0 5px}
 .help {font-size: xx-small; color: gray;}

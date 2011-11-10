@@ -30,9 +30,10 @@ class synHtml {
   }
   
   //add a form tag
-  function button($attribute) {
-    return "<input type='submit' $attribute />\n";
+  function button($attribute, $label, $type='submit') {
+    return "<button type='{$type}' $attribute>{$label}</button>\n";
   }
+
   //add a form tag
   function check($attribute) {
     return "<input type='checkbox' $attribute />\n";

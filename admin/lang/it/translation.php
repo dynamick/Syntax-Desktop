@@ -113,6 +113,9 @@
   //aa schema
   $str["modify"]="Modifica";
   $str["sure_delete"]="Sicuro di voler cancellare la riga?";
+  $str["save"]="Salva e continua";
+  $str["saveandclone"]="Salva e crea duplicato";
+  $str['saveandnext']="Salva e vai al successivo";
   $str["saveandexit"]="Salva ed Esci";
   $str["saveandadd"]="Salva e Aggiungi nuovo";
   $str["row_deleted"]="righe eliminate";
