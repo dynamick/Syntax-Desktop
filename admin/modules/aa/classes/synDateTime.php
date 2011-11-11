@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*************************************
 * class DATETIME                     *
@@ -24,27 +24,27 @@ class synDateTime extends synElement {
 
   //private function
   function _html() {
-    if ($this->value=="0000-00-00 00:00:00" or $this->value=="") $this->value=date("Y-m-d H:i:s");
+    if ($this->value=="0000-00-00 00:00:00" or $this->value=="00-00-0000 00:00:00" or $this->value=="") $this->value=date("Y-m-d H:i:s");
     $datepicker="<a href=\"javascript:NewCal('".$this->name."','ddmmyyyy',true)\"><img src=\"images/cal.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"Scegli una data\"></a>";
-    return "<input type='text' size='25' id='".$this->name."' name='".$this->name."' value='".$this->dateFormat($this->value)."'/> (gg-mm-aaaa) $datepicker"; 
+    return "<input type='text' size='25' id='".$this->name."' name='".$this->name."' value='".$this->dateHumanFormat($this->value)."'/> (gg-mm-aaaa) $datepicker";
   }
   
   //get the selected/typed value
   function getValue() {
     global ${$this->name};
     if (${$this->name}=="") return $this->value;
-    else return $this->dateFormat(${$this->name});
+    else return $this->dateIsoFormat(${$this->name});
   }
 
   //get the label of the element
   function getCell() {
-    return $this->dateFormat($this->getValue());
+    return $this->dateHumanFormat($this->getValue());
   }
   
   //sets the value of the element
   function setValue($v) {
-    $this->value = $v;
-  }  
+    $this->value = $this->dateHumanFormat($v);
+  }
   
   //function for the auto-configuration
   function configuration($i="",$k=99) {
@@ -65,15 +65,23 @@ class synDateTime extends synElement {
   }
   
   //private: formats the date in a dd-mm-yyyy (Hours:Min:sec)format
-  function dateFormat($value) {
-   #$dateHour=split(" ",$value);
-   #$splitted=split("-",$dateHour[0]);
-    $dateHour=explode(' ',$value);
-    $splitted=explode('-',$dateHour[0]);
-    $value=$splitted[2]."-".$splitted[1]."-".$splitted[0];
-    return $value." ".$dateHour[1];  
+  function dateIsoFormat($value) {
+    if(preg_match('/^\d{2}-\d{2}-\d{4} \d{2}:\d{2}:\d{2}$/', $value)){
+      $dateHour=explode(' ',$value);
+      $splitted=explode('-',$dateHour[0]);
+      $value=$splitted[2]."-".$splitted[1]."-".$splitted[0];
+      return $value." ".$dateHour[1];
+    } else return $value;
   }
 
+  function dateHumanFormat($value) {
+   if(preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/', $value)){
+      $dateHour=explode(' ',$value);
+      $splitted=explode('-',$dateHour[0]);
+      $value=$splitted[2]."-".$splitted[1]."-".$splitted[0];
+      return $value." ".$dateHour[1];
+    } else return $value;
+  }
   
 } //end of class text
 

@@ -31,7 +31,7 @@ EOQ;
       $html = "<p>Nessuna notizia disponibile.</p>\n";
 
     } else {
-      while ($arr=utf8($res->FetchRow())) {
+      while ($arr=$res->FetchRow()) {
         extract($arr);
         unset($imgtag);
         $cnt ++;

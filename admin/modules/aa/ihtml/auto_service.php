@@ -204,12 +204,14 @@ function __autoload($class) {
       $bottom  = "<table id=\"actions\">\n";
       $bottom .= "  <tr>\n";
       $bottom .= "    <td>";
+      $ico_off = "<img src=\"img/tool_undo.png\" alt=\"{$label}\" /> ";
       $bottom .= $synHtml->hidden("name='changeto' value=''");
-      $bottom .= $synHtml->button("name='off' value='' class='cancel_button' onclick='document.location=\"{$PHP_SELF}\"; return false;'", $str["cancel"], 'reset');
+      $bottom .= $synHtml->button("name='off' value='' class='cancel_button' onclick='document.location=\"{$PHP_SELF}\"; return false;'", $ico_off.$str["cancel"], 'reset');
       $bottom .= "    </td>\n";
       $bottom .= "    <td align=\"right\">";
+      $ico_ok  = "<img src=\"img/accept.png\" alt=\"{$label}\" /> ";
       $bottom .= $synHtml->select('name="after" class="submit-actions"', $after_options);
-      $bottom .= $synHtml->button("name='cmd' value='".INSERT."' class='action_button'", 'OK');
+      $bottom .= $synHtml->button("name='cmd' value='".INSERT."' class='action_button'", $ico_ok.'OK');
       $bottom .= "    </td>\n";
       $bottom .= "  </tr>\n";
       $bottom .= "</table>\n";
@@ -248,13 +250,21 @@ function __autoload($class) {
       $bottom  = "<table id=\"actions\">\n";
       $bottom .= "  <tr>\n";
       $bottom .= "    <td>";
+      $ico_off = "<img src=\"img/tool_undo.png\" alt=\"{$label}\" /> ";
       $bottom .= $synHtml->hidden("name='synPrimaryKey' value='".urlencode($synPrimaryKey)."'");
       $bottom .= $synHtml->hidden("name='changeto' value=''");
-      $bottom .= $synHtml->button("name='off' value='' class='cancel_button' onclick='document.location=\"{$PHP_SELF}\"; return false;'", $str["cancel"], 'reset');
+      $bottom .= $synHtml->button("name='off' value='' class='cancel_button' onclick='document.location=\"{$PHP_SELF}\"; return false;'", $ico_off.$str["cancel"], 'reset');
       $bottom .= "    </td>\n";
+      if ($synLoggedUser->canDelete==1) {
+        $ico_del = "<img src=\"img/container_delete.png\" alt=\"{$label}\" /> ";
+        $bottom .= "    <td align=\"right\" width=\"80%\"><div class=\"button-wrapper\">";
+        $bottom .= $synHtml->button("name='cmd' value='".DELETE."' class='delete_button' onclick=\"return (confirm('{$str["sure_delete"]}'));\"", $ico_del.$str['delete']);
+        $bottom .= "    </div></td>\n";
+      }
       $bottom .= "    <td align=\"right\">";
+      $ico_ok  = "<img src=\"img/accept.png\" alt=\"{$label}\" /> ";
       $bottom .= $synHtml->select('name="after" class="submit-actions"', $after_options);
-      $bottom .= $synHtml->button("name='cmd' value='".CHANGE."' class='action_button'", 'OK');
+      $bottom .= $synHtml->button("name='cmd' value='".CHANGE."' class='action_button'", $ico_ok.'OK');
       $bottom .= "    </td>\n";
       $bottom .= "  </tr>\n";
       $bottom .= "</table>\n";
