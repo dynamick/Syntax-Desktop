@@ -53,10 +53,11 @@ function __autoload($class) {
   //variabili globali
   $PHP_SELF=$_SERVER['PHP_SELF'];
 
-  if (isset($_REQUEST['cmd'])) $cmd=$_REQUEST['cmd'];  else $cmd='';
-  if (isset($_POST['after']))  $after=$_POST['after']; else $after='stay';
-  if (!defined("RPC")) define ("RPC", "rpcfunction");
-
+  $cmd = '';
+  if (isset($_REQUEST['cmd'])) $cmd = $_REQUEST['cmd'];
+  if (isset($_POST['synPrimaryKey']) && $cmd=='') $cmd = CHANGE; // FckEditor/toolbar save button
+  if (isset($_POST['after'])) $after = $_POST['after']; else $after="stay";
+  if (!defined("RPC")) define("RPC", "rpcfunction");
 
   //----------------------------------------------------------------------------
   //                                   FUNZIONI
@@ -196,10 +197,10 @@ function __autoload($class) {
       echo $synHtml->form("action='$PHP_SELF' method='POST' enctype='multipart/form-data' onsubmit='javascript: true || loading();' autocomplete=\"off\"");
       $contenitore->getHtml();
       $after_options = array(
+        'exit' => $str['saveandexit'],
         'stay' => $str['save'],
        'clone' => $str['saveandclone'],
-         'new' => $str['saveandadd'],
-        'exit' => $str['saveandexit']
+         'new' => $str['saveandadd']
       );
       $bottom  = "<table id=\"actions\">\n";
       $bottom .= "  <tr>\n";
@@ -241,11 +242,11 @@ function __autoload($class) {
       $contenitore->getHtml();
 
       $after_options = array(
+        'exit' => $str['saveandexit'],
         'stay' => $str['save'],
        'clone' => $str['saveandclone'],
         'next' => $str['saveandnext'],
-         'new' => $str['saveandadd'],
-        'exit' => $str['saveandexit']
+         'new' => $str['saveandadd']
       );
       $bottom  = "<table id=\"actions\">\n";
       $bottom .= "  <tr>\n";
