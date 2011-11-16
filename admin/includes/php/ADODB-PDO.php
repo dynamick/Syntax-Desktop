@@ -700,7 +700,7 @@ class synPager {
 	// override this to control overall layout and formating
 	function renderLayout($parameters='')
 	{
-    $header = $this->renderNav($parameters='');
+    $header = $this->renderNav($parameters);
     $this->firstPage = $header[0];
     $this->prevPage = $header[1];
     $this->nextPage = $header[2];
