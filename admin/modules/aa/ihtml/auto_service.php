@@ -586,6 +586,6 @@ function __autoload($class) {
   function resetClone($synTable){
     if(!isset($_SESSION)) session_start();
     if(isset($_SESSION[$synTable]['clone']))
-       unset($_SESSION[$synTable]['clone']);
+      $_SESSION[$synTable]['clone'] = '';
   }
 ?>
