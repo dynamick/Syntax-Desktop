@@ -55,7 +55,7 @@ function __autoload($class) {
 
   $cmd = '';
   if (isset($_REQUEST['cmd'])) $cmd = $_REQUEST['cmd'];
-  if (isset($_POST['synPrimaryKey']) && $cmd=='') $cmd = CHANGE; // FckEditor/toolbar save button
+  if (isset($_POST['default-cmd']) && $cmd=='') $cmd = $_POST['default-cmd']; // FckEditor/toolbar save button
   if (isset($_POST['after'])) $after = $_POST['after']; else $after="stay";
   if (!defined("RPC")) define("RPC", "rpcfunction");
 
@@ -189,8 +189,8 @@ function __autoload($class) {
       echo "<script src=\"../../includes/js/tooltip/tooltip.js\"></script>";
       aaHeader($str["insertrow"],$str["insertrow_bis"]);
 
-  	  if(isset($_SESSION[$synTable]['clone'])){
-  	  	$data = unserialize($_SESSION[$synTable]['clone']);
+  	  if(isset($_SESSION[$synTable.'_clone'])){
+  	  	$data = unserialize($_SESSION[$synTable.'_clone']);
         $contenitore->updateValues($data); // fracco i valori in sessione nel contenitore
   	  }
 
@@ -207,6 +207,7 @@ function __autoload($class) {
       $bottom .= "    <td>";
       $ico_off = "<img src=\"img/tool_undo.png\" alt=\"{$label}\" /> ";
       $bottom .= $synHtml->hidden("name='changeto' value=''");
+      $bottom .= $synHtml->hidden("name='default-cmd' value='".INSERT."'");
       $bottom .= $synHtml->button("name='off' value='' class='cancel_button' onclick='document.location=\"{$PHP_SELF}\"; return false;'", $ico_off.$str["cancel"], 'reset');
       $bottom .= "    </td>\n";
       $bottom .= "    <td align=\"right\">";
@@ -254,6 +255,7 @@ function __autoload($class) {
       $ico_off = "<img src=\"img/tool_undo.png\" alt=\"{$label}\" /> ";
       $bottom .= $synHtml->hidden("name='synPrimaryKey' value='".urlencode($synPrimaryKey)."'");
       $bottom .= $synHtml->hidden("name='changeto' value=''");
+      $bottom .= $synHtml->hidden("name='default-cmd' value='".CHANGE."'");
       $bottom .= $synHtml->button("name='off' value='' class='cancel_button' onclick='document.location=\"{$PHP_SELF}\"; return false;'", $ico_off.$str["cancel"], 'reset');
       $bottom .= "    </td>\n";
       if ($synLoggedUser->canDelete==1) {
@@ -327,7 +329,7 @@ function __autoload($class) {
 
         case 'clone': // salva & duplica
 	  	    unset($_POST['id']); //altrimenti continua a lavorare sullo stesso record
-          $_SESSION[$synTable]['clone'] = serialize($_POST);
+          $_SESSION[$synTable.'_clone'] = serialize($_POST);
 		      $jumpTo = $PHP_SELF."?cmd=".ADD;
           break;
 
@@ -400,7 +402,7 @@ function __autoload($class) {
 
         case 'clone': // salva & duplica
 	  	    unset($_POST['id']); //altrimenti continua a lavorare sullo stesso record
-          $_SESSION[$synTable]['clone'] = serialize($_POST);
+          $_SESSION[$synTable.'_clone'] = serialize($_POST);
 		      $jumpTo = $PHP_SELF."?cmd=".ADD;
           break;
 
@@ -585,7 +587,7 @@ function __autoload($class) {
   
   function resetClone($synTable){
     if(!isset($_SESSION)) session_start();
-    if(isset($_SESSION[$synTable]['clone']))
-      $_SESSION[$synTable]['clone'] = '';
+    if(isset($_SESSION[$synTable.'_clone']))
+      $_SESSION[$synTable.'_clone'] = '';
   }
 ?>
