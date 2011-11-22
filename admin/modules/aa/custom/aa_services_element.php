@@ -167,7 +167,7 @@ global $cmd;
         echo "</table>";
         echo "<table style='width: 100%;'>";
         echo "<tr><td style='width: 99%;'></td><td style='padding-right: 20px;'>";
-        echo $synHtml->button(" value=\"".$str["forward"]." &gt;&gt;\"  class='action_button' ");
+        echo $synHtml->button(" value=\"".$str["forward"]." &gt;&gt;\"  class='action_button' ", $str["forward"]);
         echo "</td></tr></table>";
       echo $synHtml->form_c();
 
@@ -238,8 +238,8 @@ global $cmd;
       
         echo "<table style='width: 100%;'>";
         echo "<tr><td style='padding-right: 20px; text-align: right;'>";
-      echo $synHtml->button(" value=\"&lt;&lt; ".$str["backward"]."\" class='cancel_button' tabindex=\"100\" onclick=\"document.location.href='".$PHP_SELF."?cmd=1&back=true'; return false;\" ");
-      echo $synHtml->button(" value=\"".$str["forward"]." &gt;&gt;\" class='action_button' tabindex=\"101\" ");
+      echo $synHtml->button(" value=\"&lt;&lt; ".$str["backward"]."\" class='cancel_button' tabindex=\"100\" onclick=\"document.location.href='".$PHP_SELF."?cmd=1&back=true'; return false;\" ", $str["backward"]);
+      echo $synHtml->button(" value=\"".$str["forward"]." &gt;&gt;\" class='action_button' tabindex=\"101\" ", $str["forward"]);
       echo "</td></tr>\n";
       echo "</table>";
       
@@ -344,8 +344,8 @@ global $cmd;
       echo "<table style='width: 100%;'>";
       echo "<tr><td style='padding-right: 20px; text-align: right;'>";
       echo "<div  class='action_button' style='float: left' >&nbsp;&nbsp;&nbsp;".$str["servicegeneratefile"].": ".$synHtml->check(" name=\"synGenerate\" value=\"1\" ")."</div>";
-      echo $synHtml->button(" value=\"&lt;&lt; ".$str["backward"]."\" class='cancel_button' onclick=\"document.location.href='".$PHP_SELF."?cmd=10'; return false;\" ");
-      echo $synHtml->button(" value=\"".$str["save"]."\" class='action_button' name='save' ");
+      echo $synHtml->button(" value=\"&lt;&lt; ".$str["backward"]."\" class='cancel_button' onclick=\"document.location.href='".$PHP_SELF."?cmd=10'; return false;\" ", $str["backward"]);
+      echo $synHtml->button(" value=\"".$str["save"]."\" class='action_button' name='save' ", $str["save"]);
       echo "</td></tr>\n";
       echo "</table>";
       
@@ -475,7 +475,7 @@ global $cmd;
           }
           echo "- Parent menu item: <select name=\"startingPoint[".$idgroup."]\">".$opt."</select><br/>";
         }
-        echo $synHtml->button(" value='".$str["save"]."' class='action_button' ");
+        echo $synHtml->button(" value='".$str["save"]."' class='action_button' ", $str["save"]);
         echo $synHtml->form_c();
         echo "</div></div>";
       } else echo "<script>parent.location.href='index.php?aa_service=5';</script>"; 
