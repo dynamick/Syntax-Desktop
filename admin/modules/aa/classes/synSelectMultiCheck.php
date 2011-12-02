@@ -27,21 +27,33 @@ class synSelectMultiCheck extends synElement {
 
   //private function
   function _html() {
-    if ($this->chkTargetMultilang($this->qry)==1) $this->multilang=1;
-    $this->value = $this->createArray2($this->qry,$this->path);
-    $selArr=explode("|",$this->selected);
-    if (is_array($this->value)) { 
+    if ($this->chkTargetMultilang($this->qry)==1)
+      $this->multilang = 1;
+    $this->value = $this->createArray2($this->qry, $this->path);
+    $selArr      = explode("|",$this->selected);
+    if (is_array($this->value)) {
+      $current_group = '';
       foreach($this->value as $v) {
-        $id=$v["id"];
-        $value=$v["value"];
-        $group=trim($v["group"]);
-        if (($group!=$group_old and trim($group)!="")) $txt.="<div><strong>$group</strong></div>";
-        if (in_array($id,$selArr)) $selected="checked=\"checked\""; else $selected="";
-        $txt.=" <input type=\"checkbox\" name=\"".$this->name."[]\" VALUE=\"".$id."\" $selected /> ".$this->translate($value,true);
-        $group_old=$group;
+        $id       = $v['id'];
+        $value    = $v['value'];
+        $group    = trim($v['group']);
+        $eol      = "<br/>\n";
+        $selected = (in_array($id, $selArr)) ? ' checked="checked"' : '';
+
+        if(trim($group)!=''){
+          if ($group != $current_group) {
+            if($current_group!='') $txt .= "</fieldset>\n";
+            $txt .= "<fieldset><legend>{$group}</legend>\n";
+            $current_group = $group;
+          }
+          $eol = ' ';
+        }
+
+        $txt .= "<label><input type=\"checkbox\" name=\"".$this->name."[]\" value=\"{$id}\"{$selected}/> ".$this->translate($value, true).'</label>'.$eol;
       }
-    }  
-    return $txt; 
+      if($current_group!='') $txt .= "</fieldset>\n";
+    }
+    return $txt;
   }
   
   //sets the value of the element

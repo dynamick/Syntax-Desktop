@@ -189,10 +189,15 @@ function __autoload($class) {
       echo "<script src=\"../../includes/js/tooltip/tooltip.js\"></script>";
       aaHeader($str["insertrow"],$str["insertrow_bis"]);
 
-  	  if(isset($_SESSION[$synTable.'_clone'])){
-  	  	$data = unserialize($_SESSION[$synTable.'_clone']);
+      if(isset($_SESSION[$synTable.'_clone'])){
+        $data = unserialize($_SESSION[$synTable.'_clone']);
+        foreach($data as $k=>$v){
+          if(is_array($v)){
+            $data[$k] = implode($v, '|'); // in caso di multicheck
+          }
+        }
         $contenitore->updateValues($data); // fracco i valori in sessione nel contenitore
-  	  }
+      }
 
       echo $synHtml->form("action='$PHP_SELF' method='POST' enctype='multipart/form-data' onsubmit='javascript: true || loading();' autocomplete=\"off\"");
       $contenitore->getHtml();

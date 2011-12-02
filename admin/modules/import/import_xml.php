@@ -1,9 +1,15 @@
 <?php
 require_once('../../config/cfg.php');
 
+# compatibility check
+if (!class_exists('SimpleXMLElement')) {
+  echo "<b>SimpleXMLElement</b> functions not available!<br />This is PHP ".phpversion().", version 5+ required.<br>\n";
+  die();
+}
+
 if($_POST['submitted']!=1){
 # non sottomesso ---------------------------------------------------------------
-  
+
   $html = <<<EOHTML
     <p>Seleziona il file da importare:</p>
     <form action="" method="post" enctype="multipart/form-data">
@@ -37,15 +43,17 @@ EOHTML;
       $container = $service->container;
       $cont_keys = array();
       $cont_vals = array();
-      
+
       foreach($container->children() as $key=>$value){
-        if($key!='id'){ //l'id non ci serve
+        if(strtolower($key)!='id'){ //l'id non ci serve
           if(count($value->children())>0){
             $langs = array();
             $labels = array();
             foreach($value->children() as $lang=>$label){
-              $langs[] = $lang;
-              $labels[] = addslashes($label);
+              if(strtolower($lang)!='id'){
+                $langs[] = $lang;
+                $labels[] = addslashes($label);
+              }
             }
             $qry = "INSERT INTO aa_translation (`".implode('`,`', $langs)."`) VALUES ('".implode("','", $labels)."')";
             $res = $db->Execute($qry);
@@ -55,7 +63,7 @@ EOHTML;
 
           } else {
             if($key=='syntable'){
-/*
+
               $table = $value;
               $check = checkTableExistance($table);
 
@@ -68,7 +76,7 @@ EOHTML;
                 } while ($newchek!=false);
                 $value = $newtable;
               }
-*/
+
             }
             $cont_keys[] = $key;
             $cont_vals[] = addslashes($value);
@@ -92,8 +100,10 @@ echo $qry, '<br><br>';
               $langs = array();
               $labels = array();
               foreach($v->children() as $lang=>$label){
-                $langs[] = $lang;
-                $labels[] = addslashes($label);
+                if(strtolower($lang)!='id'){
+                  $langs[] = $lang;
+                  $labels[] = addslashes($label);
+                }
               }
               $qry = "INSERT INTO aa_translation (`".implode('`,`', $langs)."`) VALUES ('".implode("','", $labels)."')";
               $res = $db->Execute($qry);
@@ -120,7 +130,6 @@ echo $qry, '<br><br>';
         echo $qry, '<br><br>';
 
         if($element[initOrder]==1){
-          $newInitOrder = '';        
           if($element[negative]==1){
             $newInitOrder = '-';
           }
@@ -139,9 +148,22 @@ echo $qry, '<br><br>';
 
 }
 
-
 function checkTableExistance($table){
-  global $db;
-  return $check = @$db->execute("SELECT * FROM {$table}");
+  global $db, $synDbName;
+  $exists = false;
+
+  $qry = <<<EOQ
+SELECT table_name
+  FROM information_schema.tables
+ WHERE table_schema = '{$synDbName}'
+   AND table_name = '{$table}'
+EOQ;
+
+  $res = $db->execute($qry);
+  $arr = $res->fetchrow();
+  if(is_array($arr)) $exists = true;
+
+  //var_dump($check); die();
+  return $exists;
 }
 ?>

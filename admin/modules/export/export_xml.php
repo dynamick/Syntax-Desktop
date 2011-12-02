@@ -40,8 +40,8 @@ EOHTML;
   $db->SetFetchMode(ADODB_FETCH_ASSOC);
 
   # indice delle lingue
-  $tc = $db->MetaColumnNames('aa_translation');
-  $langkeys = array_values($tc);
+  $tc = $db->MetaColumns('aa_translation');
+  $langkeys = array_keys($tc);
 
   #echo '<pre>', print_r($_POST), '<pre>';
   $selected = implode(',',$_POST['selected']);
