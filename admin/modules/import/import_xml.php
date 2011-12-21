@@ -11,17 +11,17 @@ if($_POST['submitted']!=1){
 # non sottomesso ---------------------------------------------------------------
 
   $html = <<<EOHTML
-    <p>Seleziona il file da importare:</p>
-    <form action="" method="post" enctype="multipart/form-data">
-    <p>
-      <input type="file" name="import">
-    </p>
-    <p>
-      <input type="hidden" name="submitted" value="1">
-      <button type="reset">Annulla</button>
-      <button type="submit">Procedi</button>
-    </p>
-    </form>
+<p>Seleziona il file da importare:</p>
+<form action="" method="post" enctype="multipart/form-data">
+<p>
+<input type="file" name="import">
+</p>
+<p>
+<input type="hidden" name="submitted" value="1">
+<button type="reset">Annulla</button>
+<button type="submit">Procedi</button>
+</p>
+</form>
 EOHTML;
   echo $html;
 
@@ -30,7 +30,7 @@ EOHTML;
 # sottomesso -------------------------------------------------------------------
 
  #echo '<pre>', print_r($_FILES), '</pre>';
-  if(  isset($_FILES['import'])
+  if( isset($_FILES['import'])
     && $_FILES['import']['type']=='text/xml'
     && $_FILES['import']['error']===0
     ){
@@ -87,7 +87,7 @@ EOHTML;
       $qry = "INSERT INTO aa_services (`".implode('`,`', $cont_keys)."`) VALUES ('".implode("','", $cont_vals)."')";
       $res = $db->Execute($qry);
       $cont_id = $db->Insert_Id();
-echo $qry, '<br><br>';
+      echo $qry, '<br><br>';
       echo '<br><br>';
 
       $elements = $service->elements;
@@ -154,9 +154,9 @@ function checkTableExistance($table){
 
   $qry = <<<EOQ
 SELECT table_name
-  FROM information_schema.tables
- WHERE table_schema = '{$synDbName}'
-   AND table_name = '{$table}'
+FROM information_schema.tables
+WHERE table_schema = '{$synDbName}'
+AND table_name = '{$table}'
 EOQ;
 
   $res = $db->execute($qry);

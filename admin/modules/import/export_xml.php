@@ -1,6 +1,12 @@
 <?php
 require_once('../../config/cfg.php');
 
+# compatibility check
+if (!class_exists('SimpleXMLElement')) {
+  echo "<b>SimpleXMLElement</b> functions not available!<br />This is PHP ".phpversion().", version 5+ required.<br>\n";
+  die();
+}
+
 if($_POST['submitted']!=1){
 # non sottomesso ---------------------------------------------------------------
   $rows = '';
@@ -16,15 +22,15 @@ if($_POST['submitted']!=1){
   }
 
   $html = <<<EOHTML
-    <p>Seleziona i servizi da esportare:</p>
-    <form action="" method="post">
-  {$rows}
-    <p>
-      <input type="hidden" name="submitted" value="1">
-      <button type="reset">Annulla</button>
-      <button type="submit">Procedi</button>
-    </p>
-    </form>
+<p>Seleziona i servizi da esportare:</p>
+<form action="" method="post">
+{$rows}
+<p>
+<input type="hidden" name="submitted" value="1">
+<button type="reset">Annulla</button>
+<button type="submit">Procedi</button>
+</p>
+</form>
 EOHTML;
   echo $html;
 
@@ -34,14 +40,14 @@ EOHTML;
   $db->SetFetchMode(ADODB_FETCH_ASSOC);
 
   # indice delle lingue
-  $tc = $db->MetaColumnNames('aa_translation');
-  $langkeys = array_values($tc);
+  $tc = $db->MetaColumns('aa_translation');
+  $langkeys = array_keys($tc);
 
   #echo '<pre>', print_r($_POST), '<pre>';
   $selected = implode(',',$_POST['selected']);
   $xml = new SimpleXMLElement('<root></root>');
   //$xml = new SimpleXMLElement();
-  
+
   $qry = "SELECT * FROM `aa_services` WHERE id IN ({$selected})";
   $res = $db->execute($qry);
   while($arr = $res->fetchrow()){
@@ -55,7 +61,7 @@ EOHTML;
     $r = $db->execute($q);
     $a = $r->fetchrow();
     $arr['name'] = array_combine($langkeys, $a);
-    
+
     // description
     $description = $arr['description'];
     $q = "SELECT * FROM aa_translation WHERE id={$description}";
@@ -124,7 +130,7 @@ EOHTML;
         }
       }
     } // fine ciclo elementi
-    
+
   } // fine ciclo servizi
 
   # download xml
