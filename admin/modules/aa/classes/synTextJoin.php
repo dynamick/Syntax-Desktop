@@ -62,8 +62,11 @@ class synTextJoin extends synElement {
   }
   
   function setQry($qry) {
-    $this->qry=$qry;
-    $this->table_join = array_pop(explode(" ",$this->qry));
+    $this->qry = $qry;
+    #$this->table_join = array_pop(explode(" ",$this->qry));
+  	$pattern = '/SELECT (?:[a-zA-Z-_`, *]?)+ FROM ([a-zA-Z-_`]+)(?:[a-zA-Z-_`,=0-9 ]?)+/';
+  	preg_match($pattern, $this->qry, $match);
+  	$this->table_join = $match[1];
   }
 
   function setPath($path) {
