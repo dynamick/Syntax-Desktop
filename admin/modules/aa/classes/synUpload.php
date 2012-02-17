@@ -9,6 +9,7 @@
 class synUpload extends synElement {
 
   var $mat;
+  var $filter;
 
   //constructor(name, value, label, size, help, $mat)
   function synUpload($n="", $v="", $l="", $s=255, $h="", $mat="/mat/") {
@@ -18,6 +19,7 @@ class synUpload extends synElement {
     $this->type = "file";
     $this->name  = $n;
     if ($v==null) { global $$n; $this->value = $$n; } else $this->value = $v;
+    $this->filter = $this->value;
     $this->label = $l;
     $this->size  = $s;
     $this->help  = $h;
@@ -33,9 +35,9 @@ class synUpload extends synElement {
     if($cmd=="modifyrow") {
       $container = $this->container;
       $keyArr = explode("=", str_replace("'", "", str_replace("`", "", trim(urldecode($container->getKey())))));
+      list($app_title, $app_order, $app_table, $app_field, $app_linkfield) = explode("|", $this->filter);
       $key = $keyArr[1];
-
-      $uploadPHP = "ihtml/upload.php?key=".$key."&session_id=".session_id();
+      $uploadPHP = "ihtml/upload.php?key=".$key."&session_id=".session_id()."&description={$app_title}&order={$app_order}&table={$app_table}&field={$app_field}&linkfield={$app_linkfield}";
       $ret = <<<EOC
         <object width="640" height="500" name="JUpload" codebase="http://java.sun.com/update/1.5.0/jinstall-1_5-windows-i586.cab#Version=5,0,0,3" classid="clsid:8AD9C840-044E-11D1-B3E9-00805F499D93">
           <param value="{$uploadPHP}" name="postURL">

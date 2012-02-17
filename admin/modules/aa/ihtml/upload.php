@@ -13,10 +13,17 @@ $bSuccess = true;
 $save_path = $synAbsolutePath.$synPublicPath.$mat.'/';
 
 $key = intval($_GET["key"]);
-$qo = "SELECT ordine FROM photos WHERE album=".$key." ORDER BY ordine DESC LIMIT 0,1";
+
+$description_column_name = (trim(addslashes($_GET["description"]))!="" ? trim(addslashes($_GET["description"])) : "title");
+$order_column_name = (trim(addslashes($_GET["order"]))!="" ? trim(addslashes($_GET["order"])) : "ordine");
+$table = (trim(addslashes($_GET["table"]))!="" ? trim(addslashes($_GET["table"])) : "photos");
+$field = (trim(addslashes($_GET["field"]))!="" ? trim(addslashes($_GET["field"])) : "photo");
+$linkfield = (trim(addslashes($_GET["linkfield"]))!="" ? trim(addslashes($_GET["linkfield"])) : "album");
+
+$qo = "SELECT `{$order_column_name}` FROM `{$table}` WHERE `{$linkfield}`='{$key}' ORDER BY `{$order_column_name}` DESC LIMIT 0,1";
 $ro = $db->execute($qo);
 $ao = $ro->fetchrow();
-$ordine = $ao['ordine'];
+$ordine = $ao['{$order_column_name}'];
 //$_SESSION['juvar.files'] = array(); // per after_upload.php
 
 foreach ($_FILES as $file => $fileArray) {
@@ -27,10 +34,10 @@ foreach ($_FILES as $file => $fileArray) {
 	$name = explode('/',$fileArray['name']);
   $filename = $name[count($name)-1];
   $ext = strtolower(substr(strrchr($filename, '.'), 1));
-  $qry = "INSERT INTO photos (`title`,`photo`,`album`,`ordine`) VALUES ('".substr($filename,0,-4)."','$ext',".$key.",'$ordine')";
+  $qry = "INSERT INTO {$table} (`{$description_column_name}`,`{$field}`,`{$linkfield}`,`{$order_column_name}`) VALUES ('".substr($filename,0,-4)."','$ext',".$key.",'$ordine')";
   $res = $db->Execute($qry);
   $id = $db->Insert_ID();
-  $newFilename = "photos_photo_id".$id.".".$ext;
+  $newFilename = "{$table}_{$field}_id".$id.".".$ext;
 
   try {
     move_uploaded_file($fileArray['tmp_name'], $save_path.$newFilename);
