@@ -43,6 +43,7 @@ EOHTML;
       $container = $service->container;
       $cont_keys = array();
       $cont_vals = array();
+      $newInitOrder = '';
 
       foreach($container->children() as $key=>$value){
         if(strtolower($key)!='id'){ //l'id non ci serve

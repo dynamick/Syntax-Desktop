@@ -130,6 +130,7 @@
     }
 
     //********************************* CUSTOM BOX *********************************
+/*
     function addBox(id,txt) {
 
       var el = window.parent.option.document.getElementById(id); 
@@ -147,6 +148,26 @@
         custom.innerHTML=txt;
       }
     }
+*/
+    function addBox(id, txt) {
+      if (id==null) id='custom';
+      var el = window.parent.option.document.getElementById(id);
+
+      if (el==null){
+        var parent = window.parent.option.document.getElementById('optionPane');
+        el = document.createElement('div');
+        el.id = id;
+        parent.appendChild(el);
+      }
+
+      el.innerHTML = txt;
+      if(txt==''){
+        el.className = '';
+      } else if(el.className!='box'){
+        el.className = 'box';
+      }
+    }
+
     //*****************************FUNCTION FOR IMAGE VIEW LAYER*****************************
 
     // TO DO: creare al volo il popupbox

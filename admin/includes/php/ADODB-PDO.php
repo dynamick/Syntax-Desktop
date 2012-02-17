@@ -20,294 +20,294 @@ class ADODB_PDO
 	private $host;
 	private $user;
 	private $pass;
-	public $database;
+  public $database;
 
-	/** Debug flag, publically accessible */
-	public $debug;
+  /** Debug flag, publically accessible */
+  public $debug;
   private $error;
 
-	/** PDO demands fetchmodes on each resultset, so define a default */
-	private $fetchmode;
+  /** PDO demands fetchmodes on each resultset, so define a default */
+  private $fetchmode;
 
-	/** Number of rows affected by the last Execute */
-	private $affected_rows;
+  /** Number of rows affected by the last Execute */
+  private $affected_rows;
 
   private $maxRecordCount;
   public $pageExecuteCountRows;
 
-	/**
-	* Constructor: Initialise connector
-	* @param connector String denoting type of database
-	*/
-	public function __construct($connector='mysql')
-	{
-		$this->connector = $connector;
-	}
+  /**
+  * Constructor: Initialise connector
+  * @param connector String denoting type of database
+  */
+  public function __construct($connector='mysql')
+  {
+    $this->connector = $connector;
+  }
 
-	/**
-	* Connect: Establish connection to a database
-	* @param host String
-	* @param user String [optional]
-	* @param pass String [optional]
-	* @param database String [optional]
-	*/
-	public function Connect($host, $user='', $pass='', $database='')
-	{
-		$this->host = $host;
-		$this->user = $user;
-		$this->pass = $pass;
-		$this->database = $database;
+  /**
+  * Connect: Establish connection to a database
+  * @param host String
+  * @param user String [optional]
+  * @param pass String [optional]
+  * @param database String [optional]
+  */
+  public function Connect($host, $user='', $pass='', $database='')
+  {
+    $this->host = $host;
+    $this->user = $user;
+    $this->pass = $pass;
+    $this->database = $database;
     $this->pageExecuteCountRows = true;
     $this->maxRecordCount = 0;
 
-		switch($this->connector)
-		{
-			case 'mysql':
-				$this->dsn = sprintf('%s:host=%s;dbname=%s',
-					$this->connector,
-					$this->host,
-					$this->database);
-    		try {
-    			$this->_db = new PDO($this->dsn, $this->user, $this->pass, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
-    		} catch (PDOException $e) {
-    			$this->error = $e->getMessage();
+    switch($this->connector)
+    {
+      case 'mysql':
+        $this->dsn = sprintf('%s:host=%s;dbname=%s',
+          $this->connector,
+          $this->host,
+          $this->database);
+        try {
+          $this->_db = new PDO($this->dsn, $this->user, $this->pass, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
+        } catch (PDOException $e) {
+          $this->error = $e->getMessage();
           $this->debug();
-    		}
-				$this->_db->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
-				$this->fetchmode = ADODB_FETCH_BOTH;
-				break;
-		}
-	}
+        }
+        $this->_db->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
+        $this->fetchmode = ADODB_FETCH_BOTH;
+        break;
+    }
+  }
 
-	/**
-	* SetFetchMode: Change the fetch mode of future resultsets
-	* @param fm Integer specified by constant
-	*/
-	public function SetFetchMode($fm)
-	{
-		$this->fetchmode = $fm;
-	}
+  /**
+  * SetFetchMode: Change the fetch mode of future resultsets
+  * @param fm Integer specified by constant
+  */
+  public function SetFetchMode($fm)
+  {
+    $this->fetchmode = $fm;
+  }
 
-	/**
-	* Insert_ID: Retrieve the ID of the last insert operation
-	* @return String containing last insert ID
-	*/
-	public function Insert_ID()
-	{
-		return $this->_db->lastInsertId();
-	}
+  /**
+  * Insert_ID: Retrieve the ID of the last insert operation
+  * @return String containing last insert ID
+  */
+  public function Insert_ID()
+  {
+    return $this->_db->lastInsertId();
+  }
 
 
-	/**
-	* Execute: Retrieve a resultset from a query
-	* @param sql String query to execute
-	* @param vars Array of variables to bind [optional]
-	* @return ADODB_PDO_ResultSet object
-	*/
-	public function Execute($sql, $vars=null)
-	{
+  /**
+  * Execute: Retrieve a resultset from a query
+  * @param sql String query to execute
+  * @param vars Array of variables to bind [optional]
+  * @return ADODB_PDO_ResultSet object
+  */
+  public function Execute($sql, $vars=null)
+  {
     
-		$st = $this->DoQuery($sql, $vars);
-		$this->affected_rows = $st->rowCount();
-		return $st?new ADODB_PDO_ResultSet($st):false;
-	}
+    $st = $this->DoQuery($sql, $vars);
+    $this->affected_rows = $st->rowCount();
+    return $st?new ADODB_PDO_ResultSet($st):false;
+  }
 
 
-	/**
-	* Affected_Rows: Retrieve the number of rows affected by Execute
-	* @return The number of affected rows
-	*/
-	public function Affected_Rows()
-	{
-		return $this->affected_rows;
-	}
+  /**
+  * Affected_Rows: Retrieve the number of rows affected by Execute
+  * @return The number of affected rows
+  */
+  public function Affected_Rows()
+  {
+    return $this->affected_rows;
+  }
 
-	/**
-	* GetOne: Retrieve the first value in the first row of a query
-	* @param sql String query to execute
-	* @param vars Array of variables to bind [optional]
-	* @return String data of the requested value
-	*/
-	public function GetOne($sql, $vars=null)
-	{
-		$st = $this->DoQuery($sql, $vars);
-		return $st?$st->fetchColumn():false;
-	}
+  /**
+  * GetOne: Retrieve the first value in the first row of a query
+  * @param sql String query to execute
+  * @param vars Array of variables to bind [optional]
+  * @return String data of the requested value
+  */
+  public function GetOne($sql, $vars=null)
+  {
+    $st = $this->DoQuery($sql, $vars);
+    return $st?$st->fetchColumn():false;
+  }
 
-	/**
-	* MetaColumns: Retrieve information about a table's columns
-	* @param table String name of table to find out about
-	* @return Array of ADODB_PDO_FieldData objects
-	*/
-	public function MetaColumns($table)
-	{
-		$out = array();
+  /**
+  * MetaColumns: Retrieve information about a table's columns
+  * @param table String name of table to find out about
+  * @return Array of ADODB_PDO_FieldData objects
+  */
+  public function MetaColumns($table)
+  {
+    $out = array();
 
-		$st = $this->DoQuery('select * from '.$table);
-		for($i=0; $i<$st->columnCount(); $i++){
+    $st = $this->DoQuery('select * from '.$table);
+    for($i=0; $i<$st->columnCount(); $i++){
       $column = $st->getColumnMeta($i);
       $out[strtoupper($column['name'])] = new ADODB_PDO_FieldData($column);
     }
-		return $out;
-	}
+    return $out;
+  }
 
-	/**
-	* MetaTables: Returns an array of tables and views for the current database as an array.
-	* @return Array of ADODB_PDO_FieldData objects
-	*/
-	public function MetaTables($ttype=false, $showSchema=false)
-	{
-		$out = array();
+  /**
+  * MetaTables: Returns an array of tables and views for the current database as an array.
+  * @return Array of ADODB_PDO_FieldData objects
+  */
+  public function MetaTables($ttype=false, $showSchema=false)
+  {
+    $out = array();
 
-		$st = $this->DoQuery('SHOW TABLES FROM '.$this->database);
+    $st = $this->DoQuery('SHOW TABLES FROM '.$this->database);
     //SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_TYPE='BASE TABLE' AND TABLE_SCHEMA='yourdatabasename';
     while ($row = $st->fetch(PDO::FETCH_NUM)) {
       $out[] = $row[0];
     }
-		return $out;
-	}
+    return $out;
+  }
 
-	/**
-	* DoQuery: Private helper function for Get*
-	* @param sql String query to execute
-	* @param vars Array of variables to bind [optional]
-	* @return PDOStatement object of results, or false on fail
-	*/
-	private function DoQuery($sql, $vars=null)
-	{
-		try {
+  /**
+  * DoQuery: Private helper function for Get*
+  * @param sql String query to execute
+  * @param vars Array of variables to bind [optional]
+  * @return PDOStatement object of results, or false on fail
+  */
+  private function DoQuery($sql, $vars=null)
+  {
+    try {
       $statement = $this->_db->prepare($sql);
       if(!$statement) {
         $errorInfo = $this->_db->errorInfo();
         throw new PDOException("Database error [{$errorInfo[0]}]: {$errorInfo[2]}, driver error code is $errorInfo[1]");
       }
 
-  		$statement->setFetchMode($this->fetchmode);
-  		if(!is_array($vars)) $vars = array($vars);
+      $statement->setFetchMode($this->fetchmode);
+      if(!is_array($vars)) $vars = array($vars);
 
       if((!$statement->execute($vars)) || ($statement->errorCode() != '00000')) {
         $errorInfo = $statement->errorInfo();
         throw new PDOException("Database error [{$errorInfo[0]}]: {$errorInfo[2]}, driver error code is $errorInfo[1]");
       } 
 
-		} catch (PDOException $e) {
-			$this->error = $e->getMessage();
-			$this->debug($sql, $vars);
-		}
-		return $statement;
-	}
+    } catch (PDOException $e) {
+      $this->error = $e->getMessage();
+      $this->debug($sql, $vars);
+    }
+    return $statement;
+  }
 
 
-	/**
-	* Will select, getting rows from $offset (1-based), for $nrows.
-	* This simulates the MySQL "select * from table limit $offset,$nrows" , and
-	* the PostgreSQL "select * from table limit $nrows offset $offset". Note that
-	* MySQL and PostgreSQL parameter ordering is the opposite of the other.
-	* eg.
-	*  SelectLimit('select * from table',3); will return rows 1 to 3 (1-based)
-	*  SelectLimit('select * from table',3,2); will return rows 3 to 5 (1-based)
-	*
-	* Uses SELECT TOP for Microsoft databases (when $this->hasTop is set)
-	* BUG: Currently SelectLimit fails with $sql with LIMIT or TOP clause already set
-	*
-	* @param sql
-	* @param [offset]	is the row to start calculations from (1-based)
-	* @param [nrows]		is the number of rows to get
-	* @param [inputarr]	array of bind variables
-	* @param [secs2cache]		is a private parameter only used by jlim
-	* @return		the recordset ($rs->databaseType == 'array')
- 	*/
-	private function selectLimit($sql, $nrows=-1, $offset=-1, $vars=null)
-	{
+  /**
+  * Will select, getting rows from $offset (1-based), for $nrows.
+  * This simulates the MySQL "select * from table limit $offset,$nrows" , and
+  * the PostgreSQL "select * from table limit $nrows offset $offset". Note that
+  * MySQL and PostgreSQL parameter ordering is the opposite of the other.
+  * eg.
+  *  SelectLimit('select * from table',3); will return rows 1 to 3 (1-based)
+  *  SelectLimit('select * from table',3,2); will return rows 3 to 5 (1-based)
+  *
+  * Uses SELECT TOP for Microsoft databases (when $this->hasTop is set)
+  * BUG: Currently SelectLimit fails with $sql with LIMIT or TOP clause already set
+  *
+  * @param sql
+  * @param [offset]  is the row to start calculations from (1-based)
+  * @param [nrows]    is the number of rows to get
+  * @param [inputarr]  array of bind variables
+  * @param [secs2cache]    is a private parameter only used by jlim
+  * @return    the recordset ($rs->databaseType == 'array')
+   */
+  private function selectLimit($sql, $nrows=-1, $offset=-1, $vars=null)
+  {
     //check che non sia già presente
     $sql = preg_replace('/LIMIT[0-9, ]*/', '', $sql);
     $sql = $sql.' LIMIT '.$offset.', '.$nrows;
 
-		$st = $this->DoQuery($sql, $vars);
-		$this->affected_rows = $st->rowCount();
-		return $st?new ADODB_PDO_ResultSet($st):false;
-	}
+    $st = $this->DoQuery($sql, $vars);
+    $this->affected_rows = $st->rowCount();
+    return $st?new ADODB_PDO_ResultSet($st):false;
+  }
 
 
-	/**
-	* Will select the supplied $page number from a recordset, given that it is paginated in pages of
-	* $nrows rows per page. It also saves two boolean values saying if the given page is the first
-	* and/or last one of the recordset. Added by Iván Oliva to provide recordset pagination.
-	*
-	* See readme.htm#ex8 for an example of usage.
-	*
-	* @param sql
-	* @param nrows		is the number of rows per page to get
-	* @param page		is the page number to get (1-based)
-	* @param [inputarr]	array of bind variables
-	* @param [secs2cache]		is a private parameter only used by jlim
-	* @return		the recordset ($rs->databaseType == 'array')
-	*
-	* NOTE: phpLens uses a different algorithm and does not use PageExecute().
-	*
-	*/
-	public function PageExecute($sql, $nrows, $page, $vars=null)
-	{
-		#if ($this->pageExecuteCountRows) $rs =& _adodb_pageexecute_all_rows($this, $sql, $nrows, $page, $inputarr, $secs2cache);
-		#else $rs =& _adodb_pageexecute_no_last_page($this, $sql, $nrows, $page, $inputarr, $secs2cache);
+  /**
+  * Will select the supplied $page number from a recordset, given that it is paginated in pages of
+  * $nrows rows per page. It also saves two boolean values saying if the given page is the first
+  * and/or last one of the recordset. Added by Iván Oliva to provide recordset pagination.
+  *
+  * See readme.htm#ex8 for an example of usage.
+  *
+  * @param sql
+  * @param nrows    is the number of rows per page to get
+  * @param page    is the page number to get (1-based)
+  * @param [inputarr]  array of bind variables
+  * @param [secs2cache]    is a private parameter only used by jlim
+  * @return    the recordset ($rs->databaseType == 'array')
+  *
+  * NOTE: phpLens uses a different algorithm and does not use PageExecute().
+  *
+  */
+  public function PageExecute($sql, $nrows, $page, $vars=null)
+  {
+    #if ($this->pageExecuteCountRows) $rs =& _adodb_pageexecute_all_rows($this, $sql, $nrows, $page, $inputarr, $secs2cache);
+    #else $rs =& _adodb_pageexecute_no_last_page($this, $sql, $nrows, $page, $inputarr, $secs2cache);
 
-		return $this->_pageexecute_all_rows($sql, $nrows, $page, $vars);
-	}
+    return $this->_pageexecute_all_rows($sql, $nrows, $page, $vars);
+  }
 
   /*
-   	Code originally from "Cornel G" <conyg@fx.ro>
+     Code originally from "Cornel G" <conyg@fx.ro>
 
-  	This code might not work with SQL that has UNION in it
+    This code might not work with SQL that has UNION in it
 
-  	Also if you are using CachePageExecute(), there is a strong possibility that
-  	data will get out of synch. use CachePageExecute() only with tables that
-  	rarely change.
+    Also if you are using CachePageExecute(), there is a strong possibility that
+    data will get out of synch. use CachePageExecute() only with tables that
+    rarely change.
   */
   private function _pageexecute_all_rows($sql, $nrows, $page, $vars=null)
   {
-  	$atfirstpage = false;
-  	$atlastpage = false;
-  	$lastpageno = 1;
+    $atfirstpage = false;
+    $atlastpage = false;
+    $lastpageno = 1;
 
-  	// If an invalid nrows is supplied,
-  	// we assume a default value of 10 rows per page
-  	if (!isset($nrows) || $nrows <= 0) $nrows = 10;
+    // If an invalid nrows is supplied,
+    // we assume a default value of 10 rows per page
+    if (!isset($nrows) || $nrows <= 0) $nrows = 10;
 
-  	$qryRecs = false; //count records for no offset
+    $qryRecs = false; //count records for no offset
 
-  	$qryRecs = $this->_getcount($sql, $vars=null, $secs2cache);
-  	$lastpageno = (int) ceil($qryRecs / $nrows);
-  	$this->maxRecordCount = $qryRecs;
+    $qryRecs = $this->_getcount($sql, $vars=null, $secs2cache);
+    $lastpageno = (int) ceil($qryRecs / $nrows);
+    $this->maxRecordCount = $qryRecs;
 
-  	// ***** Here we check whether $page is the last page or
-  	// whether we are trying to retrieve
-  	// a page number greater than the last page number.
-  	if ($page >= $lastpageno) {
-  		$page = $lastpageno;
-  		$atlastpage = true;
-  	}
+    // ***** Here we check whether $page is the last page or
+    // whether we are trying to retrieve
+    // a page number greater than the last page number.
+    if ($page >= $lastpageno) {
+      $page = $lastpageno;
+      $atlastpage = true;
+    }
 
-  	// If page number <= 1, then we are at the first page
-  	if (empty($page) || $page <= 1) {
-  		$page = 1;
-  		$atfirstpage = true;
-  	}
+    // If page number <= 1, then we are at the first page
+    if (empty($page) || $page <= 1) {
+      $page = 1;
+      $atfirstpage = true;
+    }
 
-  	// We get the data we want
-  	$offset = $nrows * ($page-1);
+    // We get the data we want
+    $offset = $nrows * ($page-1);
 
-		$st = $this->SelectLimit($sql, $nrows, $offset, $vars=null);
+    $st = $this->SelectLimit($sql, $nrows, $offset, $vars=null);
 
-  	// Before returning the RecordSet, we set the pagination properties we need
-  	if ($st) {
-  		$st->_maxRecordCount = $qryRecs;
-  		$st->rowsPerPage = $nrows;
-  		$st->AbsolutePage($page);
-  		$st->AtFirstPage($atfirstpage);
-  		$st->AtLastPage($atlastpage);
-  		$st->LastPageNo($lastpageno);
-  	}
-  	return $st;
+    // Before returning the RecordSet, we set the pagination properties we need
+    if ($st) {
+      $st->_maxRecordCount = $qryRecs;
+      $st->rowsPerPage = $nrows;
+      $st->AbsolutePage($page);
+      $st->AtFirstPage($atfirstpage);
+      $st->AtLastPage($atlastpage);
+      $st->LastPageNo($lastpageno);
+    }
+    return $st;
   }
 
 
@@ -388,15 +388,15 @@ class ADODB_PDO
   }
 
 
-	private function debug($sql=null, $vars=null) {
-		$error = array("Error" => $this->error);
-		if(!empty($sql))
-			$error["SQL Statement"] = $sql;
-		if(!empty($vars) && count(array_filter($vars))>0)
-			$error["Bind Parameters"] = trim(print_r($vars, true));
+  private function debug($sql=null, $vars=null) {
+    $error = array("Error" => $this->error);
+    if(!empty($sql))
+      $error["SQL Statement"] = $sql;
+    if(!empty($vars) && count(array_filter($vars))>0)
+      $error["Bind Parameters"] = trim(print_r($vars, true));
 
-		$backtrace = debug_backtrace(false);
-		if(!empty($backtrace)) {
+    $backtrace = debug_backtrace(); //(false);
+    if(!empty($backtrace)) {
 /*
       $error["Backtrace"] = "<ol>\n";
       foreach($backtrace as $v){
@@ -409,23 +409,23 @@ class ADODB_PDO
       $error["Backtrace"] .= "</ol>\n";
 */
       foreach($backtrace as $info) {
-				if($info["function"] == 'Execute')
-					$error["Backtrace"] .= $info["function"]."() called at ".$info["file"]." at line ".$info["line"]."<br />\n";
-			}
-		}
+        if($info["function"] == 'Execute')
+          $error["Backtrace"] .= $info["function"]."() called at ".$info["file"]." at line ".$info["line"]."<br />\n";
+      }
+    }
 
-		if(!empty($error["Bind Parameters"]))
-			$error["Bind Parameters"] = "<pre>" . $error["Bind Parameters"] . "</pre>";
-		$css = trim(file_get_contents(dirname(__FILE__) . "/error.css"));
-		$msg .= "<style type=\"text/css\">\n".$css."\n</style>";
-		$msg .= "\n" . '<div class="db-error">' . "\n\t<h3>SQL Error</h3>";
-		foreach($error as $key => $val){
-			$msg .= "\n\t<label>".$key.":</label>".$val;
+    if(!empty($error["Bind Parameters"]))
+      $error["Bind Parameters"] = "<pre>" . $error["Bind Parameters"] . "</pre>";
+    $css = trim(file_get_contents(dirname(__FILE__) . "/error.css"));
+    $msg .= "<style type=\"text/css\">\n".$css."\n</style>";
+    $msg .= "\n" . '<div class="db-error">' . "\n\t<h3>SQL Error</h3>";
+    foreach($error as $key => $val){
+      $msg .= "\n\t<label>".$key.":</label>".$val;
     }
     $msg .= "\n\t</div>\n";
 
     echo $msg;
-	}
+  }
 }
 
 /**
@@ -433,74 +433,74 @@ class ADODB_PDO
 */
 class ADODB_PDO_ResultSet
 {
-	/** PDO resultset to wrap */
-	private $_st;
+  /** PDO resultset to wrap */
+  private $_st;
 
-	/** One-time resultset information */
-	private $results;
-	private $rowcount;
-	private $cursor;
+  /** One-time resultset information */
+  private $results;
+  private $rowcount;
+  private $cursor;
 
-	/** Publically accessible row values */
-	public $fields;
+  /** Publically accessible row values */
+  public $fields;
 
-	/** Public end-of-resultset flag */
-	public $EOF;
+  /** Public end-of-resultset flag */
+  public $EOF;
 
   /** recordset pagination **/
-	private $_currentPage;	
-	private $_atFirstPage;
-	private $_atLastPage;
-	private $_lastPageNo;
+  private $_currentPage;  
+  private $_atFirstPage;
+  private $_atLastPage;
+  private $_lastPageNo;
   public $rowsPerPage;
   public $_maxRecordCount;
-	
+  
 
-	/**
-	* Constructor: Initialise resultset and first results
-	* @param st PDOStatement object to wrap
-	*/
-	public function __construct($st)
-	{
-		$this->_st = $st;
-		$this->results = $st->fetchAll();
-		$this->rowcount = count($this->results);
-		$this->cursor = 0;
-		$this->_currentPage = -1;
-		$this->_atFirstPage = false;
-		$this->_atLastPage = false;
-		$this->_lastPageNo = -1;
-		$this->_maxRecordCount = 0;
-		$this->rowsPerPage = 0;
-		$this->MoveNext();
-	}
+  /**
+  * Constructor: Initialise resultset and first results
+  * @param st PDOStatement object to wrap
+  */
+  public function __construct($st)
+  {
+    $this->_st = $st;
+    $this->results = $st->fetchAll();
+    $this->rowcount = count($this->results);
+    $this->cursor = 0;
+    $this->_currentPage = -1;
+    $this->_atFirstPage = false;
+    $this->_atLastPage = false;
+    $this->_lastPageNo = -1;
+    $this->_maxRecordCount = 0;
+    $this->rowsPerPage = 0;
+    $this->MoveNext();
+  }
 
-	/**
-	* RecordCount: Retrieve number of records in this RS
-	* @return Integer number of records
-	*/
-	public function RecordCount()
-	{
+  /**
+  * RecordCount: Retrieve number of records in this RS
+  * @return Integer number of records
+  */
+  public function RecordCount()
+  {
     return $this->rowcount;
-	}
+  }
 
 
-	/**
-	* MoveNext: Fetch next row and check if we're at the end
-	*/
-	public function MoveNext()
-	{
-		$this->fields = $this->results[$this->cursor++];
-		$this->EOF = ($this->cursor == $this->rowcount) ? 1 : 0;
-	}
+  /**
+  * MoveNext: Fetch next row and check if we're at the end
+  */
+  public function MoveNext()
+  {
+    $this->fields = $this->results[$this->cursor++];
+    $this->EOF = ($this->cursor == $this->rowcount) ? 1 : 0;
+  }
 
 
-	public function FetchRow()
-	{
+  public function FetchRow()
+  {
     $res = $this->fields;
     $this->MoveNext();
 
-	  return $res;
+    return $res;
   }
   
 
@@ -640,10 +640,10 @@ class synPager {
   }
 
 
-	public function Execute($sql, $rows=10,$parameters=null)
-	{
+  public function Execute($sql, $rows=10,$parameters=null)
+  {
     $this->sql = $sql;
-		$this->rows = $rows;
+    $this->rows = $rows;
 
     $this->rs = $this->db->PageExecute($this->sql, $rows, $this->curr_page);
     if (!$this->rs) {
@@ -653,7 +653,7 @@ class synPager {
     //$this->index = $this->renderPageLinks($parameters);
     $this->RenderLayout($parameters);
     return $this->rs;
-	}
+  }
 
 
   private function renderPageLinks($parameters=null)
@@ -696,10 +696,10 @@ class synPager {
     return $numbers;
   }
 
-	//------------------------------------------------------
-	// override this to control overall layout and formating
-	function renderLayout($parameters='')
-	{
+  //------------------------------------------------------
+  // override this to control overall layout and formating
+  function renderLayout($parameters='')
+  {
     $header = $this->renderNav($parameters);
     $this->firstPage = $header[0];
     $this->prevPage = $header[1];
@@ -707,100 +707,100 @@ class synPager {
     $this->lastPage = $header[3];
     $this->index = implode('  ', $header[4]);
     $this->footer = $this->renderPageCount();
-	}
+  }
 
 
-	private function renderNav($parameters='')
-	{
+  private function renderNav($parameters='')
+  {
     $ret = array();
-		if (!$this->rs->AtFirstPage()) {
-			$ret[0]=$this->RenderFirst(true,$parameters);
-			$ret[1]=$this->RenderPrev(true,$parameters);
-		} else {
-			$ret[0]=$this->RenderFirst(false,$parameters);
-			$ret[1]=$this->RenderPrev(false,$parameters);
-		}
+    if (!$this->rs->AtFirstPage()) {
+      $ret[0]=$this->RenderFirst(true,$parameters);
+      $ret[1]=$this->RenderPrev(true,$parameters);
+    } else {
+      $ret[0]=$this->RenderFirst(false,$parameters);
+      $ret[1]=$this->RenderPrev(false,$parameters);
+    }
     if ($this->showPageLinks){
       $ret[4]=$this->renderPageLinks($parameters);
     }
-		if (!$this->rs->AtLastPage()) {
-			$ret[2]=$this->RenderNext(true,$parameters);
-			$ret[3]=$this->RenderLast(true,$parameters);
-		} else {
-			$ret[2]=$this->RenderNext(false,$parameters);
-			$ret[3]=$this->RenderLast(false,$parameters);
-		}
-		return $ret;
-	}
+    if (!$this->rs->AtLastPage()) {
+      $ret[2]=$this->RenderNext(true,$parameters);
+      $ret[3]=$this->RenderLast(true,$parameters);
+    } else {
+      $ret[2]=$this->RenderNext(false,$parameters);
+      $ret[3]=$this->RenderLast(false,$parameters);
+    }
+    return $ret;
+  }
 
-	private function renderFirst($anchor=true, $parameters="")
-	{
-		if ($anchor) {
+  private function renderFirst($anchor=true, $parameters="")
+  {
+    if ($anchor) {
       if ($parameters!="") $parameters="&".$parameters;
       $ret=$this->targetFile."?".$this->id."_next_page=1".$parameters;
-		} else {
+    } else {
       if ($parameters!="") $parameters="?".$parameters;
       $ret=$this->targetFile.$parameters;
-		}
+    }
     return $ret;
-	}
+  }
 
-	//--------------------------
-	// Display link to next page
-	private function renderNext($anchor=true, $parameters="")
-	{
-		if ($anchor) {
+  //--------------------------
+  // Display link to next page
+  private function renderNext($anchor=true, $parameters="")
+  {
+    if ($anchor) {
       if ($parameters!="") $parameters="&".$parameters;
       $ret=$this->targetFile."?".$this->id."_next_page=".($this->rs->AbsolutePage() + 1).$parameters;
-		} else {
+    } else {
       if ($parameters!="") $parameters="?".$parameters;
       $ret=$this->targetFile.$parameters;
-		}
+    }
     return $ret;
-	}
+  }
 
-	// Link to previous page
-	private function renderPrev($anchor=true, $parameters="")
-	{
-		if ($anchor) {
+  // Link to previous page
+  private function renderPrev($anchor=true, $parameters="")
+  {
+    if ($anchor) {
       if ($parameters!="") $parameters="&".$parameters;
       $ret=$this->targetFile."?".$this->id."_next_page=".($this->rs->AbsolutePage() - 1).$parameters;
-		} else {
-      if ($parameters!="") $parameters="?".$parameters;
-			$ret=$this->targetFile.$parameters;
-		}
-    return $ret;
-	}
-
-	//------------------
-	// Link to last page
-	//
-	// for better performance with large recordsets, you can set
-	// $this->db->pageExecuteCountRows = false, which disables
-	// last page counting.
-	private function renderLast($anchor=true, $parameters="")
-	{
-		if (!$this->db->pageExecuteCountRows) return;
-
-		if ($anchor) {
-      if ($parameters!="") $parameters="&".$parameters;
-      $ret=$this->targetFile."?".$this->id."_next_page=".$this->rs->LastPageNo().$parameters;
-		} else {
+    } else {
       if ($parameters!="") $parameters="?".$parameters;
       $ret=$this->targetFile.$parameters;
-		}
+    }
     return $ret;
-	}
+  }
 
-	//-------------------
-	// This is the footer
-	private function renderPageCount()
-	{
-		if (!$this->db->pageExecuteCountRows) return '';
-		$lastPage = $this->rs->LastPageNo();
-		if ($lastPage == -1) $lastPage = 1; // check for empty rs.
-		return "$this->page ".$this->curr_page."/".$lastPage."";
-	}
+  //------------------
+  // Link to last page
+  //
+  // for better performance with large recordsets, you can set
+  // $this->db->pageExecuteCountRows = false, which disables
+  // last page counting.
+  private function renderLast($anchor=true, $parameters="")
+  {
+    if (!$this->db->pageExecuteCountRows) return;
+
+    if ($anchor) {
+      if ($parameters!="") $parameters="&".$parameters;
+      $ret=$this->targetFile."?".$this->id."_next_page=".$this->rs->LastPageNo().$parameters;
+    } else {
+      if ($parameters!="") $parameters="?".$parameters;
+      $ret=$this->targetFile.$parameters;
+    }
+    return $ret;
+  }
+
+  //-------------------
+  // This is the footer
+  private function renderPageCount()
+  {
+    if (!$this->db->pageExecuteCountRows) return '';
+    $lastPage = $this->rs->LastPageNo();
+    if ($lastPage == -1) $lastPage = 1; // check for empty rs.
+    return "$this->page ".$this->curr_page."/".$lastPage."";
+  }
 
 
   // simple pager

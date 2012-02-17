@@ -131,7 +131,7 @@ insert into `aa_group_services` values ('227', '0', '131', '621', '2', '151', ''
 insert into `aa_group_services` values ('228', '4030', '153', '625', '1', '0', '', '', '', '', '/admin/modules/sitemap/sitemap.php', 'chart_organisation.png');
 insert into `aa_group_services` values ('229', '1060', '152', '661', '1', '152', '', '1', '1', '1', '', '');
 insert into `aa_group_services` values ('230', '4030', '153', '761', '1', '0', '', '1', '1', '1', '/admin/modules/export/export_xml.php', 'accept.png');
-insert into `aa_group_services` values ('231', '4040', '153', '763', '1', '0', '', '', '', '', '/admin/modules/export/import_xml.php', 'wand.png');
+insert into `aa_group_services` values ('231', '4040', '153', '763', '1', '0', '', '', '', '', '/admin/modules/import/import_xml.php', 'wand.png');
 
 
 ### structure of table `aa_groups` ###
