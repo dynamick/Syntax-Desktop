@@ -131,7 +131,7 @@ insert into `aa_group_services` values ('227', '0', '131', '621', '2', '151', ''
 insert into `aa_group_services` values ('228', '4030', '153', '625', '1', '0', '', '', '', '', '/admin/modules/sitemap/sitemap.php', 'chart_organisation.png');
 insert into `aa_group_services` values ('229', '1060', '152', '661', '1', '152', '', '1', '1', '1', '', '');
 insert into `aa_group_services` values ('230', '4030', '153', '761', '1', '0', '', '1', '1', '1', '/admin/modules/export/export_xml.php', 'accept.png');
-insert into `aa_group_services` values ('231', '4040', '153', '763', '1', '0', '', '', '', '', '/admin/modules/import/import_xml.php', 'wand.png');
+insert into `aa_group_services` values ('231', '4040', '153', '762', '1', '0', '', '', '', '', '/admin/modules/import/import_xml.php', 'wand.png');
 
 
 ### structure of table `aa_groups` ###
@@ -1605,9 +1605,3 @@ CREATE TABLE `users` (
 ### data of table `users` ###
 
 insert into `users` values ('4', 'Dummy', 'Dude', 'SyntaxDesktop', 'info@syntaxdesktop.com', 'via Garibaldi', 'Villafranca', '37069', 'Verona', '', '1', '1', '2010-03-24 12:07:13', '921b67a326b3365d64ff7d7d168624c8', '1');
-insert into `users` values ('5', 'nicola', 'Galdiolo', ' ugiu', 'nicola.labs@gmail.com', 'i gig ', 'iug iugiug', 'iug ig iu', 'g iug iug', '12caf296b0f4d982f531b784aeb57ece', '', '1', '2011-10-04 17:47:50', '86930f097ed778d44416a0a53ad0b2b3', '');
-insert into `users` values ('6', 'nicola', 'Galdiolo', ' ugiu', 'nicola.labs@gmail.com', 'i gig ', 'iug iugiug', 'iug ig iu', 'g iug iug', '41feabde3d4f3e2a139bdaa379986923', '', '1', '2011-10-04 17:51:05', '86930f097ed778d44416a0a53ad0b2b3', '');
-insert into `users` values ('7', 'nicola', 'Galdiolo', ' ugiu', 'nicola.labs@gmail.com', 'i gig ', 'iug iugiug', 'iug ig iu', 'g iug iug', 'ed72cc0f12ecdb74c415c1351ed7a8e0', '', '1', '2011-10-04 17:52:14', '86930f097ed778d44416a0a53ad0b2b3', '');
-insert into `users` values ('8', 'nicola', 'Galdiolo', ' ugiu', 'nicola.labs@gmail.com', 'i gig ', 'iug iugiug', 'iug ig iu', 'g iug iug', '', '1', '1', '2011-10-04 17:54:32', '86930f097ed778d44416a0a53ad0b2b3', '');
-insert into `users` values ('9', 'nicola', 'Galdiolo', ' ugiu', 'nicola.labs@gmail.com', 'i gig ', 'iug iugiug', 'iug ig iu', 'g iug iug', '', '1', '1', '2011-10-04 17:56:27', '86930f097ed778d44416a0a53ad0b2b3', '');
-insert into `users` values ('10', 'nicola', 'Galdiolo', 'ugiu', 'nicola.galdiolo@kleis.it', 'i gig', 'iug iugiug', 'iug ig iu', 'g iug iug', '41e1701eb6f03a00dae25fa3a6ac13ae', '', '1', '2011-10-04 17:57:05', '86930f097ed778d44416a0a53ad0b2b3', '');

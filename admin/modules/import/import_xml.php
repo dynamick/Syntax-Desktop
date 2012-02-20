@@ -80,7 +80,7 @@ EOHTML;
 
             }
             $cont_keys[] = $key;
-            $cont_vals[] = addslashes($value);
+            $cont_vals[] = addslashes(trim($value));
           }
         }
 
@@ -103,7 +103,7 @@ EOHTML;
               foreach($v->children() as $lang=>$label){
                 if(strtolower($lang)!='id'){
                   $langs[] = $lang;
-                  $labels[] = addslashes($label);
+                  $labels[] = addslashes(trim($label));
                 }
               }
               $qry = "INSERT INTO aa_translation (`".implode('`,`', $langs)."`) VALUES ('".implode("','", $labels)."')";
@@ -120,8 +120,8 @@ EOHTML;
                 $a = $r->fetchrow();
                 $v = $a['id'];
               }
-              $cont_keys[] = $k;
-              $cont_vals[] = addslashes($v);
+              $cont_keys[] = trim($k);
+              $cont_vals[] = addslashes(trim($v));
             }
           }
         }

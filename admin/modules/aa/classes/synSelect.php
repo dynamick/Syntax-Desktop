@@ -143,12 +143,11 @@ class synSelect extends synElement {
   
   //function for the auto-configuration
   function configuration($i="",$k=99) {
-    global $synElmName,$synElmType,$synElmLabel,$synElmSize,$synElmHelp, $synElmQry;
-    global $synElmQry;
-    $synHtml = new synHtml();
-    
-    
+    global $synElmName,$synElmType,$synElmLabel,$synElmSize,$synElmHelp, $synElmQry, $synElmPath;
+    global $synChkKey, $synChkVisible, $synChkEditable,$synChkMultilang;
     global $db;
+    $synHtml = new synHtml();
+
     $res=$db->Execute("SELECT * FROM aa_services order by name");
     $txt="<select name=\"synElmQry[$i]\" >";
     while ($arr=$res->FetchRow()) {
@@ -166,7 +165,6 @@ class synSelect extends synElement {
     $this->configuration[6]="NULL: ".$synHtml->check(" name=\"synElmPath[$i]\" value=\"1\" $checked");
     
     //enable or disable the 3 check at the last configuration step
-    global $synChkKey, $synChkVisible, $synChkEditable,$synChkMultilang;
     $_SESSION["synChkKey"][$i]=1;
     $_SESSION["synChkVisible"][$i]=1;
     $_SESSION["synChkEditable"][$i]=0;

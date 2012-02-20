@@ -157,7 +157,9 @@
           <p id="status"></p>
         </div>
 
-        <div class="box" id="custom"></div>
+        <div id="custom"></div>
+
+        <div id="multilang"></div>
 
         <div class="box">
           <form action="content.php" target="content" method="post" id="synSearch">

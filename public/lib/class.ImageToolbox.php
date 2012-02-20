@@ -3,7 +3,7 @@
  * Image_Toolbox.class.php -- PHP image manipulation class
  *
  * Copyright (C) 2003 Martin Theimer <pappkamerad@decoded.net>
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -24,12 +24,12 @@
  * @package Image_Toolbox
  * @link http://sourceforge.net/projects/image-toolbox
  */
- 
+
 // $Id: class.ImageToolbox.php 8 2005-11-16 21:36:31Z dynamick $
 
 
  /* EXAMPLE WITH SYNTAX DESKTOP
- 
+
     include_once("admin/includes/php/class.ImageToolbox.php");
     if ($Immagine!="") $img="mat/lead_id".$lid.".".$Immagine;
     else $img="";
@@ -40,12 +40,12 @@
     $thumbnail->blend('right','bottom');
     $resultimg="mat/thumb/lead_id".$lid.".".$Immagine;
     $thumbnail->save($resultimg,'png8');
- 
- 
+
+
  */
 
 if (!defined('IMAGE_TOOLBOX_DEFAULT_JPEG_QUALITY')) {
-	define('IMAGE_TOOLBOX_DEFAULT_JPEG_QUALITY', 95);
+	define('IMAGE_TOOLBOX_DEFAULT_JPEG_QUALITY', 75);
 }
 if (!defined('IMAGE_TOOLBOX_DEFAULT_8BIT_COLORS')) {
 	define('IMAGE_TOOLBOX_DEFAULT_8BIT_COLORS', 256);
@@ -93,15 +93,15 @@ class Image_Toolbox {
 
     /**
      * The prefix for every error message
-     * 
+     *
      * @access private
      * @var string
      */
 	var $_error_prefix = 'Image: ';
-	
+
 	/**
      * Defines imagetypes and how they are supported by the server
-     * 
+     *
      * @access private
      * @var array
      */
@@ -114,7 +114,7 @@ class Image_Toolbox {
 		2 => array (
 			'ext' => 'jpg',
 			'mime' => 'image/jpeg',
-			'supported' => 1
+			'supported' => 0
 		),
 		3 => array (
 			'ext' => 'png',
@@ -122,11 +122,11 @@ class Image_Toolbox {
 			'supported' => 0
 		)
 	);
-	
+
 	/**
      * Which PHP image resize function to be used
      * imagecopyresampled only supported with GD >= 2.0
-     * 
+     *
      * @access private
      * @var string
      */
@@ -134,7 +134,7 @@ class Image_Toolbox {
 
 	/**
      * Stores all image resource data
-     * 
+     *
      * @access private
      * @var array
      */
@@ -151,22 +151,22 @@ class Image_Toolbox {
 			'color' => -1
 		)
 	);
-	
+
 	/**
      * Which PHP image create function to be used
      * imagecreatetruecolor only supported with GD >= 2.0
-     * 
+     *
      * @access private
      * @var string
      */
 	var $_imagecreatefunction = '';
-	
+
     /**
      * The class constructor.
      *
      * Determines the image features of the server and sets the according values.<br>
      * Additionally you can specify a image to be created/loaded. like {@link addImage() addImage}.
-     * 
+     *
      * If no parameter is given, no image resource will be generated<br>
      * Or:<br>
      * <i>string</i> <b>$file</b> imagefile to load<br>
@@ -178,7 +178,7 @@ class Image_Toolbox {
 	function Image_Toolbox() {
 		$args = func_get_args();
 		$argc = func_num_args();
-		
+
 		//get GD information. see what types we can handle
 		$gd_info = function_exists('gd_info') ? gd_info() : $this->_gd_info();
 		preg_match("/\A[\D]*([\d+\.]*)[\D]*\Z/", $gd_info['GD Version'], $matches);
@@ -191,7 +191,7 @@ class Image_Toolbox {
 			$this->_imagecreatefunction = 'imagecreate';
 			$this->_resize_function = 'imagecopyresized';
 		}
-						
+
 		$this->_gd_ttf = $gd_info['FreeType Support'];
 		$this->_gd_ps = $gd_info['T1Lib Support'];
 		if ($gd_info['GIF Read Support']) {
@@ -203,10 +203,13 @@ class Image_Toolbox {
 		if ($gd_info['JPG Support']) {
 			$this->_types[2]['supported'] = 2;
 		}
+		if ($gd_info['JPEG Support']) {
+			$this->_types[2]['supported'] = 2;
+		}
 		if ($gd_info['PNG Support']) {
 			$this->_types[3]['supported'] = 2;
 		}
-		
+
 		//load or create main image
 		if ($argc == 0) {
 			return true;
@@ -238,12 +241,13 @@ class Image_Toolbox {
      * </ul>
      *
      * @return array
-     */ 
+     */
 	function getServerFeatures() {
 		$features = array();
 		$features['gd_version'] = $this->_gd_version_number;
 		$features['gif'] = $this->_types[1]['supported'];
 		$features['jpg'] = $this->_types[2]['supported'];
+		$features['jpeg'] = $this->_types[2]['supported'];
 		$features['png'] = $this->_types[3]['supported'];
 		$features['ttf'] = $this->_gd_ttf;
 		return $features;
@@ -258,11 +262,11 @@ class Image_Toolbox {
      * <i>integer</i> <b>$width</b> imagewidth of new image to be created<br>
      * <i>integer</i> <b>$height</b> imageheight of new image to be created<br>
      * <i>string</i> <b>$fillcolor</b> optional fill the new image with this color (hexformat, e.g. '#FF0000')<br>
-     */ 
+     */
 	function newImage() {
 		$args = func_get_args();
 		$argc = func_num_args();
-		
+
 		if ($this->_addImage($argc, $args)) {
 			foreach ($this->_img['operator'] as $key => $value) {
 				$this->_img['main'][$key] = $value;
@@ -278,10 +282,10 @@ class Image_Toolbox {
 
 	/**
      * Reimplements the original PHP {@link gd_info()} function for older PHP versions
-     * 
+     *
      * @access private
      * @return array associative array with info about the GD library of the server
-     */ 
+     */
 	function _gd_info() {
 		$array = array(
         	"GD Version" => "",
@@ -291,17 +295,18 @@ class Image_Toolbox {
 			"GIF Read Support" => false,
 			"GIF Create Support" => false,
 			"JPG Support" => false,
+			"JPEG Support" => false,
 			"PNG Support" => false,
 			"WBMP Support" => false,
 			"XBM Support" => false
 		);
-        
+
 		$gif_support = 0;
 		ob_start();
 		eval("phpinfo();");
 		$info = ob_get_contents();
 		ob_end_clean();
-      
+
 		foreach(explode("\n", $info) as $line) {
 			if(strpos($line, "GD Version") !== false)
 				$array["GD Version"] = trim(str_replace("GD Version", "", strip_tags($line)));
@@ -319,6 +324,8 @@ class Image_Toolbox {
 				$gif_support = trim(str_replace("GIF Support", "", strip_tags($line)));
 			if(strpos($line, "JPG Support") !== false)
 				$array["JPG Support"] = trim(str_replace("JPG Support", "", strip_tags($line)));
+			if(strpos($line, "JPEG Support") !== false)
+				$array["JPEG Support"] = trim(str_replace("JPEG Support", "", strip_tags($line)));
 			if(strpos($line, "PNG Support") !== false)
 				$array["PNG Support"] = trim(str_replace("PNG Support", "", strip_tags($line)));
 			if(strpos($line, "WBMP Support") !== false)
@@ -326,7 +333,7 @@ class Image_Toolbox {
 			if(strpos($line, "XBM Support") !== false)
 				$array["XBM Support"] = trim(str_replace("XBM Support", "", strip_tags($line)));
 		}
-        
+
 		if($gif_support === "enabled") {
 			$array["GIF Read Support"] = true;
 			$array["GIF Create Support"] = true;
@@ -335,15 +342,15 @@ class Image_Toolbox {
 		if($array["FreeType Support"] === "enabled") {
 			$array["FreeType Support"] = true;
 		}
- 
+
         if($array["T1Lib Support"] === "enabled") {
             $array["T1Lib Support"] = true;
         }
-       
+
 		if($array["GIF Read Support"] === "enabled") {
 			$array["GIF Read Support"] = true;
 		}
- 
+
 		if($array["GIF Create Support"] === "enabled") {
 			$array["GIF Create Support"] = true;
 		}
@@ -351,15 +358,19 @@ class Image_Toolbox {
 		if($array["JPG Support"] === "enabled") {
 			$array["JPG Support"] = true;
 		}
-            
+
+		if($array["JPEG Support"] === "enabled") {
+			$array["JPEG Support"] = true;
+		}
+
 		if($array["PNG Support"] === "enabled") {
 			$array["PNG Support"] = true;
 		}
-            
+
 		if($array["WBMP Support"] === "enabled") {
 			$array["WBMP Support"] = true;
 		}
-            
+
 		if($array["XBM Support"] === "enabled") {
 			$array["XBM Support"] = true;
 		}
@@ -369,11 +380,11 @@ class Image_Toolbox {
 
 	/**
      * Convert a color defined in hexvalues to the PHP color format
-     * 
+     *
      * @access private
      * @param string $hex color value in hexformat (e.g. '#FF0000')
      * @return integer color value in PHP format
-     */ 
+     */
 	function _hexToPHPColor($hex) {
 		$length = strlen($hex);
 		$dr = hexdec(substr($hex, $length - 6, 2));
@@ -382,14 +393,14 @@ class Image_Toolbox {
 		$color = ($dr << 16) + ($dg << 8) + $db;
 		return $color;
 	}
-	
+
 	/**
      * Convert a color defined in hexvalues to corresponding dezimal values
-     * 
+     *
      * @access private
      * @param string $hex color value in hexformat (e.g. '#FF0000')
      * @return array associative array with color values in dezimal format (fields: 'red', 'green', 'blue')
-     */ 
+     */
 	function _hexToDecColor($hex) {
 		$length = strlen($hex);
 		$color['red'] = hexdec(substr($hex, $length - 6, 2));
@@ -423,7 +434,7 @@ class Image_Toolbox {
             // set default type jpg.
             $this->_img['operator']['type'] = 2;
             if (isset($args[2]) && is_string($args[2])) {
-            	//neues bild mit farbe fllen
+            	//neues bild mit farbe f?llen
             	$fillcolor = $this->_hexToPHPColor($args[2]);
             	imagefill($this->_img['operator']['resource'], 0, 0, $fillcolor);
             	$this->_img['operator']['color'] = $fillcolor;
@@ -431,7 +442,7 @@ class Image_Toolbox {
             	$this->_img['operator']['color'] = 0;
 			}
 		} elseif ($argc == 1 && is_string($args[0])) {
-			//bild aus datei laden. width und height original gr”sse
+			//bild aus datei laden. width und height original gr?sse
 			$this->_img['operator'] = $this->_loadFile($args[0]);
 			$this->_img['operator']['indexedcolors'] = imagecolorstotal($this->_img['operator']['resource']);
 			$this->_img['operator']['color'] = -1;
@@ -469,11 +480,11 @@ class Image_Toolbox {
 					imagecopy($filedata['resource'], $dummy, 0, 0, 0, 0, $filedata['width'], $filedata['height']);
 					imagedestroy($dummy);
 					break;
-					
+
 				case 2:
 					$filedata['resource'] = imagecreatefromjpeg($filename);
 					break;
-					
+
 				case 3:
 					$dummy = imagecreatefrompng($filename);
 					if (imagecolorstotal($dummy) != 0) {
@@ -485,7 +496,7 @@ class Image_Toolbox {
 					}
 					unset($dummy);
 					break;
-					
+
 				default:
 					trigger_error($this->_error_prefix . 'Imagetype not supported.', E_USER_ERROR);
 					return null;
@@ -496,7 +507,7 @@ class Image_Toolbox {
 			return null;
 		}
 	}
-	
+
 	/**
      * Output a image to the browser
      *
@@ -547,7 +558,7 @@ class Image_Toolbox {
 					imagegif($this->_img['main']['resource']);
 				}
 				break;
-			
+
 			case 2:
 			case '2':
 			case 'jpg':
@@ -564,7 +575,7 @@ class Image_Toolbox {
 				}
 				imagejpeg($this->_img['main']['resource'], '', $output_quality);
 				break;
-				
+
 			case 3:
 			case '3':
 			case 'png':
@@ -578,7 +589,7 @@ class Image_Toolbox {
 				header ('Content-type: ' . $this->_types[$output_type]['mime']);
 				imagepng($this->_img['main']['resource']);
 				break;
-				
+
 			case 4:
 			case '4':
 			case 'png8':
@@ -604,14 +615,14 @@ class Image_Toolbox {
 					imagepng($this->_img['main']['resource']);
 				}
 				break;
-				
+
 			default:
 				trigger_error($this->_error_prefix . 'Output-Imagetype not supported.', E_USER_ERROR);
 				return null;
 		}
 		return true;
 	}
-	
+
 	/**
      * Save a image to disk
      *
@@ -662,7 +673,7 @@ class Image_Toolbox {
 					imagegif($this->_img['main']['resource']);
 				}
 				break;
-			
+
 			case 2:
 			case '2':
 			case 'jpg':
@@ -670,15 +681,15 @@ class Image_Toolbox {
 			case 'JPG':
 			case 'JPEG':
 				if ($this->_types[2]['supported'] < 2) {
-					//trigger_error($this->_error_prefix . 'Imagetype ('.$this->_types[$output_type]['ext'].') not supported for creating/writing.', E_USER_ERROR);
-					//return null;
+					trigger_error($this->_error_prefix . 'Imagetype ('.$this->_types[$output_type]['ext'].') not supported for creating/writing.', E_USER_ERROR);
+					return null;
 				}
 				if ($output_quality === false) {
 					$output_quality = IMAGE_TOOLBOX_DEFAULT_JPEG_QUALITY;
 				}
 				imagejpeg($this->_img['main']['resource'], $filename, $output_quality);
 				break;
-				
+
 			case 3:
 			case '3':
 			case 'png':
@@ -692,7 +703,7 @@ class Image_Toolbox {
 				header ('Content-type: ' . $this->_types[$output_type]['mime']);
 				imagepng($this->_img['main']['resource'], $filename);
 				break;
-				
+
 			case 4:
 			case '4':
 			case 'png8':
@@ -717,17 +728,17 @@ class Image_Toolbox {
 					imagepng($this->_img['main']['resource'], $filename);
 				}
 				break;
-				
+
 			default:
 				trigger_error($this->_error_prefix . 'Output-Imagetype not supported.', E_USER_ERROR);
 				return null;
 		}
 		return true;
 	}
-	
+
 	/**
      * Sets the resize method of choice
-     * 
+     *
      * $method can be one of the following:<br>
      * <ul>
      * <li>'resize' -> supported by every version of GD (fast but ugly resize of image)</li>
@@ -746,7 +757,7 @@ class Image_Toolbox {
 			case 'resize':
 				$this->_resize_function = 'imagecopyresized';
 				break;
-				
+
 			case 2:
 			case '2':
 			case 'resample':
@@ -756,7 +767,7 @@ class Image_Toolbox {
 				}
 				$this->_resize_function = 'imagecopyresampled';
 				break;
-				
+
 			case 3:
 			case '3':
 			case 'resample_workaround':
@@ -764,7 +775,7 @@ class Image_Toolbox {
 			case 'bicubic':
 				$this->_resize_function = '$this->_imageCopyResampledWorkaround';
 				break;
-				
+
 			case 4:
 			case '4':
 			case 'resample_workaround2':
@@ -772,17 +783,17 @@ class Image_Toolbox {
 			case 'bicubic2':
 				$this->_resize_function = '$this->_imageCopyResampledWorkaround2';
 				break;
-				
+
 			default:
 				trigger_error($this->_error_prefix . 'Resizemethod not supported.', E_USER_ERROR);
 				return null;
 		}
 		return true;
 	}
-	
+
 	/**
      * Resize the current image
-     * 
+     *
      * if $width = 0 the new width will be calculated from the $height value preserving the correct aspectratio.<br>
      *
      * if $height = 0 the new height will be calculated from the $width value preserving the correct aspectratio.<br>
@@ -805,7 +816,7 @@ class Image_Toolbox {
      * @param string $bgcolor background fillcolor (hexformat, e.g. '#FF0000')
      * @return bool true on success, otherwise false
      */
-	function newOutputSize($width, $height, $mode = 0, $autorotate = false, $bgcolor = '#000000', $center=true) {
+	function newOutputSize($width, $height, $mode = 0, $autorotate = false, $bgcolor = '#000000') {
 		if ($width > 0 && $height > 0 && is_int($width) && is_int($height)) {
 			//ignore aspectratio
 			if (!$mode) {
@@ -819,7 +830,7 @@ class Image_Toolbox {
 					$this->_img['target']['height'] = $width;
 				}
 				$this->_img['target']['aspectratio'] = $this->_img['target']['width'] / $this->_img['target']['height'];
-				
+
 				$cpy_w = $this->_img['main']['width'];
 				$cpy_h = $this->_img['main']['height'];
 				$cpy_w_offset = 0;
@@ -835,7 +846,7 @@ class Image_Toolbox {
 					$this->_img['target']['height'] = $width;
 				}
 				$this->_img['target']['aspectratio'] = $this->_img['target']['width'] / $this->_img['target']['height'];
-				
+
 				if ($this->_img['main']['width'] / $this->_img['target']['width'] >= $this->_img['main']['height'] / $this->_img['target']['height']) {
 					$cpy_h = $this->_img['main']['height'];
 					$cpy_w = (integer) $this->_img['main']['height'] * $this->_img['target']['aspectratio'];
@@ -863,10 +874,6 @@ class Image_Toolbox {
 					$cpy_h_offset2 = 0;
 					$cpy_w_offset2 = (integer) (($width - $this->_img['target']['width']) / 2);
 				}
-        if(!$center) {
-					$cpy_w_offset2 = 0;
-					$cpy_h_offset2 = 0;
-        }        
 				$this->_img['target']['aspectratio'] = $this->_img['main']['aspectratio'];
 				$cpy_w = $this->_img['main']['width'];
 				$cpy_h = $this->_img['main']['height'];
@@ -893,7 +900,7 @@ class Image_Toolbox {
 				$this->_img['target']['width'] = (integer) $height * $this->_img['main']['aspectratio'];
 			}
 			$this->_img['target']['aspectratio'] = $this->_img['main']['aspectratio'];
-			
+
 			$cpy_w = $this->_img['main']['width'];
 			$cpy_h = $this->_img['main']['height'];
 			$cpy_w_offset = 0;
@@ -902,7 +909,7 @@ class Image_Toolbox {
 			trigger_error($this->_error_prefix . 'Outputwidth and -height must be integers greater zero.', E_USER_ERROR);
 			return null;
 		}
-		
+
 		//create resized picture
 		$functionname = $this->_imagecreatefunction;
 		$dummy = $functionname($this->_img['target']['width'] + 1, $this->_img['target']['height'] + 1);
@@ -918,7 +925,7 @@ class Image_Toolbox {
 		}
 		imagecopy($this->_img['target']['resource'], $dummy, $cpy_w_offset2, $cpy_h_offset2, 0, 0, $this->_img['target']['width'], $this->_img['target']['height']);
 		imagedestroy($dummy);
-		
+
 		if ($mode == 2) {
 			$this->_img['target']['width'] = $width;
             $this->_img['target']['height'] = $height;
@@ -928,7 +935,7 @@ class Image_Toolbox {
 			$this->_img['main'][$key] = $value;
 		}
 		unset ($this->_img['target']);
-		
+
 		return true;
 	}
 
@@ -944,11 +951,11 @@ class Image_Toolbox {
      * <i>integer</i> <b>$width</b> imagewidth of new image to be created<br>
      * <i>integer</i> <b>$height</b> imageheight of new image to be created<br>
      * <i>string</i> <b>$fillcolor</b> optional fill the new image with this color (hexformat, e.g. '#FF0000')<br>
-     */	
+     */
 	function addImage() {
-		$args = func_get_args(); 
+		$args = func_get_args();
 		$argc = func_num_args();
-		
+
 		if ($this->_addImage($argc, $args)) {
 			return true;
 		} else {
@@ -956,7 +963,7 @@ class Image_Toolbox {
 			return false;
 		}
 	}
-	
+
 	/**
      * Blend two images.
      *
@@ -992,11 +999,11 @@ class Image_Toolbox {
      * alpha value in percent of blend effect (0 - 100)<br>
      * (default = 100)
      *
-     * @param string|integer $x Horizontal position of second image. 
+     * @param string|integer $x Horizontal position of second image.
      * @param integer $y Vertical position of second image. negative values are possible.
      * @param integer $mode blend mode.
      * @param integer $percent alpha value
-     */	
+     */
 	function blend($x = 0, $y = 0, $mode = IMAGE_TOOLBOX_BLEND_COPY, $percent = 100) {
 		if (is_string($x) || is_string($y)) {
 			list($xalign, $xalign_offset) = explode(" ", $x);
@@ -1009,13 +1016,13 @@ class Image_Toolbox {
 					$src_x = 0;
 					$src_w = $this->_img['operator']['width'];
 					break;
-					
+
 				case 'right':
 					$dst_x = ($this->_img['main']['width'] - $this->_img['operator']['width']) + $xalign_offset;
 					$src_x = 0;
 					$src_w = $this->_img['operator']['width'];
 					break;
-					
+
 				case 'middle':
 				case 'center':
 					$dst_x = (($this->_img['main']['width'] / 2) - ($this->_img['operator']['width'] / 2)) + $yalign_offset;
@@ -1041,13 +1048,13 @@ class Image_Toolbox {
 					$src_y = 0;
 					$src_h = $this->_img['operator']['height'];
 					break;
-					
+
 				case 'bottom':
 					$dst_y = ($this->_img['main']['height'] - $this->_img['operator']['height']) + $yalign_offset;
 					$src_y = 0;
 					$src_h = $this->_img['operator']['height'];
 					break;
-					
+
 				case 'middle':
 				case 'center':
 					$dst_y = (($this->_img['main']['height'] / 2) - ($this->_img['operator']['height'] / 2)) + $yalign_offset;
@@ -1069,12 +1076,12 @@ class Image_Toolbox {
 		$this->_imageBlend($mode, $dst_x, $dst_y, $src_x, $src_y, $src_w, $src_h, $percent);
 		return true;
 	}
-	
+
 	/**
      * Blend two images.
      *
      * @access private
-     */	
+     */
 	function _imageBlend($mode, $dst_x, $dst_y, $src_x, $src_y, $src_w, $src_h, $percent) {
 		if ($mode == IMAGE_TOOLBOX_BLEND_COPY) {
 			if ($percent == 100) {
@@ -1096,21 +1103,21 @@ class Image_Toolbox {
 					imagesetpixel($dummy, $x, $y, $newcolor);
 				}
 			}
-		
+
 			$this->_img['target']['resource'] = $functionname($this->_img['main']['width'], $this->_img['main']['height']);
 			imagecopy($this->_img['target']['resource'], $this->_img['main']['resource'], 0, 0, 0, 0, $this->_img['main']['width'], $this->_img['main']['height']);
 			imagecopymerge($this->_img['target']['resource'], $dummy, $dst_x, $dst_y, $src_x, $src_y, $src_w, $src_h, $percent);
-									
+
 			$this->_img['main']['resource'] = $this->_img['target']['resource'];
 			unset($this->_img['target']);
 		}
 	}
-	
+
 	/**
      * Calculate blend values for given blend mode
      *
      * @access private
-     */	
+     */
 	function _calculateBlendvalue($mode, $colorrgb1, $colorrgb2) {
 		switch ($mode) {
 			case IMAGE_TOOLBOX_BLEND_MULTIPLY:
@@ -1118,32 +1125,32 @@ class Image_Toolbox {
 				$c['green'] = ($colorrgb1['green'] * $colorrgb2['green']) >> 8;
 				$c['blue'] = ($colorrgb1['blue'] * $colorrgb2['blue']) >> 8;
 				break;
-			
+
 			case IMAGE_TOOLBOX_BLEND_SCREEN:
 				$c['red'] = 255 - ((255 - $colorrgb1['red']) * (255 - $colorrgb2['red']) >> 8);
 				$c['green'] = 255 - ((255 - $colorrgb1['green']) * (255 - $colorrgb2['green']) >> 8);
 				$c['blue'] = 255 - ((255 - $colorrgb1['blue']) * (255 - $colorrgb2['blue']) >> 8);
 				break;
-			
+
 			case IMAGE_TOOLBOX_BLEND_DIFFERENCE:
 				$c['red'] = abs($colorrgb1['red'] - $colorrgb2['red']);
 				$c['green'] = abs($colorrgb1['green'] - $colorrgb2['green']);
 				$c['blue'] = abs($colorrgb1['blue'] - $colorrgb2['blue']);
 				break;
-			
-			case IMAGE_TOOLBOX_BLEND_NEGATION:	
+
+			case IMAGE_TOOLBOX_BLEND_NEGATION:
 				$c['red'] = 255 - abs(255 - $colorrgb1['red'] - $colorrgb2['red']);
 				$c['green'] = 255 - abs(255 - $colorrgb1['green'] - $colorrgb2['green']);
 				$c['blue'] = 255 - abs(255 - $colorrgb1['blue'] - $colorrgb2['blue']);
 				break;
-				
-			case IMAGE_TOOLBOX_BLEND_EXCLUTION:	
+
+			case IMAGE_TOOLBOX_BLEND_EXCLUTION:
 				$c['red'] = $colorrgb1['red'] + $colorrgb2['red'] - (($colorrgb1['red'] * $colorrgb2['red']) >> 7);
 				$c['green'] = $colorrgb1['green'] + $colorrgb2['green'] - (($colorrgb1['green'] * $colorrgb2['green']) >> 7);
 				$c['blue'] = $colorrgb1['blue'] + $colorrgb2['blue'] - (($colorrgb1['blue'] * $colorrgb2['blue']) >> 7);
 				break;
-				
-			case IMAGE_TOOLBOX_BLEND_OVERLAY:			
+
+			case IMAGE_TOOLBOX_BLEND_OVERLAY:
 				if ($colorrgb1['red'] < 128) {
 					$c['red']= ($colorrgb1['red'] * $colorrgb2['red']) >> 7;
 				} else {
@@ -1160,19 +1167,19 @@ class Image_Toolbox {
 					$c['blue'] = 255 - ((255 - $colorrgb1['blue']) * (255 - $colorrgb2['blue']) >> 7);
 				}
 				break;
-				
+
 			default:
 				break;
 		}
 		return $c;
 	}
-	
+
 	/**
      * convert iso character coding to unicode (PHP conform)
      * needed for TTF text generation of special characters (Latin-2)
      *
      * @access private
-     */	
+     */
 	function _iso2uni($isoline) {
 		$iso2uni = array(
 			173 => "&#161;",
@@ -1300,10 +1307,10 @@ class Image_Toolbox {
      * @param string|integer $x horizontal postion in pixel.
      * @param string|integer $y vertical postion in pixel.
      * @param integer $angle rotation of the text.
-     */	
+     */
 	function addText($text, $font, $size, $color, $x, $y, $angle = 0) {
 		global $HTTP_SERVER_VARS;
-		
+
 		if (substr($font, 0, 1) == DIRECTORY_SEPARATOR || (substr($font, 1, 1) == ":" && (substr($font, 2, 1) == "\\" || substr($font, 2, 1) == "/"))) {
 			$prepath = '';
 		} else {
@@ -1322,11 +1329,11 @@ class Image_Toolbox {
 				case 'left':
 					$x = 0 + $xalign_offset;
 					break;
-					
+
 				case 'right':
 					$x = ($this->_img['main']['width'] - $textwidth) + $xalign_offset;
 					break;
-					
+
 				case 'middle':
 				case 'center':
 					$x = (($this->_img['main']['width'] - $textwidth) / 2) + $xalign_offset;
@@ -1338,11 +1345,11 @@ class Image_Toolbox {
 				case 'top':
 					$y = (0 + $textheight) + $yalign_offset;
 					break;
-					
+
 				case 'bottom':
 					$y = ($this->_img['main']['height']) + $yalign_offset;
 					break;
-					
+
 				case 'middle':
 				case 'center':
 					$y = ((($this->_img['main']['height'] - $textheight) / 2) + $textheight) + $yalign_offset;
@@ -1352,12 +1359,12 @@ class Image_Toolbox {
 		imagettftext($this->_img['main']['resource'], $size, $angle, $x, $y, $this->_hexToPHPColor($color), $prepath . $font, $text);
 		return true;
 	}
-	
+
 	/**
      * workaround function for bicubic resizing. works well for downsizing only. VERY slow. taken from php.net comments
      *
      * @access private
-     */	
+     */
 	function _imageCopyResampledWorkaround(&$dst_img, &$src_img, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h) {
 		/*
 		for ($i = 0; $i < imagecolorstotal($src_img); $i++)
@@ -1396,7 +1403,7 @@ class Image_Toolbox {
      * alternative workaround function for bicubic resizing. works well for downsizing and upsizing. VERY VERY slow. taken from php.net comments
      *
      * @access private
-     */	
+     */
 	function _imageCopyResampledWorkaround2(&$dst_img, &$src_img, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h) {
 		ImagePaletteCopy ($dst_img, $src_img);
 		$rX = $src_w / $dst_w;
@@ -1417,8 +1424,8 @@ class Image_Toolbox {
 						$a++;
 					}
 				}
-				ImageSetPixel ($dst_img, $x, $y, ImageColorClosest ($dst_img, $r / $a, $g / $a, $b / $a)); 
+				ImageSetPixel ($dst_img, $x, $y, ImageColorClosest ($dst_img, $r / $a, $g / $a, $b / $a));
 			}
 		}
-	} 
+	}
 }
