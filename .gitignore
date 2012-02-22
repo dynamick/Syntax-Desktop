@@ -1,7 +1,7 @@
 admin/config/config.php
 admin/setup.php
 admin/_setup.php
-public/templates_c/*
+public/templates_c/*.php
 public/mat/*.*
 public/mat/thumb/*
 *.db
