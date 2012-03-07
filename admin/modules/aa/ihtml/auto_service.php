@@ -8,7 +8,7 @@ function __autoload($class) {
 }
 
 
-	//definizione variabili globali
+  //definizione variabili globali
   $synContainer = isset($_REQUEST["aa_service"]) ? $_REQUEST["aa_service"]: $_SESSION["aa_service"];
   $buttons=array();
 
@@ -333,9 +333,9 @@ function __autoload($class) {
           break;
 
         case 'clone': // salva & duplica
-	  	    unset($_POST['id']); //altrimenti continua a lavorare sullo stesso record
+          unset($_POST['id']); //altrimenti continua a lavorare sullo stesso record
           $_SESSION[$synTable.'_clone'] = serialize($_POST);
-		      $jumpTo = $PHP_SELF."?cmd=".ADD;
+          $jumpTo = $PHP_SELF."?cmd=".ADD;
           break;
 
         case 'next': // salva & prossimo
@@ -406,9 +406,9 @@ function __autoload($class) {
           break;
 
         case 'clone': // salva & duplica
-	  	    unset($_POST['id']); //altrimenti continua a lavorare sullo stesso record
+          unset($_POST['id']); //altrimenti continua a lavorare sullo stesso record
           $_SESSION[$synTable.'_clone'] = serialize($_POST);
-		      $jumpTo = $PHP_SELF."?cmd=".ADD;
+          $jumpTo = $PHP_SELF."?cmd=".ADD;
           break;
 
         case 'new': // salva & nuovo
@@ -513,7 +513,8 @@ function __autoload($class) {
       echo "<!-- *** inclusione di schema.php *** -->\n";
 
       resetClone($synTable);
-      unset($_POST); //in caso di edit abortito
+      // TO DO: questo sbianca la ricerca. trovare una soluzione!!!
+      //unset($_POST); //in caso di edit abortito
 
       //Change the rows mod and del button
       # EDIT button
