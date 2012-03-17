@@ -79,10 +79,13 @@ EOQ;
             $link  = "javascript:alert('{$alert}')";
           }
           $html .= "    <li>\n";
-          $html .= "      <div><a class=\"download {$class}\" href=\"{$link}\">{$arr['title']}</a></div>\n";
-          $html .= "      <p>".$arr['description']."</p>\n";
-          $html .= "      <span>".$file_label."</span>\n";
-          $html .= "    </li>\n";
+          $html .= "      <a class=\"download\" href=\"{$link}\">\n";
+          $html .= "        <span class=\"icon {$class}\"></span>\n";            
+          $html .= "        <h4>{$arr['title']}</h4>\n";
+          $html .= "        <p>".$arr['description']."</p>\n";
+          $html .= "        <span>".$file_label."</span>\n";
+          $html .= "      </a>\n";
+          $html .= "    </li>\n";          
         }
         $next = ($arr=$res->FetchRow());
       } while ($next && $catid==$arr['category_id']);

@@ -2,7 +2,8 @@
 
   //this is an auto-generated page by SyntaxDesktop
   session_start();
-
+  if(ini_get('date.timezone')=="") date_default_timezone_set('Europe/Rome');
+  
   if (file_exists(dirname(__FILE__)."/public/config/cfg.php")) {
     require("public/config/cfg.php");
   } else {
