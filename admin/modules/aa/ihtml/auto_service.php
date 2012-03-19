@@ -105,8 +105,9 @@ function __autoload($class) {
       if ($type=="<") $qry.="`".$field."` < '".$keyword."' ";
       if ($type=="acceso") $qry.=" `".$field."` <> \"\" ";
       if ($type=="spento") $qry.=" `".$field."`=\"\" ";
+
       session_register("aa_qry");
-      $aa_qry=$qry;
+      $_SESSION['aa_qry'] = $qry;
     }
 
     //check owner field...

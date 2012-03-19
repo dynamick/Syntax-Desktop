@@ -76,7 +76,7 @@ function translateSite($id,$err=false) {
   return $ret;
 }
 
-
+/*
 function updateLang() {
   global $db, $synSiteLang;
   if (isset($_GET["synSiteLang"])) setLang($_GET["synSiteLang"]);
@@ -109,6 +109,49 @@ function updateLang() {
   $_SESSION["aa_CurrentLangInitial"]=$currlang;
   $_SESSION["synSiteLangInitial"]=$currlang;
   setlocale(LC_ALL, strtolower($currlang)."_".strtoupper($currlang));
+}*/
+
+
+function updateLang() {
+  global $db, $synSiteLang;
+
+  if (isset($_GET["synSiteLang"]))
+    setLang(intval($_GET["synSiteLang"]));
+
+  //check if exist a language id that match the session variable
+  if ($_SESSION['synSiteLang'] != '') {
+    $sql = "SELECT id FROM aa_lang WHERE id=".intval($_SESSION["synSiteLang"]);
+    $res = $db->Execute($sql);
+    if(!$res->fetchrow()){
+      $_SESSION['synSiteLang'] = '';
+    }
+  }
+
+  if ($_SESSION['synSiteLang'] == '') {
+    $available = array();
+    $res = $db->Execute("SELECT id,initial FROM aa_lang WHERE `active`=1 ORDER BY id");
+    while($arr = $res->fetchrow()){
+      extract($arr);
+      $available[$initial] = $id;
+    }
+
+    $get_lang = get_languages(); // array delle lingue accettate dal browser in ordine di preferenza
+    foreach($get_lang AS $lng){
+      if(isset($available[$lng])) {
+        $pref = $available[$lng];
+        break;
+      }
+    }
+
+    if(!$pref) $pref = array_shift(array_keys($available));
+
+    $_SESSION['synSiteLang'] = $available[$pref];
+    $_SESSION['synSiteLangInitial'] = array_search($pref, $available);
+
+    //setlocale(LC_ALL, strtolower($currlang)."_".strtoupper($currlang));
+  }
+
+  //echo '<pre>', print_r($_SESSION), '</pre>';
 }
 
 
@@ -207,35 +250,18 @@ function get_languages(){
 		// need to remove spaces from strings to avoid error
 		$languages = str_replace( ' ', '', $languages );
 		$languages = explode( ",", $languages );
-		//$languages = explode( ",", $test);// this is for testing purposes only
 
 		foreach ( $languages as $language_list ){
 			// pull out the language, place languages into array of full and primary
 			// string structure:
-			$temp_array = array();
-			// slice out the part before ; on first step, the part before - on second, place into array
-			$temp_array[0] = substr( $language_list, 0, strcspn( $language_list, ';' ) );//full language
-			$temp_array[1] = substr( $language_list, 0, 2 );// cut out primary language
-			//place this array into main $user_languages language array
-			$user_languages[] = $temp_array;
+      $user_languages[] = substr( $language_list, 0, strcspn( $language_list, ';' ) );//full language
 		}
 
-		//start going through each one
-		for ( $i = 0; $i < count( $user_languages ); $i++ ){
-			foreach ( $a_languages as $index => $complete ){
-				if ( $index == $user_languages[$i][0] ){
-					// complete language, like english (canada)
-					$user_languages[$i][2] = $complete;
-					// extract working language, like english
-					$user_languages[$i][3] = substr( $complete, 0, strcspn( $complete, ' (' ) );
-				}
-			}
-		}
 	}	else {// if no languages found
-		$user_languages[0] = array( '','','','' ); //return blank array.
+		$user_languages[0] = '';
 	}
 
-	//print_r($user_languages);
+	//echo '<pre>', print_r($user_languages), '</pre>'';
   return $user_languages;
 }
 

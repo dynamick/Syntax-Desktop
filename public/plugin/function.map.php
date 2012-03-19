@@ -2,88 +2,99 @@
 /*
 * Smarty plugin
 * -------------------------------------------------------------
-* File:     function.path.php
+* File:     function.map.php
 * Type:     function
-* Name:     path
-* Purpose:  Ritorna il path "Briciole di pane" dalla posizione corrente
+* Name:     map
+* Purpose:  crea una google map con vari punti
 * -------------------------------------------------------------
 */
+function smarty_function_map($params, &$smarty){
+  global $db, $synPublicPath;
+  $sedi = array();
 
-/*
-  Questo plugin va posizionato nell'header come primo plugin di tutta la pagina.
-  Si devono poi utilizzare le due variabili {$script} e {$onload} che vanno posizionate
-  correttamente nell'<head> della pagina.
+  $qry = "SELECT * FROM sedi ORDER BY id";
+  $res = $db->Execute($qry);
+  while ($arr = $res->FetchRow()){
+        $id = $arr['id'];
+      $nome = $arr['nome'];
+ $indirizzo = $arr['indirizzo'];
+       $tel = $arr['tel'];
+       $web = $arr['web'];
+      $foto = $arr['foto'];
+       $lat = $arr['lat'];
+       $lng = $arr['long'];
 
-  Infine, il codice sotto va posizinato nel template nel punto esatto dove andrà 
-  visualizzata la mappa
-  
-  <div id="map" style="width: 400px; height: 400px"></div>
+    $sedi[] = <<<EOS
+        {id : "$id",
+       nome : "$nome",
+  indirizzo : "$indirizzo",
+   telefono : "$tel",
+        web : "$web",
+       foto : "/public/mat/sedi_foto_id$id.$foto",
+        lat : $lat,
+        lng : $lng}
 
-*/
-
-function smarty_function_map($params, &$smarty)
-{
-  if ($smarty->tpl_vars[synPageId]!=50) return;
-
-  global $db;
-  $key="ABQIAAAAtbdsvAeiRWKDV6mXFLfs3BQZ8zL4PBcW1ezs8ByFDtcU30FomRSHR9by5gRow5SVu4ycKTmDKglMzg";    
-  $startLat=45.43347361805792;
-  $startLon=12.33914852142334;
-  $startZoom=14;
-
-  // Performing SQL query
-  $query = "SELECT * FROM punti";
-  $result = $db->Execute($query) or die('Query failed: ' . mysql_error());
-  while ($row = $result->FetchRow($result)) {
-    //printf("ID: %s  Name: %s", $row[0], $row[1]);
-    $id=$row["id"];
-    $lat=$row["lat"];
-    $long=$row["long"];
-
-    $titolo=translateSite($row["titolo"]);
-    $descrizione=translateSite($row["descrizione"]);
-    $url=$row["link"];
-    if ($url!="" and $url!="http://") $titolo="<a href='$url'>$titolo</a>";
-
-    $txt.="var point$count = new GLatLng($long,$lat);\n";
-    $txt.="map.addOverlay(createMarker(point$count,\"$titolo\",\"$descrizione\",\"$url\"));\n";
-    $count++; 
+EOS;
   }
-  
-  ob_start();?>
-    <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?=$key?>" type="text/javascript"></script>
-    <script type="text/javascript">
-      function load() {
-        var map = new GMap2(document.getElementById("map"));
-        map.setCenter(new GLatLng(<?=$startLat?>,<?=$startLon?>), <?=$startZoom?>);
-        map.addControl(new GLargeMapControl());
-        map.addControl(new GMapTypeControl());
-        map.setMapType(G_HYBRID_MAP);
-        <?=$txt?>
-      }
-      function createMarker(point, txt, desc, url) {
-        var icon = new GIcon();
-        icon.image = "http://www.javaopenbusiness.it:80/com.icteam.ospmi.presentation.common.HtmlDriverOspmi/img/1_employee.png";//rosso omino
-        icon.shadow = "http://labs.google.com/ridefinder/images/mm_20_shadow.png";
-        icon.iconSize = new GSize(12, 20);
-        icon.shadowSize = new GSize(22, 20);
-        icon.iconAnchor = new GPoint(6, 20);
-        icon.infoWindowAnchor = new GPoint(5, 1);
-        var marker = new GMarker(point, icon);
-        GEvent.addListener(marker, "click", function() {
-          marker.openInfoWindowHtml("<b>" + txt + "</b><p>" + desc+ "</p>");
-        });
-        return marker;
-      }
-    </script>
-  <?
-  $contents=ob_get_contents();
-  ob_end_clean();
-  
-  $smarty->assign("script",$contents);
-  $smarty->assign("onload","onload=\"load()\" onunload=\"GUnload()\"");
 
-  
-  return;   
+  ob_start();
+?>
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+<script type="text/javascript">
+  var infowindow = null;
+  $(document).ready(function(){
+    initialize();
+  });
+
+  function initialize() {
+    var myOptions = {
+      zoom: 13,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    }
+    var map = new google.maps.Map(document.getElementById("map-canvas"), myOptions);
+
+    var bounds = new google.maps.LatLngBounds();
+    setMarkers(map, arrSedi, bounds);
+    map.fitBounds(bounds);
+
+    infowindow = new google.maps.InfoWindow({
+      content: "loading..."
+    });
+  }
+
+  var arrSedi = [
+<?= implode(",\n", $sedi); ?>
+  ];
+
+  function setMarkers(map, markers, bounds) {
+    for (var i = 0; i < markers.length; i++) {
+      var item = markers[i];
+      var siteLatLng = new google.maps.LatLng(item.lat, item.lng);
+      var marker = new google.maps.Marker({
+        position: siteLatLng,
+        map: map,
+        title: item.name,
+        animation: google.maps.Animation.DROP,
+        icon: '<?= $synPublicPath ?>/img/m_red.png',
+        html: '<h4 style="margin:0">'+ item.nome +'<\/h4><\/div>'
+            + '<img src="'+ item.foto +'" class="foto-sede" width="213" height="72">'
+            + '<div><address>'+ item.indirizzo +'<br>'+ item.telefono +'<\/address><\/div>'
+            + '<div><a href="http://'+ item.web +'" target="_blank">'+ item.web +'<\/a><\/div>'
+      });
+      bounds.extend(marker.position);
+
+      var contentString = "Some content";
+      google.maps.event.addListener(marker, "click", function () {
+        infowindow.setContent(this.html);
+        infowindow.open(map, this);
+      });
+    }
+  }
+</script>
+<?php
+  $contents = ob_get_contents();
+  ob_end_clean();
+
+  return $contents;
 }
 ?>

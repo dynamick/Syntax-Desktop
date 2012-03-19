@@ -347,7 +347,7 @@ class ADODB_PDO
        || preg_match('/\s+UNION\s+/is',$sql)) {
 
        $rewritesql = $this->_strip_order_by($sql);
-       $rewritesql = "SELECT COUNT(*) FROM ($rewritesql) ";
+       $rewritesql = "SELECT COUNT(*) FROM ($rewritesql) AS adodbpdocount ";
 
     } else {
       // now replace SELECT ... FROM with SELECT COUNT(*) FROM
