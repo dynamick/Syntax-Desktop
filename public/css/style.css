@@ -167,3 +167,20 @@ blockquote p {font: 160% Georgia; color: #aaa; padding: 0 10% 0 0; line-height: 
 #content .newsnav {margin-top:20px; width:100%; overflow:hidden; text-align:center;}
 #content .newsnav .prev {float:left;}
 #content .newsnav .next {float:right;}
+
+#content .download-content ul.file {margin:0; padding:0; list-style-type:none; overflow: hidden;}
+#content .download-content ul.file p {margin:0;}
+#content .download-content ul.file li{ float: left; margin: 0 10px 30px 0; background: none; padding: 0;}
+#content .download-content ul.file li a h4{ margin: 0;}
+#content .download-content ul.file li a{ position: relative; padding: 0 0 0 60px; display: block; width:725px;}
+#content .download-content ul.file li .icon{ display: block; width: 48px; height: 48px; position: absolute; top:0; left:0; background-image: url(/public/img/icon.png); background-position: 0 0; background-repeat: no-repeat;}
+#content .download-content ul.file li .doc{ background-position: 0 0;}
+#content .download-content ul.file li a:hover .doc{ background-position: 0 -48px;}
+#content .download-content ul.file li .pdf{ background-position: -46px 0;}
+#content .download-content ul.file li a:hover .pdf{ background-position: -46px -48px;}
+#content .download-content ul.file li .xls{ background-position: -92px 0;}
+#content .download-content ul.file li a:hover .xls{ background-position: -92px -48px;}
+#content .download-content ul.file li .zip{ background-position: -138px 0;}
+#content .download-content ul.file li a:hover .zip{ background-position: -138px -48px;}
+#content .download-content ul.file li .url{ background-position: -184px 0;}
+#content .download-content ul.file li a:hover .url{ background-position: -184px -48px;}

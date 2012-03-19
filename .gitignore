@@ -3,3 +3,4 @@ public/templates_c/*.php
 public/mat/*.*
 public/mat/thumb/*
 *.db
+.DS*
