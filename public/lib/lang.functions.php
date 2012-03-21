@@ -118,9 +118,9 @@ function updateLang() {
   if (isset($_GET["synSiteLang"]))
     setLang(intval($_GET["synSiteLang"]));
 
-  //check if exist a language id that match the session variable
+  //check if a language id that matches the session variable exists
   if ($_SESSION['synSiteLang'] != '') {
-    $sql = "SELECT id FROM aa_lang WHERE id=".intval($_SESSION["synSiteLang"]);
+    $sql = "SELECT id FROM aa_lang WHERE id=".intval($_SESSION['synSiteLang']);
     $res = $db->Execute($sql);
     if(!$res->fetchrow()){
       $_SESSION['synSiteLang'] = '';
@@ -129,7 +129,7 @@ function updateLang() {
 
   if ($_SESSION['synSiteLang'] == '') {
     $available = array();
-    $res = $db->Execute("SELECT id,initial FROM aa_lang WHERE `active`=1 ORDER BY id");
+    $res = $db->Execute('SELECT id, initial FROM aa_lang WHERE `active`=1 ORDER BY id');
     while($arr = $res->fetchrow()){
       extract($arr);
       $available[$initial] = $id;
@@ -137,21 +137,28 @@ function updateLang() {
 
     $get_lang = get_languages(); // array delle lingue accettate dal browser in ordine di preferenza
     foreach($get_lang AS $lng){
-      if(isset($available[$lng])) {
+      $lng = str_replace('-', '_', trim($lng)); //cambio 'it-it' in 'it_it' per compatibilità con mySql
+      $lng2char = substr($lng, 0, 2); //cambio 'it_it' in 'it'
+
+      if(isset($available[$lng])) { // cerco 'it_it', se lo trovo ho finito
         $pref = $available[$lng];
         break;
+      } elseif( isset($available[$lng2char]) ){ // cerco 'it' e continuo
+        $pref2 = $available[$lng2char];
       }
     }
 
-    if(!$pref) $pref = array_shift(array_keys($available));
+    //se non ho trovato 'it_it' utilizzo 'it'
+    if(!$pref) $pref = $pref2;
+
+    //se non c'è neanche quello uso la prima lingua disponibile
+    if(!$pref) $pref = array_shift(array_values($available));
 
     $_SESSION['synSiteLang'] = $available[$pref];
     $_SESSION['synSiteLangInitial'] = array_search($pref, $available);
 
     //setlocale(LC_ALL, strtolower($currlang)."_".strtoupper($currlang));
   }
-
-  //echo '<pre>', print_r($_SESSION), '</pre>';
 }
 
 
