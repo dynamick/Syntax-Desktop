@@ -4,3 +4,4 @@ public/mat/*.*
 public/mat/thumb/*
 *.db
 .DS*
+.project

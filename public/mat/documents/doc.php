@@ -90,40 +90,51 @@ function dl_file($file){
    exit;
 }
 
- function getNiceFileName($filename,$ext) {
-   global $db;
-   session_start();
-   $userid    = $_COOKIE['web_user']['id'];
-   $usergroup = $_COOKIE['web_user']['group'];
+function getNiceFileName($filename,$ext) {
+  global $db;
+  
+  $t = multiTranslateDictionary(array('doc_riservato'));
 
-   $arr=explode("_",$filename);
-   if ($arr[0]=="aa") {$arr[0]="aa_page"; $arr[2]=$arr[3];}
-   $qry="SELECT ".CAPTION_FIELD_NAME.", enabled_groups, status FROM ".$arr[0]." WHERE id=".intval(substr($arr[2],2));
-   @$res=$db->Execute($qry);
-   if ($res!==false) {
+  session_start();
+  $userid    = $_COOKIE['web_user']['id'];
+  $usergroup = $_COOKIE['web_user']['group'];
+
+  if($usergroup != "") {
+    $usergroup = explode('|', $usergroup);
+  } else $usergroup = array();
+
+  $arr=explode("_",$filename);
+  if ($arr[0]=="aa") {$arr[0]="aa_page"; $arr[2]=$arr[3];}
+  $qry="SELECT ".CAPTION_FIELD_NAME.", enabled_groups, status FROM ".$arr[0]." WHERE id=".intval(substr($arr[2],2));
+  @$res=$db->Execute($qry);
+  if ($res!==false) {
     $row    = $res->FetchRow();
     $titolo = translateSite($row[CAPTION_FIELD_NAME]);
     $status = $row["status"];
-    if($row['enabled_groups']){
-     $owner    = explode('|', $row['enabled_groups']);
-    } else $owner = Array(); 
-     
-     if( !isset($_SESSION['synUser']) and !(
-        ($status == 'public') ||
-        ($status == 'protected' && $userid != '') ||
-        (($status == 'private' || $status == 'secret') && ((in_array($usergroup, $owner) || !$owner) && $userid != '') )   
-        )){     
-         die("<b>Non ti e' permesso scaricare questo file!</b>");
-         exit;
-     }
+    if($row['enabled_groups']) $owner    = explode('|', $row['enabled_groups']);
+    else $owner = Array(); 
 
-     if ($titolo=="") $titolo=$filename; // if something has been found, use it as filename...
-     else $titolo=str_replace(" ","-",trim(strtolower(ereg_replace("[^[:alpha:][:space:]0-9+]","",$titolo)))).".".$ext;
-   } else $titolo=$filename; // ...otherwise keep the original filename
-   return $titolo;
- }
+    $intersect = array_intersect($usergroup, $owner);
 
- $file=$_SERVER["REQUEST_URI"];
- $fullpath=getenv("DOCUMENT_ROOT").$file;
- dl_file($fullpath)
- ?>
+    if(is_array($intersect) && count($intersect) > 0) $have_same_group = true;
+    else $have_same_group = false;
+   
+    if( !isset($_SESSION['synUser']) and !(
+      ($status == 'public') ||
+      ($status == 'protected' && $userid != '') ||
+      (($status == 'private' || $status == 'secret') && ($have_same_group && $userid != '') )   
+    )){     
+      die("<b>{$t['doc_riservato']}</b>");
+      exit;
+    }
+
+    if ($titolo=="") $titolo=$filename; // if something has been found, use it as filename...
+    else $titolo=str_replace(" ","-",trim(strtolower(ereg_replace("[^[:alpha:][:space:]0-9+]","",$titolo)))).".".$ext;
+  } else $titolo=$filename; // ...otherwise keep the original filename
+    return $titolo;
+}
+
+$file=$_SERVER["REQUEST_URI"];
+$fullpath=getenv("DOCUMENT_ROOT").$file;
+dl_file($fullpath)
+?>

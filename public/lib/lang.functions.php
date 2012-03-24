@@ -171,6 +171,7 @@ function translateDictionary($label){
 function multiTranslateDictionary($label=array()){
   # traduzione multipla, ritorna un array
   global $db;
+  session_start();
   $lng = $_SESSION["synSiteLangInitial"];
   $ret = array();
   $qry = "SELECT v.label, t.$lng AS value FROM dictionary v JOIN aa_translation t ON v.value=t.id WHERE v.label='".implode("' OR v.label='", $label)."'";

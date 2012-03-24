@@ -8,6 +8,10 @@ function smarty_function_documents($params, &$smarty) {
   $lng       = $_SESSION['synSiteLangInitial'];
 //echo $usergroup;
 
+  if($usergroup != "") {
+    $usergroup = explode('|', $usergroup);
+  } else $usergroup = array();
+
   $qry = <<<EOQ
    SELECT d.id, d.file, d.date, d.status, d.enabled_groups, d.category_id,
           t1.$lng AS title, t2.$lng AS category, t3.$lng AS description
@@ -25,8 +29,8 @@ EOQ;
   //$nav = $pgr->renderPagerPublic('', true, true);
   $res = $db->execute($qry);
 
-  if($arr=$res->FetchRow()){
-    //$t = multiTranslateDictionary(array('data_rilascio','scarica_file','riservato','no_abilitazione'));
+  if($arr=$res->FetchRow()) {
+    $t = multiTranslateDictionary(array('doc_riservato','doc_no_abilitazione'));
     do {
       $catid = $arr['category_id'];
       $catname = $arr['category'];
@@ -42,7 +46,7 @@ EOQ;
         $status     = $arr['status'];
 
         if($arr['enabled_groups']){
-          $owner    = explode('|', $arr['enabled_groups']);
+          $owner = explode('|', $arr['enabled_groups']);
         } else $owner = array();
 
         switch(strtolower($ext)) {
@@ -56,9 +60,15 @@ EOQ;
           default :
             $class= "pdf"; break;
         }
-
+        
+        $intersect = array_intersect($usergroup, $owner);
+        
+        if(is_array($intersect) && count($intersect) > 0) $have_same_group = true;
+        else $have_same_group = false;
+        
         if (
-            ($status == 'secret' && ((in_array($usergroup, $owner) || !$owner) && $userid != '') ) ||
+//            ($status == 'secret' && ((in_array($usergroup, $owner) || !$owner) && $userid != '') ) ||
+            ($status == 'secret' && ($have_same_group && $userid != '') ) ||
             ($status == 'private' && $userid!='' ) ||
             ($status == 'public') ||
             ($status == 'protected')
@@ -69,13 +79,14 @@ EOQ;
           if(
             ($status == 'public') ||
             ($status == 'protected' && $userid != '') ||
-            (($status == 'private' || $status == 'secret') && ((in_array($usergroup, $owner) || !$owner) && $userid != '') )
+//            (($status == 'private' || $status == 'secret') && ((in_array($usergroup, $owner) || !$owner) && $userid != '') )
+            (($status == 'private' || $status == 'secret') && ($have_same_group && $userid != '') )
             ){
             # file pubblico o autorizzato per l'utente
             $link  = $file;
           } else {
             # file privato o non autorizzato per l'utente
-            $alert = ($userid ? $t['no_abilitazione'] : $t['riservato']);
+            $alert = ($userid ? $t['doc_no_abilitazione'] : $t['doc_riservato']);
             $link  = "javascript:alert('{$alert}')";
           }
           $html .= "    <li>\n";
