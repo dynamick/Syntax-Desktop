@@ -30,9 +30,11 @@ class synSmarty extends Smarty {
       $this->caching        = false;
       $this->cache_lifetime = 100;
 
-      $this->clearCompiledTemplate();
 
       $this->synTemplate    = $this->getSynTemplate($pageId);
+
+      $this->clearCompiledTemplate($this->synTemplate);
+
       $this->traverseTree($pageId);
       $this->assign('synTemplate', $this->synTemplate);
    }
