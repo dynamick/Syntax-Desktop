@@ -252,7 +252,7 @@ class formBuilder {
     $class = ($obbligatorio==1) ? ' class="required"' : '';
     $index = $this->tabIndex();    
 
-    $ret = "  <textarea name=\"{$name}\" id=\"f{$name}\"{$class} rows=\"6\" cols=\"60\" tabindex=\"{$index}\"></textarea>";
+    $ret = "  <textarea name=\"{$name}\" id=\"f{$name}\"{$class} rows=\"6\" cols=\"60\" tabindex=\"{$index}\">{$value}</textarea>";
     return $ret;    
   }
 
