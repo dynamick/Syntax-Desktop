@@ -1,8 +1,6 @@
-<?
-include_once("fckeditor.php");
-
+<?php
 /*************************************
-* class TEXTAREA                     *
+* class TEXTAREA CKEditor 3.0        *
 * Create a input type="text" obj     *
 **************************************/
 class synTextArea extends synElement {
@@ -31,29 +29,32 @@ class synTextArea extends synElement {
   //get the label of the element
   function getCell() {
     return $this->translate(substr(strip_tags($this->getValue()),0,200),true);
-  }    
-  
-  
+  }
+
+
   //private function
   function _html() {
-    if ($this->type=="") $this->type="Default";
-    ob_start();
-    //$oFCKeditor = new FCKeditor ;
-    //$oFCKeditor->Value = $this->translate($this->value);
-    //$oFCKeditor->ToolbarSet = $this->type ;
-    //$oFCKeditor->CreateFCKeditor( $this->name, "100%", $this->size ) ;
+    global $synAdminPath, $synPublicPath, $mat;
+    $height = $this->size;
+    $value = htmlentities($this->translate($this->value));
+    $ckConfig = $synAdminPath.'/includes/js/ckeditor/syntax.config.php';
+    $contents = <<<EOC
+  <textarea name="{$this->name}" id="{$this->name}" class="editor" style="height:{$height}px" rel="{$this->type}">
+    {$value}
+  </textarea>
+  <script type="text/javascript" src="{$synAdminPath}/includes/js/ckeditor/ckeditor.js"></script>
+  <script type="text/javascript">
+   CKEDITOR.replace('{$this->name}', {customConfig:'{$ckConfig}', toolbar:'{$this->type}', height:$height});
+  </script>
+EOC;
+    // NB: quando passiamo a jquery lo script sopra va centralizzato!
 
-    $oFCKeditor = new FCKeditor($this->name) ;
-    $oFCKeditor->Value = $this->translate($this->value);
-    $oFCKeditor->ToolbarSet = $this->type ;
-    $oFCKeditor->Height = $this->size+72; //72 = barra fckeditor con 3 righe di icone
-    $oFCKeditor->Create() ;
+    $_SESSION['KCFINDER']['disabled'] = false;
+    $_SESSION['KCFINDER']['uploadURL'] = $synPublicPath.$mat.'/';
+  //$_SESSION['KCFINDER']['uploadDir'] = getenv('DOCUMENT_ROOT').$synPublicPath.$mat.'/';
 
-    $contents=ob_get_contents();
-    ob_end_clean();
-    if ($this->big==1) return "</td></tr><tr><td colspan=2>".$contents;
-    else return $contents;
-        
+    if ($this->big==1) $contents = '</td></tr><tr><td colspan=2>'.$contents;
+    return $contents;
   }
 
   function setQry($qry) {
@@ -65,31 +66,27 @@ class synTextArea extends synElement {
     global $synElmName,$synElmType,$synElmLabel,$synElmSize,$synElmHelp, $synElmPath, $synElmQry;
     global $synElmSize;
     $synHtml = new synHtml();
-    //parent::configuration();
+
     if (!isset($synElmSize[$i]) or $synElmSize[$i]=="") $synElmSize[$i]=$this->size;
     $this->configuration[4]="Altezza: ".$synHtml->text(" name=\"synElmSize[$i]\" value=\"$synElmSize[$i]\"");
 
-    $array=array(
-      "Default" => "Default",
-        "Basic" => "Basic",
-       "Deluxe" => "Deluxe"
-    );
+    $array=array("Default"=>"Default", "Basic"=>"Basic", "Deluxe"=>"Deluxe");
     $this->configuration[5]="Tipo: ".$synHtml->select(" name=\"synElmPath[$i]\" value=\"$synElmPath[$i]\"",$array,$synElmPath[$i]);
 
     if (!isset($synElmQry[$i]) or $synElmQry[$i]=="") $checked=""; else $checked=" checked='checked' ";
     $this->configuration[6]="Gigante: ".$synHtml->check(" name=\"synElmQry[$i]\" value=\"1\" $checked");
-    
+
     //enable or disable the 3 check at the last configuration step
     global $synChkKey, $synChkVisible, $synChkEditable,$synChkMultilang;
     $_SESSION["synChkKey"][$i]=1;
     $_SESSION["synChkVisible"][$i]=1;
     $_SESSION["synChkEditable"][$i]=1;
     $_SESSION["synChkMultilang"][$i]=1;
-    
+
     if ($k==99) return $this->configuration;
     else return $this->configuration[$k];
   }
-  
+
 
 } //end of class text
 
