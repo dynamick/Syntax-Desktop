@@ -8,17 +8,17 @@ class synTextArea extends synElement {
   var $big;
 
   //constructor(name, value, label, size, help)
-  function synTextArea($n="", $v=null , $l=null, $s=150, $h="") {
-    if ($n=="") $n =  "textarea".date("his");
-    if ($l=="") $l =  ucfirst($n);
+  function synTextArea($n='', $v=null , $l=null, $s=150, $h='') {
+    if ($n=='') $n =  'textarea'.date('his');
+    if ($l=='') $l =  ucfirst($n);
 
-    $this->type = "textarea";
+    $this->type  = 'Default';
     $this->name  = $n;
     if ($v==null) { global $$n; $this->value = $$n; } else $this->value = $v;
     $this->label = $l;
     $this->size  = $s;
     $this->help  = $h;
-    $this->db    = " text NOT NULL";
+    $this->db    = ' text NOT NULL';
   }
 
   //set the Type of TextArea
@@ -39,12 +39,11 @@ class synTextArea extends synElement {
     $value = htmlentities($this->translate($this->value));
     $ckConfig = $synAdminPath.'/includes/js/ckeditor/syntax.config.php';
     $contents = <<<EOC
-  <textarea name="{$this->name}" id="{$this->name}" class="editor" style="height:{$height}px" rel="{$this->type}">
+  <textarea name="{$this->name}" id="ck_{$this->name}" class="editor" style="height:{$height}px" rel="{$this->type}">
     {$value}
   </textarea>
-  <script type="text/javascript" src="{$synAdminPath}/includes/js/ckeditor/ckeditor.js"></script>
   <script type="text/javascript">
-   CKEDITOR.replace('{$this->name}', {customConfig:'{$ckConfig}', toolbar:'{$this->type}', height:$height});
+   CKEDITOR.replace('ck_{$this->name}', {customConfig:'{$ckConfig}', toolbar:'{$this->type}', height:$height});
   </script>
 EOC;
     // NB: quando passiamo a jquery lo script sopra va centralizzato!

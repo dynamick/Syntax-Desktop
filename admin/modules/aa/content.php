@@ -47,7 +47,8 @@
     <meta http-equiv="msthemecompatible" content="yes" />
     <meta http-equiv="content-script-type" content="text/javascript" />
     <link rel="stylesheet" type="text/css" href="content.css" />
-    <script type="text/javascript" src="../../includes/js/DateTimePicker/datetimepicker.js"></script>
+    <script type="text/javascript" src="<?=$synAdminPath?>/includes/js/DateTimePicker/datetimepicker.js"></script>
+    <script type="text/javascript" src="<?=$synAdminPath?>/includes/js/ckeditor/ckeditor.js"></script>
     <script type="text/javascript" src="http://www.google.com/jsapi"></script>
     <script type="text/javascript">google.load("jquery", "1");</script>
     <script type="text/javascript" src="content.js?rand=<?=rand(0,1000)?>"></script>
