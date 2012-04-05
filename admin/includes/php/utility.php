@@ -311,6 +311,9 @@ function lang($id,&$str) {
   //insert a row in the translation table and return the id of the new row
   function insertTranslation($value) {
     global $db;
+    $languagelist = "";
+    $valuelist = "";
+      
     //$lang=getLang(true);
 
     //get the list of languages
@@ -374,14 +377,14 @@ EOQ;
 
 function sanitizePath($txt) {
   # accent folding
-  $search = array('À','Á','Â','Ä','Å','Æ','à','á','â','ä','å','æ',
-                  'ß',
-                  'Ç','ç',
-                  'È','É','Ë','è','é','ë',
-                  'Ì','Í','Ï','ì','í','ï',
-                  'Ñ','ñ',
-                  'Ò','Ó','Ô','Ö','Ø','ò','ó','ô','ö','ø',
-                  'Ù','Ú','Ü','ù','ú','ü',
+  $search = array('ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½',
+                  'ï¿½',
+                  'ï¿½','ï¿½',
+                  'ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½',
+                  'ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½',
+                  'ï¿½','ï¿½',
+                  'ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½',
+                  'ï¿½','ï¿½','ï¿½','ï¿½','ï¿½','ï¿½',
                   '%','=',','
                   );
   $replace= array('A','A','A','A','A','AE','a','a','a','a','a','ae',
@@ -417,7 +420,7 @@ function getSqlTree($id) {
 *******************************************************************************/
 
 /*
-  cleverThumb ®
+  cleverThumb ï¿½
   crea il thumbnail SOLO se non esiste oppure l'immagine madre viene aggiornata.
   ritorna un tag <img>.
   ------------------------------------------------------------------------------
@@ -429,7 +432,7 @@ function getSqlTree($id) {
   - testo alt del thumbnail [optional]
   - larghezza
   - altezza
-  - rotazione (inverte altezza e larghezza se l'immagine è verticale) [optional]
+  - rotazione (inverte altezza e larghezza se l'immagine ï¿½ verticale) [optional]
   - attributi html (classe, id, ecc.) [optional]
 */
 function cleverThumb($path="", $filename, $foto, $suffix="", $alt="", $width=50, $height=50, $rotate=false, $attr=""){

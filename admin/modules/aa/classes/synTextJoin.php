@@ -24,7 +24,7 @@ class synTextJoin extends synElement {
     if ($l=="") $l =  ucfirst($n);
     $this->type = "text";
     $this->name  = $n;
-    if ($$n) { $this->selected = $$n; } else $this->value = $v;
+    if (isset($$n) and $$n) { $this->selected = $$n; } else $this->value = $v;
     $this->label = $l;
     $this->size  = $s;
     $this->help  = $h;
@@ -36,6 +36,7 @@ class synTextJoin extends synElement {
 
   //private function
   function _html() {
+    $txt = "";
     $value = $this->createArray();
     if (is_array($value)) { 
       foreach($value as $v) {
@@ -90,7 +91,8 @@ class synTextJoin extends synElement {
 
     $res = $db->Execute($this->qry);
     while ($arr=$res->FetchRow()) {
-      $ret[] = array('key'=>$arr[0], 'name'=>$arr[1], 'value'=>$values[$arr[0]]);
+      $tmp_val = isset($values[$arr[0]]) ? $values[$arr[0]] : "";
+      $ret[] = array('key'=>$arr[0], 'name'=>$arr[1], 'value'=>$tmp_val);
     }
     return $ret;
   }
@@ -172,28 +174,29 @@ class synTextJoin extends synElement {
   function configuration($i="",$k=99) {
     global $synElmName,$synElmType,$synElmLabel,$synElmSize,$synElmHelp, $synElmQry;
     global $synElmQry;
+    global $db;
+    global $synChkKey, $synChkVisible, $synChkEditable,$synChkMultilang;
+
     $synHtml = new synHtml();
     
     
-    global $db;
     $res=$db->Execute("SELECT * FROM aa_services order by name");
     $txt="<select name=\"synElmQry[$i]\" >";
     while ($arr=$res->FetchRow()) {
-      if (strpos($synElmQry[$i]." ","FROM ".$arr["syntable"]." ")===false ) $selected=""; else $selected="selected=\"selected\""; 
+      if (isset($synElmQry[$i]) and strpos($synElmQry[$i]." ","FROM ".$arr["syntable"]." ")===false ) $selected=""; else $selected="selected=\"selected\""; 
       if ($arr["syntable"]!="") $txt.="<OPTION VALUE=\"SELECT * FROM ".$arr["syntable"]."\" $selected>".translate($arr["name"])."</option>";
     }
     $txt.="</select>\n";
 
     $this->configuration[4]="Query: ".$txt;
 
-    if (!isset($synElmSize[$i]) or $synElmSize[$i]=="") $synElmSize[$i]=$this->size;
-    $this->configuration[5]="Dimensione: ".$synHtml->text(" name=\"synElmSize[$i]\" value=\"$synElmSize[$i]\"");
+#    if (!isset($synElmSize[$i]) or $synElmSize[$i]=="") $synElmSize[$i]=$this->size;
+#    $this->configuration[5]="Dimensione: ".$synHtml->text(" name=\"synElmSize[$i]\" value=\"$synElmSize[$i]\"");
 
-    if (!isset($synElmPath[$i]) or $synElmPath[$i]=="") $checked=""; else $checked=" checked='checked' ";
-    $this->configuration[6]="NULL: ".$synHtml->check(" name=\"synElmPath[$i]\" value=\"1\" $checked");
+#    if (!isset($synElmPath[$i]) or $synElmPath[$i]=="") $checked=""; else $checked=" checked='checked' ";
+#    $this->configuration[6]="NULL: ".$synHtml->check(" name=\"synElmPath[$i]\" value=\"1\" $checked");
     
     //enable or disable the 3 check at the last configuration step
-    global $synChkKey, $synChkVisible, $synChkEditable,$synChkMultilang;
     $_SESSION["synChkKey"][$i]=1;
     $_SESSION["synChkVisible"][$i]=1;
     $_SESSION["synChkEditable"][$i]=0;

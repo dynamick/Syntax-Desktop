@@ -14,7 +14,10 @@ class synPictureTag extends synElement {
 
     $this->type = "text";
     $this->name  = $n;
-    if ($v==null) { global $$n; $this->value = $_REQUEST[$n]; } else $this->value = $v;
+    if ($v==null) {
+      global $$n;
+      if(isset($_REQUEST[$n])) $this->value = $_REQUEST[$n]; 
+    } else $this->value = $v;
     $this->label = $l;
     $this->size  = $s;
     $this->help  = $h;
@@ -40,7 +43,7 @@ class synPictureTag extends synElement {
     $fieldname = $this->name;
     $value = $this->getValue();
     $session_id = urlencode(session_id());
-
+    $ret = "";
 
     if ($value!="") {
       $qry = "SELECT * FROM media WHERE id=".$value;

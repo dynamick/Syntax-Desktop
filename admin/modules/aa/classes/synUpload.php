@@ -35,7 +35,11 @@ class synUpload extends synElement {
     if($cmd=="modifyrow") {
       $container = $this->container;
       $keyArr = explode("=", str_replace("'", "", str_replace("`", "", trim(urldecode($container->getKey())))));
-      list($app_title, $app_order, $app_table, $app_field, $app_linkfield) = explode("|", $this->filter);
+      $app_title = $app_order = $app_table = $app_field = $app_linkfield = ""; 
+      if(isset($this->filter)) {
+         $arr_tmp = explode("|", $this->filter);
+         if(is_array($arr_tmp) and count($arr_tmp)==5) list($app_title, $app_order, $app_table, $app_field, $app_linkfield) = $arr_tmp; 
+      }
       $key = $keyArr[1];
       $uploadPHP = "ihtml/upload.php?key=".$key."&session_id=".session_id()."&description={$app_title}&order={$app_order}&table={$app_table}&field={$app_field}&linkfield={$app_linkfield}";
       $ret = <<<EOC
@@ -196,7 +200,7 @@ EOC;
   //translate path and insert dynamic content
   function translatePath($path) {
     global $synAdminPath;
-    if (strpos($path,"§syntaxRelativePath§")!==false) $path=str_replace("§syntaxRelativePath§",$synAdminPath,$path);
+    if (strpos($path,"Â§syntaxRelativePathÂ§")!==false) $path=str_replace("Â§syntaxRelativePathÂ§",$synAdminPath,$path);
     return $path;
   }
 
@@ -205,7 +209,7 @@ EOC;
   	global $synAbsolutePath;
 
     global $synElmName,$synElmType,$synElmLabel,$synElmSize,$synElmHelp;
-    global $synElmPath;
+    global $synElmPath,$synElmFilter;
     $synHtml = new synHtml();
 
     //Calculate the correct path
@@ -213,9 +217,11 @@ EOC;
     $documentRoot=str_replace("\\","/",$synAbsolutePath);
     $pathinfo=substr($syntaxPath,strlen($documentRoot));
     if (!isset($synElmPath[$i]) or $synElmPath[$i]=="") $synElmPath[$i]=$pathinfo."/mat";
+    if (!isset($synElmFilter[$i]) or $synElmFilter[$i]=="") $synElmFilter[$i]="title|ordine|photos|photo|album";
 
     //parent::configuration();
-    $this->configuration[8]="Path: ".$synHtml->text(" name=\"synElmPath[$i]\" value=\"$synElmPath[$i]\"")."<br><span style='color: gray'>Insert directory path without DOCUMENT ROOT.<br />I.e. <strong>/mysite/syntax/public/templates/</strong> <br> Use <strong>§syntaxRelativePath§</strong><br />for dynamically insert Syntax Desktop relative path.</span>";
+    $this->configuration[8]="Path: ".$synHtml->text(" name=\"synElmPath[$i]\" value=\"$synElmPath[$i]\"")."<br><span style='color: gray'>Insert directory path without DOCUMENT ROOT.<br />I.e. <strong>/mysite/syntax/public/templates/</strong> <br> Use <strong>Â§syntaxRelativePathÂ§</strong><br />for dynamically insert Syntax Desktop relative path.</span>";
+    $this->configuration[9]="Join: ".$synHtml->text(" name=\"synElmFilter[$i]\" value=\"$synElmFilter[$i]\"")."<br><span style='color: gray'>Usage: title field|order field|table name|field|foreign key field</span>";
 
     //enable or disable the 3 check at the last configuration step
     global $synChkKey, $synChkVisible, $synChkEditable, $synChkMultilang;

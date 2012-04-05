@@ -16,7 +16,7 @@ if (isset($_GET["aa_idjoin"])) {
   );
   
   $toRemove=false;
-  if (is_array($_SESSION["aa_joinStack"])){
+  if (isset($_SESSION["aa_joinStack"]) and is_array($_SESSION["aa_joinStack"])){
     foreach ($_SESSION["aa_joinStack"] as $k=>$s) {
       if  ( $s["idjoin"] == $_GET["aa_idjoin"] && $s["value"]  == $_GET["aa_value"] ) $toRemove=true;
       if ($toRemove) unset($_SESSION["aa_joinStack"][$k]);

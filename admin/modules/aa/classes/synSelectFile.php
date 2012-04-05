@@ -18,7 +18,7 @@ class synSelectFile extends synElement {
     if ($l=="") $l =  ucfirst($n);
     $this->type = "file";
     $this->name  = $n;
-    if ($$n) { $this->selected = $$n; } else $this->value = $v;
+    if (isset($$n) and $$n) { $this->selected = $$n; } else $this->value = $v;
     $this->label = $l;
     $this->size  = $s;
     $this->help  = $h;
@@ -28,7 +28,7 @@ class synSelectFile extends synElement {
   //private function
   function _html() {
     $this->value = $this->createArray($this->translatePath(),$this->path);
-    $txt="<select name='".$this->name."' $disable onchange=\"document.getElementById('select".$this->name."').src='".$this->translatePath()."'+this.value;\">";
+    $txt="<select name='".$this->name."' onchange=\"document.getElementById('select".$this->name."').src='".$this->translatePath()."'+this.value;\">";
     if (is_array($this->value)) {
       while (list ($k, $v) = each ($this->value)) {
         if ($this->translate($this->getValue())==$k) $selected="selected=\"selected\""; else $selected="";
@@ -36,7 +36,7 @@ class synSelectFile extends synElement {
           stripos($k, '.gif')>0 ||
           stripos($k, '.jpg')>0 ||
           stripos($k, '.png')>0
-        ){// se è una immagine la uso come sfondo (solo Firefox)
+        ){// se ï¿½ una immagine la uso come sfondo (solo Firefox)
           $icon = $this->translatePath().'/'.$k;
           $style =" style=\"padding:2px 0 2px 20px; background:url('$icon') no-repeat 0 50%;\"";
         } else $style = '';
@@ -50,8 +50,9 @@ class synSelectFile extends synElement {
 
   //sets the value of the element
   function setValue($v) {
-    global $$n;
-    if (!isset($_REQUEST[$$n])) $this->value = $this->createArray($this->translatePath(),$this->path);
+    #global $$n;
+    #if (!isset($_REQUEST[$$n])) 
+    $this->value = $this->createArray($this->translatePath(),$this->path);
     $this->selected = $v;
   }
 
@@ -76,7 +77,7 @@ class synSelectFile extends synElement {
   function translatePath() {
     global $synAdminPath;
     $path=$this->qry;
-    if (strpos($path,"§syntaxRelativePath§")!==false) $path=str_replace("§syntaxRelativePath§",$synAdminPath,$path);
+    if (strpos($path,"ï¿½syntaxRelativePathï¿½")!==false) $path=str_replace("ï¿½syntaxRelativePathï¿½",$synAdminPath,$path);
     return $path;
   }
 
@@ -106,10 +107,10 @@ class synSelectFile extends synElement {
     global $synElmQry;
     $synHtml = new synHtml();
     //parent::configuration();
-    $this->configuration[4]="Path: ".$synHtml->text(" name=\"synElmQry[$i]\" value=\"".htmlentities($synElmQry[$i])."\"")."<br><span style='color: gray'>Insert directory path without DOCUMENT ROOT.<br />I.e. <strong>/mysite/syntax/public/templates/</strong> <br> Use <strong>§syntaxRelativePath§</strong><br />for dynamically insert Syntax Desktop relative path.</span>";
+    $this->configuration[4]="Path: ".$synHtml->text(" name=\"synElmQry[$i]\" value=\"".htmlentities($synElmQry[$i])."\"")."<br><span style='color: gray'>Insert directory path without DOCUMENT ROOT.<br />I.e. <strong>/mysite/syntax/public/templates/</strong> <br> Use <strong>Â§syntaxRelativePathÂ§</strong><br />for dynamically insert Syntax Desktop relative path.</span>";
 
     if (!isset($synElmPath[$i]) or $synElmPath[$i]=="") $checked=""; else $checked=" checked='checked' ";
-    $this->configuration[5]="NULL: ".$synHtml->check(" name=\"synElmPath[$i]\" value=\"1\" $checked");
+    $this->configuration[5]="NULL: ".$synHtml->hidden(" name=\"synElmPath[$i]\" value=\"\"").$synHtml->check(" name=\"synElmPath[$i]\" value=\"1\" $checked");
 
     if (!isset($synElmSize[$i]) or $synElmSize[$i]=="") $synElmSize[$i]=$this->size;
     $this->configuration[5].=$synHtml->hidden(" name=\"synElmSize[$i]\" value=\"$synElmSize[$i]\"");

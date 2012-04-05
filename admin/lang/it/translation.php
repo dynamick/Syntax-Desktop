@@ -41,14 +41,14 @@
   $strJs["aa_change"]="Per memorizzare i cambiamenti, devi premere INVIO dopo la modifica del testo ";
   $strJs["aa_confirmDel"]="Vuoi davvero cancellare?";
   $strJs["aa_confirmSelDel"]="Sicuro di cancellare le righe selezionate?";
-  $str["cant_delete"]="Impossibile rimuovere questo nodo perchË Il nodo padre non Ë di vostra propriet‡.";
-  $str["cant_delete_child_nodes"]="Questo nodo Ë padre di altri nodi che vanno eliminati prima di procedere con questa operazione.";
+  $str["cant_delete"]="Impossibile rimuovere questo nodo perch√® Il nodo padre non √® di vostra propriet√†.";
+  $str["cant_delete_child_nodes"]="Questo nodo √® padre di altri nodi che vanno eliminati prima di procedere con questa operazione.";
   $str["selectdeselect"]="Seleziona/deseleziona tutti";
   
   
   //service-o-matic
   $str["first_step"]="1/3 - Definizione servizio";
-  $str["first_step_bis"]="Imposta le propriet‡ principali di questo servizio";
+  $str["first_step_bis"]="Imposta le propriet√† principali di questo servizio";
   $str["servicename"]="Nome";
   $str["tablename"]="Tabella";
   $str["servicedescription"]="Descrizione";
@@ -69,13 +69,13 @@
   $str["roworder"]="Ordine";
   $str["third_step"]="3/3 - Specializzazione campi";
   $str["third_step_bis"]="Imposta le caratteristiche specifiche di ogni elemento";
-  $str["alt_fieldkey"]="Spunta se Ë un campo chiave";
-  $str["alt_fieldindex"]="Spunta se Ë un campo visibile nella pagina iniziale";
-  $str["alt_fieldeditable"]="Spunta se Ë un campo editabile dalla pagina iniziale";
-  $str["alt_fieldmultilang"]="Spunta se Ë un campo multilingua";
+  $str["alt_fieldkey"]="Spunta se √® un campo chiave";
+  $str["alt_fieldindex"]="Spunta se √® un campo visibile nella pagina iniziale";
+  $str["alt_fieldeditable"]="Spunta se √® un campo editabile dalla pagina iniziale";
+  $str["alt_fieldmultilang"]="Spunta se √® un campo multilingua";
   
   $str["servicegeneratefile"]="Genera un file php";
-  $str["err_service_already_exists"]="Servizio con questo nome gi‡ esistente.";
+  $str["err_service_already_exists"]="Servizio con questo nome gi√† esistente.";
   $str["service_saved"]="Salvataggio Servizio completato. Scegli in quale gruppo attivare direttamente il servizio";
   $str["service2groups"]="Scegli in quali gruppi vuoi aggiungere il servizio:";
   $str["service_reminder"]="Ricordati che per visualizzare il menu con il nuovo servizio, devi aggiornare la pagina (refresh, F5 con explorer).";
@@ -95,7 +95,7 @@
   $str["log_rights_not_modified"]="non ho i permessi per modificare i permessi della directory";
   $str["log_file_created"]="Creato il file:";
   $str["log_file_not_created"]="non ho i permessi per creare il file";
-  $str["log_file_not_overwritten"]="File esistente e non Ë stato sovrascritto";
+  $str["log_file_not_overwritten"]="File esistente e non √® stato sovrascritto";
   //synTree
   $str["tree_desc"]="Trascina i servizi nella cartella desiderata e premere SALVA";
   
@@ -106,7 +106,7 @@
   $str["db_available_dump"]="Dump disponibili:";
   $str["db_dump_recovery1"]="Ripristina il dump del ";
   $str["db_dump_recovery2"]="delle ore";
-  $str["db_recovery_confirm"]="Verranno Cancellati tutti i dati presenti in questo database. Il database verr‡ poi popolato con i dati di questo dump. Sicuro di continuare?";
+  $str["db_recovery_confirm"]="Verranno Cancellati tutti i dati presenti in questo database. Il database verr√† poi popolato con i dati di questo dump. Sicuro di continuare?";
   $str["db_recovery_del"]="Cancella questo File";
   $str["backup_ok"]="Backup effettuato con successo";
   

@@ -29,6 +29,7 @@ class synTextAreaSimple extends synElement {
   //private function
   function _html() {
     $value=($this->translate($this->value));
+    $contents = "";
     if ($this->size==0) {
       $contents.="<textarea name=\"".$this->name."\" wrap=\"VIRTUAL\" style=\"width:100%\" rows=\"8\" >".$value."</textarea>\n";
     } else {

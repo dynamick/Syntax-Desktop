@@ -275,7 +275,7 @@ class ADODB_PDO
 
     $qryRecs = false; //count records for no offset
 
-    $qryRecs = $this->_getcount($sql, $vars=null, $secs2cache);
+    $qryRecs = $this->_getcount($sql, $vars=null);//, $secs2cache);
     $lastpageno = (int) ceil($qryRecs / $nrows);
     $this->maxRecordCount = $qryRecs;
 
@@ -357,7 +357,7 @@ class ADODB_PDO
 
     if (isset($rewritesql) && $rewritesql != $sql) {
       if (preg_match('/\sLIMIT\s+[0-9]+/i', $sql, $limitarr)) $rewritesql .= $limitarr[0];
-      $qryRecs = $this->GetOne($rewritesql, $inputarr);
+      $qryRecs = $this->GetOne($rewritesql);//, $inputarr);
 
       if ($qryRecs !== false) return $qryRecs;
     }
@@ -370,18 +370,18 @@ class ADODB_PDO
     else $rewritesql = $rewritesql = $this->_strip_order_by($sql);
 
     if (preg_match('/\sLIMIT\s+[0-9]+/i', $sql, $limitarr)) $rewritesql .= $limitarr[0];
-    $rstest = $this->Execute($rewritesql, $inputarr);
+    $rstest = $this->Execute($rewritesql);//, $inputarr);
     if (!$rstest) $rstest = $this->db->Execute($sql, $inputarr);
 
     if ($rstest) {
-      $qryRecs = $rstest->db->RecordCount();
+      $qryRecs = isset($rstest->db) ? $rstest->db->RecordCount() : 0;
       if ($qryRecs == -1) {
         while(!$rstest->EOF) {
           $rstest->MoveNext();
         }
         $qryRecs = $rstest->_currentRow;
       }
-      $rstest->Close();
+      #$rstest->Close();
       if ($qryRecs == -1) return 0;
     }
     return $qryRecs;
@@ -390,6 +390,8 @@ class ADODB_PDO
 
   private function debug($sql=null, $vars=null) {
     $error = array("Error" => $this->error);
+    $msg = "";
+    
     if(!empty($sql))
       $error["SQL Statement"] = $sql;
     if(!empty($vars) && count(array_filter($vars))>0)
@@ -409,8 +411,10 @@ class ADODB_PDO
       $error["Backtrace"] .= "</ol>\n";
 */
       foreach($backtrace as $info) {
-        if($info["function"] == 'Execute')
+        if($info["function"] == 'Execute') {
+          if(!isset($error["Backtrace"])) $error["Backtrace"] = "";
           $error["Backtrace"] .= $info["function"]."() called at ".$info["file"]." at line ".$info["line"]."<br />\n";
+        }
       }
     }
 
@@ -490,10 +494,13 @@ class ADODB_PDO_ResultSet
   */
   public function MoveNext()
   {
-    $this->fields = $this->results[$this->cursor++];
-    $this->EOF = ($this->cursor == $this->rowcount) ? 1 : 0;
+     $next = $this->cursor++;
+     if(!isset($this->results[$next]))
+       $this->results[$next] = false;
+  
+     $this->fields = $this->results[$next];
+     $this->EOF = ($this->cursor == $this->rowcount) ? 1 : 0;
   }
-
 
   public function FetchRow()
   {
@@ -575,7 +582,12 @@ class ADODB_PDO_FieldData
     $lut = array(
       'LONG' => 'int',
       'VAR_STRING' => 'varchar',
-      'BLOB' => 'text'
+      'STRING' => 'varchar',
+      'BLOB' => 'text',
+      'DATETIME' => 'datetime',
+      'DATE' => 'date',
+      'TIMESTAMP' => 'timestamp',
+      'NEWDECIMAL' => 'NewDecimal'
     );
 
     $this->debug = print_r($meta, 1);
@@ -611,8 +623,10 @@ class synPager {
   private $next_page;
   private $targetFile;
   private $targetFrame;
-
-
+  private $startLinks;
+  private $moreLinks;
+  private $page;
+  
   public function __construct($db, $id='adodb', $targetFile, $targetFrame, $showPageLinks=false, $use_session=false)
   {
     $this->db = $db;
@@ -635,7 +649,10 @@ class synPager {
 
     } else {
       # current page comes from $_GET
-      $this->curr_page = ($_GET[$this->next_page]) ? intval($_GET[$this->next_page]) : 1;
+      if(isset($_GET[$this->next_page]) && $_GET[$this->next_page]!=false)
+        $this->curr_page = intval($_GET[$this->next_page]);
+      else 
+        $this->curr_page = 1;
     }
   }
 
@@ -658,6 +675,7 @@ class synPager {
 
   private function renderPageLinks($parameters=null)
   {
+    $start = 0;
     $pages        = $this->rs->LastPageNo();
     $linksperpage = $this->linksPerPage ? $this->linksPerPage : $pages;
     $link         = $this->id.'_next_page';

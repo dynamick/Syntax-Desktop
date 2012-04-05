@@ -14,7 +14,10 @@ class synUserCreate extends synElement {
 
     $this->type = "text";
     $this->name  = $n;
-    if ($v==null) { global $$n; $this->value = $_REQUEST[$n]; } else $this->value = $v;
+    if ($v==null) {
+      global $$n; 
+      if(isset($_REQUEST[$n])) $this->value = $_REQUEST[$n]; 
+    } else $this->value = $v;
     $this->label = $l;
     $this->size  = $s;
     $this->help  = $h;
@@ -27,7 +30,7 @@ class synUserCreate extends synElement {
   function _html() {
     $disabled = ($this->value!="" ? " disabled=\"disabled\"" : "");
     // if empty, get the name of the actual user
-    if($_REQUEST[synPrimaryKey]=="") {
+    if(!isset($_REQUEST["synPrimaryKey"]) or $_REQUEST["synPrimaryKey"]=="") {
       $value = getSynUser();
     } else{
        $value = $this->value;
