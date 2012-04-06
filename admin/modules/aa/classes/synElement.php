@@ -147,8 +147,8 @@ class synElement {
   //function parse to parse some piece of text
   function synParse($txt) {
     global $synWebsite;
-    $pos=strpos($txt,"§SiteURL§");
-    if ($pos!==false) $txt=str_replace("§SiteURL§",$synWebsite,$txt);
+    $pos=strpos($txt,"ï¿½SiteURLï¿½");
+    if ($pos!==false) $txt=str_replace("ï¿½SiteURLï¿½",$synWebsite,$txt);
     return $txt;
   }
   
@@ -243,7 +243,7 @@ class synElement {
         if ($ret=="" and $err===true) {
           foreach ($arr as $mylang=>$mytrans) 
             if (!is_numeric($mylang) and $mylang!="id" and $mytrans!="") $alt.="\n$mylang: ".substr(strip_tags($mytrans),0,10);
-          if ($alt!="") $ret="<span style='color: gray' title=\"".htmlentities("Other Translations:".$alt)."\">[no translation]</span>";
+          if (isset($alt) and $alt!="") $ret="<span style='color: gray' title=\"".htmlentities("Other Translations:".$alt)."\">[no translation]</span>";
         }
       }
     } else $ret=$id;
@@ -267,8 +267,8 @@ class synElement {
     $ismultilang = 0;
 # echo $qry, '##<br>';
     preg_match("/^SELECT ([a-zA-Z0-9-_, `\*]+) FROM ([a-zA-Z-_`]+)(?:.*)?$/i", $qry, $matches);
-    $field = str_replace('`','',$matches[1]);
-    $table = str_replace('`','',$matches[2]);
+    $field = isset($matches[1]) ? str_replace('`','',$matches[1]) : "";
+    $table = isset($matches[2]) ? str_replace('`','',$matches[2]) : "";
 # echo $field, ' - ', $table, '<br>';
     if ($table!='') {
       if($field=='*'){

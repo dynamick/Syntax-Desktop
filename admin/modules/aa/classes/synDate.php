@@ -60,8 +60,8 @@ class synDate extends synElement {
   function configuration($i="",$k=99) {
     global $synElmName, $synElmType, $synElmLabel, $synElmSize, $synElmHelp, $synElmPath;
     $synHtml = new synHtml();
-
-    $this->configuration[4]="Default (empty=today's date): ".$synHtml->text(" name=\"synElmPath[$i]\" value=\"$synElmPath[$i]\"");
+    $tmp_val = isset($synElmPath[$i]) ? $synElmPath[$i] : "";
+    $this->configuration[4]="Default (empty=today's date): ".$synHtml->text(" name=\"synElmPath[$i]\" value=\"".$tmp_val."\"");
 
     //enable or disable the 3 check at the last configuration step
     global $synChkKey, $synChkVisible, $synChkEditable, $synChkMultilang;

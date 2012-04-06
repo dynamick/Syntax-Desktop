@@ -15,7 +15,10 @@ class synMultiPictureTag extends synElement {
 
     $this->type = "text";
     $this->name  = $n;
-    if ($v==null) { global $$n; $this->value = $_REQUEST[$n]; } else $this->value = $v;
+    if ($v==null) {
+      global $$n; 
+      if(isset($_REQUEST[$n])) $this->value = $_REQUEST[$n]; 
+    } else $this->value = $v;
     $this->label = $l;
     $this->size  = $s;
     $this->help  = $h;
@@ -107,6 +110,7 @@ class synMultiPictureTag extends synElement {
             
             // INIT: populate the selected list
             if ($("#<?=$fieldname?>").val()!="" ) {
+              console.log('<?=$fieldname?>');
               $.ajax({
                 url: 'ihtml/picture_dispatch_multiple.php?session_id=<?=$session_id?>&selected='+$("#<?=$fieldname?>").val(),
                 success: function(data) {

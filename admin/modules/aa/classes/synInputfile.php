@@ -131,6 +131,8 @@ class synInputfile extends synElement {
   //get the label of the element
   function getCell() {
   	global $synAbsolutePath;
+    $ret = "";
+    $show = "";
     $ext = $this->translate($this->value);
     $mat = $this->compileQry($this->translatePath($this->mat));
     $filename = $mat.$this->createFilename().".".$ext;
@@ -173,7 +175,7 @@ class synInputfile extends synElement {
   //translate path and insert dynamic content
   function translatePath($path) {
     global $synAdminPath;
-    if (strpos($path,"§syntaxRelativePath§")!==false) $path=str_replace("§syntaxRelativePath§",$synAdminPath,$path);
+    if (strpos($path,"ï¿½syntaxRelativePathï¿½")!==false) $path=str_replace("ï¿½syntaxRelativePathï¿½",$synAdminPath,$path);
     return $path;
   }
 
@@ -191,7 +193,7 @@ class synInputfile extends synElement {
     if (!isset($synElmPath[$i]) or $synElmPath[$i]=="") $synElmPath[$i]=$pathinfo."/public/mat";
 
     //parent::configuration();
-    //$this->configuration[8]="Percorso: ".$synHtml->text(" name=\"synElmPath[$i]\" value=\"$synElmPath[$i]\"")."<br><span style='color: gray'>Insert directory path without DOCUMENT ROOT.<br />I.e. <strong>/mysite/syntax/public/templates/</strong> <br> Use <strong>§syntaxRelativePath§</strong><br />for dynamically insert Syntax Desktop relative path.</span>";
+    //$this->configuration[8]="Percorso: ".$synHtml->text(" name=\"synElmPath[$i]\" value=\"$synElmPath[$i]\"")."<br><span style='color: gray'>Insert directory path without DOCUMENT ROOT.<br />I.e. <strong>/mysite/syntax/public/templates/</strong> <br> Use <strong>ï¿½syntaxRelativePathï¿½</strong><br />for dynamically insert Syntax Desktop relative path.</span>";
     $this->configuration[8]="Percorso: ".$synHtml->text(" name=\"synElmPath[$i]\" value=\"$synElmPath[$i]\"")."<br><span style='color: gray'>Insert directory path without DOCUMENT ROOT.<br />I.e. <strong>/public/mat/</strong></span>";
 
     //enable or disable the 3 check at the last configuration step

@@ -61,9 +61,9 @@ class synTree extends synElement {
         $close="</OPTGROUP>";
       } 
   
-      if (trim(stripslashes(urldecode($_GET["synPrimaryKey"])))!="`id`='".$k."'" and $_GET["synPrimaryKey"]!="`id`=".$k) { 
+      if (isset($_GET["synPrimaryKey"]) and trim(stripslashes(urldecode($_GET["synPrimaryKey"])))!="`id`='".$k."'" and $_GET["synPrimaryKey"]!="`id`=".$k) { 
         if ($this->value==$k) $selected="selected=\"selected\""; else $selected="";
-        if ($contenitore->ownerField=="" OR in_array($arr[$contenitore->ownerField],$_SESSION["synGroupChild"])) { 
+        if (!isset($contenitore->ownerField) OR $contenitore->ownerField=="" OR in_array($arr[$contenitore->ownerField],$_SESSION["synGroupChild"])) { 
           $txt.="<OPTION VALUE=\"".$k."\" $selected> ".$this->translate($v)."</option>";
         } else {
           if ($this->value==$k)
@@ -120,8 +120,9 @@ class synTree extends synElement {
 
     //retrieve the fields name
     //if (is_array($synElmName)) {
+      $options = "";
       foreach($synElmName as $name) {
-        if ($name==$synElmPath[$i]) $selected="selected=\"selected\""; else $selected="";
+        if (isset($synElmPath[$i]) and $name==$synElmPath[$i]) $selected="selected=\"selected\""; else $selected="";
         $options.="<option value=\"".htmlentities($name)."\" $selected>".htmlentities($name)."</option>";
       }
       $txt="<select name=\"synElmPath[$i]\">$options</select>"; 
@@ -192,7 +193,7 @@ class synTree extends synElement {
 
       // put it all together
       $ret.= $_."<li".($tmpCount==$totalNodes ? " class=\"last\"" : "").">\n";
-      if ( ($contenitore->ownerField=="" || in_array($arr[$contenitore->ownerField], $_SESSION["synGroupChild"])) && ($synLoggedUser->canModify==1) ) {
+      if ( (!isset($contenitore->ownerField) || $contenitore->ownerField=="" || in_array($arr[$contenitore->ownerField], $_SESSION["synGroupChild"])) && ($synLoggedUser->canModify==1) ) {
         $ret .= $__.$wrapper[0]."<a target=\"content\" href=\"content.php?cmd=modifyrow&amp;synPrimaryKey=`id`=".$arr["id"]."\">".$label."</a> ";
         $ret .= ($synLoggedUser->canDelete==1 ? $delete : "");
         $ret .= $wrapper[1]."\n";

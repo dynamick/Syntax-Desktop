@@ -40,7 +40,7 @@ $mdr      = array(
 #  $parentPage = id della pagina di riferimento (in caso di collezioni, es. news) 
 #  $recursive  = se l'oggetto ha figli 
 #  $freq       = frequenza di aggiornamento (def. 'monthly'),
-#  $priority   = priorità dell'elemento nella gerarchia del sito (max 1.0, min. 0.0, def. 0.5) 
+#  $priority   = prioritï¿½ dell'elemento nella gerarchia del sito (max 1.0, min. 0.0, def. 0.5) 
 #  $niceurl    = url interpretato da htaccess (true/false), 
 #  $recursion  = 0
 # )
@@ -71,6 +71,7 @@ $conf->setEntries($entries);
 $generator = new xml_sitemap_generator($conf);
 $output = $generator->write(false);
 
+$html = "";
 # ok, stampo l'output
 if($output=1){
   $html .= "<h2>Sitemap generated</h2>\n";
@@ -88,6 +89,9 @@ if($output=1){
 # funzione che recupera i dati
 function buildTree($table, $titleField='title', $where, $order, $parentPage, $recursive, $freq='monthly', $priority=0.5, $niceurl=true, $recursion=0){
   global $db;
+  
+  $ret = "";
+  
   if($table=='') return;
   $recursion++;
   $priority = ($recursion>1 && $priority>0) ? $priority-0.1 : $priority;
@@ -116,7 +120,7 @@ function buildTree($table, $titleField='title', $where, $order, $parentPage, $re
       $child = buildTree($table, $titleField, 'parent='.$id.' AND visible=1', $order, $parentPage, $recursive, $freq, $priority, $niceurl, $recursion);
     }
     $ret[] = array('url'=>$url, 'priority'=>$priority, 'freq'=>$freq);
-    if($child)     
+    if(isset($child) and $child)     
       $ret = array_merge($ret, $child);
   }
   return $ret;

@@ -3,6 +3,7 @@ global $cmd;
 
 	switch($cmd) {
 		case "":
+      $grp = "";
       $qry="SELECT * FROM aa_groups ORDER BY name";
       $res=$db->Execute($qry);
       while (list($id,$name)=$res->FetchRow()) {

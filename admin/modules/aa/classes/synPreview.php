@@ -66,7 +66,8 @@ class synPreview extends synElement {
     $this->configuration[4]="Dimensione: ".$synHtml->text(" name=\"synElmSize[$i]\" value=\"$synElmSize[$i]\"");
 
     //if (!isset($synElmPath[$i]) or $synElmPath[$i]=="") $synElmPath[$i]=$this->mat;
-    $this->configuration[5]="Pagina di preview: ".$synHtml->text(" name=\"synElmPath[$i]\" value=\"$synElmPath[$i]\"")."<br><span class='help'>Per esempio: /index.php o /news/art.php</span> ";
+    $tmp_path = isset($synElmPath[$i]) ? $synElmPath[$i] : "";
+    $this->configuration[5]="Pagina di preview: ".$synHtml->text(" name=\"synElmPath[$i]\" value=\"".$tmp_path."\"")."<br><span class='help'>Per esempio: /index.php o /news/art.php</span> ";
 
     //enable or disable the 3 check at the last configuration step
     global $synChkKey, $synChkVisible, $synChkEditable;

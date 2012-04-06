@@ -18,7 +18,7 @@ class synSelectMultiCheck extends synElement {
     if ($l=="") $l =  ucfirst($n);
     $this->type = "text";
     $this->name  = $n;
-    if ($$n) { $this->selected = $$n; } else $this->value = $v;
+    if (isset($$n) and $$n) { $this->selected = $$n; } else $this->value = $v;
     $this->label = $l;
     $this->size  = $s;
     $this->help  = $h;
@@ -27,6 +27,7 @@ class synSelectMultiCheck extends synElement {
 
   //private function
   function _html() {
+    $txt = "";
     if ($this->chkTargetMultilang($this->qry)==1)
       $this->multilang = 1;
     $this->value = $this->createArray2($this->qry, $this->path);
@@ -34,9 +35,9 @@ class synSelectMultiCheck extends synElement {
     if (is_array($this->value)) {
       $current_group = '';
       foreach($this->value as $v) {
-        $id       = $v['id'];
-        $value    = $v['value'];
-        $group    = trim($v['group']);
+        $id       = isset($v['id']) ? $v['id'] : "";
+        $value    = isset($v["value"]) ? $v['value'] : "";
+        $group    = isset($v['group']) ? trim($v['group']) : "";
         $eol      = "<br/>\n";
         $selected = (in_array($id, $selArr)) ? ' checked="checked"' : '';
 
@@ -58,8 +59,9 @@ class synSelectMultiCheck extends synElement {
   
   //sets the value of the element
   function setValue($v) {
-    global $$n;
-    if (!isset($_REQUEST[$$n])) $this->value = $this->createArray($this->qry,$this->path);
+    #global $$n;
+    #if (!isset($_REQUEST[$$n])) 
+    $this->value = $this->createArray($this->qry,$this->path);
     $this->selected = $v;
     return;
   }  
@@ -73,6 +75,7 @@ class synSelectMultiCheck extends synElement {
 
   //get the label of the element
   function getCell() {
+    $ret = "";
     if ($this->chkTargetMultilang($this->qry)==1) $this->multilang=1;
     $this->value = $this->createArray2($this->qry,$this->path);
     $selArr=explode("|",$this->selected);
@@ -106,7 +109,7 @@ class synSelectMultiCheck extends synElement {
     while ($arr=$res->FetchRow()) {  
       $r["id"]=$arr[0];
       $r["value"]=$arr[1];
-      if ($arr[2]!="") $r["group"]=$arr[2];
+      if (isset($arr[2]) and $arr[2]!="") $r["group"]=$arr[2];
       $ret[]=$r;
     }
     return $ret;
@@ -132,18 +135,18 @@ class synSelectMultiCheck extends synElement {
   function configuration($i="",$k=99) {
     global $synElmName,$synElmType,$synElmLabel,$synElmSize,$synElmHelp,$synElmPath;
     global $synElmQry;
+    global $synChkKey, $synChkVisible, $synChkEditable, $synChkMultilang;
     $synHtml = new synHtml();
     //parent::configuration();
     $this->configuration[4]="Query: ".$synHtml->text(" name=\"synElmQry[$i]\" value=\"".htmlentities($synElmQry[$i])."\"");
 
-    if (!isset($synElmPath[$i]) or $synElmPath[$i]=="") $checked=""; else $checked=" checked='checked' ";
-    $this->configuration[5]="NULL: ".$synHtml->check(" name=\"synElmPath[$i]\" value=\"1\" $checked");
+    #if (!isset($synElmPath[$i]) or $synElmPath[$i]=="") $checked=""; else $checked=" checked='checked' ";
+    #$this->configuration[5]="NULL: ".$synHtml->check(" name=\"synElmPath[$i]\" value=\"1\" $checked");
 
-    if (!isset($synElmSize[$i]) or $synElmSize[$i]=="") $synElmSize[$i]=$this->size;
-    $this->configuration[6]="Dimensione: ".$synHtml->text(" name=\"synElmSize[$i]\" value=\"$synElmSize[$i]\"");
+    #if (!isset($synElmSize[$i]) or $synElmSize[$i]=="") $synElmSize[$i]=$this->size;
+    #$this->configuration[6]="Dimensione: ".$synHtml->text(" name=\"synElmSize[$i]\" value=\"$synElmSize[$i]\"");
 
     //enable or disable the 3 check at the last configuration step
-    global $synChkKey, $synChkVisible, $synChkEditable, $synChkMultilang;
     $_SESSION["synChkKey"][$i]=1;
     $_SESSION["synChkVisible"][$i]=1;
     $_SESSION["synChkEditable"][$i]=0;

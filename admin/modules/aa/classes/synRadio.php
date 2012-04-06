@@ -31,9 +31,10 @@ class synRadio extends synElement {
 
     if (is_array($options)) {
       $count = 0;
+      $txt = "";
       foreach($options as $v) {
-        $id      = $v["id"];
-        $value   = $v["value"];
+        $id      = isset($v["id"]) ? $v["id"] : "";
+        $value   = isset($v["value"]) ? $v["value"] : "";
         $checked = (($id==$selected || !$selected && $count==0) ? ' checked="checked"' : '');
         $txt    .= " <input type=\"radio\" name=\"".$this->name."\" VALUE=\"".$id."\"".$checked."/> ".$value;
         $count ++;
@@ -87,18 +88,19 @@ class synRadio extends synElement {
   function configuration($i="",$k=99) {
     global $synElmName,$synElmType,$synElmLabel,$synElmSize,$synElmHelp,$synElmPath;
     global $synElmQry;
+    global $synChkKey, $synChkVisible, $synChkEditable, $synChkMultilang;
+    
     $synHtml = new synHtml();
     //parent::configuration();
     $this->configuration[4]="Query: ".$synHtml->text(" name=\"synElmQry[$i]\" value=\"".htmlentities($synElmQry[$i])."\"");
 
-    if (!isset($synElmPath[$i]) or $synElmPath[$i]=="") $checked=""; else $checked=" checked='checked' ";
-    $this->configuration[5]="NULL: ".$synHtml->check(" name=\"synElmPath[$i]\" value=\"1\" $checked");
+    #if (!isset($synElmPath[$i]) or $synElmPath[$i]=="") $checked=""; else $checked=" checked='checked' ";
+    #$this->configuration[5]="NULL: ".$synHtml->check(" name=\"synElmPath[$i]\" value=\"1\" $checked");
 
-    if (!isset($synElmSize[$i]) or $synElmSize[$i]=="") $synElmSize[$i]=$this->size;
-    $this->configuration[6]="Dimensione: ".$synHtml->text(" name=\"synElmSize[$i]\" value=\"$synElmSize[$i]\"");
+    #if (!isset($synElmSize[$i]) or $synElmSize[$i]=="") $synElmSize[$i]=$this->size;
+    #$this->configuration[6]="Dimensione: ".$synHtml->text(" name=\"synElmSize[$i]\" value=\"$synElmSize[$i]\"");
 
     //enable or disable the 3 check at the last configuration step
-    global $synChkKey, $synChkVisible, $synChkEditable, $synChkMultilang;
     $_SESSION["synChkKey"][$i]=1;
     $_SESSION["synChkVisible"][$i]=1;
     $_SESSION["synChkEditable"][$i]=0;

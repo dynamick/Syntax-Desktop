@@ -18,7 +18,7 @@ class synOwner extends synElement {
     if ($l=="") $l =  ucfirst($n);
     $this->type = "file";
     $this->name  = $n;
-    if ($$n) { $this->selected = $$n; } else $this->value = $v;
+    if (isset($$n) and $$n) { $this->selected = $$n; } else $this->value = $v;
     $this->label = $l;
     $this->size  = $s;
     $this->help  = $h;

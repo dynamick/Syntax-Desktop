@@ -18,7 +18,7 @@ class synTreeGroup extends synElement {
     if ($l=="") $l =  ucfirst($n);
     $this->type = "file";
     $this->name  = $n;
-    if ($$n) { $this->selected = $$n; } else $this->value = $v;
+    if (isset($$n) and $$n) { $this->selected = $$n; } else $this->value = $v;
     $this->label = $l;
     $this->size  = $s;
     $this->help  = $h;
@@ -31,7 +31,7 @@ class synTreeGroup extends synElement {
     $this->value = $this->createArray($this->qry,$this->path);
 
     //$this->isKey()?$disable=" disabled=\"disabled\" ":$disable="";
-    $txt="<select name='".$this->name."' $disable >";
+    $txt="<select name='".$this->name."'>";
     if ($this->selected=="") $this->selected=$synGroup;
     if (is_array($this->value)) {
       while (list ($k, $v) = each ($this->value)) {

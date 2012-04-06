@@ -15,7 +15,7 @@
   }
 
 
-  $tags     =$_GET["tags"];
+  $tags     = $_GET["tags"];
   $selected = $_GET["selected"];
   if ($tags == "" and $selected == "") die("Testo vuoto, nessun risultato");
 

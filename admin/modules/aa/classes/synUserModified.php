@@ -14,7 +14,10 @@ class synUserModified extends synElement {
 
     $this->type = "text";
     $this->name  = $n;
-    if ($v==null) { global $$n; $this->value = $_REQUEST[$n]; } else $this->value = $v;
+    if ($v==null) {
+      global $$n; 
+      if(isset($_REQUEST[$n])) $this->value = $_REQUEST[$n]; 
+    } else $this->value = $v;
     $this->label = $l;
     $this->size  = $s;
     $this->help  = $h;
@@ -26,7 +29,7 @@ class synUserModified extends synElement {
   //private function
   function _html() {
     //if primaryKey is not empty it means we're modifying an exisiting record: put the editing user's id
-    if($_REQUEST[synPrimaryKey]!="") {
+    if(!isset($_REQUEST["synPrimaryKey"]) or $_REQUEST["synPrimaryKey"]=="") {
       return "<input type='hidden' name='".$this->name."' maxsize='".$this->size."' value='".getSynUser()."'/> <strong>".username(getSynUser())." (".groupname(getSynUser()).")</strong>\n";
     }
   }

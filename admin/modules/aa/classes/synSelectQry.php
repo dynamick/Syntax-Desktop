@@ -18,7 +18,7 @@ class synSelectQry extends synElement {
     if ($l=="") $l = ucfirst($n);
     $this->type  = "text";
     $this->name  = $n;
-    if ($$n) { $this->selected = $$n; } else $this->value = $v;
+    if (isset($$n) and $$n) { $this->selected = $$n; } else $this->value = $v;
     $this->label = $l;
     $this->size  = $s;
     $this->help  = $h;
@@ -83,7 +83,7 @@ class synSelectQry extends synElement {
     $owner = '';
 
     $table = preg_match("/from (\w+)[\s]?(.*)/i",$qry, $matches);
-    $destTable = $matches[1];
+    $destTable = isset($matches[1]) ? $matches[1] : "";
     if ($destTable!="") {
       $qry1 = "SELECT * FROM aa_services WHERE syntable='{$destTable}'";
       $res  = $db->Execute($qry1);
@@ -145,11 +145,11 @@ class synSelectQry extends synElement {
     //parent::configuration();
     $this->configuration[4]="Query: ".$synHtml->text(" name=\"synElmQry[$i]\" value=\"".htmlentities($synElmQry[$i])."\"");
 
-    if (!isset($synElmPath[$i]) or $synElmPath[$i]=="") $checked=""; else $checked=" checked='checked' ";
-    $this->configuration[5]="NULL: ".$synHtml->check(" name=\"synElmPath[$i]\" value=\"1\" $checked");
-
     if (!isset($synElmSize[$i]) or $synElmSize[$i]=="") $synElmSize[$i]=$this->size;
     $this->configuration[6]="Dimensione: ".$synHtml->text(" name=\"synElmSize[$i]\" value=\"$synElmSize[$i]\"");
+
+    if (!isset($synElmPath[$i]) or $synElmPath[$i]=="") $checked=""; else $checked=" checked='checked' ";
+    $this->configuration[5]="NULL: ".$synHtml->hidden(" name=\"synElmPath[$i]\" value=\"\"").$synHtml->check(" name=\"synElmPath[$i]\" value=\"1\" $checked");
 
     //enable or disable the 3 check at the last configuration step
     global $synChkKey, $synChkVisible, $synChkEditable, $synChkMultilang;

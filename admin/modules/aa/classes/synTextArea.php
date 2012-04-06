@@ -72,8 +72,8 @@ EOC;
     $array=array("Default"=>"Default", "Basic"=>"Basic", "Deluxe"=>"Deluxe");
     $this->configuration[5]="Tipo: ".$synHtml->select(" name=\"synElmPath[$i]\" value=\"$synElmPath[$i]\"",$array,$synElmPath[$i]);
 
-    if (!isset($synElmQry[$i]) or $synElmQry[$i]=="") $checked=""; else $checked=" checked='checked' ";
-    $this->configuration[6]="Gigante: ".$synHtml->check(" name=\"synElmQry[$i]\" value=\"1\" $checked");
+#    if (!isset($synElmQry[$i]) or $synElmQry[$i]=="") $checked=""; else $checked=" checked='checked' ";
+#    $this->configuration[6]="Gigante: ".$synHtml->check(" name=\"synElmQry[$i]\" value=\"1\" $checked");
 
     //enable or disable the 3 check at the last configuration step
     global $synChkKey, $synChkVisible, $synChkEditable,$synChkMultilang;

@@ -7,7 +7,7 @@ if (!class_exists('SimpleXMLElement')) {
   die();
 }
 
-if($_POST['submitted']!=1){
+if(!isset($_POST['submitted']) or $_POST['submitted']!=1){
 # non sottomesso ---------------------------------------------------------------
   $rows = '';
   $qry = "SELECT * FROM `aa_services`";

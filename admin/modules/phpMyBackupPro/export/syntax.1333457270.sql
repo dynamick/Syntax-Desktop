@@ -1,5 +1,5 @@
-# MySQL dump of database 'schiavotto' on host 'localhost'
-# backup date and time: 10/05/11 10:38:56
+# MySQL dump of database 'syntax' on host 'localhost'
+# backup date and time: 04/03/12 14:47:50
 # built by phpMyBackupPro v.2.1
 # http://www.phpMyBackupPro.net
 
@@ -10,11 +10,11 @@
 DROP TABLE IF EXISTS `aa_element`;
 
 CREATE TABLE `aa_element` (
-  `id` int(11) NOT NULL auto_increment,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `classname` varchar(255) NOT NULL,
-  `name` varchar(255) NOT NULL default '',
-  `order` int(8) NOT NULL default '0',
-  PRIMARY KEY  (`id`),
+  `name` varchar(255) NOT NULL DEFAULT '',
+  `order` int(8) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
   KEY `id` (`classname`)
 ) ENGINE=MyISAM AUTO_INCREMENT=29 DEFAULT CHARSET=utf8 COMMENT='Elementi che compongono un contenitore' AUTO_INCREMENT=29;
 
@@ -55,19 +55,19 @@ insert into `aa_element` values ('28', 'synTextJoin', 'Text Multiple Join', '160
 DROP TABLE IF EXISTS `aa_group_services`;
 
 CREATE TABLE `aa_group_services` (
-  `id` int(11) NOT NULL auto_increment,
-  `order` int(11) NOT NULL default '0',
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order` int(11) NOT NULL DEFAULT '0',
   `parent` int(255) NOT NULL,
   `name` varchar(255) NOT NULL,
-  `group` int(11) NOT NULL default '0',
-  `service` int(11) NOT NULL default '0',
+  `group` int(11) NOT NULL DEFAULT '0',
+  `service` int(11) NOT NULL DEFAULT '0',
   `filter` varchar(255) NOT NULL,
   `insert` varchar(255) NOT NULL,
   `modify` varchar(255) NOT NULL,
   `delete` varchar(255) NOT NULL,
   `link` varchar(255) NOT NULL,
   `icon` varchar(255) NOT NULL,
-  PRIMARY KEY  (`id`),
+  PRIMARY KEY (`id`),
   KEY `group` (`group`)
 ) ENGINE=MyISAM AUTO_INCREMENT=232 DEFAULT CHARSET=utf8 AUTO_INCREMENT=232;
 
@@ -81,7 +81,7 @@ insert into `aa_group_services` values ('54', '1010', '152', '108', '1', '116', 
 insert into `aa_group_services` values ('64', '3030', '18', '109', '1', '124', '', '1', '1', '1', '', 'image.png');
 insert into `aa_group_services` values ('76', '1020', '152', 'News', '1', '127', '', '1', '1', '1', '', 'email.png');
 insert into `aa_group_services` values ('125', '10', '128', '603', '2', '2', '', '', '', '', '', '.svn');
-insert into `aa_group_services` values ('128', '40', '0', 'Amministrazione', '2', '0', '', '', '', '', '', '');
+insert into `aa_group_services` values ('128', '40', '0', '819', '2', '0', '', '', '', '', '', 'accept.png');
 insert into `aa_group_services` values ('129', '10', '131', 'Pagine', '2', '116', '', '', '', '', '', '');
 insert into `aa_group_services` values ('130', '20', '131', 'Template', '2', '124', '', '', '', '', '', '');
 insert into `aa_group_services` values ('131', '10', '0', 'Gestione Pagine', '2', '0', '', '', '', '', '', '');
@@ -109,9 +109,9 @@ insert into `aa_group_services` values ('193', '5030', '187', '512', '1', '145',
 insert into `aa_group_services` values ('194', '30', '188', '513', '2', '145', '', '1', '1', '1', '', '');
 insert into `aa_group_services` values ('195', '5040', '187', '522', '1', '146', '', '1', '1', '1', '', '.svn');
 insert into `aa_group_services` values ('196', '40', '188', '523', '2', '146', '', '1', '1', '1', '', '');
-insert into `aa_group_services` values ('197', '104020', '205', '530', '1', '147', '', '1', '1', '1', '', '.svn');
-insert into `aa_group_services` values ('198', '20', '207', '531', '2', '147', '', '1', '1', '1', '', '.svn');
-insert into `aa_group_services` values ('199', '104010', '205', '564', '1', '148', '', '1', '1', '1', '', '.svn');
+insert into `aa_group_services` values ('197', '104020', '205', '530', '1', '147', '', '1', '1', '1', '', 'accept.png');
+insert into `aa_group_services` values ('198', '20', '207', '531', '2', '147', '', '1', '1', '1', '', 'accept.png');
+insert into `aa_group_services` values ('199', '104010', '205', '564', '1', '148', '', '1', '1', '1', '', 'accept.png');
 insert into `aa_group_services` values ('200', '10', '207', '565', '2', '148', '', '1', '1', '1', '', 'accept.png');
 insert into `aa_group_services` values ('201', '105010', '206', '588', '1', '149', '', '1', '1', '1', '', '.svn');
 insert into `aa_group_services` values ('202', '0', '208', '589', '2', '149', '', '1', '1', '1', '', '.svn');
@@ -122,8 +122,8 @@ insert into `aa_group_services` values ('206', '1050', '152', '601', '1', '0', '
 insert into `aa_group_services` values ('207', '20', '0', '602', '2', '0', '', '1', '1', '1', '', 'group.png');
 insert into `aa_group_services` values ('208', '15', '0', '604', '2', '0', '', '1', '1', '1', '', 'arrow_rotate_anticlockwise.png');
 insert into `aa_group_services` values ('209', '10', '210', '603', '3', '2', '', '', '1', '', '', '.svn');
-insert into `aa_group_services` values ('210', '40', '0', 'Amministrazione', '3', '0', '', '', '', '', '', '');
-insert into `aa_group_services` values ('211', '10', '213', 'Pagine', '3', '116', '', '', '', '', '', '');
+insert into `aa_group_services` values ('210', '40', '0', '821', '3', '0', '', '', '', '', '', 'accept.png');
+insert into `aa_group_services` values ('211', '10', '213', '820', '3', '116', '', '', '', '', '', 'accept.png');
 insert into `aa_group_services` values ('213', '10', '0', 'Gestione Pagine', '3', '0', '', '', '', '', '', '');
 insert into `aa_group_services` values ('225', '1070', '152', '619', '1', '151', '', '1', '1', '1', '', '');
 insert into `aa_group_services` values ('226', '0', '213', '620', '3', '151', '', '1', '1', '1', '', '');
@@ -139,10 +139,10 @@ insert into `aa_group_services` values ('231', '4040', '153', '762', '1', '0', '
 DROP TABLE IF EXISTS `aa_groups`;
 
 CREATE TABLE `aa_groups` (
-  `id` int(11) NOT NULL auto_increment,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `parent_id` int(11) NOT NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 AUTO_INCREMENT=4;
 
 
@@ -158,13 +158,13 @@ insert into `aa_groups` values ('3', 'Authors Group', '2');
 DROP TABLE IF EXISTS `aa_lang`;
 
 CREATE TABLE `aa_lang` (
-  `id` int(11) NOT NULL auto_increment,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `lang` varchar(255) NOT NULL,
   `initial` varchar(10) NOT NULL,
   `flag` varchar(255) NOT NULL,
   `active` varchar(255) NOT NULL,
-  `order` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`id`)
+  `order` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 AUTO_INCREMENT=3;
 
 
@@ -179,36 +179,39 @@ insert into `aa_lang` values ('2', 'english', 'en', 'greatbritain.png', '1', '20
 DROP TABLE IF EXISTS `aa_page`;
 
 CREATE TABLE `aa_page` (
-  `id` int(11) NOT NULL auto_increment,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
   `text` text NOT NULL,
   `parent` int(11) NOT NULL,
   `template` int(255) NOT NULL,
   `visible` varchar(255) NOT NULL,
-  `order` int(11) NOT NULL default '0',
+  `order` int(11) NOT NULL DEFAULT '0',
   `owner` int(11) NOT NULL,
   `url` varchar(255) NOT NULL,
-  PRIMARY KEY  (`id`)
+  `metatitle` varchar(75) NOT NULL,
+  `metadescription` varchar(150) NOT NULL,
+  `metakeywords` varchar(175) NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=56 DEFAULT CHARSET=utf8 AUTO_INCREMENT=56;
 
 
 ### data of table `aa_page` ###
 
-insert into `aa_page` values ('22', '92', '93', '0', '4', '1', '5', '1', '');
-insert into `aa_page` values ('39', '398', '399', '22', '4', '1', '10', '1', '');
-insert into `aa_page` values ('40', '400', '401', '22', '4', '1', '20', '1', '');
-insert into `aa_page` values ('41', '402', '403', '22', '4', '1', '40', '1', '');
-insert into `aa_page` values ('42', '404', '405', '22', '13', '1', '50', '1', '');
-insert into `aa_page` values ('43', '406', '407', '22', '4', '1', '15', '1', '');
-insert into `aa_page` values ('44', '408', '409', '41', '4', '1', '10', '1', '');
-insert into `aa_page` values ('45', '410', '411', '41', '4', '1', '20', '1', '');
-insert into `aa_page` values ('46', '412', '413', '41', '4', '1', '15', '1', '');
-insert into `aa_page` values ('50', '479', '480', '22', '8', '', '1000', '1', '');
-insert into `aa_page` values ('51', '482', '483', '22', '4', '', '1999', '1', '');
-insert into `aa_page` values ('52', '605', '606', '22', '9', '', '60', '1', '');
-insert into `aa_page` values ('53', '607', '608', '22', '10', '1', '70', '1', '');
-insert into `aa_page` values ('54', '609', '610', '22', '11', '1', '80', '1', '');
-insert into `aa_page` values ('55', '750', '751', '22', '12', '1', '45', '1', '');
+insert into `aa_page` values ('22', '92', '93', '0', '4', '1', '5', '1', '', '', '', '');
+insert into `aa_page` values ('39', '398', '399', '22', '4', '1', '10', '1', '', '', '', '');
+insert into `aa_page` values ('40', '400', '401', '22', '4', '', '20', '1', '', '', '', '');
+insert into `aa_page` values ('41', '402', '403', '22', '4', '1', '40', '1', '', '', '', '');
+insert into `aa_page` values ('42', '404', '405', '22', '13', '1', '50', '1', '', '', '', '');
+insert into `aa_page` values ('43', '406', '407', '22', '4', '1', '15', '1', '', '', '', '');
+insert into `aa_page` values ('44', '408', '409', '41', '4', '1', '10', '1', '', '', '', '');
+insert into `aa_page` values ('45', '410', '411', '41', '4', '1', '20', '1', '', '', '', '');
+insert into `aa_page` values ('46', '412', '413', '41', '4', '1', '15', '1', '', '', '', '');
+insert into `aa_page` values ('50', '479', '480', '22', '8', '', '1000', '1', '', '', '', '');
+insert into `aa_page` values ('51', '482', '483', '22', '4', '', '1999', '1', '', '', '', '');
+insert into `aa_page` values ('52', '605', '606', '22', '9', '', '60', '1', '', '', '', '');
+insert into `aa_page` values ('53', '607', '608', '22', '10', '1', '70', '1', '', '', '', '');
+insert into `aa_page` values ('54', '609', '610', '22', '11', '1', '80', '1', '', '', '', '');
+insert into `aa_page` values ('55', '750', '751', '22', '12', '1', '45', '1', '', '', '', '');
 
 
 ### structure of table `aa_service_joins` ###
@@ -216,13 +219,13 @@ insert into `aa_page` values ('55', '750', '751', '22', '12', '1', '45', '1', ''
 DROP TABLE IF EXISTS `aa_service_joins`;
 
 CREATE TABLE `aa_service_joins` (
-  `id` int(11) NOT NULL auto_increment,
-  `title` varchar(255) NOT NULL default '',
-  `from` int(11) NOT NULL,
-  `to` int(11) NOT NULL,
-  `description` varchar(255) NOT NULL default '',
-  `container` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`id`),
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) NOT NULL,
+  `from` int(11) NOT NULL DEFAULT '0',
+  `to` int(11) NOT NULL DEFAULT '0',
+  `description` varchar(255) NOT NULL,
+  `container` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
   KEY `container` (`container`)
 ) ENGINE=MyISAM AUTO_INCREMENT=24 DEFAULT CHARSET=utf8 AUTO_INCREMENT=24;
 
@@ -243,18 +246,18 @@ insert into `aa_service_joins` values ('23', 'Opzioni', '538', '553', '', '153')
 DROP TABLE IF EXISTS `aa_services`;
 
 CREATE TABLE `aa_services` (
-  `id` int(11) NOT NULL auto_increment,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `path` varchar(255) NOT NULL,
   `icon` varchar(255) NOT NULL,
   `description` text NOT NULL,
-  `parent` int(11) NOT NULL default '0',
+  `parent` int(11) NOT NULL DEFAULT '0',
   `syntable` varchar(255) NOT NULL,
-  `order` int(11) NOT NULL default '0',
+  `order` int(11) NOT NULL DEFAULT '0',
   `dbsync` varchar(255) NOT NULL,
-  `initOrder` int(8) NOT NULL default '0',
+  `initOrder` int(8) NOT NULL DEFAULT '0',
   `multilang` varchar(255) NOT NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=156 DEFAULT CHARSET=utf8 PACK_KEYS=1 AUTO_INCREMENT=156;
 
 
@@ -276,15 +279,15 @@ insert into `aa_services` values ('143', '452', '', 'images/service_icon/picture
 insert into `aa_services` values ('144', '486', '', 'images/service_icon/images.png', '487', '0', 'media', '150', '1', '-488', '');
 insert into `aa_services` values ('145', '506', '', 'images/service_icon/tag_blue.png', '507', '0', 'tags', '160', '1', '490', '');
 insert into `aa_services` values ('146', '514', '', 'images/service_icon/vcard.png', '515', '0', 'tagged', '170', '1', '492', '');
-insert into `aa_services` values ('147', '524', '', 'images/service_icon/group.png', '525', '0', 'groups', '180', '1', '494', '');
-insert into `aa_services` values ('148', '532', '', 'images/service_icon/user_gray.png', '533', '0', 'users', '190', '1', '508', '');
+insert into `aa_services` values ('147', '524', '', 'images/service_icon/group.png', '525', '2', 'groups', '180', '1', '494', '');
+insert into `aa_services` values ('148', '532', '', 'images/service_icon/user_gray.png', '533', '2', 'users', '190', '1', '508', '');
 insert into `aa_services` values ('149', '566', '', 'images/service_icon/layout.png', '567', '0', 'documents', '200', '1', '515', '1');
 insert into `aa_services` values ('150', '590', '', 'images/service_icon/chart_organisation.png', '591', '0', 'categories', '210', '1', '523', '1');
 insert into `aa_services` values ('151', '611', '', 'images/service_icon/book_open.png', '612', '0', 'dictionary', '5', '1', '525', '1');
 insert into `aa_services` values ('152', '639', '', 'images/service_icon/application_form_edit.png', '640', '0', 'forms', '220', '1', '-536', '1');
-insert into `aa_services` values ('153', '664', '', 'images/service_icon/table_relationship.png', '665', '0', 'form_fields', '240', '1', '547', '1');
+insert into `aa_services` values ('153', '664', '', 'images/service_icon/table_relationship.png', '665', '2', 'form_fields', '240', '1', '547', '1');
 insert into `aa_services` values ('154', '689', '', 'images/service_icon/application_double.png', '690', '0', 'form_fieldsets', '230', '1', '551', '1');
-insert into `aa_services` values ('155', '700', '', 'images/service_icon/chart_organisation.png', '701', '0', 'field_options', '250', '1', '557', '1');
+insert into `aa_services` values ('155', '700', '', 'images/service_icon/chart_organisation.png', '701', '2', 'field_options', '250', '1', '557', '1');
 
 
 ### structure of table `aa_services_element` ###
@@ -292,26 +295,26 @@ insert into `aa_services` values ('155', '700', '', 'images/service_icon/chart_o
 DROP TABLE IF EXISTS `aa_services_element`;
 
 CREATE TABLE `aa_services_element` (
-  `id` int(11) NOT NULL auto_increment,
-  `container` int(11) NOT NULL default '0',
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `container` int(11) NOT NULL DEFAULT '0',
   `name` varchar(255) NOT NULL,
-  `type` int(255) NOT NULL default '0',
+  `type` int(255) NOT NULL DEFAULT '0',
   `iskey` varchar(1) NOT NULL,
   `isvisible` varchar(1) NOT NULL,
   `iseditable` varchar(1) NOT NULL,
   `label` varchar(255) NOT NULL,
-  `size` int(8) NOT NULL default '0',
+  `size` int(8) NOT NULL DEFAULT '0',
   `help` text NOT NULL,
   `path` varchar(255) NOT NULL,
   `qry` text NOT NULL,
   `value` varchar(255) NOT NULL,
   `joins` varchar(255) NOT NULL,
-  `order` int(8) NOT NULL default '0',
+  `order` int(8) NOT NULL DEFAULT '0',
   `filter` varchar(255) NOT NULL,
   `ismultilang` varchar(1) NOT NULL,
-  PRIMARY KEY  (`id`),
+  PRIMARY KEY (`id`),
   KEY `container` (`container`)
-) ENGINE=MyISAM AUTO_INCREMENT=561 DEFAULT CHARSET=utf8 COMMENT='Containers' AUTO_INCREMENT=561;
+) ENGINE=MyISAM AUTO_INCREMENT=564 DEFAULT CHARSET=utf8 COMMENT='Containers' AUTO_INCREMENT=564;
 
 
 ### data of table `aa_services_element` ###
@@ -437,7 +440,7 @@ insert into `aa_services_element` values ('503', '148', 'zip', '2', '', '', '', 
 insert into `aa_services_element` values ('504', '148', 'province', '2', '', '', '', '550', '255', '551', '', '', '', '', '80', '', '');
 insert into `aa_services_element` values ('505', '148', 'confirmation_code', '2', '', '', '', '552', '255', '553', '', '', '', '', '90', '', '');
 insert into `aa_services_element` values ('506', '148', 'active', '9', '', '1', '', '554', '255', '555', '', '', '1', '', '100', '', '');
-insert into `aa_services_element` values ('507', '148', 'group', '12', '', '1', '', '556', '11', '557', '', 'SELECT * FROM groups', '', '', '110', '', '');
+insert into `aa_services_element` values ('507', '148', 'group', '24', '', '1', '', '556', '11', '557', '', 'SELECT * FROM groups', '', '', '110', '', '');
 insert into `aa_services_element` values ('508', '148', 'timestamp', '15', '', '1', '', '558', '0', '559', '', '', '', '', '120', '', '');
 insert into `aa_services_element` values ('509', '148', 'password', '4', '', '', '', '560', '255', '561', '', '', '', '', '130', '', '');
 insert into `aa_services_element` values ('510', '148', 'newsletter', '9', '', '', '', '562', '255', '563', '', '', '1', '', '140', '', '');
@@ -487,6 +490,9 @@ insert into `aa_services_element` values ('557', '155', 'ordine', '3', '', '1', 
 insert into `aa_services_element` values ('558', '152', 'titolo', '2', '', '1', '', '752', '255', '753', '', '', '', '', '10', '', '1');
 insert into `aa_services_element` values ('559', '136', 'active', '9', '', '1', '', '765', '255', '766', '', '', '1', '', '40', '', '');
 insert into `aa_services_element` values ('560', '136', 'order', '3', '', '1', '1', '767', '11', '768', '', '', '', '', '50', '', '');
+insert into `aa_services_element` values ('561', '116', 'metatitle', '2', '', '', '', '822', '75', '823', '', '', '', '', '90', '', '1');
+insert into `aa_services_element` values ('562', '116', 'metadescription', '2', '', '', '', '824', '150', '825', '', '', '', '', '100', '', '1');
+insert into `aa_services_element` values ('563', '116', 'metakeywords', '2', '', '', '', '826', '175', '827', '', '', '', '', '110', '', '1');
 
 
 ### structure of table `aa_template` ###
@@ -494,12 +500,12 @@ insert into `aa_services_element` values ('560', '136', 'order', '3', '', '1', '
 DROP TABLE IF EXISTS `aa_template`;
 
 CREATE TABLE `aa_template` (
-  `id` int(11) NOT NULL auto_increment,
-  `title` varchar(255) NOT NULL default '',
-  `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',
-  `filename` varchar(255) NOT NULL default '',
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) NOT NULL DEFAULT '',
+  `timestamp` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `filename` varchar(255) NOT NULL DEFAULT '',
   `owner` int(11) NOT NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 AUTO_INCREMENT=14;
 
 
@@ -519,11 +525,11 @@ insert into `aa_template` values ('13', 'form', '2010-12-21 16:13:51', 'form.tpl
 DROP TABLE IF EXISTS `aa_translation`;
 
 CREATE TABLE `aa_translation` (
-  `id` int(11) NOT NULL auto_increment,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `it` text NOT NULL,
   `en` text NOT NULL,
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=817 DEFAULT CHARSET=utf8 AUTO_INCREMENT=817;
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=828 DEFAULT CHARSET=utf8 AUTO_INCREMENT=828;
 
 
 ### data of table `aa_translation` ###
@@ -543,7 +549,7 @@ insert into `aa_translation` values ('107', 'Sezioni del sito', 'Site section');
 insert into `aa_translation` values ('108', 'Pagine', 'Pages');
 insert into `aa_translation` values ('109', 'Template', 'Template');
 insert into `aa_translation` values ('111', 'Amministrazione', 'Administration');
-insert into `aa_translation` values ('112', 'Utenti', 'Users');
+insert into `aa_translation` values ('112', 'Utenti backend', 'Backend users');
 insert into `aa_translation` values ('113', 'Gruppi/Menu', 'Groups/Menu');
 insert into `aa_translation` values ('114', 'Servizi', 'Service');
 insert into `aa_translation` values ('115', 'Lingue', 'Language');
@@ -575,10 +581,10 @@ insert into `aa_translation` values ('140', 'Lingue', 'Language');
 insert into `aa_translation` values ('141', 'Elenco delle lingue disponibili', 'User language');
 insert into `aa_translation` values ('142', 'Traduzioni', 'Translations');
 insert into `aa_translation` values ('143', 'Elenco di tutte le traduzioni', 'contains the traslation string of everything in this db');
-insert into `aa_translation` values ('144', 'Utenti', 'Utenti');
-insert into `aa_translation` values ('145', 'Lista degli utenti', 'Lista degli utenti');
-insert into `aa_translation` values ('146', 'Gruppi', 'Group');
-insert into `aa_translation` values ('147', 'Lista dei gruppi di utenti', 'User group management');
+insert into `aa_translation` values ('144', 'Utenti di sistema', 'System users');
+insert into `aa_translation` values ('145', 'Lista degli utenti di sistema', 'System users list');
+insert into `aa_translation` values ('146', 'Gruppi di sistema', 'System Group');
+insert into `aa_translation` values ('147', 'Lista dei gruppi di utenti di sistema', 'System users group management');
 insert into `aa_translation` values ('148', 'Service-o-matic', 'Service-o-matic');
 insert into `aa_translation` values ('149', 'Assistente per la creazione dei servizi', 'Wizard for service creation');
 insert into `aa_translation` values ('150', 'Joins', 'Joins');
@@ -877,7 +883,7 @@ insert into `aa_translation` values ('470', 'Il proprietario della pagina', 'Il 
 insert into `aa_translation` values ('471', 'Owner', 'Owner');
 insert into `aa_translation` values ('472', 'indica il proprietario del tempalte', 'indica il proprietario del tempalte');
 insert into `aa_translation` values ('473', 'Url', 'Url');
-insert into `aa_translation` values ('474', 'Eventuale collegamento ad un sito esterno\r\n(p.e. http://www.dynamick.it)', 'You can specify a link to an external site.\r\nI.e. http://www.dynamick.it');
+insert into `aa_translation` values ('474', 'Eventuale collegamento ad un sito esterno(p.e. http://www.dynamick.it)', 'You can specify a link to an external site.\r\nI.e. http://www.dynamick.it');
 insert into `aa_translation` values ('475', 'Owner', 'Owner');
 insert into `aa_translation` values ('476', 'Se volete che l\'utente possa modificare la propria password, dovete scegliere il gruppo a cui appartiene.', 'If you want the user can change himself the password, you\'ve to choose the group he belongs to.');
 insert into `aa_translation` values ('477', 'Wiki', 'Wiki');
@@ -928,15 +934,15 @@ insert into `aa_translation` values ('521', '', '');
 insert into `aa_translation` values ('522', 'Tagged', 'Tagged');
 insert into `aa_translation` values ('523', 'Tagged', 'Tagged');
 insert into `aa_translation` values ('524', 'Gruppi', 'Groups');
-insert into `aa_translation` values ('525', 'Gruppi web', 'Gruppi web');
+insert into `aa_translation` values ('525', 'Gruppi utenti web', 'Web users groups');
 insert into `aa_translation` values ('526', 'Id', 'Id');
 insert into `aa_translation` values ('527', '', '');
 insert into `aa_translation` values ('528', 'Gruppo', 'Group');
 insert into `aa_translation` values ('529', '', '');
-insert into `aa_translation` values ('530', 'Gruppi', 'Groups');
-insert into `aa_translation` values ('531', 'Gruppi', 'Groups');
+insert into `aa_translation` values ('530', 'Gruppi utenti web', 'Web users groups');
+insert into `aa_translation` values ('531', 'Gruppi utenti web', 'Web users groups');
 insert into `aa_translation` values ('532', 'Utenti', 'Users');
-insert into `aa_translation` values ('533', 'Utenti web', 'web users');
+insert into `aa_translation` values ('533', 'Utenti web', 'Web users');
 insert into `aa_translation` values ('534', 'Id', 'Id');
 insert into `aa_translation` values ('535', '', '');
 insert into `aa_translation` values ('536', 'Nome', 'Name');
@@ -959,7 +965,7 @@ insert into `aa_translation` values ('552', 'Confirmation_code', 'Confirmation_c
 insert into `aa_translation` values ('553', '', '');
 insert into `aa_translation` values ('554', 'Attivo', 'Active');
 insert into `aa_translation` values ('555', '', '');
-insert into `aa_translation` values ('556', 'Gruppo', 'Group');
+insert into `aa_translation` values ('556', 'Gruppi', 'Groups');
 insert into `aa_translation` values ('557', '', '');
 insert into `aa_translation` values ('558', 'Timestamp', 'Timestamp');
 insert into `aa_translation` values ('559', '', '');
@@ -967,8 +973,8 @@ insert into `aa_translation` values ('560', 'Password', 'Password');
 insert into `aa_translation` values ('561', '', '');
 insert into `aa_translation` values ('562', 'Newsletter', 'Newsletter');
 insert into `aa_translation` values ('563', '', '');
-insert into `aa_translation` values ('564', 'Users', 'Users');
-insert into `aa_translation` values ('565', 'Users', 'Users');
+insert into `aa_translation` values ('564', 'Utenti web', 'Web users');
+insert into `aa_translation` values ('565', 'Utenti web', 'Web users');
 insert into `aa_translation` values ('566', 'Documents', 'Documents');
 insert into `aa_translation` values ('567', 'available documents', 'available documents');
 insert into `aa_translation` values ('568', 'Id', 'Id');
@@ -1067,8 +1073,8 @@ insert into `aa_translation` values ('660', '', '');
 insert into `aa_translation` values ('661', 'Forms', 'Forms');
 insert into `aa_translation` values ('662', 'Campi dei form', 'Campi dei form');
 insert into `aa_translation` values ('663', 'Campi del form selezionato', 'Campi del form selezionato');
-insert into `aa_translation` values ('664', 'Campi dei form', 'Campi dei form');
-insert into `aa_translation` values ('665', 'Campi del form selezionato', 'Campi del form selezionato');
+insert into `aa_translation` values ('664', 'Campi dei form', 'Form fields');
+insert into `aa_translation` values ('665', 'Campi del form selezionato', 'Fields of the selected form');
 insert into `aa_translation` values ('666', 'Id', 'Id');
 insert into `aa_translation` values ('667', '', '');
 insert into `aa_translation` values ('668', 'Id_form', 'Id_form');
@@ -1103,8 +1109,8 @@ insert into `aa_translation` values ('696', '', '');
 insert into `aa_translation` values ('697', 'Ordine', 'Ordine');
 insert into `aa_translation` values ('698', '', '');
 insert into `aa_translation` values ('699', 'Fieldsets', 'Fieldsets');
-insert into `aa_translation` values ('700', 'Opzioni campo', 'Opzioni campo');
-insert into `aa_translation` values ('701', 'Opzioni del campo selezionato (solo se di tipo select, checkbox o radio) ', 'Opzioni del campo selezionato (solo se di tipo select, checkbox o radio) ');
+insert into `aa_translation` values ('700', 'Opzioni campo', 'Options field');
+insert into `aa_translation` values ('701', 'Opzioni del campo selezionato (solo se di tipo select, checkbox o radio) ', 'Options selected fields (only for select, checkbox or radio) ');
 insert into `aa_translation` values ('702', 'Id', 'Id');
 insert into `aa_translation` values ('703', '', '');
 insert into `aa_translation` values ('704', 'Id_field', 'Id_field');
@@ -1163,63 +1169,74 @@ insert into `aa_translation` values ('756', 'Ai sensi dell\'articolo 10 della ex
 insert into `aa_translation` values ('757', 'Verificare i seguenti campi:', 'Check the following fields:');
 insert into `aa_translation` values ('758', 'Campo obbligatorio', 'This field is required.');
 insert into `aa_translation` values ('759', 'inserire un indirizzo valido', 'enter a valid email');
-insert into `aa_translation` values ('760', 'verifica questo campo', 'verifica questo campo');
-insert into `aa_translation` values ('761', 'Esporta servizi', 'Esporta servizi');
-insert into `aa_translation` values ('762', 'Importa servizi', 'Importa servizi');
+insert into `aa_translation` values ('760', 'verifica questo campo', 'check this field');
+insert into `aa_translation` values ('761', 'Esporta servizi', 'Services export');
+insert into `aa_translation` values ('762', 'Importa servizi', 'Services import');
 insert into `aa_translation` values ('763', 'Invia', 'Submit');
 insert into `aa_translation` values ('764', 'Cancella', 'Reset');
 insert into `aa_translation` values ('765', 'Active', 'Active');
 insert into `aa_translation` values ('766', '', '');
 insert into `aa_translation` values ('767', 'Order', 'Order');
 insert into `aa_translation` values ('768', '', '');
-insert into `aa_translation` values ('769', 'Hai dimenticato la password?', 'Hai dimenticato la password?');
-insert into `aa_translation` values ('770', 'Nuovo utente? Registrati qui', 'Nuovo utente? Registrati qui');
-insert into `aa_translation` values ('771', 'Se possiedi gi&agrave; i dati per l\'autenticazione, inseriscili qui sotto', 'Se possiedi gi&agrave; i dati per l\'autenticazione, inseriscili qui sotto');
+insert into `aa_translation` values ('769', 'Hai dimenticato la password?', 'Forgot your password?');
+insert into `aa_translation` values ('770', 'Nuovo utente? Registrati qui', 'New user? Sign up here');
+insert into `aa_translation` values ('771', 'Se possiedi gi&agrave; i dati per l\'autenticazione, inseriscili qui sotto', 'If you already have the data for authentication, enter them below');
 insert into `aa_translation` values ('772', 'Email', 'Email');
 insert into `aa_translation` values ('773', 'Password', 'Password');
-insert into `aa_translation` values ('774', 'Invia', 'Invia');
-insert into `aa_translation` values ('775', 'Nome', 'Nome');
-insert into `aa_translation` values ('776', 'Cognome', 'Cognome');
-insert into `aa_translation` values ('777', 'Ragione sociale', 'Ragione sociale');
-insert into `aa_translation` values ('778', 'Indirizzo', 'Indirizzo');
-insert into `aa_translation` values ('779', 'Citt&agrave;', 'Citt&agrave;');
-insert into `aa_translation` values ('780', 'CAP', 'CAP');
-insert into `aa_translation` values ('781', 'Provincia', 'Provincia');
+insert into `aa_translation` values ('774', 'Invia', 'Send');
+insert into `aa_translation` values ('775', 'Nome', 'Name');
+insert into `aa_translation` values ('776', 'Cognome', 'Surname');
+insert into `aa_translation` values ('777', 'Ragione sociale', 'Company name');
+insert into `aa_translation` values ('778', 'Indirizzo', 'Address');
+insert into `aa_translation` values ('779', 'Citt&agrave;', 'City');
+insert into `aa_translation` values ('780', 'CAP', 'ZIP');
+insert into `aa_translation` values ('781', 'Provincia', 'Province');
 insert into `aa_translation` values ('782', 'Il vostro account', 'Il vostro account');
-insert into `aa_translation` values ('783', 'Conferma la password', 'Conferma la password');
+insert into `aa_translation` values ('783', 'Conferma la password', 'Confirm the password');
 insert into `aa_translation` values ('784', 'Newsletter', 'Newsletter');
-insert into `aa_translation` values ('785', 'desidero registrarmi al servizio', 'desidero registrarmi al servizio');
+insert into `aa_translation` values ('785', 'desidero registrarmi al servizio', 'I wish to register to the service');
 insert into `aa_translation` values ('786', 'Privacy', 'Privacy');
-insert into `aa_translation` values ('787', 'ho letto e accettato', 'ho letto e accettato');
-insert into `aa_translation` values ('788', 'l\'informativa', 'L\'informativa');
-insert into `aa_translation` values ('789', 'Annulla', 'Annulla');
-insert into `aa_translation` values ('790', '5 caratteri', '5 caratteri');
-insert into `aa_translation` values ('791', 'Per poter accedere ai file protetti di &egrave; necessario registrarsi. I campi marcati con * sono obbligatori:', 'Per poter accedere ai file protetti di &egrave; necessario registrarsi. I campi marcati con * sono obbligatori:');
-insert into `aa_translation` values ('792', 'Dati personali', 'Dati personali');
-insert into `aa_translation` values ('793', 'Il vostro account', 'Il vostro account');
+insert into `aa_translation` values ('787', 'ho letto e accettato', 'I have read and accepted');
+insert into `aa_translation` values ('788', 'l\'informativa', 'The information');
+insert into `aa_translation` values ('789', 'Annulla', 'Cancel');
+insert into `aa_translation` values ('790', '5 caratteri', '5 characters');
+insert into `aa_translation` values ('791', 'Per poter accedere ai file protetti di &egrave; necessario registrarsi. I campi marcati con * sono obbligatori:', 'In order to access protected files, you must register. Fields marked with * are required:');
+insert into `aa_translation` values ('792', 'Dati personali', 'Personal data');
+insert into `aa_translation` values ('793', 'Il vostro account', 'Your account');
 insert into `aa_translation` values ('794', 'Newsletter', 'Newsletter');
-insert into `aa_translation` values ('795', 'desidero registrarmi al servizio', 'desidero registrarmi al servizio');
-insert into `aa_translation` values ('796', 'Scegli almeno 5 caratteri', 'Scegli almeno 5 caratteri');
-insert into `aa_translation` values ('797', 'Le password non coincidono', 'Le password non coincidono');
-insert into `aa_translation` values ('798', 'I dati sono stati salvati', 'I dati sono stati salvati');
-insert into `aa_translation` values ('799', 'Il tuo account &egrave; pronto per essere attivato, clicca sul link che ti &egrave; appena stato spedito all\'indirizzo specificato per confermare la tua registrazione.', 'Il tuo account &egrave; pronto per essere attivato, clicca sul link che ti &egrave; appena stato spedito all\'indirizzo specificato per confermare la tua registrazione.');
-insert into `aa_translation` values ('800', 'Il tuo account &egrave; stato attivato correttamente.', 'Il tuo account &egrave; stato attivato correttamente.');
-insert into `aa_translation` values ('801', 'Effettua il login', 'Effettua il login');
-insert into `aa_translation` values ('802', 'Nome utente o password errati.', 'Nome utente o password errati.');
-insert into `aa_translation` values ('803', 'Sei autenticato come', 'Sei autenticato come');
-insert into `aa_translation` values ('804', 'Effettua il logout', 'Effettua il logout');
+insert into `aa_translation` values ('795', 'desidero registrarmi al servizio', 'I wish to register to the service');
+insert into `aa_translation` values ('796', 'Scegli almeno 5 caratteri', 'Choose at least 5 characters');
+insert into `aa_translation` values ('797', 'Le password non coincidono', 'Passwords do not match');
+insert into `aa_translation` values ('798', 'I dati sono stati salvati', 'The data were saved');
+insert into `aa_translation` values ('799', 'Il tuo account &egrave; pronto per essere attivato, clicca sul link che ti &egrave; appena stato spedito all\'indirizzo specificato per confermare la tua registrazione.', 'Your account is ready to be activated, click on the link that has just been sended to the email specified to confirm your registration.');
+insert into `aa_translation` values ('800', 'Il tuo account &egrave; stato attivato correttamente.', 'Your account has been activated successfully.');
+insert into `aa_translation` values ('801', 'Effettua il login', 'Login');
+insert into `aa_translation` values ('802', 'Nome utente o password errati.', 'Username or password incorrect.');
+insert into `aa_translation` values ('803', 'Sei autenticato come', 'You are logged in as');
+insert into `aa_translation` values ('804', 'Effettua il logout', 'Logout');
 insert into `aa_translation` values ('805', 'Login', 'Login');
-insert into `aa_translation` values ('806', 'Registrati', 'Registrati');
+insert into `aa_translation` values ('806', 'Registrati', 'Register');
 insert into `aa_translation` values ('807', 'Logout', 'Logout');
-insert into `aa_translation` values ('808', 'Benvenuto', 'Benvenuto');
-insert into `aa_translation` values ('809', 'I tuoi dati sono stati aggiornati correttamente', 'I tuoi dati sono stati aggiornati correttamente');
-insert into `aa_translation` values ('810', 'Inserisci la tua email, e i tuoi dati, se richiesti, ti verranno recapitati nuovamente al tuo account di posta', 'Inserisci la tua email, e i tuoi dati, se richiesti, ti verranno recapitati nuovamente al tuo account di posta');
-insert into `aa_translation` values ('811', 'Password rigenerata', 'Password rigenerata');
-insert into `aa_translation` values ('812', 'Una mail con i tuoi nuovi dati di accesso &egrave; stata spedita all\'indirizzo', 'Una mail con i tuoi nuovi dati di accesso &egrave; stata spedita all\'indirizzo');
-insert into `aa_translation` values ('813', 'Indirizzo non riconosciuto', 'Indirizzo non riconosciuto');
-insert into `aa_translation` values ('814', 'L\'indirizzo inserito non &egrave; presente nel database.', 'L\'indirizzo inserito non &egrave; presente nel database.');
-insert into `aa_translation` values ('815', 'Riprova', 'Riprova');
-insert into `aa_translation` values ('816', 'Codice di sicurezza', 'Codice di sicurezza');
+insert into `aa_translation` values ('808', 'Benvenuto', 'Welcome');
+insert into `aa_translation` values ('809', 'I tuoi dati sono stati aggiornati correttamente', 'Your information has been updated correctly');
+insert into `aa_translation` values ('810', 'Inserisci la tua email, e i tuoi dati, se richiesti, ti verranno recapitati nuovamente al tuo account di posta', 'Enter your email address, and your data, if required, you will be redelivered to your email account');
+insert into `aa_translation` values ('811', 'Password rigenerata', 'Password regenerated');
+insert into `aa_translation` values ('812', 'Una mail con i tuoi nuovi dati di accesso &egrave; stata spedita all\'indirizzo', 'An email with your new login information was sent to your email address');
+insert into `aa_translation` values ('813', 'Indirizzo non riconosciuto', 'Email not recognized');
+insert into `aa_translation` values ('814', 'L\'indirizzo inserito non &egrave; presente nel database.', 'The address you entered is not in the database.');
+insert into `aa_translation` values ('815', 'Riprova', 'Retry');
+insert into `aa_translation` values ('816', 'Codice di sicurezza', 'Security Code');
+insert into `aa_translation` values ('817', 'Non sei abilitato per scaricare questo file', 'You aren\'t allowed to download this file');
+insert into `aa_translation` values ('818', 'Documento riservato', 'Confidential document');
+insert into `aa_translation` values ('819', 'Amministrazione', 'Administration');
+insert into `aa_translation` values ('820', 'Pagine', 'Pages');
+insert into `aa_translation` values ('821', 'Amministrazione', 'Administration');
+insert into `aa_translation` values ('822', 'Metatitle', 'Metatitle');
+insert into `aa_translation` values ('823', '', '');
+insert into `aa_translation` values ('824', 'Metadescription', 'Metadescription');
+insert into `aa_translation` values ('825', '', '');
+insert into `aa_translation` values ('826', 'Metakeywords', 'Metakeywords');
+insert into `aa_translation` values ('827', '', '');
 
 
 ### structure of table `aa_users` ###
@@ -1227,19 +1244,19 @@ insert into `aa_translation` values ('816', 'Codice di sicurezza', 'Codice di si
 DROP TABLE IF EXISTS `aa_users`;
 
 CREATE TABLE `aa_users` (
-  `id` int(11) NOT NULL auto_increment,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `login` varchar(255) NOT NULL,
   `passwd` varchar(255) NOT NULL,
   `id_group` int(255) NOT NULL,
   `lang` int(255) NOT NULL,
   `owner` int(11) NOT NULL,
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=778 DEFAULT CHARSET=utf8 AUTO_INCREMENT=778;
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=5277 DEFAULT CHARSET=utf8 AUTO_INCREMENT=5277;
 
 
 ### data of table `aa_users` ###
 
-insert into `aa_users` values ('777', 'root', '39f27c4882a68be92b6f70dc96ad948e', '1', '1', '1');
+insert into `aa_users` values ('5276', 'root', 'ea52ba980ec513579f5a61cb051434c6', '1', '1', '1');
 
 
 ### structure of table `album` ###
@@ -1247,11 +1264,11 @@ insert into `aa_users` values ('777', 'root', '39f27c4882a68be92b6f70dc96ad948e'
 DROP TABLE IF EXISTS `album`;
 
 CREATE TABLE `album` (
-  `id` int(11) NOT NULL auto_increment,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
   `date` datetime NOT NULL,
   `photo` varchar(255) NOT NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 AUTO_INCREMENT=5;
 
 
@@ -1265,10 +1282,10 @@ insert into `album` values ('4', 'Demo Album', '2010-03-24 16:25:00', '');
 DROP TABLE IF EXISTS `categories`;
 
 CREATE TABLE `categories` (
-  `id` int(11) NOT NULL auto_increment,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `category` varchar(255) NOT NULL,
   `order` int(11) NOT NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 AUTO_INCREMENT=2;
 
 
@@ -1282,12 +1299,12 @@ insert into `categories` values ('1', '626', '10');
 DROP TABLE IF EXISTS `dictionary`;
 
 CREATE TABLE `dictionary` (
-  `id` int(11) NOT NULL auto_increment,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `label` varchar(255) NOT NULL,
   `value` text NOT NULL,
-  PRIMARY KEY  (`id`),
+  PRIMARY KEY (`id`),
   KEY `label` (`label`)
-) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8 AUTO_INCREMENT=57;
+) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8 AUTO_INCREMENT=59;
 
 
 ### data of table `dictionary` ###
@@ -1323,7 +1340,6 @@ insert into `dictionary` values ('30', 'cinque_caratteri', '790');
 insert into `dictionary` values ('31', 'necessaria_registrazione', '791');
 insert into `dictionary` values ('32', 'dati_personali', '792');
 insert into `dictionary` values ('33', 'vostro_account', '793');
-insert into `dictionary` values ('34', 'newsletter', '794');
 insert into `dictionary` values ('35', 'registrazione_newsletter', '795');
 insert into `dictionary` values ('36', 'almeno_cinque_caratteri', '796');
 insert into `dictionary` values ('37', 'password_sbagliate', '797');
@@ -1346,6 +1362,8 @@ insert into `dictionary` values ('53', 'email_sconosciuta', '813');
 insert into `dictionary` values ('54', 'indirizzo_non_presente', '814');
 insert into `dictionary` values ('55', 'riprova', '815');
 insert into `dictionary` values ('56', 'codice_sicurezza', '816');
+insert into `dictionary` values ('57', 'doc_no_abilitazione', '817');
+insert into `dictionary` values ('58', 'doc_riservato', '818');
 
 
 ### structure of table `documents` ###
@@ -1353,21 +1371,21 @@ insert into `dictionary` values ('56', 'codice_sicurezza', '816');
 DROP TABLE IF EXISTS `documents`;
 
 CREATE TABLE `documents` (
-  `id` int(11) NOT NULL auto_increment,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
   `description` varchar(150) NOT NULL,
   `date` date NOT NULL,
   `file` varchar(255) NOT NULL,
-  `category_id` int(11) NOT NULL,
+  `category_id` int(11) NOT NULL DEFAULT '0',
   `enabled_groups` varchar(255) NOT NULL,
-  `status` enum('public','protected','private','secret','suspended') NOT NULL default 'public',
-  PRIMARY KEY  (`id`)
+  `status` enum('public','protected','private','secret','suspended') NOT NULL DEFAULT 'public',
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 AUTO_INCREMENT=2;
 
 
 ### data of table `documents` ###
 
-insert into `documents` values ('1', '635', '636', '2010-03-24', 'zip', '1', '', 'public');
+insert into `documents` values ('1', '635', '636', '2010-03-24', 'zip', '1', '1|2', 'suspended');
 
 
 ### structure of table `field_options` ###
@@ -1375,13 +1393,13 @@ insert into `documents` values ('1', '635', '636', '2010-03-24', 'zip', '1', '',
 DROP TABLE IF EXISTS `field_options`;
 
 CREATE TABLE `field_options` (
-  `id` int(11) NOT NULL auto_increment,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_field` int(11) NOT NULL,
   `label` varchar(255) NOT NULL,
   `value` varchar(255) NOT NULL,
   `selezionato` varchar(255) NOT NULL,
   `ordine` int(11) NOT NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
 
@@ -1394,17 +1412,17 @@ CREATE TABLE `field_options` (
 DROP TABLE IF EXISTS `form_fields`;
 
 CREATE TABLE `form_fields` (
-  `id` int(11) NOT NULL auto_increment,
-  `id_form` int(11) NOT NULL default '0',
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_form` int(11) NOT NULL DEFAULT '0',
   `titolo` varchar(255) NOT NULL,
   `label` varchar(255) NOT NULL,
-  `tipo` enum('text','textarea','checkbox','radio','select','file','password') NOT NULL default 'text',
+  `tipo` enum('text','textarea','checkbox','radio','select','file','password') NOT NULL DEFAULT 'text',
   `value` varchar(255) NOT NULL,
-  `formato` enum('text','date','digits','email') NOT NULL default 'text',
+  `formato` enum('text','date','digits','email') NOT NULL DEFAULT 'text',
   `obbligatorio` varchar(255) NOT NULL,
-  `fieldset` int(11) NOT NULL default '0',
-  `ordine` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`id`)
+  `fieldset` int(11) NOT NULL DEFAULT '0',
+  `ordine` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 AUTO_INCREMENT=4;
 
 
@@ -1420,11 +1438,11 @@ insert into `form_fields` values ('3', '1', 'messaggio', '749', 'textarea', '', 
 DROP TABLE IF EXISTS `form_fieldsets`;
 
 CREATE TABLE `form_fieldsets` (
-  `id` int(11) NOT NULL auto_increment,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_form` int(11) NOT NULL,
   `titolo` varchar(255) NOT NULL,
   `ordine` varchar(255) NOT NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
 
@@ -1437,17 +1455,17 @@ CREATE TABLE `form_fieldsets` (
 DROP TABLE IF EXISTS `forms`;
 
 CREATE TABLE `forms` (
-  `id` int(11) NOT NULL auto_increment,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `descrizione` text NOT NULL,
   `destinatario` varchar(255) NOT NULL,
   `privacy` varchar(255) NOT NULL,
-  `captcha` enum('nessuno','basic','synCaptcha') NOT NULL default 'nessuno',
+  `captcha` enum('nessuno','basic','synCaptcha') NOT NULL DEFAULT 'nessuno',
   `risposta` text NOT NULL,
   `data` datetime NOT NULL,
   `visibile` varchar(255) NOT NULL,
-  `pagina` int(255) NOT NULL default '0',
+  `pagina` int(255) NOT NULL DEFAULT '0',
   `titolo` varchar(255) NOT NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 AUTO_INCREMENT=2;
 
 
@@ -1461,15 +1479,16 @@ insert into `forms` values ('1', '722', 'info@dynamick.it', '', 'synCaptcha', '7
 DROP TABLE IF EXISTS `groups`;
 
 CREATE TABLE `groups` (
-  `id` int(11) NOT NULL auto_increment,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `group` varchar(255) NOT NULL,
-  PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 AUTO_INCREMENT=2;
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 AUTO_INCREMENT=3;
 
 
 ### data of table `groups` ###
 
 insert into `groups` values ('1', 'Standard Group');
+insert into `groups` values ('2', 'Other Group');
 
 
 ### structure of table `media` ###
@@ -1477,14 +1496,14 @@ insert into `groups` values ('1', 'Standard Group');
 DROP TABLE IF EXISTS `media`;
 
 CREATE TABLE `media` (
-  `id` int(11) NOT NULL auto_increment,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `filename` varchar(255) NOT NULL,
   `path` varchar(255) NOT NULL,
   `title` varchar(255) NOT NULL,
   `caption` varchar(255) NOT NULL,
   `author` varchar(255) NOT NULL,
-  `modified_at` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
-  PRIMARY KEY  (`id`)
+  `modified_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 AUTO_INCREMENT=3;
 
 
@@ -1499,12 +1518,12 @@ insert into `media` values ('2', 'ragazza-miniatura-1.jpg', '/public/mat/2010/03
 DROP TABLE IF EXISTS `news`;
 
 CREATE TABLE `news` (
-  `id` int(11) NOT NULL auto_increment,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
   `text` text NOT NULL,
   `image` varchar(255) NOT NULL,
   `date` date NOT NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 AUTO_INCREMENT=5;
 
 
@@ -1521,12 +1540,12 @@ insert into `news` values ('4', '432', '433', '', '2005-04-19');
 DROP TABLE IF EXISTS `photos`;
 
 CREATE TABLE `photos` (
-  `id` int(11) NOT NULL auto_increment,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
   `photo` varchar(255) NOT NULL,
   `album` int(11) NOT NULL,
-  `ordine` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`id`),
+  `ordine` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
   KEY `album` (`album`)
 ) ENGINE=MyISAM AUTO_INCREMENT=29 DEFAULT CHARSET=utf8 AUTO_INCREMENT=29;
 
@@ -1544,10 +1563,10 @@ insert into `photos` values ('28', 'business-italy-2 (Custom)', 'jpg', '4', '40'
 DROP TABLE IF EXISTS `tagged`;
 
 CREATE TABLE `tagged` (
-  `id` int(11) NOT NULL auto_increment,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `media_id` int(11) NOT NULL,
   `tag_id` int(11) NOT NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 AUTO_INCREMENT=5;
 
 
@@ -1564,9 +1583,9 @@ insert into `tagged` values ('4', '2', '4');
 DROP TABLE IF EXISTS `tags`;
 
 CREATE TABLE `tags` (
-  `id` int(11) NOT NULL auto_increment,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `tag` varchar(255) NOT NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 AUTO_INCREMENT=5;
 
 
@@ -1583,7 +1602,7 @@ insert into `tags` values ('4', 'bocca');
 DROP TABLE IF EXISTS `users`;
 
 CREATE TABLE `users` (
-  `id` int(11) NOT NULL auto_increment,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `surname` varchar(255) NOT NULL,
   `company` varchar(255) NOT NULL,
@@ -1594,14 +1613,14 @@ CREATE TABLE `users` (
   `province` varchar(255) NOT NULL,
   `confirmation_code` varchar(255) NOT NULL,
   `active` varchar(255) NOT NULL,
-  `group` int(11) NOT NULL default '0',
+  `group` varchar(11) NOT NULL,
   `timestamp` datetime NOT NULL,
   `password` varchar(255) NOT NULL,
   `newsletter` varchar(255) NOT NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 AUTO_INCREMENT=11;
 
 
 ### data of table `users` ###
 
-insert into `users` values ('4', 'Dummy', 'Dude', 'SyntaxDesktop', 'info@syntaxdesktop.com', 'via Garibaldi', 'Villafranca', '37069', 'Verona', '', '1', '1', '2010-03-24 12:07:13', '921b67a326b3365d64ff7d7d168624c8', '1');
+insert into `users` values ('4', 'Dummy', 'Dude', 'SyntaxDesktop', 'info@syntaxdesktop.com', 'via Garibaldi', 'Villafranca', '37069', 'Verona', '', '1', '2', '2010-03-24 12:07:13', 'ea52ba980ec513579f5a61cb051434c6', '1');

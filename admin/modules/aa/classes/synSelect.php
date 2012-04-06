@@ -18,7 +18,7 @@ class synSelect extends synElement {
     if ($l=="") $l =  ucfirst($n);
     $this->type = "file";
     $this->name  = $n;
-    if ($$n) { $this->selected = $$n; } else $this->value = $v;
+    if (isset($$n) and $$n) { $this->selected = $$n; } else $this->value = $v;
     $this->label = $l;
     $this->size  = $s;
     $this->help  = $h;
@@ -107,6 +107,7 @@ class synSelect extends synElement {
     $qry=$this->compileQry($qry);
     
     $ret=array();
+    $ownerField="";
     // discover an "owner field" in the service
     $table=preg_match("/from (\w+)[\s]?(.*)/i",$qry, $matches);
     $destTable=$matches[1];
@@ -147,11 +148,15 @@ class synSelect extends synElement {
     global $synChkKey, $synChkVisible, $synChkEditable,$synChkMultilang;
     global $db;
     $synHtml = new synHtml();
+    $selected = "";
 
     $res=$db->Execute("SELECT * FROM aa_services order by name");
     $txt="<select name=\"synElmQry[$i]\" >";
     while ($arr=$res->FetchRow()) {
-      if (strpos($synElmQry[$i]." ","FROM ".$arr["syntable"]." ")===false ) $selected=""; else $selected="selected=\"selected\""; 
+      if(isset($synElmQry[$i])) {  
+        if (strpos($synElmQry[$i]." ","FROM ".$arr["syntable"]." ")===false ) $selected=""; 
+        else $selected="selected=\"selected\""; 
+      }
       if ($arr["syntable"]!="") $txt.="<OPTION VALUE=\"SELECT * FROM ".$arr["syntable"]."\" $selected>".translate($arr["name"])."</option>";
     }
     $txt.="</select>\n";
@@ -162,7 +167,7 @@ class synSelect extends synElement {
     $this->configuration[5]="Dimensione: ".$synHtml->text(" name=\"synElmSize[$i]\" value=\"$synElmSize[$i]\"");
 
     if (!isset($synElmPath[$i]) or $synElmPath[$i]=="") $checked=""; else $checked=" checked='checked' ";
-    $this->configuration[6]="NULL: ".$synHtml->check(" name=\"synElmPath[$i]\" value=\"1\" $checked");
+    $this->configuration[6]="NULL: ".$synHtml->hidden(" name=\"synElmPath[$i]\" value=\"\"").$synHtml->check(" name=\"synElmPath[$i]\" value=\"1\" $checked");
     
     //enable or disable the 3 check at the last configuration step
     $_SESSION["synChkKey"][$i]=1;

@@ -128,6 +128,8 @@ class synContainer {
   function getTree($qry) {
     global $db;
 
+    $ret = "";
+    $startQry = "";
     if ($this->table=="aa_page") $qry.=",`order`";
 
     ////////////////////////////
@@ -331,7 +333,7 @@ class synContainer {
         $ret .= "          <a href=\"".$_SERVER["PHP_SELF"]."?aa_order=".$this->element[$k]->name."\" title=\"".translateDesktop($this->element[$k]->help)."\">";
         if ($v->multilang==1) $ret.= $this->getLangFlag("","")."&nbsp;";
         $ret .= translateDesktop($this->element[$k]->colname);
-        if ($_SESSION["aa_order"]==$this->element[$k]->name)
+        if (isset($_SESSION["aa_order"]) and $_SESSION["aa_order"]==$this->element[$k]->name)
           $_SESSION["aa_order_direction"]==" ASC" ? $ret.=" <img src=\"images/up.gif\" />" : $ret.=" <img src=\"images/down.gif\" />";
         //else $ret.=" <img src=\"images/normal.gif\"/>";
         $ret .= "</a>\n";
@@ -636,7 +638,7 @@ class synContainer {
         $fieldSpecificType=explode(' ',$fieldType);
         $fieldSpecificType=explode('\(',$fieldSpecificType[1]);
         $fieldSpecificType=strtolower($fieldSpecificType[0]);
-        if ($columns[strtoupper($name)]->name!=$name) {
+        if (!isset($columns[strtoupper($name)]) or $columns[strtoupper($name)]->name!=$name) {
           if (!($v->isJoin())) {
             if ($v->isKey()) $dboption=" PRIMARY KEY"; else $dboption="";
               $qry = "ALTER TABLE `".$this->table."` ADD `".$name."` ".$fieldType.$dboption;
@@ -646,8 +648,12 @@ class synContainer {
       }
 
       //Modify fields
-      $colSize=$columns[strtoupper($name)]->max_length;
-      $colType=$columns[strtoupper($name)]->type;
+      $colSize = 0;
+      $colType = 0;
+      if (isset($columns[strtoupper($name)])) {
+        $colSize=$columns[strtoupper($name)]->max_length;
+        $colType=$columns[strtoupper($name)]->type;
+      }
       if ($colSize==-1) $colSize=$colType;
       //echo $fieldSpecificType." - ".$colType."<br>";
       if (stristr($fieldType,$colSize)==false or $fieldSpecificType!=$colType) {
@@ -663,7 +669,7 @@ class synContainer {
       }
 
       //check the primary keys
-      if ($v->isKey()!=$columns[strtoupper($name)]->primary_key) $resetKey=1;
+      if (isset($columns[strtoupper($name)]) and $v->isKey()!=$columns[strtoupper($name)]->primary_key) $resetKey=1;
       if ($v->isKey()===true) $primaryKeys.=$this->element[$k]->getSQLName().",";
       //echo $v->isKey()." - ".$columns[strtoupper($name)]->primary_key."<br>";
     }
@@ -708,7 +714,7 @@ class synContainer {
   
   /* add_filter functionality */  
   function add_callback($hook, $func=array()) {//array($obj, $function)
-    if(!is_array($this->hooks[$hook])) $this->hooks[$hook]=array();  
+    if(!isset($this->hooks[$hook]) or !is_array($this->hooks[$hook])) $this->hooks[$hook]=array();  
     array_push($this->hooks[$hook], $func);
     return true;
   }  

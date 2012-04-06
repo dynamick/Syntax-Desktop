@@ -197,7 +197,7 @@ EOC;
   //translate path and insert dynamic content
   function translatePath($path) {
     global $synAdminPath;
-    if (strpos($path,"§syntaxRelativePath§")!==false) $path=str_replace("§syntaxRelativePath§",$synAdminPath,$path);
+    if (strpos($path,"Â§syntaxRelativePathÂ§")!==false) $path=str_replace("Â§syntaxRelativePathÂ§",$synAdminPath,$path);
     return $path;
   }
 
@@ -216,7 +216,7 @@ EOC;
     if (!isset($synElmPath[$i]) or $synElmPath[$i]=="") $synElmPath[$i]=$pathinfo."/mat";
 
     //parent::configuration();
-    $this->configuration[8]="Path: ".$synHtml->text(" name=\"synElmPath[$i]\" value=\"$synElmPath[$i]\"")."<br><span style='color: gray'>Insert directory path without DOCUMENT ROOT.<br />I.e. <strong>/mysite/syntax/public/templates/</strong> <br> Use <strong>§syntaxRelativePath§</strong><br />for dynamically insert Syntax Desktop relative path.</span>";
+    $this->configuration[8]="Path: ".$synHtml->text(" name=\"synElmPath[$i]\" value=\"$synElmPath[$i]\"")."<br><span style='color: gray'>Insert directory path without DOCUMENT ROOT.<br />I.e. <strong>/mysite/syntax/public/templates/</strong> <br> Use <strong>Â§syntaxRelativePathÂ§</strong><br />for dynamically insert Syntax Desktop relative path.</span>";
 
     //enable or disable the 3 check at the last configuration step
     global $synChkKey, $synChkVisible, $synChkEditable, $synChkMultilang;

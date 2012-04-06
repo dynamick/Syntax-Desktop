@@ -211,6 +211,7 @@ function __autoload($class) {
        'clone' => $str['saveandclone'],
          'new' => $str['saveandadd']
       );
+      $label  = $str["new"];
       $bottom  = "<table id=\"actions\">\n";
       $bottom .= "  <tr>\n";
       $bottom .= "    <td>";
@@ -261,6 +262,7 @@ function __autoload($class) {
         'next' => $str['saveandnext'],
          'new' => $str['saveandadd']
       );
+      $label  = $str["modify"];
       $bottom  = "<table id=\"actions\">\n";
       $bottom .= "  <tr>\n";
       $bottom .= "    <td>";
