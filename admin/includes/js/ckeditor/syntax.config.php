@@ -55,8 +55,8 @@ CKEDITOR.editorConfig = function(config)
   var kcPath = '/admin/includes/js/kcfinder/';
   config.filebrowserBrowseUrl = kcPath+'browse.php?type=file';
   config.filebrowserUploadUrl = kcPath+'upload.php?type=file';
-  config.filebrowserImageBrowseUrl = kcPath+'browse.php?type=images';
-  config.filebrowserImageUploadUrl = kcPath+'upload.php?type=images';
+  config.filebrowserImageBrowseUrl = kcPath+'browse.php?type=image';
+  config.filebrowserImageUploadUrl = kcPath+'upload.php?type=image';
   config.filebrowserFlashBrowseUrl = kcPath+'browse.php?type=flash';
   config.filebrowserFlashUploadUrl = kcPath+'upload.php?type=flash';
 };

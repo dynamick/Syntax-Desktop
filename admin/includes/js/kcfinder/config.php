@@ -28,8 +28,8 @@ $_CONFIG = array(
 
     'uploadURL' => '', //settato in sessione
     'uploadDir' => '',
-    'dirPerms' => '0755',
-    'filePerms' => '0644',
+    'dirPerms' => 0755,
+    'filePerms' => 0644,
 
     'access' => array(
 

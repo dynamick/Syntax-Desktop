@@ -6,21 +6,21 @@
 //set the current language
 function setLang($id) {
   global $db;
+  session_start();
+
   $lang=intval($id);
-  if ($lang=="") return false;
+  if ($lang==0) return false;
 
   //get the current lang
-  $qry="SELECT initial FROM aa_lang WHERE id='".$lang."'";
+  $qry="SELECT initial FROM aa_lang WHERE id='".$lang."' AND `active`=1";
   $res=$db->Execute($qry);
-  if ($res->RecordCount()>0) {
-    $arr=$res->FetchRow();
-    $currlang=$arr[0];
+  if ($arr = $res->fetchRow()) {
+    $initial = $arr['initial'];
 
-    $_SESSION["aa_CurrentLang"]=$lang;
     $_SESSION["synSiteLang"]=$lang;
-    $_SESSION["aa_CurrentLangInitial"]=$currlang;
-    $_SESSION["synSiteLangInitial"]=$currlang;
-    setlocale(LC_ALL, strtolower($currlang)."_".strtoupper($currlang));
+    $_SESSION["synSiteLangInitial"]=$initial;
+
+    //setlocale(LC_ALL, strtolower($currlang)."_".strtoupper($currlang));
     return true;
   } else {
     return false;
@@ -31,7 +31,7 @@ function setLang($id) {
 //DEPRECATED - return the language list (i.e. en,it,es)
 function getLangList() {
   global $db;
-  $res=$db->Execute("SELECT initial FROM aa_lang");
+  $res=$db->Execute("SELECT initial FROM aa_lang ");
   while (list($lang)=$res->FetchRow()) $ret.=$lang.", ";
   return substr($ret,0,-2);
 }
@@ -46,81 +46,43 @@ function getLangArr() {
 }
 
 //translate an element for the desktop. If err==true display the error message
-function translateSite($id,$err=false) {
+function translateSite($id, $err=false) {
   global $db;
-    if (isset($_GET["synSiteLang"])) setLang($_GET["synSiteLang"]);
-    if ($_SESSION["synSiteLang"]=="" or !isset($_SESSION["synSiteLang"])){
-      $res=$db->Execute("SELECT id,initial FROM aa_lang ORDER BY id");
-      if($res!=false){
-        $arr=$res->FetchRow();
-        $_SESSION["synSiteLang"]=$arr["id"];
-        $_SESSION["synSiteLangInitial"]=$arr["initial"];
-        setlocale(LC_ALL, strtolower($arr["initial"])."_".strtoupper($arr["initial"]));
-      }
-    }
-  //if ($this->multilang==1 and $id!="") {
-    $qry="SELECT * FROM aa_translation WHERE id='".addslashes($id)."'";
-    $res=$db->Execute($qry);
-    if ($res->RecordCount()==0) {  //umm... the field is multilang but there isn't a row in the translation table...
-      $ret=$id;
-    } else {
-      $arr=$res->FetchRow();
-      $ret=$arr[$_SESSION["synSiteLangInitial"]];
+  session_start();
 
-      if ($ret=="" and $err===true) {
-        foreach ($arr as $mylang=>$mytrans) if (!is_numeric($mylang) and $mylang!="id" and $mytrans!="") $alt.="\n$mylang: ".substr(strip_tags($mytrans),0,10);
-        $ret="<span style='color: gray' title=\"".htmlentities("Other Translations:".$alt)."\">[no translation]</span>";
-      }
+  if (isset($_GET["synSiteLang"])) setLang($_GET["synSiteLang"]);
+  if ($_SESSION["synSiteLang"]=="" or !isset($_SESSION["synSiteLang"])){
+    updateLang();
+  }
+
+  $qry="SELECT * FROM aa_translation WHERE id='".addslashes($id)."'";
+  $res=$db->Execute($qry);
+  if ($res->RecordCount()==0) {  //umm... the field is multilang but there isn't a row in the translation table...
+    $ret=$id;
+  } else {
+    $arr=$res->FetchRow();
+    $ret=$arr[$_SESSION["synSiteLangInitial"]];
+
+    if ($ret=="" and $err===true) {
+      foreach ($arr as $mylang=>$mytrans) if (!is_numeric($mylang) and $mylang!="id" and $mytrans!="") $alt.="\n$mylang: ".substr(strip_tags($mytrans),0,10);
+      $ret="<span style='color: gray' title=\"".htmlentities("Other Translations:".$alt)."\">[no translation]</span>";
     }
-  //} else $ret=$id;
+  }
+
   return $ret;
 }
 
-/*
-function updateLang() {
-  global $db, $synSiteLang;
-  if (isset($_GET["synSiteLang"])) setLang($_GET["synSiteLang"]);
-
-  //check if exist a language id that match the session variable
-  if ($_SESSION["synSiteLang"]!="") {
-    $res=$db->Execute("SELECT id FROM aa_lang WHERE id=".$_SESSION["synSiteLang"]);
-  }
-
-  if ($_SESSION["synSiteLang"]=="" or $res->RecordCount()==0) {
-    //$prefLang=getenv("HTTP_ACCEPT_LANGUAGE");
-    $get_lang = get_languages();
-    $prefLang = $get_lang[0][1];
-
-    $res=$db->Execute("SELECT id FROM aa_lang WHERE `active`=1 AND initial='$prefLang'");
-    if ($res->RecordCount()>0) list($_SESSION["synSiteLang"])=$res->FetchRow();
-
-    else {
-      $res=$db->Execute("SELECT id FROM aa_lang WHERE `active`=1 ORDER BY `order` LIMIT 0,1");
-      if ($res->RecordCount()>0) list($_SESSION["synSiteLang"])=$res->FetchRow();
-    }
-  }
-
-  //get the current lang
-  $qry="SELECT initial FROM aa_lang WHERE id=".$_SESSION["synSiteLang"];
-  $res=$db->Execute($qry);
-  $arr=$res->FetchRow();
-  $currlang=$arr[0];
-
-  $_SESSION["aa_CurrentLangInitial"]=$currlang;
-  $_SESSION["synSiteLangInitial"]=$currlang;
-  setlocale(LC_ALL, strtolower($currlang)."_".strtoupper($currlang));
-}*/
-
 
 function updateLang() {
   global $db, $synSiteLang;
+  session_start();
 
   if (isset($_GET["synSiteLang"]))
     setLang(intval($_GET["synSiteLang"]));
 
   //check if a language id that matches the session variable exists
   if ($_SESSION['synSiteLang'] != '') {
-    $sql = "SELECT id FROM aa_lang WHERE id=".intval($_SESSION['synSiteLang']);
+    $sql = "SELECT id FROM aa_lang WHERE id=".intval($_SESSION['synSiteLang']).' AND `active`=1';
     $res = $db->Execute($sql);
     if(!$res->fetchrow()){
       $_SESSION['synSiteLang'] = '';
@@ -136,12 +98,13 @@ function updateLang() {
     }
 
     $get_lang = get_languages(); // array delle lingue accettate dal browser in ordine di preferenza
+
     foreach($get_lang AS $lng){
       $lng = str_replace('-', '_', trim($lng)); //cambio 'it-it' in 'it_it' per compatibilità con mySql
       $lng2char = substr($lng, 0, 2); //cambio 'it_it' in 'it'
 
       if(isset($available[$lng])) { // cerco 'it_it', se lo trovo ho finito
-        $pref = $available[$lng];
+        $pref = $available[$lng]; //=2
         break;
       } elseif( isset($available[$lng2char]) ){ // cerco 'it' e continuo
         $pref2 = $available[$lng2char];
@@ -154,8 +117,9 @@ function updateLang() {
     //se non c'è neanche quello uso la prima lingua disponibile
     if(!$pref) $pref = array_shift(array_values($available));
 
-    $_SESSION['synSiteLang'] = $available[$pref];
-    $_SESSION['synSiteLangInitial'] = array_search($pref, $available);
+    //$_SESSION['synSiteLang'] = $pref;
+    //$_SESSION['synSiteLangInitial'] = array_search($pref, $available);
+    setLang($pref);
 
     //setlocale(LC_ALL, strtolower($currlang)."_".strtoupper($currlang));
   }
@@ -163,7 +127,7 @@ function updateLang() {
 
 
 
-// if not already exists, insert a row in the translation table and return the 
+// if not already exists, insert a row in the translation table and return the
 // translation for the current selected lang
 function l($value,$replace="") {
   global $db;
@@ -195,9 +159,9 @@ function l($value,$replace="") {
   }
   $ret=translateSite($id);
   if ($replace!="") $ret=str_replace("###",$replace,$ret);
-  
+
   return $ret;
-}  
+}
 
 
 function translateDictionary($label){
@@ -213,7 +177,7 @@ function translateDictionary($label){
   } else {
     $arr=$res->FetchRow();
     $ret = $arr["value"];
-  }    
+  }
   return $ret;
 }
 

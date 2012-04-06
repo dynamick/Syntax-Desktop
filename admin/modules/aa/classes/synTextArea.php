@@ -34,7 +34,7 @@ class synTextArea extends synElement {
 
   //private function
   function _html() {
-    global $synAdminPath, $synPublicPath, $mat;
+    global $synAdminPath, $synPublicPath, $mat, $synAbsolutePath;
     $height = $this->size;
     $value = htmlentities($this->translate($this->value));
     $ckConfig = $synAdminPath.'/includes/js/ckeditor/syntax.config.php';
@@ -50,7 +50,7 @@ EOC;
 
     $_SESSION['KCFINDER']['disabled'] = false;
     $_SESSION['KCFINDER']['uploadURL'] = $synPublicPath.$mat.'/';
-  //$_SESSION['KCFINDER']['uploadDir'] = getenv('DOCUMENT_ROOT').$synPublicPath.$mat.'/';
+  //$_SESSION['KCFINDER']['uploadDir'] = $synAbsolutePath.$synPublicPath.$mat.'/';
 
     if ($this->big==1) $contents = '</td></tr><tr><td colspan=2>'.$contents;
     return $contents;

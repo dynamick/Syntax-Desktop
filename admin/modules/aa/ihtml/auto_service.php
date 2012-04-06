@@ -182,13 +182,16 @@ function __autoload($class) {
 
 
   switch($cmd) {
-    /**************************************************************************
-    *                             ADD A ROW
-    ***************************************************************************/
+
+    ////////////////////////////////////////////////////////////////////////////
+    //
+    //                            ADD A ROW
+    //
+    ////////////////////////////////////////////////////////////////////////////
 
     case ADD:
-      echo "<script src=\"../../includes/js/tooltip/tooltip.js\"></script>";
-      aaHeader($str["insertrow"],$str["insertrow_bis"]);
+      #echo "<script src=\"../../includes/js/tooltip/tooltip.js\"></script>";
+      aaHeader($str["insertrow"], $str["insertrow_bis"]);
 
       if(isset($_SESSION[$synTable.'_clone'])){
         $data = unserialize($_SESSION[$synTable.'_clone']);
@@ -211,13 +214,13 @@ function __autoload($class) {
       $bottom  = "<table id=\"actions\">\n";
       $bottom .= "  <tr>\n";
       $bottom .= "    <td>";
-      $ico_off = "<img src=\"img/tool_undo.png\" alt=\"{$label}\" /> ";
+      $ico_off = "<img src=\"img/tool_undo.png\" alt=\"{$str['cancel']}\" /> ";
       $bottom .= $synHtml->hidden("name='changeto' value=''");
       $bottom .= $synHtml->hidden("name='default-cmd' value='".INSERT."'");
       $bottom .= $synHtml->button("name='off' value='' class='cancel_button' onclick='document.location=\"{$PHP_SELF}\"; return false;'", $ico_off.$str["cancel"], 'reset');
       $bottom .= "    </td>\n";
       $bottom .= "    <td align=\"right\">";
-      $ico_ok  = "<img src=\"img/accept.png\" alt=\"{$label}\" /> ";
+      $ico_ok  = "<img src=\"img/accept.png\" alt=\"{$str['save']}\" /> ";
       $bottom .= $synHtml->select('name="after" class="submit-actions"', $after_options);
       $bottom .= $synHtml->button("name='cmd' value='".INSERT."' class='action_button'", $ico_ok.'OK');
       $bottom .= "    </td>\n";
@@ -235,16 +238,19 @@ function __autoload($class) {
 
       break;
 
-    /**************************************************************************
-    *                             MODIFY A ROW
-    ***************************************************************************/
+
+    ////////////////////////////////////////////////////////////////////////////
+    //
+    //                            MODIFY A ROW
+    //
+    ////////////////////////////////////////////////////////////////////////////
 
     case MODIFY:
       aaHeader($str["modifyrow"],$str["modifyrow_bis"]);
       $synPrimaryKey=stripslashes(urldecode(trim($_REQUEST["synPrimaryKey"])));
 
       echo $synHtml->form("action=\"$PHP_SELF\" method=\"post\" enctype=\"multipart/form-data\" autocomplete=\"off\"");
-      $res=$db->Execute("select * from $synTable where $synPrimaryKey");
+      $res = $db->Execute("select * from $synTable where $synPrimaryKey");
       $contenitore->updateValues($res->FetchRow());
       $contenitore->getHtml();
 
@@ -258,20 +264,20 @@ function __autoload($class) {
       $bottom  = "<table id=\"actions\">\n";
       $bottom .= "  <tr>\n";
       $bottom .= "    <td>";
-      $ico_off = "<img src=\"img/tool_undo.png\" alt=\"{$label}\" /> ";
+      $ico_off = "<img src=\"img/tool_undo.png\" alt=\"{$str["cancel"]}\" /> ";
       $bottom .= $synHtml->hidden("name='synPrimaryKey' value='".urlencode($synPrimaryKey)."'");
       $bottom .= $synHtml->hidden("name='changeto' value=''");
       $bottom .= $synHtml->hidden("name='default-cmd' value='".CHANGE."'");
       $bottom .= $synHtml->button("name='off' value='' class='cancel_button' onclick='document.location=\"{$PHP_SELF}\"; return false;'", $ico_off.$str["cancel"], 'reset');
       $bottom .= "    </td>\n";
       if ($synLoggedUser->canDelete==1) {
-        $ico_del = "<img src=\"img/container_delete.png\" alt=\"{$label}\" /> ";
+        $ico_del = "<img src=\"img/container_delete.png\" alt=\"{$str['delete']}\" /> ";
         $bottom .= "    <td align=\"right\" width=\"80%\"><div class=\"button-wrapper\">";
         $bottom .= $synHtml->button("name='cmd' value='".DELETE."' class='delete_button' onclick=\"return (confirm('{$str["sure_delete"]}'));\"", $ico_del.$str['delete']);
         $bottom .= "    </div></td>\n";
       }
       $bottom .= "    <td align=\"right\">";
-      $ico_ok  = "<img src=\"img/accept.png\" alt=\"{$label}\" /> ";
+      $ico_ok  = "<img src=\"img/accept.png\" alt=\"{$str['save']}\" /> ";
       $bottom .= $synHtml->select('name="after" class="submit-actions"', $after_options);
       $bottom .= $synHtml->button("name='cmd' value='".CHANGE."' class='action_button'", $ico_ok.'OK');
       $bottom .= "    </td>\n";
@@ -294,9 +300,12 @@ function __autoload($class) {
 
       break;
 
-    /**************************************************************************
-    *                             CHANGE A ROW
-    ***************************************************************************/
+
+        ////////////////////////////////////////////////////////////////////////
+       //                                                                    //
+      //                          UPDATE A ROW                              //
+     //                                                                    //
+    ////////////////////////////////////////////////////////////////////////
 
     case CHANGE:
 
@@ -363,9 +372,12 @@ function __autoload($class) {
       }
       break;
 
-    /**************************************************************************
-    *                             INSERT A ROW
-    ***************************************************************************/
+
+        ////////////////////////////////////////////////////////////////////////
+       //                                                                    //
+      //                          INSERT A ROW                              //
+     //                                                                    //
+    ////////////////////////////////////////////////////////////////////////
 
     case INSERT:
       $synPrimaryKey=$contenitore->getKeyURLString();
@@ -426,9 +438,14 @@ function __autoload($class) {
 
       break;
 
-    /**************************************************************************
-    *                             DELETE A ROW
-    ***************************************************************************/
+
+
+        ////////////////////////////////////////////////////////////////////////
+       //                                                                    //
+      //                          DELETE A ROW                              //
+     //                                                                    //
+    ////////////////////////////////////////////////////////////////////////
+
 
     case DELETE:
 
@@ -454,9 +471,12 @@ function __autoload($class) {
 
       break;
 
-    /**************************************************************************
-    *                        DELETE MULTIPLE ROWS
-    ***************************************************************************/
+
+        ////////////////////////////////////////////////////////////////////////
+       //                                                                    //
+      //                          DELETE X ROWS                             //
+     //                                                                    //
+    ////////////////////////////////////////////////////////////////////////
 
     case MULTIPLEDELETE:
       //TODO: attenzione alle chiavi. Prende solamente l'id!!!!!!!!!
@@ -487,9 +507,12 @@ function __autoload($class) {
       break;
 
 
-    /**************************************************************************
-    *                        RPC - set values
-    ***************************************************************************/
+        ////////////////////////////////////////////////////////////////////////
+       //                                                                    //
+      //                 RPC - set values via ajax                          //
+     //                                                                    //
+    ////////////////////////////////////////////////////////////////////////
+
     case RPC:
       global $contenitore, $debug;
 
@@ -506,10 +529,13 @@ function __autoload($class) {
     break;
 
 
-    /**************************************************************************
-    *                             LIST OF THE ROWS
-    ***************************************************************************/
-    case "":
+        ////////////////////////////////////////////////////////////////////////
+       //                                                                    //
+      //                          LIST ALL ROWS                             //
+     //                                                                    //
+    ////////////////////////////////////////////////////////////////////////
+
+    case '':
       global $treeFrame;
       echo "<!-- *** inclusione di schema.php *** -->\n";
 
@@ -520,29 +546,34 @@ function __autoload($class) {
       //Change the rows mod and del button
       # EDIT button
       if ($synLoggedUser->canModify==1) {
-        $label  = $str["modify"];
+        $label  = $str['modify'];
         $button = "<a href=\"%s&amp;synPrimaryKey=%s\" class=\"button\" title=\"{$label}\">";
         $button.= "<img src=\"img/container_edit.png\" alt=\"{$label}\" /></a>";
-        $contenitore->buttons[$button]="?cmd=".MODIFY;
+        $contenitore->buttons[$button] = "?cmd=".MODIFY;
       }
 
       # DELETE button
       if ($synLoggedUser->canDelete==1) {
-        $label  = $str["delete"];
+        $label  = $str['delete'];
         $button = "<a href=\"%s&amp;synPrimaryKey=%s\" class=\"button\" title=\"{$label}\" ";
         $button.= "onclick=\"return (confirm('{$str["sure_delete"]}'));\">";
         $button.= "<img src=\"img/container_delete.png\" alt=\"{$label}\" /></a>";
-        $contenitore->buttons[$button]="?cmd=".DELETE;
+        $contenitore->buttons[$button] = "?cmd=".DELETE;
       }
 
       //perfrom the qry
-      $qry = addQueryWhere("select `$synTable`.* from `$synTable`");
+      $qry = addQueryWhere("SELECT `{$synTable}`.* FROM `{$synTable}`");
 
-      $pager = new synPager($db,'syntax',"content.php", "content", true);//$db, $id, $targetFile, $targetFrame, $showpagelink
+      $pager = new synPager($db, 'syntax', 'content.php', 'content', true);//$db, $id, $targetFile, $targetFrame, $showpagelink
       $res=$pager->Execute($qry,$synRowsPerPage);
       if ($treeFrame=="true") {$contenitore->getTree($qry);/*die();*/}
       else {
-        if ($contenitore->treeExists()===true) echo "<script type=\"text/javascript\">\n  parent.refreshTreeFrame();\n  parent.openTreeFrame();\n</script>\n";
+        if ($contenitore->treeExists()===true) {
+          echo "<script type=\"text/javascript\">\n"
+              ."  parent.refreshTreeFrame();\n"
+              ."  parent.openTreeFrame();\n"
+              ."</script>\n";
+        }
         echo "<form action=\"?cmd=".MULTIPLEDELETE."\" method=\"post\" style=\"margin: 0px;\">\n";
         echo "  <table id=\"mainTable\" cellpadding=\"0\" cellspacing=\"0\">\n";
         echo "    <thead>\n";
@@ -585,11 +616,15 @@ function __autoload($class) {
     js_location($jumpTo);
   }
 
-  function aaHeader($tit,$tit2="") {
-    echo "<div id=\"formHeader\">\n";
-    echo "  <h4>$tit</h4>\n";
-    echo "  <div >$tit2</div>\n";
-    echo "</div>\n";
+  function aaHeader($title, $title2='') {
+    $header = <<<EOHEADER
+    <div id="formHeader">
+      <h4>{$title}</h4>
+      <div>{$title2}</div>
+    </div>
+EOHEADER;
+
+    echo $header;
   }
   
   function resetClone($synTable){
@@ -597,4 +632,5 @@ function __autoload($class) {
     if(isset($_SESSION[$synTable.'_clone']))
       $_SESSION[$synTable.'_clone'] = '';
   }
+
 ?>
