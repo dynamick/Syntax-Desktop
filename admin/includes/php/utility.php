@@ -398,7 +398,7 @@ function sanitizePath($txt) {
                   'percent','eq','_'
                   );
   $txt=str_replace($search,$replace,$txt);
-  $txt=trim(strtolower(ereg_replace('[^[:alpha:]0-9+]',' ',$txt)));
+  $txt=trim(strtolower(preg_replace('[^a-zA-Z0-9-_+]', ' ', $txt)));
   $txt=str_replace(' ','-',$txt);
   while (strstr($txt,'--')) $txt=str_replace('--','-',$txt);
   return $txt;

@@ -395,7 +395,7 @@ insert into `aa_services_element` values ('456', '137', 'en', '8', '', '1', '1',
 insert into `aa_services_element` values ('457', '127', 'title', '2', '', '1', '', '342', '255', '343', '', '', '', '', '10', '', '1');
 insert into `aa_services_element` values ('458', '127', 'text', '6', '', '', '', '344', '255', '345', 'Default', '', '', '', '20', '', '1');
 insert into `aa_services_element` values ('459', '127', 'image', '5', '', '1', '', '346', '0', '347', '/public/mat', '', '', '', '30', '', '');
-insert into `aa_services_element` values ('460', '127', 'date', '14', '', '1', '', '350', '0', '351', '', '', '', '', '40', '', '');
+insert into `aa_services_element` values ('460', '127', 'date', '15', '', '1', '', '350', '0', '351', '', '', '', '', '40', '', '');
 insert into `aa_services_element` values ('461', '140', 'id', '1', '1', '', '', '419', '0', '420', '', '', '', '', '0', '', '');
 insert into `aa_services_element` values ('462', '140', 'title', '2', '', '1', '', '421', '255', '422', '', '', '', '', '10', '', '');
 insert into `aa_services_element` values ('463', '140', 'text', '8', '', '', '', '423', '0', '424', '', '', '', '', '20', '', '');
@@ -1522,17 +1522,17 @@ CREATE TABLE `news` (
   `title` varchar(255) NOT NULL,
   `text` text NOT NULL,
   `image` varchar(255) NOT NULL,
-  `date` date NOT NULL,
+  `date` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 AUTO_INCREMENT=5;
 
 
 ### data of table `news` ###
 
-insert into `news` values ('1', '348', '349', '', '2004-11-19');
-insert into `news` values ('2', '394', '395', '', '2004-12-27');
-insert into `news` values ('3', '396', '397', '', '2004-12-27');
-insert into `news` values ('4', '432', '433', '', '2005-04-19');
+insert into `news` values ('1', '348', '349', '', '2004-11-19 00:00:00');
+insert into `news` values ('2', '394', '395', '', '2004-12-27 12:00:00');
+insert into `news` values ('3', '396', '397', '', '2004-12-27 00:00:00');
+insert into `news` values ('4', '432', '433', '', '2005-04-19 00:00:00');
 
 
 ### structure of table `photos` ###
