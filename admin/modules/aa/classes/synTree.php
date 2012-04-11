@@ -27,7 +27,7 @@ class synTree extends synElement {
   //private function
   function _html() {
     global $db, $contenitore;
-    $hidden = $where = $disable = $p_old = $close = '';
+    $hidden = $where = $p_old = $close = '';
     $table=$this->container->table;
     if ($this->chkTargetMultilang()) $this->multilang=1;
 
@@ -44,30 +44,38 @@ class synTree extends synElement {
     
     //$res=$db->Execute("SELECT id,".$this->caption.",".$this->name." FROM $table $where ORDER BY ".$this->name);
     $res=$db->Execute("SELECT * FROM $table $where ORDER BY ".$this->name);
-    $txt="<select name='".$this->name."' $disable >";
+    $txt="<select name='".$this->name."'>";
 
-    $txt.="<OPTION VALUE=\"0\" selected=\"selected\">[No parent]</option>";
+    $txt.="<option value=\"0\" selected=\"selected\">[No parent]</option>";
     while ($arr = $res->FetchRow()) {
       $k=$arr["id"];
       $v=$arr[$this->caption];
       $p=$arr[$this->name];
       if (($p!=$p_old and trim($p)!="")) {
-        $q="SELECT ".$this->caption." FROM $table WHERE id=".$p;
+        $q = "SELECT ".$this->caption." FROM $table WHERE id=".$p;
         $resParent=$db->Execute($q);
         $arrParent=$resParent->FetchRow($q);
         if ($arrParent[0]==0 or $arrParent[0]=="") $p_name="[root]"; 
         else $p_name=$this->translate($arrParent[0]);
-        $txt.=$close."<OPTGROUP LABEL=\"".$p_name."\">";
-        $close="</OPTGROUP>";
+        $txt .= $close."<optgroup label=\"".$p_name."\">";
+        $close = "</optgroup>";
       } 
   
-      if (isset($_GET["synPrimaryKey"]) and trim(stripslashes(urldecode($_GET["synPrimaryKey"])))!="`id`='".$k."'" and $_GET["synPrimaryKey"]!="`id`=".$k) { 
-        if ($this->value==$k) $selected="selected=\"selected\""; else $selected="";
-        if (!isset($contenitore->ownerField) OR $contenitore->ownerField=="" OR in_array($arr[$contenitore->ownerField],$_SESSION["synGroupChild"])) { 
-          $txt.="<OPTION VALUE=\"".$k."\" $selected> ".$this->translate($v)."</option>";
+      if (
+        !isset($_GET["synPrimaryKey"])
+        || ((trim(stripslashes(urldecode($_GET['synPrimaryKey']))) != "`id`='{$k}'") && ($_GET['synPrimaryKey'] != "`id`={$k}"))
+        ){
+
+        $selected = ($this->value==$k) ? ' selected="selected"' : '';
+
+        if ( !isset($contenitore->ownerField)
+          || ($contenitore->ownerField == '')
+          || in_array($arr[$contenitore->ownerField], $_SESSION["synGroupChild"])
+          ){
+          $txt .= "<option value=\"{$k}\"{$selected}> ".$this->translate($v)."</option>";
         } else {
           if ($this->value==$k)
-            $hidden.="<input type=\"hidden\" VALUE=\"".$k."\" name=\"".$this->name."\"> (".$this->translate($v).")";
+            $hidden .= "<input type=\"hidden\" value=\"".$k."\" name=\"".$this->name."\"> (".$this->translate($v).")";
         }
       }
       $p_old=$p;
