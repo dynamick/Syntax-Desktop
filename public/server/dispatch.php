@@ -60,36 +60,38 @@ EOFSQL;
 
   # - recupero l'elenco dei campi obbligatori
   $qr2 = <<<EOSQL
-     SELECT f.titolo, f.formato
+     SELECT f.titolo, f.formato, f.tipo
        FROM form_fields f
       WHERE f.id_form = $form_id
         AND f.obbligatorio=1
 EOSQL;
   $re2 = $db->execute($qr2);
   while($ar2 = $re2->fetchRow()){
-    $fields[$ar2['titolo']] = $ar2['formato'];
+    $fields[$ar2['titolo']] = ($ar2['tipo']=='file' ? $ar2['tipo'] : $ar2['formato']);
   }
 
   if($_POST['action']=='submit') {
     $error = 0;
     $_SESSION['form'.$form_id]['error'] = array();
 
-# - ciclo il $_POST per cercare dati mancanti
+# - ciclo $_POST e $_FILES per cercare dati mancanti
     foreach($fields as $k=>$v){
-      if($_POST[$k]==''){
+      if ( ($v!='file' && $_POST[$k]=='')
+        || ($v=='file' && (!isset($_FILES[$k]) || $_FILES[$k]['error']>0))
+        || ($v=='email' && !preg_match($mailpattern, $_POST[$k]))
+        ){
         $error ++;
         $_SESSION['form'.$form_id]['error'][$k] = 'empty';
       }
-      if ($v=='email' && !preg_match($mailpattern, $_POST[$k])){
-        $error ++;
-        $_SESSION['form'.$form_id]['error'][$k] = 'empty';
-      }
-      if($form_privacy==1 && $_POST['privacy']!=1){
+      if ( $form_privacy==1
+        && $_POST['privacy']!=1
+        ){
         $error ++;
         $_SESSION['form'.$form_id]['error']['privacy'] = 'empty';
-
       }
-      if($form_captcha!='nessuno' && strtolower($_POST['captcha'])!=strtolower($_SESSION['security_code'])){
+      if ( $form_captcha!='nessuno'
+        && strtolower($_POST['captcha'])!=strtolower($_SESSION['security_code'])
+        ){
         $error ++;
         $_SESSION['form'.$form_id]['error']['captcha'] = 'empty';
       }
