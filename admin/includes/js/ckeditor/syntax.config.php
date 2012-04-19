@@ -10,6 +10,8 @@ CKEDITOR.editorConfig = function(config)
   config.width = '100%';
   config.resize_enabled = false;
   config.toolbarCanCollapse = false;
+  config.entities = false;
+  config.entities_latin = false;
 
   config.toolbar = 'Basic';
   config.toolbar_Basic = [
