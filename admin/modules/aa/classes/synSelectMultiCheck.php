@@ -138,7 +138,8 @@ class synSelectMultiCheck extends synElement {
     global $synChkKey, $synChkVisible, $synChkEditable, $synChkMultilang;
     $synHtml = new synHtml();
     //parent::configuration();
-    $this->configuration[4]="Query: ".$synHtml->text(" name=\"synElmQry[$i]\" value=\"".htmlentities($synElmQry[$i])."\"");
+    $tmp_val = isset($synElmQry[$i]) ? htmlentities($synElmQry[$i]) : "";
+    $this->configuration[4]="Query: ".$synHtml->text(" name=\"synElmQry[$i]\" value=\"".$tmp_val."\"");
 
     #if (!isset($synElmPath[$i]) or $synElmPath[$i]=="") $checked=""; else $checked=" checked='checked' ";
     #$this->configuration[5]="NULL: ".$synHtml->check(" name=\"synElmPath[$i]\" value=\"1\" $checked");
