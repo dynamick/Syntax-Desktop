@@ -67,6 +67,9 @@ class MySQL_Restore
       {
         $value = mysql_select_db($this->database);
       }
+
+      // setto la connessione in UTF8
+      mysql_set_charset('utf8', $this->link_id);
     }
     if (!$value)
     {
