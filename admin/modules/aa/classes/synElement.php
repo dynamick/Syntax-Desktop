@@ -82,7 +82,7 @@ class synElement {
 
   //get the label of the element
   function getLabel() {
-    return "<div class=\"label\" tooltip=\"".$this->help."\">".$this->label."</a>";
+    return "<div class=\"label\" tooltip=\"".$this->help."\">".$this->label."</div>";
   }
 
   //get the label help of the element
