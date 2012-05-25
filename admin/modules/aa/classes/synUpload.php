@@ -66,7 +66,7 @@ class synUpload extends synElement {
                  . '&linkfield='.$app_linkfield
                  . '&path='.$this->mat;
 
-      $debug = true;
+      $debug = false;
       if($debug==true){
         $debuglevel = '100';
         $logwindow = 'true';

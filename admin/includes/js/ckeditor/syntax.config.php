@@ -27,7 +27,7 @@ CKEDITOR.editorConfig = function(config)
     ['Image','Flash','Table','HorizontalRule','SpecialChar',],
     ['Maximize','ShowBlocks','Source'],
     '/',
-    ['Format','-','Bold','Italic','Strike','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyFull'],
+    ['Format','-','Bold','Italic','Strike','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
     ['NumberedList','BulletedList','-','Outdent','Indent','Blockquote'],
     ['Link','Unlink','Anchor'],
     ['About']

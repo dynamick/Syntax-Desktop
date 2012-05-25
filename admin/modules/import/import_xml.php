@@ -37,9 +37,9 @@ EOQRY;
       } while ($next && $groupid==$arr['group']);
 
       $grp .= "  </select></td>\n";
-      $grp .= "  <td><label><input type=\"checkbox\" value=\"1\" name=\"insert[{$k}]\" checked=\"checked\" disabled=\"disabled\" class=\"toggleable\"> Inserimento</label></td>\n";
-      $grp .= "  <td><label><input type=\"checkbox\" value=\"1\" name=\"modify[{$k}]\" checked=\"checked\" disabled=\"disabled\" class=\"toggleable\"> Modifica</label></td>\n";
-      $grp .= "  <td><label><input type=\"checkbox\" value=\"1\" name=\"delete[{$k}]\" checked=\"checked\" disabled=\"disabled\" class=\"toggleable\"> Cancellazione</label></td>\n";
+      $grp .= "  <td><label><input type=\"checkbox\" value=\"1\" name=\"insert[{$groupid}]\" checked=\"checked\" disabled=\"disabled\" class=\"toggleable\"> Inserimento</label></td>\n";
+      $grp .= "  <td><label><input type=\"checkbox\" value=\"1\" name=\"modify[{$groupid}]\" checked=\"checked\" disabled=\"disabled\" class=\"toggleable\"> Modifica</label></td>\n";
+      $grp .= "  <td><label><input type=\"checkbox\" value=\"1\" name=\"delete[{$groupid}]\" checked=\"checked\" disabled=\"disabled\" class=\"toggleable\"> Cancellazione</label></td>\n";
       $grp .= "</tr>\n";
 
     } while ($next);
