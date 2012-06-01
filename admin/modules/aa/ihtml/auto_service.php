@@ -195,12 +195,14 @@ function __autoload($class) {
 
       if(isset($_SESSION[$synTable.'_clone'])){
         $data = unserialize($_SESSION[$synTable.'_clone']);
-        foreach($data as $k=>$v){
-          if(is_array($v)){
-            $data[$k] = implode($v, '|'); // in caso di multicheck
+        if(is_array($data)){
+          foreach($data as $k=>$v){
+            if(is_array($v)){
+              $data[$k] = implode($v, '|'); // in caso di multicheck
+            }
           }
+          $contenitore->updateValues($data); // fracco i valori in sessione nel contenitore
         }
-        $contenitore->updateValues($data); // fracco i valori in sessione nel contenitore
       }
 
       echo $synHtml->form("action='$PHP_SELF' method='POST' enctype='multipart/form-data' onsubmit='javascript: true || loading();' autocomplete=\"off\"");
