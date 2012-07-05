@@ -19,6 +19,13 @@ function setLang($id, $initial='') {
       $res = $db->Execute($qry);
       if ($arr = $res->fetchRow()) {
         $initial = $arr['initial'];
+      } else {
+        // è stata richiesta una lingua non attiva?
+        $qry = "SELECT initial FROM aa_lang WHERE `active`=1";
+        $res = $db->Execute($qry);
+        if ($arr = $res->fetchRow()) {
+          $initial = $arr['initial'];
+        } else die('nessuna lingua attivata'); // l'initial DEVE essere valorizzata...
       }
     }
 

@@ -106,8 +106,9 @@ class ADODB_PDO
   */
   public function Execute($sql, $vars=null)
   {
-    
-    $st = $this->DoQuery($sql, $vars);
+    #$st = $this->DoQuery($sql, $vars);
+    $st = $this->_db->query($sql);
+    $st->setFetchMode($this->fetchmode);
     $this->affected_rows = $st->rowCount();
     return $st?new ADODB_PDO_ResultSet($st):false;
   }

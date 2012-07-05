@@ -1,10 +1,9 @@
 <?php
   session_start();
-  $lng = $_SESSION['synSiteLangInitial'];
-?>
+  $lng = (isset($_SESSION['synSiteLangInitial'])) ? $_SESSION['synSiteLangInitial'] : 'it'; ?>
 CKEDITOR.editorConfig = function(config)
 {
-  config.language = '<?php echo $lng?>';
+  config.language = '<?php echo $lng; ?>';
   config.uiColor = '#ddd';
   config.skin = 'syntax';
   config.width = '100%';
