@@ -91,7 +91,7 @@ class synContainer {
         $multilang = ($v->multilang==1) ? $v->getHtmlMultilang() : '';
         $flag = ($v->multilang==1) ? $this->getLangFlag("","height='12' style='float: right'") : '';
         echo "      <tr style=\"background-color: $bc\">\n";
-        echo "        <td style='width: 20%;font: menu; border-bottom: 1px solid #DDD; padding-left: 5px;vertical-align: top;'>".$flag.$v->getLabel()."<br />".$help."</td>\n";
+        echo "        <td style='width: 20%;font: menu; border-bottom: 1px solid #DDD; padding-left: 5px;vertical-align: top;'>".$flag.$v->getLabel().$help."</td>\n";
         echo "        <td style='font: menu;border-bottom: 1px solid #DDD;'>".$v->getHtml().$multilang."</td>\n";
         //echo "        <td style='width: 1px'>".$flag."</td>\n";
         echo "      </tr>\n";

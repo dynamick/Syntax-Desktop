@@ -123,19 +123,19 @@ EOQ;
       </div>
       
       <div class="share">
-        <g:plusone size="tall" href="{$permalink}"></g:plusone>
-        <iframe src="//www.facebook.com/plugins/like.php?app_id=264494650237692&amp;href={$permalink}&amp;send=false&amp;layout=box_count"
+        <iframe src="//www.facebook.com/plugins/like.php?href={$permalink}&amp;send=false&amp;layout=box_count&amp;width=75&amp;show_faces=false&amp;action=recommend&amp;colorscheme=light&amp;font=arial&amp;height=62"
           scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:75px; height:62px;" allowTransparency="true"></iframe>
         <a href="http://twitter.com/share" class="twitter-share-button" data-count="vertical" data-lang="it">Tweet</a>
+        <g:plusone size="tall" href="{$permalink}"></g:plusone>
       </div>
-      
+      <script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+      <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+
       <div class="newsnav">
         <a href="{$newsPage}">&uarr; torna all archivio</a>
         {$navlinks}
       </div>
       
-      <script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
-      <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
 EOHTML;
 
     }

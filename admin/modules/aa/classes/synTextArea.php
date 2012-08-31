@@ -34,9 +34,9 @@ class synTextArea extends synElement {
 
   //private function
   function _html() {
-    global $synAdminPath, $synPublicPath, $mat;
+    global $synAdminPath, $synPublicPath, $mat, $synAbsolutePath;
     $height = $this->size;
-    $value = htmlentities($this->translate($this->value));
+    $value = $this->translate($this->value);
     $ckConfig = $synAdminPath.'/includes/js/ckeditor/syntax.config.php';
     $contents = <<<EOC
   <textarea name="{$this->name}" id="ck_{$this->name}" class="editor" style="height:{$height}px" rel="{$this->type}">

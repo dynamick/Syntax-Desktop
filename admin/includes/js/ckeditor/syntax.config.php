@@ -1,15 +1,16 @@
 <?php
   session_start();
-  $lng = $_SESSION['synSiteLangInitial'];
-?>
+  $lng = (isset($_SESSION['synSiteLangInitial'])) ? $_SESSION['synSiteLangInitial'] : 'it'; ?>
 CKEDITOR.editorConfig = function(config)
 {
-  config.language = '<?php echo $lng?>';
+  config.language = '<?php echo $lng; ?>';
   config.uiColor = '#ddd';
   config.skin = 'syntax';
   config.width = '100%';
   config.resize_enabled = false;
   config.toolbarCanCollapse = false;
+  config.entities = false;
+  config.entities_latin = false;
 
   config.toolbar = 'Basic';
   config.toolbar_Basic = [
@@ -25,7 +26,7 @@ CKEDITOR.editorConfig = function(config)
     ['Image','Flash','Table','HorizontalRule','SpecialChar',],
     ['Maximize','ShowBlocks','Source'],
     '/',
-    ['Format','-','Bold','Italic','Strike','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyFull'],
+    ['Format','-','Bold','Italic','Strike','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
     ['NumberedList','BulletedList','-','Outdent','Indent','Blockquote'],
     ['Link','Unlink','Anchor'],
     ['About']
@@ -55,8 +56,8 @@ CKEDITOR.editorConfig = function(config)
   var kcPath = '/admin/includes/js/kcfinder/';
   config.filebrowserBrowseUrl = kcPath+'browse.php?type=file';
   config.filebrowserUploadUrl = kcPath+'upload.php?type=file';
-  config.filebrowserImageBrowseUrl = kcPath+'browse.php?type=images';
-  config.filebrowserImageUploadUrl = kcPath+'upload.php?type=images';
+  config.filebrowserImageBrowseUrl = kcPath+'browse.php?type=image';
+  config.filebrowserImageUploadUrl = kcPath+'upload.php?type=image';
   config.filebrowserFlashBrowseUrl = kcPath+'browse.php?type=flash';
   config.filebrowserFlashUploadUrl = kcPath+'upload.php?type=flash';
 };

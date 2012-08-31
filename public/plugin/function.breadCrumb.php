@@ -16,7 +16,7 @@ function smarty_function_breadCrumb($params, &$smarty) {
   }
 
   // array elementi URL
-  $uri = $_SERVER['REQUEST_URI'];
+  $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
   $uri_elems = array_filter(explode('/', $uri));
 
   // aggiungo la Home come primo elemento

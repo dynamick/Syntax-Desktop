@@ -14,15 +14,21 @@ class synSelectMultiCheck extends synElement {
   function synSelectMultiCheck($n="", $v="", $l="", $s=255, $h="") {
     global $$n;
     
-    if ($n=="") $n =  "text".date("his");
-    if ($l=="") $l =  ucfirst($n);
-    $this->type = "text";
+    if ($n=='')
+      $n = "text".date("his");
+    if ($l=='')
+      $l = ucfirst($n);
+    $this->type  = 'text';
     $this->name  = $n;
-    if (isset($$n) and $$n) { $this->selected = $$n; } else $this->value = $v;
+    if(isset($$n) and $$n){
+      $this->selected = $$n;
+    } else {
+      $this->value = $v;
+    }
     $this->label = $l;
     $this->size  = $s;
     $this->help  = $h;
-    $this->db    = " varchar(".$this->size.") NOT NULL";
+    $this->db    = ' varchar(255) NOT NULL ';
   }
 
   //private function

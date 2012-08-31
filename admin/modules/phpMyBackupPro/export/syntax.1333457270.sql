@@ -192,12 +192,12 @@ CREATE TABLE `aa_page` (
   `metadescription` varchar(150) NOT NULL,
   `metakeywords` varchar(175) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=56 DEFAULT CHARSET=utf8 AUTO_INCREMENT=56;
+) ENGINE=MyISAM AUTO_INCREMENT=57 DEFAULT CHARSET=utf8 AUTO_INCREMENT=57;
 
 
 ### data of table `aa_page` ###
 
-insert into `aa_page` values ('22', '92', '93', '0', '4', '1', '5', '1', '', '', '', '');
+insert into `aa_page` values ('22', '92', '93', '0', '4', '1', '5', '1', '', '833', '834', '835');
 insert into `aa_page` values ('39', '398', '399', '22', '4', '1', '10', '1', '', '', '', '');
 insert into `aa_page` values ('40', '400', '401', '22', '4', '', '20', '1', '', '', '', '');
 insert into `aa_page` values ('41', '402', '403', '22', '4', '1', '40', '1', '', '', '', '');
@@ -212,6 +212,7 @@ insert into `aa_page` values ('52', '605', '606', '22', '9', '', '60', '1', '', 
 insert into `aa_page` values ('53', '607', '608', '22', '10', '1', '70', '1', '', '', '', '');
 insert into `aa_page` values ('54', '609', '610', '22', '11', '1', '80', '1', '', '', '', '');
 insert into `aa_page` values ('55', '750', '751', '22', '12', '1', '45', '1', '', '', '', '');
+insert into `aa_page` values ('56', '828', '829', '41', '4', '1', '330', '1', '', '830', '831', '832');
 
 
 ### structure of table `aa_service_joins` ###
@@ -326,7 +327,7 @@ insert into `aa_services_element` values ('42', '2', 'id_group', '11', '', '1', 
 insert into `aa_services_element` values ('44', '2', 'lang', '11', '', '1', '', '232', '255', '233', '', 'SELECT * FROM aa_lang', '', '', '55', '', '');
 insert into `aa_services_element` values ('45', '5', 'id', '1', '1', '1', '', '240', '0', '241', '', '', '', '', '0', '', '');
 insert into `aa_services_element` values ('46', '5', 'name', '2', '', '1', '1', '242', '255', '243', '', '', '', '', '10', '', '1');
-insert into `aa_services_element` values ('47', '5', 'path', '2', '', '1', '1', '244', '255', '245', '', '', '', '', '20', '', '');
+insert into `aa_services_element` values ('47', '5', 'path', '2', '', '', '1', '244', '255', '245', '', '', '', '', '20', '', '');
 insert into `aa_services_element` values ('48', '5', 'icon', '2', '', '', '', '246', '255', '247', '', '', '', '', '30', '', '');
 insert into `aa_services_element` values ('49', '5', 'description', '8', '', '', '', '248', '150', '249', '', '', '', '', '40', '', '1');
 insert into `aa_services_element` values ('50', '5', 'parent', '12', '', '', '', '250', '11', '251', '', 'select * from aa_services', '', '', '50', '', '');
@@ -395,7 +396,7 @@ insert into `aa_services_element` values ('456', '137', 'en', '8', '', '1', '1',
 insert into `aa_services_element` values ('457', '127', 'title', '2', '', '1', '', '342', '255', '343', '', '', '', '', '10', '', '1');
 insert into `aa_services_element` values ('458', '127', 'text', '6', '', '', '', '344', '255', '345', 'Default', '', '', '', '20', '', '1');
 insert into `aa_services_element` values ('459', '127', 'image', '5', '', '1', '', '346', '0', '347', '/public/mat', '', '', '', '30', '', '');
-insert into `aa_services_element` values ('460', '127', 'date', '14', '', '1', '', '350', '0', '351', '', '', '', '', '40', '', '');
+insert into `aa_services_element` values ('460', '127', 'date', '15', '', '1', '', '350', '0', '351', '', '', '', '', '40', '', '');
 insert into `aa_services_element` values ('461', '140', 'id', '1', '1', '', '', '419', '0', '420', '', '', '', '', '0', '', '');
 insert into `aa_services_element` values ('462', '140', 'title', '2', '', '1', '', '421', '255', '422', '', '', '', '', '10', '', '');
 insert into `aa_services_element` values ('463', '140', 'text', '8', '', '', '', '423', '0', '424', '', '', '', '', '20', '', '');
@@ -405,7 +406,7 @@ insert into `aa_services_element` values ('466', '141', 'id', '1', '1', '', '', 
 insert into `aa_services_element` values ('467', '142', 'id', '1', '1', '', '', '443', '0', '444', '', '', '', '', '0', '', '');
 insert into `aa_services_element` values ('468', '142', 'title', '2', '', '1', '', '445', '255', '446', '', '', '', '', '10', '', '');
 insert into `aa_services_element` values ('469', '142', 'date', '15', '', '1', '', '447', '0', '448', '', '', '', '', '20', '', '');
-insert into `aa_services_element` values ('470', '142', 'photo', '10', '', '', '', '449', '0', '450', '/public/mat', '', '', '', '30', '', '');
+insert into `aa_services_element` values ('470', '142', 'photo', '10', '', '', '', '449', '0', '450', '/public/mat', '', 'title|ordine|photos|photo|album', '', '30', '', '');
 insert into `aa_services_element` values ('471', '143', 'id', '1', '1', '', '', '454', '0', '455', '', '', '', '', '0', '', '');
 insert into `aa_services_element` values ('472', '143', 'title', '2', '', '1', '', '456', '255', '457', '', '', '', '', '10', '', '');
 insert into `aa_services_element` values ('474', '143', 'photo', '5', '', '1', '', '460', '0', '461', '/public/mat', '', '', '', '30', '', '');
@@ -535,7 +536,7 @@ CREATE TABLE `aa_translation` (
 ### data of table `aa_translation` ###
 
 insert into `aa_translation` values ('92', 'Home Page', 'Home Page');
-insert into `aa_translation` values ('93', '<p><img width=\"170\" height=\"221\" border=\"0\" align=\"right\" alt=\"Syntax Desktop package\" src=\"/public/img/syntax-box.gif\" />Syntax Desktop &egrave; un sistema professionale di gestione dei contenuti Open Source. In pratica, &egrave; uno strumento che permette agli utenti di poter modificare il proprio sito come, dove e quando vogliono.</p>\r\n<p>Syntax Desktop ti aiuta a creare e gestire complessi siti web senza conoscere l\'HTML. Un editor WYSIWYG integrato con un\'interfaccia utente simile a quella delle ben note applicazioni office aiuta l\'utente a creare i contenuti, mentre un template engine gestisce tutte le parti del sito per avere un controllo completo dell\'applicazione.</p>\r\n<p>Syntax Desktop &egrave; basato su tecnologia PHP. E\' per questo motivo che funziona sulla gran parte delle moderne infrastrutture IT esistenti. Syntax Desktop gira su ambienti completamente &quot;open source&quot; (p.e. Linux, Apache, MySQL), ma funziona tranquillamente anche su componenti commerciali (p.e. Windows, IIS, Oracle DB, MS Access).</p>\r\n<p>Inoltre una grande virt&ugrave; di Syntax &egrave; la sua predisposizione ad essere indicizzato dai motori di ricerca. Syntax &egrave; stato infatti progettato nell\'ottica di generare pagine amiche dei motori di ricerca.</p>\r\n<p>Per conoscere di pi&ugrave; Syntax Desktop, visualizza il <a href=\"http://www.dynamick.it/syntax-desktop/tour.php\">tour guidato</a> che ti mostrer&agrave; le principali funzionalit&agrave; dell\'applicazione. Per una\'approfondimento ulteriore, leggi il <a href=\"http://www.syntaxdesktop.com/docs\">manuale utente</a>.</p>', '<p><img width=\"170\" height=\"221\" border=\"0\" align=\"right\" src=\"/public/img/syntax-box.gif\" alt=\"Syntax Desktop package\" /></p>\r\n<p><strong>Syntax Desktop</strong> is a professional open source <strong>Content Management System</strong> (CMS).&nbsp; It is a tool that allows users to modify the web site contents how, when and where they want. <br />\r\n<br />\r\nSyntax Desktop helps you to create and manage large web sites <strong>without any knowledge</strong> of HTML. There\'s an integrated WYSIWYG editor with a friendly user interface similar to common office applications. You can create the contents and a template engine manages all the parts of the site allowing complete control of the application. <br />\r\n<br />\r\nSyntax Desktop is based on<strong> PHP technology</strong>. It is a web application, so it works on a wide range of modern existing IT infrastructures.&nbsp; Syntax Desktop runs with other &quot;open source&quot; technologies (i.e. Linux, Apache, MySQL), but it works also on commercial products (i.e. Windows, IIS, Oracle DB, MS Access). <br />\r\n<br />\r\nMoreover, a great virtue of Syntax is its predisposition to being indexed from <strong>search engines</strong>.&nbsp; Syntax is constructed to generate pages optimized for search engines.<br />\r\n<br />\r\nFor more information about Syntax Desktop, you can watch the flash <a href=\"http://www.dynamick.it/syntax-desktop/tour.php\">guided tour</a>. You can find other information by reading the <a href=\"http://www.syntaxdesktop.com/docs/\">user manual</a>.</p>');
+insert into `aa_translation` values ('93', '<p>\r\n	<img alt=\"Syntax Desktop package\" src=\"/public/mat/image/syntax-box.gif\" style=\"border-width: 0px; border-style: solid; float: right; width: 170px; height: 221px;\" />Syntax Desktop &egrave; un sistema professionale di gestione dei contenuti Open Source. In pratica, &egrave; uno strumento che permette agli utenti di poter modificare il proprio sito come, dove e quando vogliono.</p>\r\n<p>\r\n	Syntax Desktop ti aiuta a creare e gestire complessi siti web senza conoscere l&#39;HTML. Un editor WYSIWYG integrato con un&#39;interfaccia utente simile a quella delle ben note applicazioni office aiuta l&#39;utente a creare i contenuti, mentre un template engine gestisce tutte le parti del sito per avere un controllo completo dell&#39;applicazione.</p>\r\n<p>\r\n	Syntax Desktop &egrave; basato su tecnologia PHP. E&#39; per questo motivo che funziona sulla gran parte delle moderne infrastrutture IT esistenti. Syntax Desktop gira su ambienti completamente &quot;open source&quot; (p.e. Linux, Apache, MySQL), ma funziona tranquillamente anche su componenti commerciali (p.e. Windows, IIS, Oracle DB, MS Access).</p>\r\n<p>\r\n	Inoltre una grande virt&ugrave; di Syntax &egrave; la sua predisposizione ad essere indicizzato dai motori di ricerca. Syntax &egrave; stato infatti progettato nell&#39;ottica di generare pagine amiche dei motori di ricerca.</p>\r\n<p>\r\n	Per conoscere di pi&ugrave; Syntax Desktop, visualizza il <a href=\"http://www.dynamick.it/syntax-desktop/tour.php\">tour guidato</a> che ti mostrer&agrave; le principali funzionalit&agrave; dell&#39;applicazione. Per una&#39;approfondimento ulteriore, leggi il <a href=\"http://www.syntaxdesktop.com/docs\">manuale utente</a>.</p>\r\n', '<p>\r\n	<img alt=\"Syntax Desktop package\" src=\"/public/mat/image/syntax-box.gif\" style=\"border-width: 0px; border-style: solid; float: right; width: 170px; height: 221px;\" /></p>\r\n<p>\r\n	<strong>Syntax Desktop</strong> is a professional open source <strong>Content Management System</strong> (CMS).&nbsp; It is a tool that allows users to modify the web site contents how, when and where they want.<br />\r\n	<br />\r\n	Syntax Desktop helps you to create and manage large web sites <strong>without any knowledge</strong> of HTML. There&#39;s an integrated WYSIWYG editor with a friendly user interface similar to common office applications. You can create the contents and a template engine manages all the parts of the site allowing complete control of the application.<br />\r\n	<br />\r\n	Syntax Desktop is based on<strong> PHP technology</strong>. It is a web application, so it works on a wide range of modern existing IT infrastructures.&nbsp; Syntax Desktop runs with other &quot;open source&quot; technologies (i.e. Linux, Apache, MySQL), but it works also on commercial products (i.e. Windows, IIS, Oracle DB, MS Access).<br />\r\n	<br />\r\n	Moreover, a great virtue of Syntax is its predisposition to being indexed from <strong>search engines</strong>.&nbsp; Syntax is constructed to generate pages optimized for search engines.<br />\r\n	<br />\r\n	For more information about Syntax Desktop, you can watch the flash <a href=\"http://www.dynamick.it/syntax-desktop/tour.php\">guided tour</a>. You can find other information by reading the <a href=\"http://www.syntaxdesktop.com/docs/\">user manual</a>.</p>\r\n');
 insert into `aa_translation` values ('94', 'Chi Siamo', 'About us');
 insert into `aa_translation` values ('95', '<P>Smarty allows access to PHP objects through the templates. There are two ways to access them. One way is to register objects to the template, then use access them via syntax similar to custom functions. The other way is to assign objects to the templates and access them much like any other assigned variable. The first method has a much nicer template syntax. It is also more secure, as a registered object can be restricted to certain methods or properties. However, a registered object cannot be looped over or assigned in arrays of objects, etc. The method you choose will be determined by your needs, but use the first method whenever possible to keep template syntax to a minimum. </P>\r\n<P>If security is enabled, no private methods or functions can be accessed (begininning with \"_\"). If a method and property of the same name exist, the method will be used. </P>\r\n<P>You can restrict the methods and properties that can be accessed by listing them in an array as the third registration parameter. </P>\r\n<P>By default, parameters passed to objects through the templates are passed the same way custom functions get them. An associative array is passed as the first parameter, and the smarty object as the second. If you want the parameters passed one at a time for each argument like traditional object parameter passing, set the fourth registration parameter to false. </P>\r\n<P>The optional fifth parameter has only effect with <TT class=parameter><I>format</I></TT> being <TT class=literal>true</TT> and contains a list ob methods that should be treated as blocks. That means these methods have a closing tag in the template (<TT class=literal>{foobar-&gt;meth2}...{/foobar-&gt;meth2}</TT>) and the parameters to the methods have the same synopsis as the parameters for block-function-plugins: They get 4 parameters <TT class=parameter><I>$params</I></TT>, <TT class=parameter><I>$content</I></TT>, <TT class=parameter><I>&amp;$smarty</I></TT> and <TT class=parameter><I>&amp;$repeat</I></TT> and they also behave like block-function-plugin</P>', '<P>Smarty allows access to PHP objects through the templates. There are two ways to access them. One way is to register objects to the template, then use access them via syntax similar to custom functions. The other way is to assign objects to the templates and access them much like any other assigned variable. The first method has a much nicer template syntax. It is also more secure, as a registered object can be restricted to certain methods or properties. However, a registered object cannot be looped over or assigned in arrays of objects, etc. The method you choose will be determined by your needs, but use the first method whenever possible to keep template syntax to a minimum. </P>\r\n<P>If security is enabled, no private methods or functions can be accessed (begininning with \"_\"). If a method and property of the same name exist, the method will be used. </P>\r\n<P>You can restrict the methods and properties that can be accessed by listing them in an array as the third registration parameter. </P>\r\n<P>By default, parameters passed to objects through the templates are passed the same way custom functions get them. An associative array is passed as the first parameter, and the smarty object as the second. If you want the parameters passed one at a time for each argument like traditional object parameter passing, set the fourth registration parameter to false. </P>\r\n<P>The optional fifth parameter has only effect with <TT class=parameter><I>format</I></TT> being <TT class=literal>true</TT> and contains a list ob methods that should be treated as blocks. That means these methods have a closing tag in the template (<TT class=literal>{foobar-&gt;meth2}...{/foobar-&gt;meth2}</TT>) and the parameters to the methods have the same synopsis as the parameters for block-function-plugins: They get 4 parameters <TT class=parameter><I>$params</I></TT>, <TT class=parameter><I>$content</I></TT>, <TT class=parameter><I>&amp;$smarty</I></TT> and <TT class=parameter><I>&amp;$repeat</I></TT> and they also behave like block-function-plugin</P>');
 insert into `aa_translation` values ('96', 'Contatti', 'Contacts');
@@ -686,11 +687,11 @@ insert into `aa_translation` values ('251', '', '');
 insert into `aa_translation` values ('252', 'Syntable', 'Syntable');
 insert into `aa_translation` values ('253', '', '');
 insert into `aa_translation` values ('254', 'Ordinamento', 'Order');
-insert into `aa_translation` values ('255', 'Scegli il campo che detterà l\'ordine', '');
+insert into `aa_translation` values ('255', 'Scegli il campo che detterÃ  l\'ordine', '');
 insert into `aa_translation` values ('256', 'Dbsync', 'Dbsync');
 insert into `aa_translation` values ('257', 'Crea/aggiorna le tabelle sul database?', 'Create/update database table?');
 insert into `aa_translation` values ('258', 'Multilingua', 'Multilang');
-insert into `aa_translation` values ('259', 'Questo servizio è multilingua?', 'Is a multilang service? This field is auto calculated by service-o-matic');
+insert into `aa_translation` values ('259', 'Questo servizio Ã¨ multilingua?', 'Is a multilang service? This field is auto calculated by service-o-matic');
 insert into `aa_translation` values ('260', 'Posizione', 'InitOrder');
 insert into `aa_translation` values ('261', 'Posizione dell\'elemento rispetto agli altri', '');
 insert into `aa_translation` values ('262', 'Id', 'Id');
@@ -955,7 +956,7 @@ insert into `aa_translation` values ('542', 'Email', 'Email');
 insert into `aa_translation` values ('543', '', '');
 insert into `aa_translation` values ('544', 'Indirizzo', 'Address');
 insert into `aa_translation` values ('545', '', '');
-insert into `aa_translation` values ('546', 'Città', 'City');
+insert into `aa_translation` values ('546', 'CittÃ ', 'City');
 insert into `aa_translation` values ('547', '', '');
 insert into `aa_translation` values ('548', 'CAP', 'Zip');
 insert into `aa_translation` values ('549', '', '');
@@ -1065,7 +1066,7 @@ insert into `aa_translation` values ('652', 'Il testo dell\'informativa si trova
 insert into `aa_translation` values ('653', 'Captcha', 'Captcha');
 insert into `aa_translation` values ('654', '', '');
 insert into `aa_translation` values ('655', 'Risposta', 'Risposta');
-insert into `aa_translation` values ('656', 'Messaggio da visualizzare dopo che il form Ã¨ stato inviato con successo', 'Messaggio da visualizzare dopo che il form ï¿½ stato inviato con successo');
+insert into `aa_translation` values ('656', 'Messaggio da visualizzare dopo che il form ÃƒÂ¨ stato inviato con successo', 'Messaggio da visualizzare dopo che il form Ã¯Â¿Â½ stato inviato con successo');
 insert into `aa_translation` values ('657', 'Data', 'Data');
 insert into `aa_translation` values ('658', '', '');
 insert into `aa_translation` values ('659', 'Visibile', 'Visibile');
@@ -1165,7 +1166,7 @@ insert into `aa_translation` values ('752', 'Titolo', 'Titolo');
 insert into `aa_translation` values ('753', '', '');
 insert into `aa_translation` values ('754', 'Contattaci', '');
 insert into `aa_translation` values ('755', 'Presa visione dell\'informativa fornita, acconsento al trattamento dei dati personali', 'I agree to the given terms.');
-insert into `aa_translation` values ('756', 'Ai sensi dell\'articolo 10 della ex-legge 31.12.1996 n. 675, in ottemperanza all\'art. 13 del Nuovo Codice Privacy (dlgs 30 Giugno 2003 n° 196/2003) Le forniamo le seguenti informazioni:\r\nIl trattamento dei dati raccolti sarà effettuato mediante elaborazioni manuali, strumenti informatici e telematici e avrà le seguenti finalità:\r\n - dare esecuzione all\'invio delle email verso la casella postale degli utenti sottoscritti;\r\n - raccogliere le essenziali informazioni demografiche che ci permettano di perfezionare e promuovere i servizi promozionali e commerciali;\r\nI dati da Lei conferiti non verranno prestati, venduti o scambiati con altre organizzazioni, se non chiedendoLe espressamente il consenso.\r\nLa informiamo che il conferimento dei dati non è obbligatorio per eseguire l\'invio delle e-mail stesse.\r\nAl titolare del trattamento Lei potrà rivolgersi per far valere i suoi diritti così come previsti dall\'articolo13 della ex-legge n. 675/96 (accesso, rettifica, integrazione, cancellazione, opposizione ecc.), in ottemperanza all\'art. 7 del Nuovo Codice Privacy (dlgs 30 Giugno 2003 n° 196).', 'Following the article 10 ex-law 12.31.1996 no. 675, in conformity with the article 13 of the New Code Privacy ( Dlgs June 30th, 2003 n° 196/2003 ) we give you the following information:\r\nThe treatment of the gathered data will be made by manual elaborations, data processing tools and for the following aims:\r\n          - dispatch of the Email to e-amail address of the subscribed users;\r\n          - gather the essential demographic information that let us perfect and advise the promotional and commercial offers;\r\nThe data conferred by you will not be lent, sold or exchanged with other organizations, if not expressly asking you the assent.\r\nWe inform you that the conferment of the data is optional and their possible non-conferment does not have any consequence.\r\nYou say request the holder of the data treatment as is permited by the law, article 13 ex-law no. 675/96 (accessing, reviewing, integration, deleting personal data), and as is permitted by article 7 New Code Privacy ( Dlgs June 30th, 2003 n° 196 ). ');
+insert into `aa_translation` values ('756', 'Ai sensi dell\'articolo 10 della ex-legge 31.12.1996 n. 675, in ottemperanza all\'art. 13 del Nuovo Codice Privacy (dlgs 30 Giugno 2003 nÂ° 196/2003) Le forniamo le seguenti informazioni:\r\nIl trattamento dei dati raccolti sarÃ  effettuato mediante elaborazioni manuali, strumenti informatici e telematici e avrÃ  le seguenti finalitÃ :\r\n - dare esecuzione all\'invio delle email verso la casella postale degli utenti sottoscritti;\r\n - raccogliere le essenziali informazioni demografiche che ci permettano di perfezionare e promuovere i servizi promozionali e commerciali;\r\nI dati da Lei conferiti non verranno prestati, venduti o scambiati con altre organizzazioni, se non chiedendoLe espressamente il consenso.\r\nLa informiamo che il conferimento dei dati non Ã¨ obbligatorio per eseguire l\'invio delle e-mail stesse.\r\nAl titolare del trattamento Lei potrÃ  rivolgersi per far valere i suoi diritti cosÃ¬ come previsti dall\'articolo13 della ex-legge n. 675/96 (accesso, rettifica, integrazione, cancellazione, opposizione ecc.), in ottemperanza all\'art. 7 del Nuovo Codice Privacy (dlgs 30 Giugno 2003 nÂ° 196).', 'Following the article 10 ex-law 12.31.1996 no. 675, in conformity with the article 13 of the New Code Privacy ( Dlgs June 30th, 2003 nÂ° 196/2003 ) we give you the following information:\r\nThe treatment of the gathered data will be made by manual elaborations, data processing tools and for the following aims:\r\n          - dispatch of the Email to e-amail address of the subscribed users;\r\n          - gather the essential demographic information that let us perfect and advise the promotional and commercial offers;\r\nThe data conferred by you will not be lent, sold or exchanged with other organizations, if not expressly asking you the assent.\r\nWe inform you that the conferment of the data is optional and their possible non-conferment does not have any consequence.\r\nYou say request the holder of the data treatment as is permited by the law, article 13 ex-law no. 675/96 (accessing, reviewing, integration, deleting personal data), and as is permitted by article 7 New Code Privacy ( Dlgs June 30th, 2003 nÂ° 196 ). ');
 insert into `aa_translation` values ('757', 'Verificare i seguenti campi:', 'Check the following fields:');
 insert into `aa_translation` values ('758', 'Campo obbligatorio', 'This field is required.');
 insert into `aa_translation` values ('759', 'inserire un indirizzo valido', 'enter a valid email');
@@ -1189,7 +1190,7 @@ insert into `aa_translation` values ('776', 'Cognome', 'Surname');
 insert into `aa_translation` values ('777', 'Ragione sociale', 'Company name');
 insert into `aa_translation` values ('778', 'Indirizzo', 'Address');
 insert into `aa_translation` values ('779', 'Citt&agrave;', 'City');
-insert into `aa_translation` values ('780', 'CAP', 'ZIP');
+insert into `aa_translation` values ('780', 'CAP', 'ZIP Code');
 insert into `aa_translation` values ('781', 'Provincia', 'Province');
 insert into `aa_translation` values ('782', 'Il vostro account', 'Il vostro account');
 insert into `aa_translation` values ('783', 'Conferma la password', 'Confirm the password');
@@ -1237,7 +1238,27 @@ insert into `aa_translation` values ('824', 'Metadescription', 'Metadescription'
 insert into `aa_translation` values ('825', '', '');
 insert into `aa_translation` values ('826', 'Metakeywords', 'Metakeywords');
 insert into `aa_translation` values ('827', '', '');
-
+insert into `aa_translation` values ('828', 'Stili', 'Stili');
+insert into `aa_translation` values ('829', '<h1>\r\n	Titolo 1</h1>\r\n<h2>\r\n	Titolo 2</h2>\r\n<h3>\r\n	Titolo 3</h3>\r\n<p>\r\n	Lorem ipsum dolor sit amet consectetuer lacinia auctor fringilla urna ligula. Sed at et dis odio lorem nibh Ut est <strong>neque Curabitur</strong>. Orci Proin ac semper consectetuer sed rutrum gravida vitae interdum congue. Neque Curabitur elit faucibus morbi est convallis congue eros convallis Sed. Nam felis justo nisl Vestibulum Curabitur Phasellus porttitor convallis tristique ridiculus. Massa quis dui Vestibulum enim scelerisque ac wisi id lacus ut. <a href=\"http://www.google.com\">Ante semper tellus</a>.</p>\r\n<p>\r\n	<img alt=\"\" src=\"/public/mat/image/syntax-box.gif\" style=\"width: 77px; height: 100px; float: left;\" />Dictumst id penatibus morbi <strong>parturient Vivamus</strong> orci et ligula feugiat dui. Massa habitasse pretium Suspendisse tincidunt laoreet id felis Pellentesque tellus eu. Ac Phasellus montes Morbi sodales Aenean sociis pellentesque Vestibulum sagittis volutpat. Consectetuer et ante et ac velit quis malesuada est Aenean est. Donec Nulla Sed tellus quis semper tellus consectetuer et nascetur et. Tellus fames mus nulla Curabitur eu eget Curabitur magna metus Vestibulum. <a href=\"http://www.google.com\">Nisl consequat</a>.</p>\r\n<p>\r\n	<img alt=\"\" src=\"/public/mat/image/syntax-box.gif\" style=\"width: 77px; height: 100px; float: right;\" />Ut scelerisque <em>Proin porttitor Quisque</em> gravida facilisis dignissim euismod at leo. Ante eu condimentum nonummy sem sagittis ut cursus amet senectus Aliquam. Nam vitae risus Nullam interdum at dolor dapibus laoreet Praesent auctor. Lobortis Vestibulum porttitor nibh nunc eu lacinia Curabitur Maecenas condimentum lorem. <strike>Volutpat sem justo ipsum nibh semper tempor</strike>.</p>\r\n<h4>\r\n	Titolo 4</h4>\r\n<ul>\r\n	<li>\r\n		Orci Curabitur feugiat mauris convallis</li>\r\n	<li>\r\n		porttitor sagittis condimentum vitae Praesent</li>\r\n	<li>\r\n		Neque cursus nisl Phasellus laoreet habitasse tristique</li>\r\n	<li>\r\n		lacus adipiscing hendrerit velit. Phasellus vel fames commodo</li>\r\n	<li>\r\n		Fermentum a sit egestas dolor tincidunt libero</li>\r\n	<li>\r\n		Curabitur Nulla tincidunt pellentesque augue at penatibus</li>\r\n	<li>\r\n		Phasellus eros lorem tempus libero tortor Lorem wisi felis</li>\r\n</ul>\r\n<hr />\r\n<h5>\r\n	Titolo 5</h5>\r\n<ol>\r\n	<li>\r\n		Quis elit nonummy laoreet et dolor</li>\r\n	<li>\r\n		Sed lorem Curabitur at a</li>\r\n	<li>\r\n		Libero odio id congue pretium convallis tristique</li>\r\n	<li>\r\n		Platea lacinia molestie lacinia congue a interdum</li>\r\n	<li>\r\n		Ultrices fringilla vel Morbi vitae at nascetur tellus</li>\r\n</ol>\r\n<p>\r\n	Mi quis laoreet Vivamus malesuada lacinia dapibus nibh augue Lorem tellus. Mauris wisi et venenatis nec purus sapien lacus hendrerit dictum amet. Pellentesque orci Curabitur commodo ultrices mauris Vestibulum tincidunt in dui et. Pellentesque sit habitasse orci mi volutpat dis sit lorem quis tellus. Dolor adipiscing leo nibh Suspendisse pretium malesuada netus enim condimentum iaculis. Mauris interdum Pellentesque et a urna.</p>\r\n<table border=\"1\" cellpadding=\"1\" cellspacing=\"1\" style=\"width: 100%;\">\r\n	<tbody>\r\n		<tr>\r\n			<td>\r\n				massa condimentum</td>\r\n			<td>\r\n				1000</td>\r\n			<td>\r\n				150</td>\r\n			<td>\r\n				1000000</td>\r\n		</tr>\r\n		<tr>\r\n			<td>\r\n				pharetra quis Aenean</td>\r\n			<td>\r\n				2000</td>\r\n			<td>\r\n				250</td>\r\n			<td>\r\n				2000000</td>\r\n		</tr>\r\n		<tr>\r\n			<td>\r\n				Curabitur congue lacinia</td>\r\n			<td>\r\n				3000</td>\r\n			<td>\r\n				350</td>\r\n			<td>\r\n				3000000</td>\r\n		</tr>\r\n		<tr>\r\n			<td>\r\n				Phasellus ut malesuada</td>\r\n			<td>\r\n				4000</td>\r\n			<td>\r\n				450</td>\r\n			<td>\r\n				4000000</td>\r\n		</tr>\r\n		<tr>\r\n			<td>\r\n				Ultrices fringilla</td>\r\n			<td>\r\n				5000</td>\r\n			<td>\r\n				550</td>\r\n			<td>\r\n				5000000</td>\r\n		</tr>\r\n	</tbody>\r\n</table>\r\n<h6>\r\n	Titolo 6</h6>\r\n<blockquote>\r\n	<p>\r\n		There are painters who transform the sun to a yellow spot, but there are others who with the help of their art and their intelligence, transform a yellow spot into the sun.<br />\r\n		-Pablo Picasso</p>\r\n</blockquote>\r\n<pre>\r\n&nbsp; global $db;\r\n&nbsp; $ret = array();\r\n&nbsp; while(list($l)=$res-&gt;FetchRow()) \r\n    $ret[] = $l;\r\n&nbsp; return $ret;\r\n</pre>\r\n<address>\r\n	Quis elit nonummy laoreet et dolor<br />\r\n	Sed lorem Curabitur at a<br />\r\n	Libero odio id congue pretium convallis tristique</address>\r\n', '<h1>\r\n	Titolo 1</h1>\r\n<h2>\r\n	Titolo 2</h2>\r\n<h3>\r\n	Titolo 3</h3>\r\n<p>\r\n	Lorem ipsum dolor sit amet consectetuer lacinia auctor fringilla urna ligula. Sed at et dis odio lorem nibh Ut est <strong>neque Curabitur</strong>. Orci Proin ac semper consectetuer sed rutrum gravida vitae interdum congue. Neque Curabitur elit faucibus morbi est convallis congue eros convallis Sed. Nam felis justo nisl Vestibulum Curabitur Phasellus porttitor convallis tristique ridiculus. Massa quis dui Vestibulum enim scelerisque ac wisi id lacus ut. <a href=\"http://www.google.com\">Ante semper tellus</a>.</p>\r\n<p>\r\n	Dictumst id penatibus morbi <strong>parturient Vivamus</strong> orci et ligula feugiat dui. Massa habitasse pretium Suspendisse tincidunt laoreet id felis Pellentesque tellus eu. Ac Phasellus montes Morbi sodales Aenean sociis pellentesque Vestibulum sagittis volutpat. Consectetuer et ante et ac velit quis malesuada est Aenean est. Donec Nulla Sed tellus quis semper tellus consectetuer et nascetur et. Tellus fames mus nulla Curabitur eu eget Curabitur magna metus Vestibulum. <a href=\"http://www.google.com\">Nisl consequat</a>.</p>\r\n<p>\r\n	Ut scelerisque <em>Proin porttitor Quisque</em> gravida facilisis dignissim euismod at leo. Ante eu condimentum nonummy sem sagittis ut cursus amet senectus Aliquam. Nam vitae risus Nullam interdum at dolor dapibus laoreet Praesent auctor. Lobortis Vestibulum porttitor nibh nunc eu lacinia Curabitur Maecenas condimentum lorem. <strike>Volutpat sem justo ipsum nibh semper tempor</strike>.</p>\r\n<h4>\r\n	Titolo 4</h4>\r\n<ul>\r\n	<li>\r\n		Orci Curabitur feugiat mauris convallis</li>\r\n	<li>\r\n		porttitor sagittis condimentum vitae Praesent</li>\r\n	<li>\r\n		Neque cursus nisl Phasellus laoreet habitasse tristique</li>\r\n	<li>\r\n		lacus adipiscing hendrerit velit. Phasellus vel fames commodo</li>\r\n	<li>\r\n		Fermentum a sit egestas dolor tincidunt libero</li>\r\n	<li>\r\n		Curabitur Nulla tincidunt pellentesque augue at penatibus</li>\r\n	<li>\r\n		Phasellus eros lorem tempus libero tortor Lorem wisi felis</li>\r\n</ul>\r\n<hr />\r\n<h5>\r\n	Titolo 5</h5>\r\n<ol>\r\n	<li>\r\n		Quis elit nonummy laoreet et dolor</li>\r\n	<li>\r\n		Sed lorem Curabitur at a</li>\r\n	<li>\r\n		Libero odio id congue pretium convallis tristique</li>\r\n	<li>\r\n		Platea lacinia molestie lacinia congue a interdum</li>\r\n	<li>\r\n		Ultrices fringilla vel Morbi vitae at nascetur tellus</li>\r\n</ol>\r\n<p>\r\n	Mi quis laoreet Vivamus malesuada lacinia dapibus nibh augue Lorem tellus. Mauris wisi et venenatis nec purus sapien lacus hendrerit dictum amet. Pellentesque orci Curabitur commodo ultrices mauris Vestibulum tincidunt in dui et. Pellentesque sit habitasse orci mi volutpat dis sit lorem quis tellus. Dolor adipiscing leo nibh Suspendisse pretium malesuada netus enim condimentum iaculis. Mauris interdum Pellentesque et a urna.</p>\r\n<table border=\"1\" cellpadding=\"1\" cellspacing=\"1\" style=\"width: 100%;\">\r\n	<tbody>\r\n		<tr>\r\n			<td>\r\n				massa condimentum</td>\r\n			<td>\r\n				1000</td>\r\n			<td>\r\n				150</td>\r\n			<td>\r\n				1000000</td>\r\n		</tr>\r\n		<tr>\r\n			<td>\r\n				pharetra quis Aenean</td>\r\n			<td>\r\n				2000</td>\r\n			<td>\r\n				250</td>\r\n			<td>\r\n				2000000</td>\r\n		</tr>\r\n		<tr>\r\n			<td>\r\n				Curabitur congue lacinia</td>\r\n			<td>\r\n				3000</td>\r\n			<td>\r\n				350</td>\r\n			<td>\r\n				3000000</td>\r\n		</tr>\r\n		<tr>\r\n			<td>\r\n				Phasellus ut malesuada</td>\r\n			<td>\r\n				4000</td>\r\n			<td>\r\n				450</td>\r\n			<td>\r\n				4000000</td>\r\n		</tr>\r\n		<tr>\r\n			<td>\r\n				Ultrices fringilla</td>\r\n			<td>\r\n				5000</td>\r\n			<td>\r\n				550</td>\r\n			<td>\r\n				5000000</td>\r\n		</tr>\r\n	</tbody>\r\n</table>\r\n<p>\r\n	&nbsp;</p>\r\n');
+insert into `aa_translation` values ('830', '', '');
+insert into `aa_translation` values ('831', '', '');
+insert into `aa_translation` values ('832', '', '');
+insert into `aa_translation` values ('833', '', '');
+insert into `aa_translation` values ('834', '', '');
+insert into `aa_translation` values ('835', '', '');
+insert into `aa_translation` values ('836', 'Lavora con noi', 'Lavora con noi');
+insert into `aa_translation` values ('837', '<p>\r\n	Vuoi far parte di un gruppo di lavoro giovane e dinamico? Inviaci il tuo curriculum vitae: ti richiameremo non appena si apriranno posizioni inerenti il tuo profilo.</p>\r\n', '<p>\r\n	Vuoi far parte di un gruppo di lavoro giovane e dinamico? Inviaci il tuo curriculum vitae: ti richiameremo non appena si apriranno posizioni inerenti il tuo profilo.</p>\r\n');
+insert into `aa_translation` values ('838', '<p>\r\n	I tuoi dati sono stati inviati correttamente. Grazie per la disponibilit&agrave;!</p>\r\n', '<p>\r\n	I tuoi dati sono stati inviati correttamente. Grazie per la disponibilit&agrave;!</p>\r\n');
+insert into `aa_translation` values ('839', 'Nome', 'Nome');
+insert into `aa_translation` values ('840', 'Cognome', 'Cognome');
+insert into `aa_translation` values ('841', 'E-mail', 'E-mail');
+insert into `aa_translation` values ('842', 'Telefono', 'Telefono');
+insert into `aa_translation` values ('843', 'Curriculum Vitae', 'Curriculum Vitae');
+insert into `aa_translation` values ('844', 'Note', 'Note');
+insert into `aa_translation` values ('845', 'Test', 'Test');
+insert into `aa_translation` values ('846', '', '');
+insert into `aa_translation` values ('847', 'test', 'test');
+insert into `aa_translation` values ('848', '', '');
 
 ### structure of table `aa_users` ###
 
@@ -1385,7 +1406,7 @@ CREATE TABLE `documents` (
 
 ### data of table `documents` ###
 
-insert into `documents` values ('1', '635', '636', '2010-03-24', 'zip', '1', '1|2', 'suspended');
+insert into `documents` values ('1', '635', '636', '2010-03-24', 'zip', '1', '1|2', 'public');
 
 
 ### structure of table `field_options` ###
@@ -1423,7 +1444,7 @@ CREATE TABLE `form_fields` (
   `fieldset` int(11) NOT NULL DEFAULT '0',
   `ordine` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 AUTO_INCREMENT=4;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 AUTO_INCREMENT=10;
 
 
 ### data of table `form_fields` ###
@@ -1431,6 +1452,12 @@ CREATE TABLE `form_fields` (
 insert into `form_fields` values ('1', '1', 'nome', '741', 'text', '', '', '', '0', '10');
 insert into `form_fields` values ('2', '1', 'email', '742', 'text', '', 'email', '1', '0', '20');
 insert into `form_fields` values ('3', '1', 'messaggio', '749', 'textarea', '', 'text', '1', '0', '30');
+insert into `form_fields` values ('4', '2', 'nome', '839', 'text', '', 'text', '1', '0', '10');
+insert into `form_fields` values ('5', '2', 'cognome', '840', 'text', '', 'text', '1', '0', '20');
+insert into `form_fields` values ('6', '2', 'email', '841', 'text', '', 'email', '1', '0', '30');
+insert into `form_fields` values ('7', '2', 'telefono', '842', 'text', '', 'digits', '', '0', '40');
+insert into `form_fields` values ('8', '2', 'curriculum', '843', 'file', '', 'text', '1', '0', '50');
+insert into `form_fields` values ('9', '2', 'note', '844', 'textarea', '', 'text', '', '0', '60');
 
 
 ### structure of table `form_fieldsets` ###
@@ -1472,6 +1499,7 @@ CREATE TABLE `forms` (
 ### data of table `forms` ###
 
 insert into `forms` values ('1', '722', 'info@dynamick.it', '', 'synCaptcha', '723', '2010-12-16 17:18:37', '1', '42', '754');
+insert into `forms` values ('2', '837', 'info@dynamick.it', '1', 'nessuno', '838', '2012-04-12 15:31:08', '', '0', '836');
 
 
 ### structure of table `groups` ###
@@ -1522,17 +1550,17 @@ CREATE TABLE `news` (
   `title` varchar(255) NOT NULL,
   `text` text NOT NULL,
   `image` varchar(255) NOT NULL,
-  `date` date NOT NULL,
+  `date` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 AUTO_INCREMENT=5;
 
 
 ### data of table `news` ###
 
-insert into `news` values ('1', '348', '349', '', '2004-11-19');
-insert into `news` values ('2', '394', '395', '', '2004-12-27');
-insert into `news` values ('3', '396', '397', '', '2004-12-27');
-insert into `news` values ('4', '432', '433', '', '2005-04-19');
+insert into `news` values ('1', '348', '349', '', '2004-11-19 00:00:00');
+insert into `news` values ('2', '394', '395', '', '2004-12-27 12:00:00');
+insert into `news` values ('3', '396', '397', '', '2004-12-27 00:00:00');
+insert into `news` values ('4', '432', '433', '', '2005-04-19 00:00:00');
 
 
 ### structure of table `photos` ###

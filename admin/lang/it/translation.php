@@ -1,4 +1,4 @@
-<?
+<?php
   //interface
   $str["logoff"]="Esci";
   

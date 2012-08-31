@@ -134,7 +134,6 @@ EOHTML;
   } // fine ciclo servizi
 
   # download xml
-
   $filename = sanitizePath($synWebsiteTitle);
   header("Pragma: public");
   header("Expires: 0");

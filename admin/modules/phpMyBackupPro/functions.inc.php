@@ -522,6 +522,8 @@ function PMBP_dump($db,$tables,$data,$drop,$zip,$comment) {
     $backupfile=PMBP_EXPORT_DIR.$backupfile;
 
     if ($con=@mysql_connect($CONF['sql_host'],$CONF['sql_user'],$CONF['sql_passwd'])) {
+        // setto la connessione in UTF8
+        mysql_set_charset('utf8', $con);
 
         //create comment
         $out="# MySQL dump of database '".$db."' on host '".$CONF['sql_host']."'\n";

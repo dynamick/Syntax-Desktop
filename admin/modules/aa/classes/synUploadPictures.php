@@ -12,16 +12,23 @@ class synUploadPictures extends synElement {
 
   //constructor(name, value, label, size, help, $mat)
   function synUploadPictures($n="", $v="", $l="", $s=255, $h="", $mat="/mat/") {
-    if ($n=="") $n =  "text".date("his");
-    if ($l=="") $l =  ucfirst($n);
+    if ($n=='')
+      $n = "text".date("his");
+    if ($l=='')
+      $l =  ucfirst($n);
 
-    $this->type = "file";
+    $this->type  = 'file';
     $this->name  = $n;
-    if ($v==null) { global $$n; $this->value = $$n; } else $this->value = $v;
+    if ($v==null) {
+      global $$n;
+      $this->value = $$n;
+    } else {
+      $this->value = $v;
+    }
     $this->label = $l;
     $this->size  = $s;
     $this->help  = $h;
-    $this->db    = " varchar(255) NOT NULL";
+    $this->db    = ' varchar(255) NOT NULL ';
     $this->mat   = $mat;
   }
 
@@ -37,27 +44,28 @@ class synUploadPictures extends synElement {
 
       $uploadPHP = "ihtml/upload_pictures.php?key=".$key."&session_id=".session_id();
       $ret = <<<EOC
+
         <object width="640" height="500" name="JUpload" codebase="http://java.sun.com/update/1.5.0/jinstall-1_5-windows-i586.cab#Version=5,0,0,3" classid="clsid:8AD9C840-044E-11D1-B3E9-00805F499D93">
-          <param value="{$uploadPHP}" name="postURL">
-          <param value="2147483648" name="maxFileSize">
-          <param value="wjhk.jupload.jar" name="archive">
-          <param value="true" name="sendMD5Sum">
-          <param value="0" name="debugLevel">
-          <param value="JUpload" name="name">
-          <param value="wjhk.jupload2.JUploadApplet" name="code">
-          <param value="false" name="showLogWindow">
-          <param value="true" name="mayscript">
-          <param value="false" name="scriptable">
-          <param value="SUCCESS" name="stringUploadSuccess">
-          <param value="ERROR: (.*)" name="stringUploadError">
-          <param value="500000" name="maxChunkSize">
-          <param value="1024" name="maxPicHeight">
-          <param value="1024" name="maxPicWidth">
-          <param value="true" name="pictureTransmitMetadata">
-          <param value="fileChooserIconSize" name="80">
-          <param value="lookAndFeel" name="system">
-          <param value="showStatusBar" name="false">
-          <param value="jpg/jpeg/eps" name="allowedFileExtensions">
+          <param value="{$uploadPHP}" name="postURL" />
+          <param value="2147483648" name="maxFileSize" />
+          <param value="wjhk.jupload.jar" name="archive" />
+          <param value="true" name="sendMD5Sum" />
+          <param value="0" name="debugLevel" />
+          <param value="JUpload" name="name" />
+          <param value="wjhk.jupload2.JUploadApplet" name="code" />
+          <param value="false" name="showLogWindow" />
+          <param value="true" name="mayscript" />
+          <param value="false" name="scriptable" />
+          <param value="SUCCESS" name="stringUploadSuccess" />
+          <param value="ERROR: (.*)" name="stringUploadError" />
+          <param value="500000" name="maxChunkSize" />
+          <param value="1024" name="maxPicHeight" />
+          <param value="1024" name="maxPicWidth" />
+          <param value="true" name="pictureTransmitMetadata" />
+          <param value="fileChooserIconSize" name="80" />
+          <param value="lookAndFeel" name="system" />
+          <param value="showStatusBar" name="true" />
+          <param value="jpg/jpeg/eps" name="allowedFileExtensions" />
           <comment>
             <embed width="700" height="500" pluginspage="http://java.sun.com/products/plugin/index.html#download"
               maxchunksize="500000"
@@ -76,7 +84,7 @@ class synUploadPictures extends synElement {
               pictureTransmitMetadata="true"
               fileChooserIconSize="80"
               lookAndFeel="system"
-              showStatusBar="false"
+              showStatusBar="true"
               archive="wjhk.jupload.jar"
               maxfilesize="2147483648"
               allowedFileExtensions="jpg/jpeg/eps"
