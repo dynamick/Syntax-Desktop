@@ -436,23 +436,23 @@ function getSqlTree($id) {
   - attributi html (classe, id, ecc.) [optional]
 */
 function cleverThumb($path="", $filename, $foto, $suffix="", $alt="", $width=50, $height=50, $rotate=false, $attr=""){
-  global $synPublicPath;
+  global $synPublicPath, $synAbsolutePath;
   if($filename=='' || $foto=='') return;
   $img         = $synPublicPath."/mat/".$path.$filename.".".$foto;
   $resultimg   = $synPublicPath."/mat/thumb/".$suffix.$filename.".".$foto;
-  if(file_exists($_SERVER['DOCUMENT_ROOT'].$img)) {
-    $tmb_exists  = file_exists($_SERVER['DOCUMENT_ROOT'].$resultimg);
-    $img_created = date("Y-m-d H:i:s", @filectime($_SERVER['DOCUMENT_ROOT'].$img));
-    $tmb_created = date("Y-m-d H:i:s", @filectime($_SERVER['DOCUMENT_ROOT'].$resultimg));
+  if(file_exists($synAbsolutePath.$img)) {
+    $tmb_exists  = file_exists($synAbsolutePath.$resultimg);
+    $img_created = date("Y-m-d H:i:s", @filectime($synAbsolutePath.$img));
+    $tmb_created = date("Y-m-d H:i:s", @filectime($synAbsolutePath.$resultimg));
     if ($tmb_exists) {
-      list($w,$h) = @getimagesize(getenv("DOCUMENT_ROOT").$resultimg);
+      list($w,$h) = @getimagesize($synAbsolutePath.$resultimg);
       $sameSize= ($w==$width) and ($h==$height);
     }
     if (!$tmb_exists || ($tmb_exists && ($img_created > $tmb_created)) || !$sameSize ){
-      $thumbnail = new Image_Toolbox(getenv("DOCUMENT_ROOT").$img);
+      $thumbnail = new Image_Toolbox($synAbsolutePath.$img);
       $thumbnail-> setResizeMethod('resample');
       $thumbnail-> newOutputSize($width, $height, 1, $rotate, '#FFFFFF');
-      $thumbnail-> save(getenv("DOCUMENT_ROOT")."/".$resultimg, "jpg");
+      $thumbnail-> save($synAbsolutePath."/".$resultimg, "jpg");
     }
     return "<img src=\"".$resultimg."\" alt=\"".str_replace("\"","",htmlentities($alt))."\"".$attr."/>";
   }
@@ -460,23 +460,23 @@ function cleverThumb($path="", $filename, $foto, $suffix="", $alt="", $width=50,
 
 
 function cleverThumbTag($path="", $filename, $foto, $suffix="", $alt="", $width=50, $height=50, $rotate=false, $attr=""){
-  global $synPublicPath;
+  global $synPublicPath, $synAbsolutePath;
   if($filename=='' || $foto=='') return;
   $img         = $path.$filename.".".$foto;
   $resultimg   = $synPublicPath."/mat/thumb/".$suffix.$filename.".".$foto;
-  if(file_exists($_SERVER['DOCUMENT_ROOT'].$img)) {
-    $tmb_exists  = file_exists($_SERVER['DOCUMENT_ROOT'].$resultimg);
-    $img_created = date("Y-m-d H:i:s", @filectime($_SERVER['DOCUMENT_ROOT'].$img));
-    $tmb_created = date("Y-m-d H:i:s", @filectime($_SERVER['DOCUMENT_ROOT'].$resultimg));
+  if(file_exists($synAbsolutePath.$img)) {
+    $tmb_exists  = file_exists($synAbsolutePath.$resultimg);
+    $img_created = date("Y-m-d H:i:s", @filectime($synAbsolutePath.$img));
+    $tmb_created = date("Y-m-d H:i:s", @filectime($synAbsolutePath.$resultimg));
     if ($tmb_exists) {
-      list($w,$h) = @getimagesize(getenv("DOCUMENT_ROOT").$resultimg);
+      list($w,$h) = @getimagesize($synAbsolutePath.$resultimg);
       $sameSize= ($w==$width) and ($h==$height);
     }
     if (!$tmb_exists || ($tmb_exists && ($img_created > $tmb_created)) || !$sameSize ){
-      $thumbnail = new Image_Toolbox(getenv("DOCUMENT_ROOT").$img);
+      $thumbnail = new Image_Toolbox($synAbsolutePath.$img);
       $thumbnail-> setResizeMethod('resample');
       $thumbnail-> newOutputSize($width, $height, 1, $rotate, '#FFFFFF');
-      $thumbnail-> save(getenv("DOCUMENT_ROOT")."/".$resultimg, "jpg");
+      $thumbnail-> save($synAbsolutePath."/".$resultimg, "jpg");
     }
     return "<img src=\"".$resultimg."\" alt=\"".str_replace("\"","",htmlentities($alt))."\"".$attr."/>";
   }

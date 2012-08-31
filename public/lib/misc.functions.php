@@ -64,7 +64,7 @@ if(!function_exists('str_makerand')) {
 }
 
 /*
-  cleverThumb ®
+  cleverThumb ï¿½
   crea il thumbnail SOLO se non esiste oppure l'immagine madre viene aggiornata.
   ritorna un tag <img>.
   ------------------------------------------------------------------------------
@@ -76,14 +76,14 @@ if(!function_exists('str_makerand')) {
   - testo alt del thumbnail [optional]
   - larghezza
   - altezza
-  - rotazione (inverte altezza e larghezza se l'immagine è verticale) [optional]
+  - rotazione (inverte altezza e larghezza se l'immagine ï¿½ verticale) [optional]
   - attributi html (classe, id, ecc.) [optional]
 */
 if(!function_exists('cleverThumb')) {
   function cleverThumb($path="", $filename, $foto, $suffix="", $alt="", $width=50, $height=50, $rotate=false, $attr='', $mode=1, $mask=false, $center=true){
-    global $synPublicPath;
+    global $synPublicPath, $synAbsolutePath;
     if($filename=='' || $foto=='') return;
-    $ROOT        = getenv('DOCUMENT_ROOT');
+    $ROOT        = $synAbsolutePath;
     $img         = $synPublicPath."/mat/".$path.$filename.".".$foto;
     $resultimg   = $synPublicPath."/mat/thumb/".$suffix.$filename.".".$foto;
     if(file_exists($ROOT.$img)) {
@@ -176,7 +176,7 @@ function _delUserFromNewsletter($email){
 }
 
 function getDocument($productname, $document, $line, $classe, $spessore=''){
-  global $synPublicPath;
+  global $synPublicPath, $synAbsolutePath;
   $ret = NULL;
   
   switch($line){
@@ -234,9 +234,9 @@ function getDocument($productname, $document, $line, $classe, $spessore=''){
   $file_pdf = $file.".pdf";
   $file_doc = $file.".doc";  
   
-  if(file_exists($_SERVER['DOCUMENT_ROOT'].$file_pdf)) {
+  if(file_exists($synAbsolutePath.$file_pdf)) {
     $ret = "      <li><a class=\"dl $classe\" href=\"$file_pdf\">$label</a></li>\n";  
-  } else if (file_exists($_SERVER['DOCUMENT_ROOT'].$file_doc)) {
+  } else if (file_exists($synAbsolutePath.$file_doc)) {
     $ret = "      <li><a class=\"dl $classe\" href=\"$file_doc\">$label</a></li>\n";  
   } #else $ret = "<li>".$file." non trovato</li>\n";
   

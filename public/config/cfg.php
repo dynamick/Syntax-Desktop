@@ -2,7 +2,7 @@
 //ini_set('display_errors','On');
 
 //$dir = dirname(__FILE__) . '/';
-$ROOT = getenv('DOCUMENT_ROOT');
+$ROOT = $_SERVER['DOCUMENT_ROOT'];
 
 if (file_exists($ROOT.'/admin/config/config.php')) {
   require_once ($ROOT.'/admin/config/config.php');

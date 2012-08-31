@@ -1,7 +1,7 @@
 <?php
 function smarty_function_documents($params, &$smarty) {
   session_start();
-  global $db, $synPublicPath;
+  global $db, $synPublicPath, $synAbsolutePath;
   $cat       = $params['cat'];
   $userid    = $_COOKIE['web_user']['id'];
   $usergroup = $_COOKIE['web_user']['group'];
@@ -41,7 +41,7 @@ EOQ;
       do {
         $ext        = $arr['file'];
         $file       = "{$synPublicPath}/mat/documents/documents_file_id".$arr['id'].".".$ext;
-        $size       = @filesize($_SERVER['DOCUMENT_ROOT'].$file);
+        $size       = @filesize($synAbsolutePath.$file);
         $file_label = $ext.", ".byteConvert($size);
         $status     = $arr['status'];
 

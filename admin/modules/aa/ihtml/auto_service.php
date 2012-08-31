@@ -4,7 +4,8 @@ if(!isset($_REQUEST['cmd'])) $_REQUEST['cmd'] = '';
 
 # auto-load delle classi istanziate
 function __autoload($class) {
-  require_once getenv('DOCUMENT_ROOT').'/admin/modules/aa/classes/'.$class.'.php';
+  global $synAbsolutePath;
+  require_once $synAbsolutePath.'/admin/modules/aa/classes/'.$class.'.php';
 }
 
 
@@ -190,7 +191,7 @@ function __autoload($class) {
       echo "<script src=\"../../includes/js/tooltip/tooltip.js\"></script>";
       aaHeader($str["insertrow"],$str["insertrow_bis"]);
 
-      if(isset($_SESSION[$synTable.'_clone'])){
+      if(isset($_SESSION[$synTable.'_clone']) and trim($_SESSION[$synTable.'_clone'])!=""){
         $data = unserialize($_SESSION[$synTable.'_clone']);
         foreach($data as $k=>$v){
           if(is_array($v)){

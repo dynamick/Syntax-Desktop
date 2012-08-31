@@ -1,11 +1,10 @@
 <?
   session_id($_GET["session_id"]);
   include_once ("../../../config/cfg.php");
-  global $synAbsolutePath;
-  global $synPublicPath;
+  global $synAbsolutePath, $synPublicPath;
   
   function tags($media_id) {
-    global $db;
+    global $db, $synAbsolutePath, $synPublicPath;
     $qry="SELECT * FROM tags JOIN tagged ON tags.id=tagged.tag_id WHERE tagged.media_id = ".$media_id;
     $res=$db->Execute($qry);
     while ($arr=$res->FetchRow()) {
@@ -60,7 +59,7 @@
   $res=$db->Execute($qry);
   while ($arr=$res->FetchRow()) {
     $filename_parts = pathinfo($arr["filename"]);
-    list($width, $height, $type, $attr) = getimagesize(getenv("DOCUMENT_ROOT").$arr["path"]."/".$arr["filename"]);
+    list($width, $height, $type, $attr) = getimagesize($synAbsolutePath.$arr["path"]."/".$arr["filename"]);
     $ret .= "<div class=\"scProductListItem\" >";
     $ret .= cleverThumbTag($arr["path"]."/", $filename_parts["filename"], $filename_parts["extension"], "", $arr["caption"], 120, 0, false, " rel=\"".$arr["id"]."\" width=\"120\" height=\"120\" class=\"scProductListItemImg\" ");
     $ret .= "<table cellpadding=\"0\" cellspacing=\"0\" class=\"scProductListItemInfo\">";
