@@ -17,8 +17,8 @@ if (!file_exists(dirname(__FILE__).'/phpthumb.functions.php') || !include_once(d
 }
 ob_end_clean();
 
-$PHPTHUMB_CONFIG['document_root']                        = realpath((getenv('DOCUMENT_ROOT') && ereg('^'.preg_quote(realpath(getenv('DOCUMENT_ROOT'))), realpath(__FILE__))) ? getenv('DOCUMENT_ROOT') : str_replace(dirname(@$_SERVER['PHP_SELF']), '', str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__))));
-$PHPTHUMB_CONFIG['cache_directory']                      = getenv('DOCUMENT_ROOT').'/public/mat/thumb/';
+$PHPTHUMB_CONFIG['document_root']                        = realpath(($_SERVER["DOCUMENT_ROOT"] && ereg('^'.preg_quote(realpath($_SERVER["DOCUMENT_ROOT"])), realpath(__FILE__))) ? $_SERVER["DOCUMENT_ROOT"] : str_replace(dirname(@$_SERVER['PHP_SELF']), '', str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__))));
+$PHPTHUMB_CONFIG['cache_directory']                      = $_SERVER["DOCUMENT_ROOT"].'/public/mat/thumb/';
 $PHPTHUMB_CONFIG['cache_disable_warning']                = false;
 $PHPTHUMB_CONFIG['cache_directory_depth']                = 1;
 $PHPTHUMB_CONFIG['cache_maxage']                         = 86400 * 90;        // 90 days
@@ -70,7 +70,7 @@ $PHPTHUMB_CONFIG['nooffsitelink_watermark_src']          = '';
 $PHPTHUMB_CONFIG['nooffsitelink_text_message']           = 'Image taken from '.@$_SERVER['HTTP_HOST'];
 $PHPTHUMB_CONFIG['border_hexcolor']                      = '000000';
 $PHPTHUMB_CONFIG['background_hexcolor']                  = 'FFFFFF';
-$PHPTHUMB_CONFIG['ttf_directory']                        = getenv('DOCUMENT_ROOT').'/public/';
+$PHPTHUMB_CONFIG['ttf_directory']                        = $_SERVER["DOCUMENT_ROOT"].'/public/';
 $PHPTHUMB_CONFIG['mysql_query']                          = '';
 $PHPTHUMB_CONFIG['mysql_hostname']                       = 'localhost';
 $PHPTHUMB_CONFIG['mysql_username']                       = '';

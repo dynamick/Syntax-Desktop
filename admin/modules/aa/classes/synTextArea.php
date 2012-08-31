@@ -50,7 +50,6 @@ EOC;
 
     $_SESSION['KCFINDER']['disabled'] = false;
     $_SESSION['KCFINDER']['uploadURL'] = $synPublicPath.$mat.'/';
-  //$_SESSION['KCFINDER']['uploadDir'] = $synAbsolutePath.$synPublicPath.$mat.'/';
 
     if ($this->big==1) $contents = '</td></tr><tr><td colspan=2>'.$contents;
     return $contents;

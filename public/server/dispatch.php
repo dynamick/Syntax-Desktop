@@ -227,7 +227,7 @@ function _uploadDocument($id, $f, $stub, $mat) {
     $name != '' &&
     $file != ''
   ) {
-    move_uploaded_file($file, getenv('DOCUMENT_ROOT').$mat.$fname);
+    move_uploaded_file($file, $_SERVER['DOCUMENT_ROOT'].$mat.$fname);
     @chmod($mat.$fname,0777);
     return $ext;
   }

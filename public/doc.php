@@ -27,7 +27,7 @@ define (CAPTION_FIELD_NAME, "titolo");
 // Below this, edit at your own risk!
 // ----------------------------------
 
-include(getenv("DOCUMENT_ROOT")."/public/config/cfg.php");
+include($_SERVER["DOCUMENT_ROOT"]."/public/config/cfg.php");
 
 function dl_file($file){
   //First, see if the file exists
@@ -112,6 +112,6 @@ function getNiceFileName($filename,$ext) {
 }
 
 $file = $_SERVER["REQUEST_URI"];
-$fullpath = getenv("DOCUMENT_ROOT").$file;
+$fullpath = $_SERVER["DOCUMENT_ROOT"].$file;
 dl_file($fullpath);
 ?>
