@@ -29,7 +29,7 @@ function smarty_function_lang($params, &$smarty){
     $selected    = (intval($id)==intval($_SESSION["synSiteLang"])) ? ' class="selected"' : '';
     $getWithLang = $get."synSiteLang=$id";
 
-    $html .= "<li><a href=\"{$PHP_SELF}?{$getWithLang}\" title=\"{$lang}\"{$selected}>{$flag}{$lang}</a></li>\n";
+    $html .= "<li><a href=\"/?{$getWithLang}\" title=\"{$lang}\"{$selected}>{$flag}{$lang}</a></li>\n";
   }
   return $html;
 }

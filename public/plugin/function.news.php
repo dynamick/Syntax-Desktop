@@ -4,6 +4,7 @@ function smarty_function_news($params, &$smarty) {
 
   $newsPage = createPath(55);
   $req      = intval($_GET['id']); //$params['dettaglio']);
+  $langId   = $_SESSION['synSiteLang'];
   $lang     = $_SESSION['synSiteLangInitial'];
   $html     = '';
 
@@ -16,10 +17,11 @@ function smarty_function_news($params, &$smarty) {
     $qry = <<<EOQ
    SELECT n.id, n.date, n.image,
           t1.{$lang} AS titolo, t2.{$lang} AS testo
-     FROM news n
-LEFT JOIN aa_translation t1 ON n.title = t1.id
-LEFT JOIN aa_translation t2 ON n.text = t2.id
- ORDER BY n.`date` DESC
+    FROM news n
+      LEFT JOIN aa_translation t1 ON n.title = t1.id
+      LEFT JOIN aa_translation t2 ON n.text = t2.id
+    WHERE CONCAT('|', `visible`, '|') LIKE '%|{$langId}|%' 
+    ORDER BY n.`date` DESC
 EOQ;
 
     

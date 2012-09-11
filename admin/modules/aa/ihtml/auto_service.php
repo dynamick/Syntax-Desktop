@@ -315,7 +315,7 @@ function __autoload($class) {
     case CHANGE:
 
       $synPrimaryKey=urldecode(trim($_POST["synPrimaryKey"]));
-
+      
       $contenitore->uploadDocument();
       $upd = $contenitore->getUpdateString();
       $ok = true;
@@ -328,7 +328,7 @@ function __autoload($class) {
 
       #die('done');
       //controllo errori
-      if (!$ok) echo "<script>alert(\"$err\"); history.go(-1);</script>";
+      if (!$ok) echo "<script>alert(\"$ok\"); history.go(-1);</script>";
       //else echo 'ok';
 
       //set the next page
