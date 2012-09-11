@@ -238,14 +238,16 @@ function createMenu($id=0, $includeParent=false, $first_child=false) {
   $nodeArr=$smarty->synPageNode;
   foreach($nodeArr as $node) $idArr[]=$node["id"];
   $currPage=$smarty->tpl_vars[synPageId];
-  $qry="SELECT * FROM `aa_page` WHERE `visible`='1' AND `parent`=$id ORDER BY `order`";
+  $lang = $_SESSION["synSiteLang"];
+  
+  $qry="SELECT * FROM `aa_page` WHERE CONCAT('|', `visible`, '|') LIKE '%|{$lang}|%' AND `parent`=$id ORDER BY `order`";
   $res=$db->Execute($qry);
   $rows=$res->RecordCount();
   $count=1;
   while ($arr=$res->FetchRow()) {
     $title=translateSite($arr["title"]);
     if($first_child==true) {
-      $qry="SELECT * FROM `aa_page` WHERE `visible`='1' AND `parent`=".$arr["id"]." ORDER BY `order`";
+      $qry="SELECT * FROM `aa_page` WHERE CONCAT('|', `visible`, '|') LIKE '%|{$lang}|%' AND `parent`=".$arr["id"]." ORDER BY `order`";
       $res_c=$db->Execute($qry);
       if ($arr_c=$res_c->FetchRow()) {
         if (trim($arr_c['url'])==''){
@@ -293,7 +295,7 @@ function createMenu($id=0, $includeParent=false, $first_child=false) {
     $count++;
   }
   if($includeParent===true){
-    $qry="SELECT * FROM `aa_page` WHERE `visible`='1' AND `id`=$id";
+    $qry="SELECT * FROM `aa_page` WHERE CONCAT('|', `visible`, '|') LIKE '%|{$lang}|%' AND `id`=$id";
     $res=$db->Execute($qry);
     if($res!=false){
       $arr=$res->FetchRow();
@@ -340,9 +342,10 @@ function createSubmenuPrivate($id=0, $expand=false, $includeParent=false, $first
   $nodeArr=$smarty->synPageNode;
   foreach($nodeArr as $node) $idArr[]=$node["id"];
   $currPage=$smarty->tpl_vars[synPageId];
+  $lang = $_SESSION["synSiteLang"];
 
   if ($includeParent===true) {
-    $qry="SELECT * FROM `aa_page` WHERE `visible`='1' AND `id`=$id";
+    $qry="SELECT * FROM `aa_page` WHERE CONCAT('|', `visible`, '|') LIKE '%|{$lang}|%' AND `id`=$id";
     $res=$db->Execute($qry);
     if ($arr=$res->FetchRow()) {
       $title=translateSite($arr[$field]);
@@ -364,7 +367,7 @@ function createSubmenuPrivate($id=0, $expand=false, $includeParent=false, $first
     }
   }
 
-  $qry="SELECT * FROM `aa_page` WHERE `visible`='1' AND `parent`=$id ORDER BY `order`";
+  $qry="SELECT * FROM `aa_page` WHERE CONCAT('|', `visible`, '|') LIKE '%|{$lang}|%' AND `parent`=$id ORDER BY `order`";
   $res=$db->Execute($qry);
   $num_child=0;
   while($arr=$res->FetchRow()) {
