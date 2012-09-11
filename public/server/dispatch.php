@@ -141,6 +141,7 @@ EOBODY;
         $mail = new PHPMailer(true);
         $mail->From     = ($email) ? $email : $form_destinatario;
         $mail->FromName = ($nome || $cognome) ? "$nome $cognome" : $synWebsiteTitle;
+        $mail->CharSet  = 'UTF-8';
         $mail->Subject  = "Messaggio da {$synWebsiteTitle}";
         $mail->AltBody  = strip_tags($body);
         $mail->MsgHTML($body);
