@@ -8,15 +8,15 @@ function smarty_function_news_sidebar($params, &$smarty) {
   $html     = "";
 
   $qry = <<<EOQ
-    SELECT n.id, n.date, t.$lang AS titolo
+    SELECT n.id, n.date, t.{$lang} AS titolo
       FROM news n
       JOIN aa_translation t ON n.title=t.id
-    WHERE CONCAT('|', n.`visible`, '|') LIKE '%|{$langId}|%'       
-    ORDER BY n.`date` DESC
-    LIMIT 0,5
+     WHERE CONCAT('|', n.`visible`, '|') LIKE '%|{$langId}|%'       
+  ORDER BY n.`date` DESC
+     LIMIT 0,5
 EOQ;
   $res = $db->Execute($qry);
-  if ($res->RecordCount()==0) {
+  if (!is_object($res)) {
     $html = "<p>Nessuna news inserita.</p>\n";
   } else {
 

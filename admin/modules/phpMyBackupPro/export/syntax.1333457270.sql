@@ -1,5 +1,5 @@
 # MySQL dump of database 'syntax' on host 'localhost'
-# backup date and time: 09/11/12 15:51:44
+# backup date and time: 26/09/2012 13.12.37
 # built by phpMyBackupPro v.2.1
 # http://www.phpMyBackupPro.net
 
@@ -11,9 +11,9 @@ DROP TABLE IF EXISTS `aa_element`;
 
 CREATE TABLE `aa_element` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
   `classname` varchar(255) NOT NULL,
-  `name` varchar(255) NOT NULL DEFAULT '',
-  `order` int(8) NOT NULL DEFAULT '0',
+  `order` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `id` (`classname`)
 ) ENGINE=MyISAM AUTO_INCREMENT=29 DEFAULT CHARSET=utf8 COMMENT='Elementi che compongono un contenitore' AUTO_INCREMENT=29;
@@ -21,33 +21,33 @@ CREATE TABLE `aa_element` (
 
 ### data of table `aa_element` ###
 
-insert into `aa_element` values ('1', 'synKey', 'Key', '1');
-insert into `aa_element` values ('2', 'synText', 'TextField', '10');
-insert into `aa_element` values ('3', 'synTextNumeric', 'TextField Numeric', '15');
-insert into `aa_element` values ('4', 'synPassword', 'Password', '20');
-insert into `aa_element` values ('5', 'synInputfile', 'File', '30');
-insert into `aa_element` values ('6', 'synTextArea', 'TextArea', '40');
-insert into `aa_element` values ('8', 'synTextAreaSimple', 'Textarea simple with Countdown', '45');
-insert into `aa_element` values ('9', 'synCheck', 'CheckBox', '50');
-insert into `aa_element` values ('10', 'synUpload', 'Image Uploader', '55');
-insert into `aa_element` values ('11', 'synSelect', 'Select', '60');
-insert into `aa_element` values ('12', 'synSelectQry', 'Select Qry', '70');
-insert into `aa_element` values ('13', 'synSelectFile', 'Select File', '75');
-insert into `aa_element` values ('14', 'synDate', 'Date', '80');
-insert into `aa_element` values ('15', 'synDateTime', 'Date and Time', '90');
-insert into `aa_element` values ('16', 'synTree', 'Tree', '100');
-insert into `aa_element` values ('17', 'synTreeGroup', 'Tree Access Point', '102');
-insert into `aa_element` values ('18', 'synOwner', 'Owner', '108');
-insert into `aa_element` values ('19', 'synPreview', 'Preview', '110');
-insert into `aa_element` values ('20', 'synLastUpdate', 'Last Update', '120');
-insert into `aa_element` values ('21', 'synUserCreate', 'User Create', '130');
-insert into `aa_element` values ('22', 'synUserModified', 'User Modified', '140');
-insert into `aa_element` values ('23', 'synRadio', 'Radio buttons', '95');
-insert into `aa_element` values ('24', 'synSelectMultiCheck', 'Multi Checkbox', '98');
-insert into `aa_element` values ('25', 'synPictureTag', 'Choose Pictures from tags', '57');
-insert into `aa_element` values ('26', 'synMultiPictureTag', 'Choose multi Pictures from tags', '57');
-insert into `aa_element` values ('27', 'synTextDecimal', 'TextField Numeric Decimal', '150');
-insert into `aa_element` values ('28', 'synTextJoin', 'Text Multiple Join', '160');
+insert into `aa_element` values ('1', 'Key', 'synKey', '1');
+insert into `aa_element` values ('2', 'TextField', 'synText', '10');
+insert into `aa_element` values ('3', 'TextField Numeric', 'synTextNumeric', '15');
+insert into `aa_element` values ('4', 'Password', 'synPassword', '20');
+insert into `aa_element` values ('5', 'File', 'synInputfile', '30');
+insert into `aa_element` values ('6', 'TextArea', 'synTextArea', '40');
+insert into `aa_element` values ('8', 'Textarea simple with Countdown', 'synTextAreaSimple', '45');
+insert into `aa_element` values ('9', 'CheckBox', 'synCheck', '50');
+insert into `aa_element` values ('10', 'Image Uploader', 'synUpload', '55');
+insert into `aa_element` values ('11', 'Select', 'synSelect', '60');
+insert into `aa_element` values ('12', 'Select Qry', 'synSelectQry', '70');
+insert into `aa_element` values ('13', 'Select File', 'synSelectFile', '75');
+insert into `aa_element` values ('14', 'Date', 'synDate', '80');
+insert into `aa_element` values ('15', 'Date and Time', 'synDateTime', '90');
+insert into `aa_element` values ('16', 'Tree', 'synTree', '100');
+insert into `aa_element` values ('17', 'Tree Access Point', 'synTreeGroup', '102');
+insert into `aa_element` values ('18', 'Owner', 'synOwner', '108');
+insert into `aa_element` values ('19', 'Preview', 'synPreview', '110');
+insert into `aa_element` values ('20', 'Last Update', 'synLastUpdate', '120');
+insert into `aa_element` values ('21', 'User Create', 'synUserCreate', '130');
+insert into `aa_element` values ('22', 'User Modified', 'synUserModified', '140');
+insert into `aa_element` values ('23', 'Radio buttons', 'synRadio', '95');
+insert into `aa_element` values ('24', 'Multi Checkbox', 'synSelectMultiCheck', '98');
+insert into `aa_element` values ('25', 'Choose Pictures from tags', 'synPictureTag', '57');
+insert into `aa_element` values ('26', 'Choose multi Pictures from tags', 'synMultiPictureTag', '57');
+insert into `aa_element` values ('27', 'TextField Numeric Decimal', 'synTextDecimal', '150');
+insert into `aa_element` values ('28', 'Text Multiple Join', 'synTextJoin', '160');
 
 
 ### structure of table `aa_group_services` ###
@@ -69,7 +69,7 @@ CREATE TABLE `aa_group_services` (
   `icon` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `group` (`group`)
-) ENGINE=MyISAM AUTO_INCREMENT=232 DEFAULT CHARSET=utf8 AUTO_INCREMENT=232;
+) ENGINE=MyISAM AUTO_INCREMENT=233 DEFAULT CHARSET=utf8 AUTO_INCREMENT=233;
 
 
 ### data of table `aa_group_services` ###
@@ -132,6 +132,7 @@ insert into `aa_group_services` values ('228', '4030', '153', '625', '1', '0', '
 insert into `aa_group_services` values ('229', '1060', '152', '661', '1', '152', '', '1', '1', '1', '', '');
 insert into `aa_group_services` values ('230', '4030', '153', '761', '1', '0', '', '1', '1', '1', '/admin/modules/export/export_xml.php', 'accept.png');
 insert into `aa_group_services` values ('231', '4040', '153', '762', '1', '0', '', '', '', '', '/admin/modules/import/import_xml.php', 'wand.png');
+insert into `aa_group_services` values ('232', '3080', '18', '893', '1', '156', '', '1', '1', '1', '', '');
 
 
 ### structure of table `aa_groups` ###
@@ -259,7 +260,7 @@ CREATE TABLE `aa_services` (
   `initOrder` int(8) NOT NULL DEFAULT '0',
   `multilang` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=156 DEFAULT CHARSET=utf8 PACK_KEYS=1 AUTO_INCREMENT=156;
+) ENGINE=MyISAM AUTO_INCREMENT=157 DEFAULT CHARSET=utf8 PACK_KEYS=1 AUTO_INCREMENT=157;
 
 
 ### data of table `aa_services` ###
@@ -289,6 +290,7 @@ insert into `aa_services` values ('152', '639', '', 'images/service_icon/applica
 insert into `aa_services` values ('153', '664', '', 'images/service_icon/table_relationship.png', '665', '2', 'form_fields', '240', '1', '547', '1');
 insert into `aa_services` values ('154', '689', '', 'images/service_icon/application_double.png', '690', '0', 'form_fieldsets', '230', '1', '551', '1');
 insert into `aa_services` values ('155', '700', '', 'images/service_icon/chart_organisation.png', '701', '2', 'field_options', '250', '1', '557', '1');
+insert into `aa_services` values ('156', '883', '', 'images/service_icon/plugin.png', '884', '2', 'aa_element', '0', '1', '569', '');
 
 
 ### structure of table `aa_services_element` ###
@@ -315,7 +317,7 @@ CREATE TABLE `aa_services_element` (
   `ismultilang` varchar(1) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `container` (`container`)
-) ENGINE=MyISAM AUTO_INCREMENT=566 DEFAULT CHARSET=utf8 COMMENT='Containers' AUTO_INCREMENT=566;
+) ENGINE=MyISAM AUTO_INCREMENT=570 DEFAULT CHARSET=utf8 COMMENT='Containers' AUTO_INCREMENT=570;
 
 
 ### data of table `aa_services_element` ###
@@ -495,6 +497,10 @@ insert into `aa_services_element` values ('561', '116', 'metatitle', '2', '', ''
 insert into `aa_services_element` values ('562', '116', 'metadescription', '2', '', '', '', '824', '150', '825', '', '', '', '', '100', '', '1');
 insert into `aa_services_element` values ('563', '116', 'metakeywords', '2', '', '', '', '826', '175', '827', '', '', '', '', '110', '', '1');
 insert into `aa_services_element` values ('565', '127', 'visible', '24', '', '1', '', '881', '0', '882', '', 'SELECT id, lang FROM `aa_lang`', '', '', '50', '', '');
+insert into `aa_services_element` values ('566', '156', 'id', '1', '1', '', '', '885', '0', '886', '', '', '', '', '0', '', '');
+insert into `aa_services_element` values ('567', '156', 'classname', '13', '', '1', '', '887', '255', '888', '', '/admin/modules/aa/classes', '', '', '10', '', '');
+insert into `aa_services_element` values ('568', '156', 'name', '2', '', '1', '', '889', '255', '890', '', '', '', '', '20', '', '');
+insert into `aa_services_element` values ('569', '156', 'order', '3', '', '1', '', '891', '11', '892', '', '', '', '', '30', '', '');
 
 
 ### structure of table `aa_template` ###
@@ -531,7 +537,7 @@ CREATE TABLE `aa_translation` (
   `it` text NOT NULL,
   `en` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=883 DEFAULT CHARSET=utf8 AUTO_INCREMENT=883;
+) ENGINE=MyISAM AUTO_INCREMENT=894 DEFAULT CHARSET=utf8 AUTO_INCREMENT=894;
 
 
 ### data of table `aa_translation` ###
@@ -1294,6 +1300,17 @@ insert into `aa_translation` values ('874', '', '');
 insert into `aa_translation` values ('876', '', '');
 insert into `aa_translation` values ('877', '', '');
 insert into `aa_translation` values ('882', '', '');
+insert into `aa_translation` values ('883', 'Elementi', 'Elementi');
+insert into `aa_translation` values ('884', 'Elementi dei seriviz di Syntax', 'Elementi dei seriviz di Syntax');
+insert into `aa_translation` values ('885', 'Id', 'Id');
+insert into `aa_translation` values ('886', '', '');
+insert into `aa_translation` values ('887', 'Classname', 'Classname');
+insert into `aa_translation` values ('888', '', '');
+insert into `aa_translation` values ('889', 'Name', 'Name');
+insert into `aa_translation` values ('890', '', '');
+insert into `aa_translation` values ('891', 'Order', 'Order');
+insert into `aa_translation` values ('892', '', '');
+insert into `aa_translation` values ('893', 'Elementi', 'Elementi');
 
 
 ### structure of table `aa_users` ###
@@ -1308,12 +1325,12 @@ CREATE TABLE `aa_users` (
   `lang` int(255) NOT NULL,
   `owner` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=5027 DEFAULT CHARSET=utf8 AUTO_INCREMENT=5027;
+) ENGINE=MyISAM AUTO_INCREMENT=97907 DEFAULT CHARSET=utf8 AUTO_INCREMENT=97907;
 
 
 ### data of table `aa_users` ###
 
-insert into `aa_users` values ('5026', 'root', 'b8c10b35d456890686a95be899f2cfce', '1', '1', '1');
+insert into `aa_users` values ('979', 'root', '43f9783edf549d9e0fdb7d85998ab9f3', '1', '1', '1');
 
 
 ### structure of table `album` ###

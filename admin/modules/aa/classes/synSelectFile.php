@@ -88,6 +88,8 @@ class synSelectFile extends synElement {
     if ($null==true) $ret['']="[null]";
     if ($dir = @opendir($synAbsolutePath.$path)) {
       while (false !== ($file = readdir($dir))) {
+        // for Syntax Elements ... waiting for a better solution!
+        $file = str_replace('.php', '', $file); 
         if (
           $file!="." &&
           $file!=".." &&

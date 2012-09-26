@@ -2,7 +2,7 @@
 if(!isset($_SESSION)) session_start();
 if(!isset($_REQUEST['cmd'])) $_REQUEST['cmd'] = '';
 
-# auto-load delle classi istanziate
+// auto-load delle classi istanziate
 function __autoload($class) {
   global $synAbsolutePath;
   require_once $synAbsolutePath.'/admin/modules/aa/classes/'.$class.'.php';
@@ -10,13 +10,14 @@ function __autoload($class) {
 
 
   //definizione variabili globali
-  $synContainer = isset($_REQUEST["aa_service"]) ? $_REQUEST["aa_service"]: $_SESSION["aa_service"];
+  $synContainer = isset($_REQUEST["aa_service"]) ? $_REQUEST["aa_service"] : $_SESSION["aa_service"];
   $buttons=array();
 
   //creo il contenitore
-  if(!isset($db)) include_once ("../../../config/cfg.php"); //if RPC
+  if(!isset($db)) 
+    include_once ("../../../config/cfg.php"); //if RPC
   
-  $res = $db->Execute("SELECT * FROM aa_services WHERE id=$synContainer");
+  $res = $db->Execute("SELECT * FROM aa_services WHERE id='{$synContainer}'");
   $arr = $res->FetchRow();
   $synDb=str_replace(" ","_",strToLower($arr["syntable"]));
   $contenitore = synContainer::getInstance($synDb, $buttons, true, $arr["name"], $arr["description"],$arr["multilang"]);
@@ -24,7 +25,7 @@ function __autoload($class) {
   $dbSync=$arr["dbsync"];
 
   //ci aggiungo gli elementi
-  $res=$db->Execute("SELECT se.*,e.classname as classname FROM aa_services_element se INNER JOIN aa_element e ON se.type=e.id WHERE container=$synContainer order by `order`, `id`");
+  $res=$db->Execute("SELECT se.*, e.classname as classname FROM aa_services_element se INNER JOIN aa_element e ON se.type=e.id WHERE container='{$synContainer}' order by `order`, `id`");
   $count = 0;
   while ($arr=$res->FetchRow()) {
     $obj[$count] = new $arr["classname"]($arr["name"], $arr["value"], translateDesktop($arr["label"]), $arr["size"], translateDesktop($arr["help"]));
@@ -35,7 +36,9 @@ function __autoload($class) {
     if ($arr["iskey"]==1) $obj[$count]->setKey(true);
     if ($arr["ismultilang"]==1) $obj[$count]->setMultilang(true);
 
-    if ($arr["qry"]!="" and (!isset($_REQUEST[$arr['name']]) || $_REQUEST[$arr["name"]]=="")) {
+    if ( $arr["qry"]!='' 
+      && ( !isset($_REQUEST[$arr['name']]) || $_REQUEST[$arr["name"]] == '' )
+      ){
       $obj[$count]->setQry($arr["qry"]);
       $obj[$count]->setPath($arr["path"]);
     }
@@ -46,7 +49,8 @@ function __autoload($class) {
   }
 
   //sincronizzo il db con gli elementi aggiunti al contenitore
-  if ($dbSync=="1" && $_REQUEST["cmd"]=='') $contenitore->dbSynchronize();
+  if ($dbSync=="1" && $_REQUEST["cmd"]=='') 
+    $contenitore->dbSynchronize();
 
   //----------------------------------------------------------------------------
   //                               INIZIALIZZAZIONE
@@ -392,7 +396,7 @@ function __autoload($class) {
 
       $contenitore->execute_callbacks('insert');
       //execute insert qry
-      $qry = "INSERT INTO $synTable (".$contenitore->getFieldsString().") VALUES (".$contenitore->getInsertString().")";
+      $qry = "INSERT INTO {$synTable} (".$contenitore->getFieldsString().") VALUES (".$contenitore->getInsertString().")";
       $err = $res = $db->Execute($qry);
 
       //$insertId = $db->Insert_Id();
