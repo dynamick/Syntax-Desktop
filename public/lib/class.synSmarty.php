@@ -12,7 +12,9 @@ require('smarty/Smarty.class.php');
 |*/
 class synSmarty extends Smarty {
    var $synTemplate, $synPackagePath, $synPluginPath;
-
+   
+   public $synPageNode = array();
+   
    function synSmarty($pageId) {
       global $synAbsolutePath, $synPublicPath, $synPluginPath;
       // Class Constructor. These automatically get set with each new instance.
@@ -121,6 +123,7 @@ class synSmarty extends Smarty {
     global $db;
     static $synLevel=0;
     if(!$id) return;
+    
     $lng = $_SESSION['synSiteLangInitial'];
     $qry = <<<EOQ
     SELECT p.parent, t.$lng AS title
