@@ -1,3 +1,3 @@
-.db-error {margin:0.75em; padding:1em; border:4px double #f00; background-color:#fee; font-size:13px; line-height:20px;}
-.db-error h3 {margin:0.5em 0; font-size:20px;}
+.db-error {margin:0.75em; padding:1em; border:4px double #f00; background-color:#fee; font-size:13px; line-height:20px; color:#000; font-family:monospace;}
+.db-error h3 {margin:0.5em 0; font-size:20px; font-weight:bold; color:#f00;}
 .db-error label {margin:0.5em 0; display:block; font-weight:bold;}

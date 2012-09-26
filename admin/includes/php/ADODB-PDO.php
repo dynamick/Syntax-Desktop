@@ -106,13 +106,24 @@ class ADODB_PDO
   */
   public function Execute($sql, $vars=null)
   {
-    #$st = $this->DoQuery($sql, $vars);
-    $st = $this->_db->query($sql);
+    // method 1: query prepare mode
+    //$st = $this->DoQuery($sql, $vars); 
+
+    // method 2: simple query mode 
+    $st = $this->PDOquery($sql); 
+
     if($st){
       $st->setFetchMode($this->fetchmode);
       $this->affected_rows = $st->rowCount();
+      $cols = $st->columnCount();
+
+      // if query fails or is not a select, don't return any record
+      if ($this->affected_rows === 0 || $cols === 0)      
+        $st->closeCursor();
     }
-    return $st?new ADODB_PDO_ResultSet($st):false;
+    
+    // if records are found, return a recordset
+    return $st ? new ADODB_PDO_ResultSet($st) : false;
   }
 
 
@@ -200,7 +211,27 @@ class ADODB_PDO
     return $statement;
   }
 
+  /**
+  * PDOquery: Private helper function for Get*
+  * @param sql String query to execute
+  * @return PDOStatement object of results, or false on fail
+  * marco - 20120926
+  */
+  private function PDOquery($sql)
+  {
+    // set error mode to Exception. Comment this line (or set to PDO::ERRMODE_SILENT) to fail silently.
+    $this->_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    try {
+      $res = $this->_db->query($sql);
 
+    } catch (PDOException $e) {
+      $this->error = $e->getMessage();
+      $this->debug($sql);
+    }
+    return $res;
+  }
+  
+  
   /**
   * Will select, getting rows from $offset (1-based), for $nrows.
   * This simulates the MySQL "select * from table limit $offset,$nrows" , and
@@ -471,7 +502,7 @@ class ADODB_PDO_ResultSet
   {
     $this->_st = $st;
     $this->results = $st->fetchAll();
-    $this->rowcount = count($this->results);
+    $this->rowcount = $st->rowCount(); //count($this->results);
     $this->cursor = 0;
     $this->_currentPage = -1;
     $this->_atFirstPage = false;
@@ -500,6 +531,7 @@ class ADODB_PDO_ResultSet
      $next = $this->cursor++;
      if(!isset($this->results[$next]))
        $this->results[$next] = false;
+       $this->close();
   
      $this->fields = $this->results[$next];
      $this->EOF = ($this->cursor == $this->rowcount) ? 1 : 0;
@@ -555,6 +587,11 @@ class ADODB_PDO_ResultSet
     if ($status != false) $this->_atLastPage = $status;
     return $this->_atLastPage;
   }
+  
+  public function close()
+  {
+    return $this->_st->closeCursor();
+  }  
 }
 
 /**
