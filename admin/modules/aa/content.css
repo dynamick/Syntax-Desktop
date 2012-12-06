@@ -35,6 +35,7 @@ form label:hover {background-color:#fff; color:#06f;}
 form label input {vertical-align:sub;}
 form fieldset {margin-bottom:10px; border:1px solid #ccc;}
 form fieldset legend {font-weight:bold; color:#39f;}
+form .tree-select {font-family:monospace;}
 #formHeader {width:100%; height:41px; background-color:#F5F5F5; background-image:url(images/lineaHeader.gif); background-repeat:repeat-x; margin:0px; padding:4 0 0 25px; color:#3A3A3A; font-family:Arial; font-size:xx-small;}
 #formHeader h4 {color:white; font-family:Arial; font-size:medium; padding:0; margin:0;}
 #debug{font-size: xx-small; 	font-family: verdana,lucida,helvetica,arial,sans-serif;}

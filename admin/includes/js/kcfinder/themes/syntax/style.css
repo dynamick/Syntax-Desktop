@@ -65,8 +65,8 @@ tr.selected:hover > td {background-color:#5b9bda;color:#fff;}
 #loading {background-image:url('img/loading.gif'); font-weight:bold; margin-right:4px; padding:5px 50px;}
 #alert div.message,
 #dialog div.question {padding:0 0 0 40px;}
-#alert {background:url('img/alert.png') no-repeat 8px 29px;}
-#dialog div.question {background:url('img/confirm.png') no-repeat 0 0;}
+#alert {background:#EFEFDE url('img/alert.png') no-repeat 8px 29px;}
+#dialog div.question {background:#EFEFDE url('img/confirm.png') no-repeat 0 0;}
 #alert div.ok,
 #dialog div.buttons {padding-top:5px;text-align:right;}
 .menu {padding:2px;border:1px solid #8F8F73;background:#fff;opacity:0.95;border-radius:3px;}

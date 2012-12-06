@@ -8,84 +8,117 @@ class synTree extends synElement {
   var $caption;
 
   //constructor(name, value, label, size, help)
-  function synTree($n="", $v=null , $l=null, $s=11, $h="") {
-    if ($n=="") $n =  "text".date("his");
-    if ($l=="") $l =  ucfirst($n);
+  function synTree($n='', $v=null , $l=null, $s=11, $h='') {
+    if ($n=='')
+      $n = "text".date('his');
 
-    $this->type = "text";
-    $this->name  = $n;
-    if ($v==null) { global $$n; $this->value = $$n; } else $this->value = $v;
-    $this->label = $l;
-    $this->size  = $s;
-    $this->help  = $h;
-    $this->keyName="id";
-    $this->db    = " INT(".$this->size.") NOT NULL";
+    if ($l=='')
+      $l = ucfirst($n);
 
+    $this->type    = "text";
+    $this->name    = $n;
+    if ($v==null) {
+      global $$n;
+      $this->value = $$n;
+    } else {
+      $this->value = $v;
+    }
+    $this->label   = $l;
+    $this->size    = $s;
+    $this->help    = $h;
+    $this->keyName = "id";
+    $this->db      = " INT(".$this->size.") NOT NULL";
+    $this->hidden  = '';
     //$this->configuration();
   }
 
-  //private function
+
   function _html() {
-    global $db, $contenitore;
-    $hidden = $where = $p_old = $close = '';
-    $table=$this->container->table;
-    if ($this->chkTargetMultilang()) $this->multilang=1;
-
-    echo "<script>parent.closeTreeFrame();</script>";
-
-    if ($_SESSION["aa_service"]==4) {
-    
-      $stackKeys=array_keys($_SESSION["aa_joinStack"]);
-      $stackLastKey=$stackKeys[count($stackKeys)-1];
-      $value=$_SESSION["aa_joinStack"][$stackLastKey]["value"];
-    
-      $where = " WHERE `group`=".$value;
-    }
-    
-    //$res=$db->Execute("SELECT id,".$this->caption.",".$this->name." FROM $table $where ORDER BY ".$this->name);
-    $res=$db->Execute("SELECT * FROM $table $where ORDER BY ".$this->name);
-    $txt="<select name='".$this->name."'>";
-
-    $txt.="<option value=\"0\" selected=\"selected\">[No parent]</option>";
-    while ($arr = $res->FetchRow()) {
-      $k=$arr["id"];
-      $v=$arr[$this->caption];
-      $p=$arr[$this->name];
-      if (($p!=$p_old and trim($p)!="")) {
-        $q = "SELECT ".$this->caption." FROM $table WHERE id=".$p;
-        $resParent=$db->Execute($q);
-        $arrParent=$resParent->FetchRow($q);
-        if ($arrParent[0]==0 or $arrParent[0]=="") $p_name="[root]"; 
-        else $p_name=$this->translate($arrParent[0]);
-        $txt .= $close."<optgroup label=\"".$p_name."\">";
-        $close = "</optgroup>";
-      } 
+    if ($this->chkTargetMultilang())
+      $this->multilang = 1;
   
-      if (
-        !isset($_GET["synPrimaryKey"])
-        || ((trim(stripslashes(urldecode($_GET['synPrimaryKey']))) != "`id`='{$k}'") && ($_GET['synPrimaryKey'] != "`id`={$k}"))
+    echo "<script type=\"text/javascript\">parent.closeTreeFrame();</script>\n";
+
+    $txt  = "<select name=\"{$this->name}\" class=\"tree-select\">";
+    $txt .= "<option value=\"0\" selected=\"selected\">[No parent]</option>";
+    $txt .= $this->createOptionsArray();
+    $txt .= "</select>\n";
+
+    if ($this->hidden!='')
+      $txt = $this->hidden;
+
+    return $txt;
+  }
+
+
+  // returns selectable options
+  function createOptionsArray($parent='', $recursion=-1, $unselectable_children=0) {
+    global $db, $contenitore;
+
+    $recursion ++;
+    $ret       = '';
+    $myself    = 0;
+    $table     = $this->container->table;
+    $clause    = '';
+    $join      = '';
+    $joinfield = '';
+    $synPrimaryKey = preg_filter('/(\D+)/', '', $_GET['synPrimaryKey']);
+
+    if($this->multilang){
+      $joinfield = ", t.{$this->getlang()} AS {$this->caption} ";
+      $join = " LEFT JOIN aa_translation t ON {$this->caption} = t.id ";
+    }
+
+    if ($_SESSION['aa_service']==4) {
+      // menu services
+      $stackKeys = array_keys($_SESSION["aa_joinStack"]);
+      $stackLastKey = $stackKeys[count($stackKeys)-1];
+      $value = $_SESSION["aa_joinStack"][$stackLastKey]["value"];
+      $clause = " AND `group`={$value}";
+    }
+
+    $qry = "SELECT {$table}.* {$joinfield} FROM {$table}{$join} WHERE {$this->name}='{$parent}'{$clause}";
+    if (isset($_SESSION["aa_order"]))
+      $qry .= "ORDER BY {$table}.`{$_SESSION["aa_order"]}`";
+
+    $res  = $db->Execute($qry);
+    while($arr = $res->fetchrow()){
+      $indent = str_repeat('+-', $recursion);
+
+      if ($synPrimaryKey == $arr['id']){
+        $myself = 1; // found myself
+      } elseif (!$unselectable_children){
+        $myself = 0; // not me nor my children
+      }
+
+      // select current parent
+      $selected = ($this->value==$arr['id']) ? ' selected="selected"' : '';
+
+      // me and my children can't be selected
+      $disabled = ($unselectable_children || $myself) ? ' disabled="disabled"' : '';
+
+      // check ownership
+      if ( !isset($contenitore->ownerField)
+        || ($contenitore->ownerField == '')
+        || in_array($arr[$contenitore->ownerField], $_SESSION["synGroupChild"])
         ){
 
-        $selected = ($this->value==$k) ? ' selected="selected"' : '';
+        $ret .= "<option value=\"{$arr['id']}\"{$selected}{$disabled}>{$indent}{$arr[$this->caption]}</option>";
 
-        if ( !isset($contenitore->ownerField)
-          || ($contenitore->ownerField == '')
-          || in_array($arr[$contenitore->ownerField], $_SESSION["synGroupChild"])
-          ){
-          $txt .= "<option value=\"{$k}\"{$selected}> ".$this->translate($v)."</option>";
-        } else {
-          if ($this->value==$k)
-            $hidden .= "<input type=\"hidden\" value=\"".$k."\" name=\"".$this->name."\"> (".$this->translate($v).")";
+        if($children = $this->createOptionsArray($arr['id'], $recursion, ($unselectable_children+$myself))){
+          $ret .= $children; // add my children
         }
+      } else {
+        // user don't own the parent
+        if ($selected)
+          $this->hidden = "<input type=\"hidden\" value=\"{$arr['id']}\" name=\"{$this->name}\"> ({$arr[$this->caption]})";
       }
-      $p_old=$p;
     }
-    $txt.=$close;
-    $txt.="</select>\n";
-    if ($hidden!="") $txt=$hidden;  
-    return $txt; 
+    return $ret;
   }
-  
+
+
+
   //get the label of the element
   function getCell() {
     global $db;
@@ -93,14 +126,14 @@ class synTree extends synElement {
     $key=$container->getKeyString();
     $table=$container->table;
     if ($this->chkTargetMultilang()) $this->multilang=1;
-  
-      if (isset($this->value)) {  
+
+      if (isset($this->value)) {
         $res=$db->Execute("SELECT id,".$this->caption." FROM $table WHERE id=".$this->getValue());
         list ($k, $v) = $res->FetchRow();
         return $this->translate($v);
-      } else return "<span style='color:red'>x</span>";
+      } else return "<span style='color:red'>&times;</span>";
   }
-  
+
   //check if the target service is multilang
   function chkTargetMultilang() {
     global $db;
@@ -111,12 +144,12 @@ class synTree extends synElement {
     }
     return $ret;
   }
-  
+
   //set Caption field
   function setPath($key) {
     $this->caption=$key;
   }
-  
+
   //function for the auto-configuration
   function configuration($i="",$k=99) {
     global $synElmName,$synElmType,$synElmLabel,$synElmSize,$synElmHelp, $synElmPath;
@@ -133,7 +166,7 @@ class synTree extends synElement {
         if (isset($synElmPath[$i]) and $name==$synElmPath[$i]) $selected="selected=\"selected\""; else $selected="";
         $options.="<option value=\"".htmlentities($name)."\" $selected>".htmlentities($name)."</option>";
       }
-      $txt="<select name=\"synElmPath[$i]\">$options</select>"; 
+      $txt="<select name=\"synElmPath[$i]\">$options</select>";
       $this->configuration[5]="Caption Field: ".$txt;
     //}
 
@@ -148,7 +181,7 @@ class synTree extends synElement {
     else return $this->configuration[$k];
   }
 
-//-------------PRIVATE FUNCTIONS------------------------------------------------  
+//-------------PRIVATE FUNCTIONS------------------------------------------------
 
   function indent($x, $rec){
     $space = "  ";
@@ -162,14 +195,14 @@ class synTree extends synElement {
     $ret      = "";
     $tmpCount = 0;
     $newRec   = $recursion+2;
-    
+
     // calculate indentation based on recursion
     $_   = $this->indent(0, $newRec);
     $__  = $this->indent(1, $newRec);
 
     if ($this->chkTargetMultilang()) $this->multilang=1;
     if (strpos(strtolower($qry), "where")) $and=" AND "; else $and=" WHERE ";
-    if (strpos(strtolower($qry), "order")) 
+    if (strpos(strtolower($qry), "order"))
       $q=str_replace("ORDER", $and.$this->name."=$id ORDER",$qry);
     else $q=$qry.$and.$this->name."=$id";
     if ($startingQry!="") $q=$startingQry;
@@ -213,7 +246,7 @@ class synTree extends synElement {
     }
     return $ret;
   }
-  
+
   function getTree($qry,$startingQry) {
     global $db, $str;
 
@@ -229,5 +262,6 @@ class synTree extends synElement {
 
 <?php
   } // end of PRIVATE FUNCTIONS
+  
 } //end of class tree
 ?>

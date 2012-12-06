@@ -114,9 +114,8 @@
     </script>
   </head>
   <body>
-    <div id="content">
-<?php
-    if (file_exists($targetFileName))  include($targetFileName);
+    <div id="content"><?php
+    if (file_exists($targetFileName)) include($targetFileName);
     else echo "<p>Function not yet implemented...</p>";
 ?>
     </div>

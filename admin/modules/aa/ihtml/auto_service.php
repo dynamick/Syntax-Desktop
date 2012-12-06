@@ -1,13 +1,15 @@
 <?php
-if(!isset($_SESSION)) session_start();
-if(!isset($_REQUEST['cmd'])) $_REQUEST['cmd'] = '';
+
+if(!isset($_SESSION)) 
+  session_start();
+if(!isset($_REQUEST['cmd'])) 
+  $_REQUEST['cmd'] = '';
 
 // auto-load delle classi istanziate
 function __autoload($class) {
   global $synAbsolutePath;
   require_once $synAbsolutePath.'/admin/modules/aa/classes/'.$class.'.php';
 }
-
 
   //definizione variabili globali
   $synContainer = isset($_REQUEST["aa_service"]) ? $_REQUEST["aa_service"] : $_SESSION["aa_service"];
@@ -16,7 +18,7 @@ function __autoload($class) {
   //creo il contenitore
   if(!isset($db)) 
     include_once ("../../../config/cfg.php"); //if RPC
-  
+
   $res = $db->Execute("SELECT * FROM aa_services WHERE id='{$synContainer}'");
   $arr = $res->FetchRow();
   $synDb=str_replace(" ","_",strToLower($arr["syntable"]));
