@@ -135,7 +135,7 @@ class synTree extends synElement {
   }
 
   //check if the target service is multilang
-  function chkTargetMultilang() {
+  function chkTargetMultilang($val='') {
     global $db;
     $container=$this->container;
     $ret=false;

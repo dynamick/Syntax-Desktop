@@ -1,4 +1,4 @@
-<?
+<?php
 session_start();
 include_once ("../../config/cfg.php");
 include_once ("classes/synContainer.php");
@@ -66,8 +66,8 @@ if (isset($_GET["aa_group_services"])) {
     
   }
 */
-  $_SESSION["aa_service"]=extractService($_GET["aa_group_services"]);
-  $_SESSION["aa_group_services"]=$_GET["aa_group_services"];
+  $_SESSION["aa_service"] = extractService($_GET["aa_group_services"]);
+  $_SESSION["aa_group_services"] = $_GET["aa_group_services"];
   unset($_SESSION["aa_joinStack"]);
   //rimuovo le variabili di sessione che regolano il meccanismo dell'ordinamento
   unset($_SESSION["aa_order"]);  

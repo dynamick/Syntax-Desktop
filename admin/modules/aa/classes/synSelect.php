@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*************************************
 * class SELECT                       *
@@ -68,22 +68,22 @@ class synSelect extends synElement {
   }
   
   //check if the target service is multilang
-  function chkTargetMultilang() {
+  function chkTargetMultilang($val='') {
     global $db;
     $ret=false;
     // discover an "owner field" in the service
-    $table=preg_match("/from (\w+)[\s]?(.*)/i",$this->qry, $matches);
+    $table = preg_match("/from (\w+)[\s]?(.*)/i", $this->qry, $matches);
     $destTable=$matches[1];
-    if ($destTable!="") {
-      $qry1="SELECT * FROM aa_services WHERE syntable='".$destTable."'";
-      $res=$db->Execute($qry1);
-      $arr=$res->FetchRow();
-      $id=$arr["id"];
-      $qry2="SELECT * FROM aa_services_element WHERE container='".$id."' ORDER BY `order` LIMIT 1,1";
-      $res=$db->Execute($qry2);
+    if ($destTable != "") {
+      $qry1 = "SELECT * FROM aa_services WHERE syntable='{$destTable}'";
+      $res = $db->Execute($qry1);
+      $arr = $res->FetchRow();
+      $id = $arr["id"];
+      $qry2 = "SELECT * FROM aa_services_element WHERE container='{$id}' ORDER BY `order` LIMIT 1, 1";
+      $res = $db->Execute($qry2);
       //$arr=$res->FetchRow(); //salto il primo elemento: campo "value" dell'option
-      $arr=$res->FetchRow(); //prendo il secondo elemento: campo "innerHTML" dell'option
-      $ret=$arr["ismultilang"];
+      $arr = $res->FetchRow(); //prendo il secondo elemento: campo "innerHTML" dell'option
+      $ret = $arr["ismultilang"];
     }
     /*
     $qry="SELECT * FROM aa_services";
@@ -96,7 +96,9 @@ class synSelect extends synElement {
     return $ret;
   }
   
-  function setPath($path) {$this->path=$path;}
+  function setPath($path) {
+  	$this->path=$path;
+  }
 
   function setQry($qry) {
     $this->qry=$qry;

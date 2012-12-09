@@ -1,7 +1,7 @@
-<?
+<?php
 global $JSLIB_INC;
 if (!isset($JSLIB_INC)) {
-$JSLIB_INC=1;
+	$JSLIB_INC=1;
 /************************************************************************************************/
 /*  JJJJJJJ  SSSS   L      I BBBBB                                                              */
 /*     J    S    S  L      I B    B                                                             */
@@ -46,17 +46,17 @@ TODO:
 
 	function js_declarescript($script) {
 		/* inserisce un codice javascript */
-	?><? echo $script;?><?
+		echo $script;
 	}
 
 	function js_declare() {
 		/* inizia una dichiarazione jscript */
-	?><script><?
+		echo '<script type="text/javascript">';
 	}
 
 	function js_declare_c() {
 		/* chiude una dichiarazione jscript */
-	?></script><?
+		echo '</script>';
 	}
 
 	function js_declare_popup() {
@@ -85,11 +85,12 @@ TODO:
 	}
 	function js_alert($msg) {
 		/* lancia un messaggio in javascript */
-	?><script>alert("<? echo $msg;?>");</script><?
+		echo "<script>alert(\"{$msg}\");</script>";
 	}
+	
 	function js_location($location) {
 		/* riposiziona la pagina */
-	?><script>if (!window.top.synDebug) window.location="<? echo $location;?>";</script><?
+		echo "<script>if (!window.top.synDebug) window.location=\"{$location}\";</script>";
 	}
 }
 ?>
