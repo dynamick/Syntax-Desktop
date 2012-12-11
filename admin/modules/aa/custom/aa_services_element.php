@@ -1,4 +1,4 @@
-<?
+<?php
 global $cmd;
 
   //if the tree frame is loaded, tree frame must die

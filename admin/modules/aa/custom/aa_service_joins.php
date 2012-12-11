@@ -1,4 +1,4 @@
-<?
+<?php
 global $cmd;
 
   //get the current join from the join stack

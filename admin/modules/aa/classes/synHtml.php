@@ -1,4 +1,4 @@
-<?
+<?php
 /*************************************
 * class Html                         *
 * Create a class container           *
