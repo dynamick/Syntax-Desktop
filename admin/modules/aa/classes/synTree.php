@@ -62,7 +62,8 @@ class synTree extends synElement {
     $clause    = '';
     $join      = '';
     $joinfield = '';
-    $synPrimaryKey = preg_filter('/(\D+)/', '', $_GET['synPrimaryKey']);
+    //$synPrimaryKey = preg_filter('/(\D+)/', '', $_GET['synPrimaryKey']); //php 5.3+
+    $synPrimaryKey = preg_match('/(\D+)/', '', $_GET['synPrimaryKey']);
 
     if($this->multilang){
       $joinfield = ", t.{$this->getlang()} AS {$this->caption} ";
@@ -79,7 +80,7 @@ class synTree extends synElement {
 
     $qry = "SELECT {$table}.* {$joinfield} FROM {$table}{$join} WHERE {$this->name}='{$parent}'{$clause}";
     if (isset($_SESSION["aa_order"]))
-      $qry .= "ORDER BY {$table}.`{$_SESSION["aa_order"]}`";
+      $qry .= " ORDER BY {$table}.`{$_SESSION["aa_order"]}`";
 
     $res  = $db->Execute($qry);
     while($arr = $res->fetchrow()){
