@@ -3,7 +3,7 @@ function smarty_function_news($params, &$smarty) {
   global $db, $smarty, $synPublicPath;
 
   $newsPage = createPath(55);
-  $req      = intval($_GET['id']); //$params['dettaglio']);
+  $req      = isset($_GET['id']) ? intval($_GET['id']) : 0;
   $langId   = $_SESSION['synSiteLang'];
   $lang     = $_SESSION['synSiteLangInitial'];
   $html     = '';
@@ -13,6 +13,9 @@ function smarty_function_news($params, &$smarty) {
     $maxitems = 10;
     $imgw     = 100;
     $imgh     = 120;
+    
+    $cnt      = 0;
+    $list     = '';
     
     $qry = <<<EOQ
    SELECT n.id, n.date, n.image,

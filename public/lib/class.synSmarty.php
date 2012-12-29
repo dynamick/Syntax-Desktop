@@ -48,41 +48,53 @@ class synSmarty extends Smarty {
   // synPageXxxxx
 
   function getSynTemplate($pageId) {
-    global $db,$synPublicPath,$synAdminPath,$ADODB_FETCH_MODE;
-    $qry="SELECT aa_page.*,aa_template.id as template_id, aa_template.filename FROM aa_page,aa_template WHERE aa_page.id=\"$pageId\" and aa_page.template=aa_template.id";
+    global $db, $synPublicPath, $synAdminPath, $synAbsolutePath, $ADODB_FETCH_MODE;
+
+    $qry = <<<EOQRY
+    SELECT aa_page.*, 
+           aa_template.id as template_id, aa_template.filename 
+      FROM aa_page, 
+           aa_template 
+     WHERE aa_page.id = '{$pageId}'
+       AND aa_page.template = aa_template.id
+EOQRY;
 //echo $qry, '<br>';
     $ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;
-    $res=$db->Execute($qry);
+    $res = $db->Execute($qry);
     $ADODB_FETCH_MODE = ADODB_FETCH_BOTH;
 
-    if ($res->RecordCount()>0) $arr=$res->FetchRow();
-    else return false;
+    if ($res->RecordCount()>0) 
+      $arr = $res->FetchRow();
+    else 
+      return false;
 
-    $qry="SELECT id FROM aa_services WHERE syntable=\"aa_page\" ";
-    $res_temp=$db->Execute($qry);
-    $arr_temp=$res_temp->FetchRow();
-    $id_service=$arr_temp["id"];
+    $qry = "SELECT id FROM aa_services WHERE syntable='aa_page'";
+    $res_temp = $db->Execute($qry);
+    $arr_temp = $res_temp->FetchRow();
+    $id_service = $arr_temp["id"];
 
     foreach ($arr as $key => $value) {
-      $qry="SELECT * FROM aa_services_element WHERE container=\"$id_service\" AND name=\"$key\"";
-      $res_temp=$db->Execute($qry);
-      $arr_temp=$res_temp->FetchRow();
-      $is_multilanguage=($arr_temp["ismultilang"]==1)? true : false;
-      if($is_multilanguage) {
-        $value=translateSite($value);
+      $qry = "SELECT * FROM aa_services_element WHERE container='{$id_service}' AND name='{$key}'";
+      $res_temp = $db->Execute($qry);
+      $arr_temp = $res_temp->FetchRow();
+      if($arr_temp["ismultilang"]==1){
+        $value = translateSite($value);
         $this->assign("synPage".ucfirst($key)."_lang", "_".$_SESSION["synSiteLangInitial"]);
       }
       $this->assign("synPage".ucfirst($key), $value);
     }
+    
     $this->assign('synAdminPath', $synAdminPath);
     $this->assign('synPublicPath', $synPublicPath);
     $this->assign('synAbsolutePath', $synAbsolutePath);
 
     //se il template esiste su file allora prendo quello, altrimenti lo carico dal database
-    $filename=$arr["filename"];
-    $template_id=$arr["template_id"];
-    if ($filename!="") $template=$filename;
-    else $template="db:".$template_id;
+    $filename = $arr["filename"];
+    $template_id = $arr["template_id"];
+    if ($filename!="") 
+      $template = $filename;
+    else 
+      $template = "db:".$template_id;
 
     return $template;
   }
@@ -136,7 +148,7 @@ EOQ;
       $this->traverseTree($arr['parent']);
       $this->synPageNode[$synLevel]['id'] = $id;
       $this->synPageNode[$synLevel]['title'] = $arr['title'];
-//    $this->assign('synPageNode'.$synLevel, $id);
+      $this->assign('synPageNode'.$synLevel, $id);
       $this->assign('synPageLevel', $synLevel);
       $synLevel++;
     }

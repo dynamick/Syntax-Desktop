@@ -1,10 +1,13 @@
 <?php
 function smarty_function_form($params, &$smarty) {
   global $db, $smarty, $synWebsiteTitle, $synPublicPath;
-  session_start();
+  
+  if(!isset($_SESSION))
+    session_start();
  
   $req      = intval($params['id']);
-  if($req==0) return;
+  if($req==0) 
+    return;
 
   $lng      = $_SESSION['synSiteLangInitial'];
   $t        = multiTranslateDictionary(array('informativa', 'informativa_privacy', 'checkfields', 'campo_obbligatorio', 'email_non_valida', 'verifica_valore', 'cancella', 'invia', 'codice_sicurezza'));
@@ -16,7 +19,7 @@ function smarty_function_form($params, &$smarty) {
   $fieldset = getFormFieldset($form_id, $lng);  
   $fields   = getFormFields($form_id, $lng, $params);
   $form     = new formBuilder($form_id);
-  $session  = $_SESSION['form'.$form_id];
+  $session  = isset($_SESSION['form'.$form_id]) ? $_SESSION['form'.$form_id] : false;
   $html     = "<h2>{$form_var['titolo']}</h2>\n";
 
   if(isset($session) && $session['submitted']==true) {

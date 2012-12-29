@@ -1,14 +1,14 @@
 {include file="_header.tpl"}
-{include file="_left.tpl"}		
-{include file="_right.tpl"}		
-		
-		<div id="content">
-      {if $smarty.get.id eq ""}
+{include file="_left.tpl"}    
+{include file="_right.tpl"}   
+    
+    <div id="content">
+      {if !isset($smarty.get.id) || $smarty.get.id eq ""}
         <h2 id="Intro"><a href="#">{$synPageTitle}</a></h2>
         {$synPageText}
       {else}
         {news}
       {/if}
-		</div>
+    </div>
 
 {include file='_footer.tpl'}

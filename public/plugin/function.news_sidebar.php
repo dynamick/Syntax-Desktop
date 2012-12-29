@@ -5,7 +5,8 @@ function smarty_function_news_sidebar($params, &$smarty) {
   $newsPage = createPath(55);
   $langId   = $_SESSION["synSiteLang"];
   $lang     = $_SESSION["synSiteLangInitial"];
-  $html     = "";
+  $html     = '';
+  $list     = '';
 
   $qry = <<<EOQ
     SELECT n.id, n.date, t.{$lang} AS titolo

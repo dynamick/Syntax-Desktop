@@ -45,7 +45,8 @@ function sql2datetime($data) {
 
 function synSetLocale(){
   # setta LC_TIME in base alla lingua selezionata da Syntax
-  session_start();
+  if(!isset($_SESSION))
+    session_start();
   $lng = $_SESSION['synSiteLangInitial'];
   $double_string = strtolower($lng).'_'.strtoupper($lng);
   return setlocale(LC_TIME, $double_string.'@euro', $double_string, $lng, $double_string.'.UTF-8');

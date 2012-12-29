@@ -55,7 +55,7 @@ function smarty_function_account($params, &$smarty) {
 	
   # Automatic variable initialization
   $pagetitle          = $smarty->getTemplateVars('synPageTitle');  
-  $userid             = isset($_COOKIE["web_user"]["id"]) ? $_COOKIE["web_user"]["id"] : 0;
+  $userid             = $_COOKIE["web_user"]["id"];   
   $pageURL            = "http://".getenv("HTTP_HOST");
 
   #+-------------------------------------------------------------------------+
@@ -116,7 +116,7 @@ function smarty_function_account($params, &$smarty) {
   <p><?=$t['autenticato']?> <strong><?=$email?></strong></p>
   <p><a class="follow" href="/public/server/setcookies.php?act=logoff"><?=$t['effettua_logout']?></a></p>
 </div>
-<?php
+<?
       $contents = ob_get_contents();
     }
     ob_end_clean();
@@ -135,8 +135,6 @@ function smarty_function_account($params, &$smarty) {
       ){
       $u_res = $db->Execute("SELECT * FROM anagrafica_web WHERE id='{$userid}' AND attivo=1 LIMIT 0,1");
       $u_arr = $u_res->FetchRow();
-    } else {
-      $u_arr = array('name'=>'','surname'=>'','company'=>'','address'=>'','city'=>'','zip'=>'','province'=>'','email'=>'','id'=>'');
     }
     $tab = 0;
     ob_start();

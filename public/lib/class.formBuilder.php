@@ -103,6 +103,7 @@ class formBuilder {
   }
   
   public function addField($name, $label, $value='', $tipo='text', $obbligatorio=0, $formato='', $options=array(), $fieldset='') {
+    $class = '';
     switch($tipo){
       case 'textarea':
         $input = $this->textArea($name, $value, $obbligatorio);
@@ -154,7 +155,9 @@ class formBuilder {
     if($this->multipart==true){
       $enctype = ' enctype="multipart/form-data"';
       $this->addHiddenField('MAX_FILE_SIZE', $this->maxFileSize);
-    }
+    } else
+      $enctype = '';
+      
     $this->addHiddenField('action', 'submit');
     $this->addHiddenField('formId', $this->id);    
     
@@ -413,7 +416,7 @@ EOPD;
 
 
   private function insertButtons(){
-    $ret .= "  <div class=\"button-wrap\">\n";
+    $ret  = "  <div class=\"button-wrap\">\n";
     $ret .= implode(PHP_EOL, $this->hiddenfields);    
     $ret .= "    <button type=\"submit\" class=\"submit\" tabindex=\"{$this->tabIndex()}\"><span><b>{$this->submitLabel}</b></span></button>\n";
     $ret .= "    <button type=\"reset\" class=\"reset\"><span><b>{$this->resetLabel}</b></span></button>\n";

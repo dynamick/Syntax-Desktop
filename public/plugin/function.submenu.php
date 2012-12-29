@@ -8,23 +8,22 @@
 
 */
 
-function smarty_function_submenu($params,&$smarty){
+function smarty_function_submenu($params, &$smarty){
   global $db;
 
-  $nodeArr=$smarty->synPageNode;
-  $startPage=$params["startPage"];
-  $expand=$params["expand"];
-  $includeParent=$params["includeParent"];
-  $firstChild=$params["firstChild"];
+  $nodeArr       = $smarty->synPageNode;
+  $level         = ($nodeArr[1]['id']==9999) ? 2 : 1;  
   
-  if ($startPage=="") $startPage=$nodeArr[1]["id"];
-  if ($expand=="") $expand=false;
-  if ($includeParent=="") $includeParent=false;
-  if ($firstChild=="") $firstChild=false;
+  $startPage     = empty($params['startPage'])     ? $nodeArr[$level]['id'] : $params['startPage'];
+  $expand        = empty($params['expand'])        ? false : $params['expand'];
+  $includeParent = empty($params['includeParent']) ? false : $params['includeParent'];
+  $firstChild    = empty($params['firstChild'])    ? false : $params['firstChild'];
   
-  $ret .= "<h3>".$nodeArr[1]['title']."</h3>\n";
+ 
+  $ret  = "<h3>".$nodeArr[$level]['title']."</h3>\n";
   $ret .= createSubmenu($startPage, $expand, $includeParent, $firstChild, "title");
 
   return $ret;
 }
-?>
+
+// EOF

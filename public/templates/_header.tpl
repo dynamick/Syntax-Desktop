@@ -2,7 +2,7 @@
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="it" lang="it">
   <head profile="http://www.w3.org/2005/10/profile">
-    <title>{if $smarty.get.title}{$smarty.get.title|replace:'-':' '|capitalize} > {/if}{$synPageTitle|htmlspecialchars} > Syntax Demo Site</title>
+    <title>{if isset($smarty.get.title)}{$smarty.get.title|replace:'-':' '|capitalize} > {/if}{$synPageTitle|htmlspecialchars} > Syntax Demo Site</title>
     <meta http-equiv="content-type"         content="text/html; charset=utf-8" />
     <meta http-equiv="content-language"     content="{$smarty.session.synSiteLangInitial}" />
     <meta http-equiv="imagetoolbar"         content="no" />
@@ -10,11 +10,11 @@
     <meta http-equiv="content-script-type"  content="text/javascript" />
     <meta name="author"                     content="info@syntaxdesktop.com" />
     <meta name="robots"                     content="index, follow" />
-		<link type="image/vnd.microsoft.icon"   href="/favicon.ico" rel="shortcut icon" />
+    <link type="image/vnd.microsoft.icon"   href="/favicon.ico" rel="shortcut icon" />
     <link type="image/png"                  href="/favicon.png" rel="icon" />
     <link type="text/css"                   href="{$synPublicPath}/css/style.css" rel="stylesheet" media="screen" />
-		<script type="text/javascript"          src="{$synPublicPath}/js/monolith.php"></script>
-{if $smarty.get._next_page neq ''}
+    <script type="text/javascript"          src="{$synPublicPath}/js/monolith.php"></script>
+{if isset($smarty.get._next_page) && $smarty.get._next_page neq ''}
     <link rel="canonical"                   href="/{$smarty.get.parent}/" />
 {/if}
   </head>
@@ -37,7 +37,7 @@
         </ul>
 
         <ul id="servicemenu">
-{if $smarty.cookies.web_user eq ""}
+{if !isset($smarty.cookies.web_user) || $smarty.cookies.web_user eq ""}
           <li><a href="/account/">{trad label="login"}</a></li>
           <li><a href="/account/?action=reg">{trad label="registrati"}</a></li>
 {else}

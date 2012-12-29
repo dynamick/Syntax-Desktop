@@ -219,6 +219,7 @@ class ADODB_PDO
   */
   private function PDOquery($sql)
   {
+    $res = false;
     // set error mode to Exception. Comment this line (or set to PDO::ERRMODE_SILENT) to fail silently.
     $this->_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     try {
@@ -865,12 +866,12 @@ class synPager {
   public function renderPgr()
   {
     $pagine = explode('  ', $this->index);
-
+    $txt = 'Pagina: ';
     foreach($pagine as $v){
       $txt .= "$v ";
       //$txt .= str_replace('index', $layout, $v)." ";
     }
-    return "Pagina: ".$txt;
+    return $txt;
   }
 
 }

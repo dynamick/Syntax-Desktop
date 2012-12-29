@@ -20,11 +20,11 @@ function smarty_function_menu($params, &$smarty){
   global $db;
 
   $nodeArr       = $smarty->synPageNode;
-  $startPage     = ($params["startPage"])     ? $params["startPage"]     : $nodeArr[0]["id"];
-  $includeParent = ($params["includeParent"]) ? $params["includeParent"] : true;
-  $firstChild    = ($params["firstChild"])    ? $params["firstChild"]    : false;
+  $startPage     = isset($params["startPage"])     ? $params["startPage"]     : $nodeArr[0]["id"];
+  $includeParent = isset($params["includeParent"]) ? $params["includeParent"] : true;
+  $firstChild    = isset($params["firstChild"])    ? $params["firstChild"]    : false;
 
-  $ret=createMenu($startPage, $includeParent, $firstChild);
+  $ret = createMenu($startPage, $includeParent, $firstChild);
   return "<ul id=\"nav\">".$ret."</ul>";
 }
 ?>

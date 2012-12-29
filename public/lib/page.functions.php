@@ -89,12 +89,15 @@ function sanitizePath($txt) {
 
 function getDomain(){
   //estraggo il dominio
-  $domainArr=explode("\.",getenv("SERVER_NAME"));
-  $domain=$domainArr[(count($domainArr)-2)];
+  $domainArr = explode(".", getenv("SERVER_NAME"));
+  $domain = $domainArr[(count($domainArr)-2)];
+
   //estraggo il sottodominio
-  $subdomainArr=explode("\.",getenv("HTTP_X_FORWARDED_HOST"));
-  $subdomain=$subdomainArr[0];
-  if($subdomain=="www") $subdomain="";
+  $subdomainArr = explode(".", getenv("HTTP_X_FORWARDED_HOST"));
+  $subdomain = $subdomainArr[0];
+
+  if($subdomain=="www") 
+    $subdomain = '';
   //return
   return array(
     "domain" => $domain,
@@ -174,10 +177,12 @@ function getPageId() {
     array_pop($arr);
   } else {
     //directory
+    $filename = '';
   }
 
   //check if it's the homepage
-  if ($filename=="index.php" and count($arr)==1) return $homepageId;
+  if ($filename=="index.php" and count($arr)==1) 
+    return $homepageId;
 
   // search for page match
   $lastParent="";
@@ -236,9 +241,10 @@ function url_decode($s){
 function createMenu($id=0, $includeParent=false, $first_child=false) {
   global $db,$smarty,$synPublicPath;;
   $ret="";
-  $nodeArr=$smarty->synPageNode;
-  foreach($nodeArr as $node) $idArr[]=$node["id"];
-  $currPage=$smarty->tpl_vars[synPageId];
+  $nodeArr = $smarty->synPageNode;
+  foreach($nodeArr as $node) 
+    $idArr[] = $node["id"];
+  $currPage = $smarty->getTemplateVars('synPageId');
   $lang = $_SESSION["synSiteLang"];
   
   $qry="SELECT * FROM `aa_page` WHERE CONCAT('|', `visible`, '|') LIKE '%|{$lang}|%' AND `parent`=$id ORDER BY `order`";
@@ -289,12 +295,12 @@ function createMenu($id=0, $includeParent=false, $first_child=false) {
       $class="";
     }
 
-    if($count==$rows) $class_li.=" class=\"last\" ";
-    else $class_li.="";
+    $class_li = ($count==$rows) ? ' class="last"' : '';
 
-    $ret.="<li $class_li><a href=\"$link\" $event $class>".$title.$img."</a></li>";
-    $count++;
+    $ret .= "<li{$class_li}><a href=\"{$link}\" {$event}{$class}>{$title}{$img}</a></li>";
+    $count ++;
   }
+  
   if($includeParent===true){
     $qry="SELECT * FROM `aa_page` WHERE CONCAT('|', `visible`, '|') LIKE '%|{$lang}|%' AND `id`=$id";
     $res=$db->Execute($qry);
@@ -342,7 +348,7 @@ function createSubmenuPrivate($id=0, $expand=false, $includeParent=false, $first
   $count++;
   $nodeArr=$smarty->synPageNode;
   foreach($nodeArr as $node) $idArr[]=$node["id"];
-  $currPage=$smarty->tpl_vars[synPageId];
+  $currPage = $smarty->getTemplateVars('synPageId');
   $lang = $_SESSION["synSiteLang"];
 
   if ($includeParent===true) {
@@ -388,11 +394,15 @@ function createSubmenuPrivate($id=0, $expand=false, $includeParent=false, $first
     $num_child++;
 
     $link_my_child="";
-    $childret=createSubmenuPrivate($arr["id"], false, false, $first_child, $field, $count, $link_my_child);
-    if($first_child && $link_my_child!="") $link=$link_my_child;
-    if(($arr["id"]==$currPage)||((is_array($idArr))&&(in_array($arr["id"],$idArr))))
+    $childret = createSubmenuPrivate($arr["id"], false, false, $first_child, $field, $count, $link_my_child);
+
+    if($first_child && $link_my_child!="") 
+      $link = $link_my_child;
+
+    if(($arr["id"]==$currPage) || ((is_array($idArr)) && (in_array($arr["id"],$idArr))))
       $class=" class=\"active\" ";
-    else $class="";
+    else 
+      $class="";
 
     $ret.="<li>";
     //$ret.="<a href=\"$link\" $class>".$title."</a>";

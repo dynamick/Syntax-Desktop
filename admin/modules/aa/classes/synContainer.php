@@ -14,6 +14,7 @@ class synContainer {
   var $description;
   var $joins=array();
   var $multilang;
+  var $ownerField;
   var $hooks = array(); 
 
   //private var

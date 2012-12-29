@@ -58,7 +58,9 @@ function getLangArr() {
 //translate an element for the desktop. If err==true display the error message
 function translateSite($id, $err=false) {
   global $db;
-  session_start();
+
+  if(!isset($_SESSION))
+    session_start();
 
   if (isset($_GET["synSiteLang"])) setLang($_GET["synSiteLang"]);
   if ($_SESSION["synSiteLang"]=="" or !isset($_SESSION["synSiteLang"])){
@@ -85,7 +87,9 @@ function translateSite($id, $err=false) {
 
 function updateLang() {
   global $db, $synSiteLang;
-  session_start();
+
+  if(!isset($_SESSION))
+    session_start();
 
   if (isset($_GET['synSiteLang']))
     setLang(intval($_GET['synSiteLang']));
@@ -189,7 +193,9 @@ function translateDictionary($label){
   # traduzione singola
   # es. translateDictionary("home_title_realizzazioni")
   global $db;
-  session_start();
+
+  if(!isset($_SESSION))
+    session_start();
   $lng = $_SESSION['synSiteLangInitial'];
   $qry = "SELECT t.$lng AS value FROM dictionary v JOIN aa_translation t ON v.value=t.id WHERE v.label='".$label."'";
   $res = $db->Execute($qry);
@@ -206,7 +212,10 @@ function translateDictionary($label){
 function multiTranslateDictionary($label=array()){
   # traduzione multipla, ritorna un array
   global $db;
-  session_start();
+
+  if(!isset($_SESSION))
+    session_start();
+
   $lng = $_SESSION["synSiteLangInitial"];
   $ret = array();
   $qry = "SELECT v.label, t.$lng AS value FROM dictionary v JOIN aa_translation t ON v.value=t.id WHERE v.label='".implode("' OR v.label='", $label)."'";

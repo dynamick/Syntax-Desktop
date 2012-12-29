@@ -3,11 +3,15 @@ function smarty_function_slideshow($params, &$smarty){
   global $db;
 
   #$pag = $smarty->get_template_vars('synPageId');
-  $alb = "";
-  $nav = $params['nav'];
-  $gal = $params['gal'];
-  if ($alb!="") $where="WHERE album=$alb";
-  $qry = "SELECT * FROM photos $where ORDER BY `ordine`";
+  $alb   = '';
+  $nav   = $params['nav'];
+  $gal   = $params['gal'];
+  $where = ($alb!="") ? "WHERE album='{$alb}'" : '';
+  $thumb = '';
+  $html  = '';
+  $slide = '';
+  
+  $qry = "SELECT * FROM photos {$where} ORDER BY `ordine`";
   $res = $db->Execute($qry);
 
   while($arr = $res->FetchRow()){
@@ -27,16 +31,18 @@ function smarty_function_slideshow($params, &$smarty){
 
   if($nav==true){
     $class = ($gal) ? '' : 'small';
-    $html .= "<div id=\"gallery-out\" class=\"{$class}\">\n";
-    $html .= "  <div class=\"gallery-in\">\n";
-    $html .= "    <ul id=\"slide-nav\">\n";
-    $html .= $thumb;
-    $html .= "    </ul>\n";
-    $html .= "  </div>\n";
-    $html .= "</div>\n";
-
+    $html .= <<<EOHTML
+    <div id="gallery-out" class="{$class}">
+      <div class="gallery-in">
+        <ul id="slide-nav">
+        {$thumb}
+        </ul>
+      </div>
+    </div>
+EOHTML;
   }
 
   return $html;
 }
-?>
+
+// EOF

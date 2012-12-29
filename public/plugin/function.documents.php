@@ -1,26 +1,30 @@
 <?php
 function smarty_function_documents($params, &$smarty) {
-  session_start();
   global $db, $synPublicPath, $synAbsolutePath;
-  $cat       = $params['cat'];
-  $userid    = $_COOKIE['web_user']['id'];
-  $usergroup = $_COOKIE['web_user']['group'];
+  
+  if(!isset($_SESSION))
+    session_start();
+
+  $cat       = isset($params['cat']) ? $params['cat'] : '';
+  $userid    = isset($_COOKIE['web_user']['id']) ? $_COOKIE['web_user']['id'] : 0;
+  $usergroup = isset($_COOKIE['web_user']['group']) ? $_COOKIE['web_user']['group'] : 0;
   $lng       = $_SESSION['synSiteLangInitial'];
+  $html      = '';
 //echo $usergroup;
 
   if($usergroup != "") {
     $usergroup = explode('|', $usergroup);
-  } else $usergroup = array();
+  } else 
+    $usergroup = array();
 
   $qry = <<<EOQ
    SELECT d.id, d.file, d.date, d.status, d.enabled_groups, d.category_id,
-          t1.$lng AS title, t2.$lng AS category, t3.$lng AS description
+          t1.{$lng} AS title, t2.{$lng} AS category, t3.{$lng} AS description
      FROM documents d
-     JOIN categories c ON d.category_id=c.id
-LEFT JOIN aa_translation t1 ON d.title=t1.id
-LEFT JOIN aa_translation t2 ON c.category=t2.id
-LEFT JOIN aa_translation t3 ON d.description=t3.id
-    $where
+     JOIN categories      c ON d.category_id = c.id
+LEFT JOIN aa_translation t1 ON d.title = t1.id
+LEFT JOIN aa_translation t2 ON c.category = t2.id
+LEFT JOIN aa_translation t3 ON d.description = t3.id
  ORDER BY c.`order`, d.`date` DESC, d.title
 EOQ;
 
@@ -40,14 +44,15 @@ EOQ;
       $html .= "  <ul class=\"file\">\n";
       do {
         $ext        = $arr['file'];
-        $file       = "{$synPublicPath}/mat/documents/documents_file_id".$arr['id'].".".$ext;
+        $file       = "{$synPublicPath}/mat/documents/documents_file_id{$arr['id']}.{$ext}";
         $size       = @filesize($synAbsolutePath.$file);
         $file_label = $ext.", ".byteConvert($size);
         $status     = $arr['status'];
 
         if($arr['enabled_groups']){
           $owner = explode('|', $arr['enabled_groups']);
-        } else $owner = array();
+        } else 
+          $owner = array();
 
         switch(strtolower($ext)) {
           case "xlsx" :
@@ -74,8 +79,8 @@ EOQ;
             ($status == 'protected')
           ){
           # file pubblico o autorizzato per l'utente o visibile
-          $privato = ($status != 'public' ? " class=\"privato\"" : '');
-          $testo   = ($arr['abstract'] ? $arr['abstract']."<br />" : '');
+          $privato = ($status != 'public') ? ' class=\"privato"' : '';
+          //$testo   = ($arr['abstract']) ? $arr['abstract']."<br />" : '';
           if(
             ($status == 'public') ||
             ($status == 'protected' && $userid != '') ||
@@ -89,14 +94,17 @@ EOQ;
             $alert = ($userid ? $t['doc_no_abilitazione'] : $t['doc_riservato']);
             $link  = "javascript:alert('{$alert}')";
           }
-          $html .= "    <li>\n";
-          $html .= "      <a class=\"download\" href=\"{$link}\">\n";
-          $html .= "        <span class=\"icon {$class}\"></span>\n";            
-          $html .= "        <h4>{$arr['title']}</h4>\n";
-          $html .= "        <p>".$arr['description']."</p>\n";
-          $html .= "        <span>".$file_label."</span>\n";
-          $html .= "      </a>\n";
-          $html .= "    </li>\n";          
+
+          $html .= <<<EOHTML
+          <li>
+            <a class="download" href="{$link}">
+              <span class="icon {$class}"></span>
+              <h4>{$arr['title']}</h4>
+              <p>{$arr['description']}</p>
+              <span>{$file_label}</span>
+            </a>
+          </li>
+EOHTML;
         }
         $next = ($arr=$res->FetchRow());
       } while ($next && $catid==$arr['category_id']);
@@ -104,6 +112,7 @@ EOQ;
       $html .= "  </ul>\n";
       $html .= "</div>\n";
     } while ($next);
+    
   } else {
     $html .= $nav;
     $html .= "<h4>Nessun elemento disponibile.</h4>";
@@ -111,3 +120,5 @@ EOQ;
 
   return $html;
 }
+
+// EOF

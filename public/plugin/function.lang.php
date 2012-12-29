@@ -10,7 +10,9 @@
 */
 function smarty_function_lang($params, &$smarty){
   global $db, $synPublicPath, $synSiteLang;
-  $get = "";
+
+  $get = '';
+  $html = '';
 
   if (getenv("QUERY_STRING")!="") {
     $getArray=explode("&",getenv("QUERY_STRING"));
@@ -18,10 +20,10 @@ function smarty_function_lang($params, &$smarty){
       if (substr($v,0,11)!="synSiteLang") $get.=$v."&amp;";
   }
 
-  $attr=$params["attr"];
-  $qry="SELECT * FROM `aa_lang` WHERE `active`=1";
-  $res=$db->Execute($qry);
-  while ($arr=$res->FetchRow()) {
+  $attr = $params["attr"];
+  $qry = "SELECT * FROM `aa_lang` WHERE `active`=1";
+  $res = $db->Execute($qry);
+  while ($arr = $res->FetchRow()) {
     $id          = $arr["id"];
     $lang        = $arr["lang"];
     $initial     = $arr["initial"];
@@ -33,4 +35,5 @@ function smarty_function_lang($params, &$smarty){
   }
   return $html;
 }
-?>
+
+// EOF

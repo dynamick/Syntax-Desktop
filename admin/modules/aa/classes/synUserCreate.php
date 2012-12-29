@@ -43,7 +43,7 @@ class synUserCreate extends synElement {
   function getSQL() {
     $ret="";
     //if primaryKey is empty, then it's a new record: put the creator's id
-    if($_REQUEST[synPrimaryKey]=="") {
+    if($_REQUEST['synPrimaryKey']=="") {
       if ($this->getValue()!="") {
         $ret=$this->getSQLname()."=".fixEncoding($this->getSQLValue());
       }
