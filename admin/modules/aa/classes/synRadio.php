@@ -72,7 +72,7 @@ class synRadio extends synElement {
   }
   
   //check if the target service is multilang
-  function chkTargetMultilang() {
+  function chkTargetMultilang($qry='') {
     global $db;
     $ret=false;
     $qry="SELECT * FROM aa_services";

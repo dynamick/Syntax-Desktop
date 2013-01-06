@@ -190,8 +190,8 @@ EOHTML;
         $elm_id = $db->Insert_Id();
         echo $qry, '<br><br>';
 
-        if($element[initOrder]==1){
-          if($element[negative]==1){
+        if($element['initOrder']==1){
+          if($element['negative']==1){
             $newInitOrder = '-';
           }
           $newInitOrder .= $elm_id;

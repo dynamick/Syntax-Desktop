@@ -63,7 +63,7 @@ class synCheck extends synElement {
     global $synElmValue;
     $synHtml = new synHtml();
     //parent::configuration();
-    if ($synElmValue[$i]=="") $synElmValue[$i]="1";
+    if (!isset($synElmValue[$i]) || $synElmValue[$i]=="") $synElmValue[$i]="1";
     $this->configuration[8]="Valore: ".$synHtml->text(" name=\"synElmValue[$i]\" value=\"$synElmValue[$i]\"");
     if (!isset($synElmSize[$i]) or $synElmSize[$i]=="") $synElmSize[$i]=$this->size;
     $this->configuration[4]="Dimensione: ".$synHtml->text(" name=\"synElmSize[$i]\" value=\"$synElmSize[$i]\"");

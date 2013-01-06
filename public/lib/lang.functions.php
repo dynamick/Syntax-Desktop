@@ -6,7 +6,10 @@
 //set the current language
 function setLang($id, $initial='') {
   global $db;
-  session_start();
+  
+  if(!isset($_SESSION))
+    session_start();
+    
   $lang = intval($id);
 
   if ($lang == 0) {
@@ -249,7 +252,7 @@ function get_languages(){
       if(!in_array($language, $user_languages)){
         $user_languages[] = $language;
       }
-      if($langshort && !in_array($langshort, $user_languages)){
+      if(isset($langshort) && !in_array($langshort, $user_languages)){
         $user_languages[] = $langshort;
         unset($langshort);
       }

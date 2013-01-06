@@ -78,22 +78,24 @@ class synInputfile extends synElement {
     global ${$this->name}, ${$this->name."_name"};    // ${$this->name} = ${"surname"} = $surname
     $documentRoot = $synAbsolutePath."/";
     $mat          = $this->compileQry($this->translatePath($this->mat));
-    $name         = $_FILES[$this->name]["name"];
-    $pieces       = explode(".", $name);
-    $ext          = strtolower($this->translate(end($pieces)));
-    $filename     = $this->createFilename().".".$ext;
-    $file         = $_FILES[$this->name]["tmp_name"];
-    $original_filename = $_FILES[$this->name]["name"];
+    if(isset($_FILES[$this->name])){
+      $name         = $_FILES[$this->name]["name"];
+      $pieces       = explode(".", $name);
+      $ext          = strtolower($this->translate(end($pieces)));
+      $filename     = $this->createFilename().".".$ext;
+      $file         = $_FILES[$this->name]["tmp_name"];
+      $original_filename = $_FILES[$this->name]["name"];
 
-    if ($file!="none" AND $original_filename!="" AND $file!="") {
-      if (!file_exists($documentRoot.$mat)) mkdir($documentRoot.$mat);
-      $mime = str_replace(array('"', "'"), '', $_FILES[$this->name]["type"]);
+      if ($file!="none" AND $original_filename!="" AND $file!="") {
+        if (!file_exists($documentRoot.$mat)) mkdir($documentRoot.$mat);
+        $mime = str_replace(array('"', "'"), '', $_FILES[$this->name]["type"]);
 
-      if(synElement::isFileTypeAllowed($mime)){
-        move_uploaded_file($file,$documentRoot.$mat.$filename);
-        @chmod($documentRoot.$mat.$filename,0777);
-      } else {
-        echo "<script>alert('File type {$mime} not allowed');</script>";
+        if(synElement::isFileTypeAllowed($mime)){
+          move_uploaded_file($file,$documentRoot.$mat.$filename);
+          @chmod($documentRoot.$mat.$filename,0777);
+        } else {
+          echo "<script>alert('File type {$mime} not allowed');</script>";
+        }
       }
     }
   }
@@ -117,13 +119,16 @@ class synInputfile extends synElement {
 
   //get the values of element
   function getValue() {
-      if (isset($_FILES[$this->name]))$value=$_FILES[$this->name];
-      else $value=$this->value;
+      if (isset($_FILES[$this->name]))
+        $value = $_FILES[$this->name];
+      else 
+        $value = $this->value;
+      $ext = '';
       if (is_array($value)) {
         $ext = end(explode(".", $value["name"]));
       } else {
-        if ($ext=="") $ext=$_REQUEST[$this->name."_old"];
-        if ($ext=="") $ext=$value;
+        if ($ext=="") $ext = $_REQUEST[$this->name."_old"];
+        if ($ext=="") $ext = $value;
       }
       return strtolower($ext);
   }

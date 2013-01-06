@@ -1,4 +1,4 @@
-<?
+<?php
 //ALTER TABLE `` ADD `` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ;
 /*************************************
 * class TEXT                         *

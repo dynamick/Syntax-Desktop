@@ -113,7 +113,7 @@ function __autoload($class) {
       if ($type=="acceso") $qry.=" `".$field."` <> \"\" ";
       if ($type=="spento") $qry.=" `".$field."`=\"\" ";
 
-      session_register("aa_qry");
+      //session_register("aa_qry");
       $_SESSION['aa_qry'] = $qry;
     }
 

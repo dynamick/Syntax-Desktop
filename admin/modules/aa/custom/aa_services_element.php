@@ -221,7 +221,7 @@ global $cmd;
             }
           }
         </script>
-      <?
+      <?php
       
       $tmp_serviceDBSync = isset($_POST["synDbSync"]) ? isset($_POST["synDbSync"]) : "";
       $tmp_serviceTitleLang = isset($_SESSION["synServiceTitleLang"]) ? $_SESSION["synServiceTitleLang"] : "";
