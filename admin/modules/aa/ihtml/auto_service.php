@@ -396,17 +396,16 @@ function __autoload($class) {
       //upload available documents
       $contenitore->uploadDocument();
 
-      $contenitore->execute_callbacks('insert');
+      
       //execute insert qry
-      $qry = "INSERT INTO {$synTable} (".$contenitore->getFieldsString().") VALUES (".$contenitore->getInsertString().")";
+      $qry = "INSERT INTO `{$synTable}` (".$contenitore->getFieldsString().") VALUES (".$contenitore->getInsertString().")";
       $err = $res = $db->Execute($qry);
 
-      //$insertId = $db->Insert_Id();
       $insertId = $db->Insert_Id();
+      $contenitore->setKeyValue($insertId);
 
-      // DA IMPLEMENTARE
-      //$err = $err && $contenitore->execute_callbacks('insert');
-
+      $err = $err && $contenitore->execute_callbacks('insert');
+      
       //error check
       if (!$err) {
         //echo "<script>alert(\"$err\"); history.go(-1);</script>";
@@ -470,8 +469,9 @@ function __autoload($class) {
       $canDelete=$contenitore->isDeletable();
       if ($canDelete===true) {
         $contenitore->deleteDocument();
-        $res = $db->Execute("DELETE FROM $synTable WHERE $synPrimaryKey" );
         $contenitore->execute_callbacks('delete');
+        
+        $res = $db->Execute("DELETE FROM $synTable WHERE $synPrimaryKey" );
 
       } else {
         echo "<script>alert(\"".$canDelete."\");</script>";

@@ -596,7 +596,15 @@ class synContainer {
     return $ret;
   }
 
-
+  
+  function setKeyValue($id) {
+    foreach($this->element as $k=>$v) {
+      if ($this->element[$k]->isKey()) {
+        $this->element[$k]->setValue($id);
+      }
+    }
+  }
+  
   //return the list of keys for SQL queries (i.e.: id=34&key=house )
   function getKeyURLString() {
     $ret="";

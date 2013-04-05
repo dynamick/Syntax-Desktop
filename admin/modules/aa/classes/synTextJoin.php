@@ -83,7 +83,7 @@ class synTextJoin extends synElement {
     $field  = $this->name;
     $values = array();
 
-    $res = $db->execute("SELECT id_{$table2} AS k, $field FROM `{$table1}-{$table2}` WHERE `id_{$table1}`={$key}");
+    $res = $db->execute("SELECT id_{$table2} AS k, `{$field}` FROM `{$table1}-{$table2}` WHERE `id_{$table1}`={$key}");
     while($val=$res->fetchrow()){
       $values[$val['k']] = $val[$field]; 
     }
@@ -127,7 +127,7 @@ class synTextJoin extends synElement {
         $ret = $ret && $upd;
       } else {
         // nope, insert it      
-        $ins = $db->execute("INSERT INTO `{$table1}-{$table2}` (`id_{$table1}`, `id_{$table2}`, `{$field}`) VALUES ('$key','$k','$v')");
+        $ins = $db->execute("INSERT INTO `{$table1}-{$table2}` (`id_{$table1}`, `id_{$table2}`, `{$field}`) VALUES ('{$key}','{$k}','{$v}')");
         $ret = $ret && $ins;
       }
     }
@@ -138,16 +138,17 @@ class synTextJoin extends synElement {
 
   function insert() {
     global $db;
-//    $container = synContainer::getInstance(); 
     $container = $this->container;     
     $key    = $container->getKeyValue();
     $table1 = $container->table;
     $table2 = $this->table_join;
     $field  = $this->name;
+    $post   = $_POST[$field.'_value'];
     $values = array();
 
     $qry  = "INSERT INTO `{$table1}-{$table2}` (`id_{$table1}`, `id_{$table2}`, `{$field}`) VALUES ";
-    foreach($_POST[$this->table_join.'_value'] as $k=>$v){
+    //foreach($_POST[$this->table_join.'_value'] as $k=>$v){
+    foreach($post as $k=>$v){
       $values[] = "({$key}, {$k}, '{$v}')";      
     }
     $qry .= implode(', ', $values).";";
@@ -159,12 +160,13 @@ class synTextJoin extends synElement {
   function delete() {
     global $db;
 
-    $container = getContainer(); //$this->container;
+    $container = $this->container;    
     $key    = $container->getKeyValue();
     $table1 = $container->table;
     $table2 = $this->table_join;
 
-    $del = $db->execute("DELETE FROM `{$table1}-{$table2}` WHERE `id_{$table1}`=$key");
+    $qry = "DELETE FROM `{$table1}-{$table2}` WHERE `id_{$table1}`=$key";
+    $del = $db->execute($qry);
 
     return $del;
   }
