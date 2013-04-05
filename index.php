@@ -1,8 +1,15 @@
 <?php
-
   //this is an auto-generated page by SyntaxDesktop
-  session_start();
-  if(ini_get('date.timezone')=="") date_default_timezone_set('Europe/Rome');
+  error_reporting(E_ALL & ~(E_NOTICE | E_DEPRECATED | E_WARNING));
+  ini_set('display_errors', 1);  
+  
+  header('Content-type: text/html; charset=utf-8');
+  
+  if(!isset($_SESSION))
+    session_start();
+
+  if(ini_get('date.timezone')=="") 
+    date_default_timezone_set('Europe/Rome');
   
   if (file_exists(dirname(__FILE__)."/public/config/cfg.php")) {
     require("public/config/cfg.php");
@@ -10,8 +17,8 @@
     die("Is it the first time you run Syntax Desktop? If yes, run <a href=\"admin/setup.php\">setup</a>.");
   }
 
-  # Main
-  $pageId=getPageId();
+  // Main
+  $pageId = getPageId();
   updateLang();
   $smarty = new synSmarty($pageId);
   $smarty->display($smarty->synTemplate);

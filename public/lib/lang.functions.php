@@ -193,8 +193,8 @@ function l($value,$replace="") {
 
 
 function translateDictionary($label){
-  # traduzione singola
-  # es. translateDictionary("home_title_realizzazioni")
+  // traduzione singola
+  // es. translateDictionary("home_title_realizzazioni")
   global $db;
 
   if(!isset($_SESSION))
@@ -213,7 +213,7 @@ function translateDictionary($label){
 
 
 function multiTranslateDictionary($label=array()){
-  # traduzione multipla, ritorna un array
+  // traduzione multipla, ritorna un array
   global $db;
 
   if(!isset($_SESSION))
@@ -264,4 +264,4 @@ function get_languages(){
   return $user_languages;
 }
 
-?>
+// EOF lang.functions.php
