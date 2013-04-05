@@ -45,7 +45,7 @@ if (!isset($CONF['ftp_user'])) $CONF['ftp_user']='';
 //if (!isset($CONF['sql_host'])) $CONF['sql_host']='localhost';
 //if (!isset($CONF['sql_user'])) $CONF['sql_user']='root';
 //if (!isset($CONF['sql_db'])) $CONF['sql_db']='syntax';
-/if (!isset($CONF['ftp_passwd'])) $CONF['ftp_passwd']='';
+if (!isset($CONF['ftp_passwd'])) $CONF['ftp_passwd']='';
 if (!isset($CONF['ftp_path'])) $CONF['ftp_path']='';
 if (!isset($CONF['ftp_pasv'])) $CONF['ftp_pasv']='';
 if (!isset($CONF['ftp_port'])) $CONF['ftp_port']='';
@@ -149,7 +149,7 @@ foreach($CONF as $key=>$value) {
                 break;
             case "email": if ($value||$CONF['email_use']) {
                     foreach(explode(",",$value) as $value2) {
-                        if (!eregi("^\ *[äöüÄÖÜa-zA-Z0-9_-]+(\.[äöüÄÖÜa-zA-Z0-9\._-]+)*@([äöüÄÖÜa-zA-Z0-9-]+\.)+([a-z]{2,4})$",$value2)) {
+                        if (!eregi("^\ *[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½a-zA-Z0-9_-]+(\.[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½a-zA-Z0-9\._-]+)*@([ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½a-zA-Z0-9-]+\.)+([a-z]{2,4})$",$value2)) {
                             echo "<div class=\"red\">'".array_search($key,$conf)."' ".C_WRONG_TYPE."</div>\n";
                             break;
                         }
