@@ -36,13 +36,15 @@ class synTree extends synElement {
   function _html() {
     if ($this->chkTargetMultilang())
       $this->multilang = 1;
-  
+
     echo "<script type=\"text/javascript\">parent.closeTreeFrame();</script>\n";
 
-    $txt  = "<select name=\"{$this->name}\" class=\"tree-select\">";
-    $txt .= "<option value=\"0\" selected=\"selected\">[No parent]</option>";
+    $txt  = "<select name=\"{$this->name}\" class=\"tree-select\">\n";
+    $txt .= "  <option value=\"0\">[No parent]</option>\n";
     $txt .= $this->createOptionsArray();
     $txt .= "</select>\n";
+
+    //$txt .= "<pre>".htmlspecialchars($txt)."</pre>";
 
     if ($this->hidden!='')
       $txt = $this->hidden;
@@ -63,7 +65,7 @@ class synTree extends synElement {
     $join      = '';
     $joinfield = '';
     //$synPrimaryKey = preg_filter('/(\D+)/', '', $_GET['synPrimaryKey']); //php 5.3+
-    $synPrimaryKey = preg_match('/(\D+)/', '', $_GET['synPrimaryKey']);
+    $synPrimaryKey = preg_replace('/(\D+)/', '', $_GET['synPrimaryKey']);
 
     if($this->multilang){
       $joinfield = ", t.{$this->getlang()} AS {$this->caption} ";
@@ -81,6 +83,8 @@ class synTree extends synElement {
     $qry = "SELECT {$table}.* {$joinfield} FROM {$table}{$join} WHERE {$this->name}='{$parent}'{$clause}";
     if (isset($_SESSION["aa_order"]))
       $qry .= " ORDER BY {$table}.`{$_SESSION["aa_order"]}`";
+
+    //echo "query: {$qry}<br>";
 
     $res  = $db->Execute($qry);
     while($arr = $res->fetchrow()){
@@ -103,22 +107,20 @@ class synTree extends synElement {
         || ($contenitore->ownerField == '')
         || in_array($arr[$contenitore->ownerField], $_SESSION["synGroupChild"])
         ){
-
-        $ret .= "<option value=\"{$arr['id']}\"{$selected}{$disabled}>{$indent}{$arr[$this->caption]}</option>";
-
-        if($children = $this->createOptionsArray($arr['id'], $recursion, ($unselectable_children+$myself))){
-          $ret .= $children; // add my children
-        }
+        $ret .= "  <option value=\"{$arr['id']}\"{$selected}{$disabled}>{$indent}{$arr[$this->caption]}</option>\n";
       } else {
-        // user don't own the parent
+        // user didn't own the parent
         if ($selected)
           $this->hidden = "<input type=\"hidden\" value=\"{$arr['id']}\" name=\"{$this->name}\"> ({$arr[$this->caption]})";
       }
+
+      if($children = $this->createOptionsArray($arr['id'], $recursion, ($unselectable_children+$myself))){
+        $ret .= $children; // add my children
+      }
     }
     return $ret;
-  }
-
-
+  }  
+  
 
   //get the label of the element
   function getCell() {
