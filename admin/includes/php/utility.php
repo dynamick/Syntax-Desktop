@@ -116,6 +116,10 @@ function decode($str) {
 
 function lang($id,&$str) {
   global $db;
+  
+  if(!isset($_SESSION))
+    session_start();
+  
   $file = $ret = null;
 
   $a = $db->MetaTables();
@@ -123,13 +127,13 @@ function lang($id,&$str) {
   elseif (!isset($_SESSION['aa_CurrentLang']) || $_SESSION['aa_CurrentLang']=='') {
     if ($id!="") $lang=getUserLang();
     else {
-      $res=$db->Execute("select id from aa_lang");
+      $res=$db->Execute("SELECT id FROM aa_lang");
       list($lang)=$res->FetchRow();
     }
     setLang($lang);
   }
 
-  $qry="select initial from aa_lang JOIN aa_users ON aa_users.lang=aa_lang.id WHERE aa_users.id='".$_SESSION["synUser"]."'";
+  $qry="SELECT initial FROM aa_lang JOIN aa_users ON aa_users.lang = aa_lang.id WHERE aa_users.id='".$_SESSION["synUser"]."'";
   $res=$db->Execute($qry);
   list($sigla)=$res->FetchRow();
   $file=dirname(__FILE__)."/../../lang/$sigla/translation.php";
@@ -169,44 +173,56 @@ function lang($id,&$str) {
   }
 
 
-  //set the current language
+  // set the current language
   function setLang($id) {
     global $db;
-    $lang=intval($id);
-    if ($lang=="") return false;
+    
+    if(!isset($_SESSION))
+      session_start();
+      
+    $lang = intval($id);
+    if ($lang=='') 
+      return false;
 
     //get the current lang
-    $qry="SELECT initial FROM aa_lang WHERE id='".$lang."'";
-    $res=$db->Execute($qry);
+    $qry = "SELECT initial FROM aa_lang WHERE id='{$lang}'";
+    $res = $db->Execute($qry);
     if ($res->RecordCount()>0) {
-      $arr=$res->FetchRow();
-      $currlang=$arr[0];
+      $arr = $res->FetchRow();
+      $currlang = $arr[0];
 
-      $_SESSION["aa_CurrentLang"]=$lang;
-      $_SESSION["synSiteLang"]=$lang;
-      $_SESSION["aa_CurrentLangInitial"]=$currlang;
-      $_SESSION["synSiteLangInitial"]=$currlang;
+      $_SESSION['aa_CurrentLang'] = $lang;
+      $_SESSION['aa_CurrentLangInitial'] = $currlang;
+      
       setlocale(LC_ALL, strtolower($currlang)."_".strtoupper($currlang));
       return true;
+      
     } else {
       return false;
     }
   }
 
-/*
-  //return the language list (i.e. en,it,es)
-  function getLangList() {
+  
+  function getLangProperties($lang){
     global $db;
-    $res=$db->Execute("SELECT initial FROM aa_lang");
-    while (list($lang)=$res->FetchRow()) $ret.=$lang.", ";
-    return substr($ret,0,-2);
+    
+    $qry = "SELECT * FROM aa_lang WHERE id='{$lang}'";
+    $res = $db->Execute($qry);
+    if($arr = $res->fetchRow()){
+      return $arr;
+    }
+    return false;
   }
-*/
 
+  
   //translate an element. If err==true display the error message
   function translate($id,$err=false) {
     global $db;
+//echo "{$_SESSION['aa_CurrentLang']} - {$_SESSION['aa_CurrentLangInitial']}<hr>";
 
+    if(!isset($_SESSION))
+      session_start();
+      
     //if ($this->multilang==1 and $id!="") {
       $qry="SELECT * FROM aa_translation WHERE id='".addslashes($id)."'";
       $res=$db->Execute($qry);
@@ -214,9 +230,12 @@ function lang($id,&$str) {
         $ret=$id;
       } else {
         $arr=$res->FetchRow();
-        $ret=$arr[$_SESSION["synSiteLangInitial"]];
+        //$ret=$arr[$_SESSION["synSiteLangInitial"]];
+        $ret = $arr[$_SESSION['aa_CurrentLangInitial']];
         if ($ret=="" and $err===true) {
-          foreach ($arr as $mylang=>$mytrans) if (!is_numeric($mylang) and $mylang!="id" and $mytrans!="") $alt.="\n$mylang: ".substr(strip_tags($mytrans),0,10);
+          foreach ($arr as $mylang=>$mytrans) 
+            if (!is_numeric($mylang) and $mylang!="id" and $mytrans!="") 
+              $alt .= "\n$mylang: ".substr(strip_tags($mytrans),0,10);
           $ret="<span style='color: gray' title=\"".htmlentities("Other Translations:".$alt)."\">[no translation]</span>";
         }
       }
@@ -225,19 +244,28 @@ function lang($id,&$str) {
   }
 
   //translate an element for the desktop. If err==true display the error message
-  function translateDesktop($id,$err=false) {
+  function translateDesktop($id, $err=false) {
     global $db;
+    
+    if(!isset($_SESSION))
+      session_start();
+      
     //if ($this->multilang==1 and $id!="") {
       $qry="SELECT * FROM aa_translation WHERE id='".addslashes($id)."'";
       $res=$db->Execute($qry);
       if ($res->RecordCount()==0) {  //umm... the field is multilang but there isn't a row in the translation table...
         $ret=$id;
       } else {
-        $arr=$res->FetchRow();
-        $ret=$arr[getUserLang()];
-        if ($ret=="" and $err===true) {
-          foreach ($arr as $mylang=>$mytrans) if (!is_numeric($mylang) and $mylang!="id" and $mytrans!="") $alt.="\n$mylang: ".substr(strip_tags($mytrans),0,10);
-          $ret="<span style='color: gray' title=\"".htmlentities("Other Translations:".$alt)."\">[no translation]</span>";
+        $arr = $res->FetchRow();
+        $ret = $arr[getUserLang()];
+        if ($ret=="" && $err===true) {
+          foreach ($arr AS $mylang => $mytrans) 
+            if ( !is_numeric($mylang) 
+              && $mylang != 'id' 
+              && $mytrans != ''
+              ) $alt .= "\n{$mylang}: ".substr(strip_tags($mytrans),0,10);
+            
+          $ret = "<span style='color: gray' title=\"".htmlentities("Other Translations:".$alt)."\">[no translation]</span>";
         }
       }
     //} else $ret=$id;
@@ -245,7 +273,7 @@ function lang($id,&$str) {
   }
 
   //translate an element for the desktop. If err==true display the error message
-  function translateSite($id,$err=false) {
+  function translateSite_DEPRECATED($id,$err=false) {
     global $db;
       if (isset($_GET["synSiteLang"])) setLang($_GET["synSiteLang"]);
       if ($_SESSION["synSiteLang"]=="" or !isset($_SESSION["synSiteLang"])){
@@ -309,7 +337,7 @@ function lang($id,&$str) {
 
 
   //insert a row in the translation table and return the id of the new row
-  function insertTranslation($value) {
+  function insertTranslation_DEPRECATED($value) {
     global $db;
     $languagelist = "";
     $valuelist = "";
@@ -331,24 +359,77 @@ function lang($id,&$str) {
     $ret=$db->Insert_ID();
     return $ret;
   }
+  
+  
+  //insert a row in the translation table and return the id of the new row
+  function insertTranslation($value) {
+    global $db;
+
+    $languages = getLangList();
+    $fields = implode('`, `', $languages);
+
+    if (!is_array($value)) {
+      $temp_val = array();
+      foreach($languages as $l){
+        $temp_val[$l] = addslashes($value);
+      }
+      $value = $temp_val;
+    }
+    $values = implode("', '", $value);
+
+    //insert the row in each language
+    $qry = "INSERT INTO aa_translation (`{$fields}`) VALUES ('{$values}')";
+    $res = $db->Execute($qry);
+
+    return $db->Insert_ID();
+  }  
+  
 
   //update the translation table by changing a the $id row with $value
-  function updateTranslation(&$id,$value) {
-    global $db,$aa_CurrentLang;
+  function updateTranslation(&$id, $value) {
+    global $db;
 
-    $qry="SELECT * FROM aa_translation WHERE id='".addslashes($id)."'";
-    $res=$db->Execute($qry);
-    if ($res->RecordCount()==0) $id=insertTranslation($value);
-    else {
-      $res=$db->Execute("SELECT initial FROM aa_lang WHERE id='".$aa_CurrentLang."'");
-      list($lang)=$res->FetchRow();
-
-      $qry="UPDATE aa_translation SET $lang='".addslashes($value)."' WHERE id='$id'";
-      $res=$db->Execute($qry);
+    $lang = $_SESSION['aa_CurrentLangInitial'];
+    
+    $qry = "SELECT * FROM aa_translation WHERE id='".addslashes($id)."'";
+    $res = $db->Execute($qry);
+    if ($res->RecordCount()==0) {
+      $id = insertTranslation($value);
+    } else {
+    
+      if(is_array($value)){
+        //get the list of languages
+        $languages = getLangList();
+        $values = array();
+        foreach($value as $k => $v){
+          $values[] = "`{$languages[$k]}` = '".addslashes($v)."'";
+        }        
+        $sqlvalues = implode(', ', $values);
+        $qry = "UPDATE aa_translation SET {$sqlvalues} WHERE id='{$id}'";
+        
+      } else {
+        $qry = "UPDATE aa_translation SET {$lang} = '".addslashes($value)."' WHERE id='{$id}'";
+      }
+      $res = $db->Execute($qry);
     }
     return true;
   }
 
+  //return the language list
+  function getLangList() {
+    global $db;
+
+    $languages = array();
+
+    //get the list of languages
+    $res = $db->Execute('SELECT initial FROM aa_lang');
+    while($arr = $res->FetchRow()) {
+      $languages[] = $arr['initial'];
+    }
+    
+    return $languages;
+  }
+  
 
 /******************************************************************************
 ***                                  PAGE FUNCTIONS
@@ -423,6 +504,131 @@ function getSqlTree($id) {
   }
   return $ret;
 }
+
+/*
+function createSlugs($parent_id = '', $parent_slug = ''){
+  global $db, $aa_CurrentLang;
+
+  $qry = "SELECT * FROM aa_page WHERE parent='{$parent_id}' ORDER BY `order`";
+  $res = $db->Execute($qry);
+  while ($arr = $res->FetchRow()) {
+    extract($arr);
+
+    
+    if(empty($parent_id)){
+      $lang = getLangProperties($aa_CurrentLang);
+      if($lang['default']==''){
+        $title = $lang['initial'].'/';
+      } else {
+        $title = '';
+      }
+    } else {
+      $title = translateSite($title);
+    }
+    $myslug = createSlug($parent_slug, $title, $slug);
+
+      //$qry = "UPDATE aa_page SET slug = '{$myslug}' WHERE id='{$id}'";
+      //$db->execute($qry);
+    
+    createSlugs($id, $myslug);
+  }
+  
+}
+
+
+function createSlug($parent, $str, $idtrans){
+  global $db, $aa_CurrentLang;
+  // insert into aa_translation
+  
+  $slug = $parent.sanitizePath($str).'/';
+  
+  updateTranslation($idtrans, $slug);
+  
+  return $slug;
+}
+*/
+
+// aggiorna lo slug nella lingua corrente
+function updateSlug($id){
+  global $db;
+
+  $qry = "SELECT `title`, `parent`, `slug` FROM `aa_page` WHERE `id` = '{$id}'";
+  $res = $db->Execute($qry);
+  if ($arr = $res->FetchRow()) {
+    extract($arr);  
+    
+    if(empty($parent)){
+      $title = '';
+    } else {
+      $title = translate($title);
+    }
+
+    $new_slug = createUniqueSlug($title);
+
+    updateTranslation($slug, $new_slug);
+    return true;
+  }
+  return false;
+}
+
+
+// inserisce gli slug per tutte le lingue
+function insertSlug($id){
+  global $db;
+  $languages = getLangList();
+  
+  $qry = "SELECT p.title, p.parent, p.slug, t.* FROM `aa_page` p LEFT JOIN aa_translation t ON p.title = t.id WHERE p.id = '{$id}'";
+  $res = $db->Execute($qry);
+  if ($arr = $res->FetchRow()) {
+    $slug_array = array();
+    foreach($languages AS $l){
+      if(empty($arr['parent'])){
+        $title = '';
+      } else {
+        $title = translate($arr[$l]);
+      }
+      $slug_array[] = createUniqueSlug($title);
+    }
+    
+    updateTranslation($arr['slug'], $slug_array);
+    return true;
+  }
+  return false;
+}
+
+
+
+
+function createUniqueSlug($slug){
+  global $db;
+  // verifica univocità
+  
+  if(!isset($_SESSION))
+    session_start();
+  $aa_CurrentLangInitial = $_SESSION['aa_CurrentLangInitial'];
+    
+  $slug = sanitizePath($slug);
+  
+  $existing = array();
+  $qry = "SELECT t.{$aa_CurrentLangInitial} AS existing FROM `aa_page` p LEFT JOIN `aa_translation` t ON p.slug = t.id";
+
+  $res = $db->Execute($qry);
+  while($arr = $res->fetchrow()){
+    $existing[] = $arr['existing'];
+  }
+
+  if($slug!='' && in_array($slug, $existing)){
+    $count = 0;
+    $slug_tmp = $slug;
+    while (in_array($slug, $existing)){
+      $count ++;
+      $slug = $slug_tmp.$count;
+    }
+  }
+//echo 'slug: ', $slug, '</br>'; die();
+  return $slug;
+}
+
 
 /******************************************************************************
 ***                              IMAGE MANIPULATION

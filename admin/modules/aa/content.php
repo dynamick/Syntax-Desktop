@@ -1,35 +1,41 @@
 <?php
   session_start();
- /***************************************************************************
-  *                             MULTILANG SECTION
-  ***************************************************************************/
-  if (isset($_GET["synSetLang"])) $_SESSION["aa_CurrentLang"]=$_GET["synSetLang"];
-  elseif ($_SESSION["aa_CurrentLang"]=="") $_SESSION["aa_CurrentLang"]=1;
-
   include_once ("../../config/cfg.php");
   include_once ("../../includes/php/jslib.inc");
   include_once ("classes/synContainer.php");
   include_once ("classes/synHtml.php");
 
-  define ("MODIFY", "modifyrow");
-  define ("CHANGE", "changerow");
-  define ("ADD", "addrow");
-  define ("INSERT", "insertrow");
-  define ("DELETE", "delrow");
-  define ("MULTIPLEDELETE", "delmultrow");
-  define ("RPC", "rpcfunction");
+ /***************************************************************************
+  *                             MULTILANG SECTION
+  ***************************************************************************/
+  if (isset($_GET["synSetLang"]))
+    setLang($_GET["synSetLang"]);
+  elseif ($_SESSION["aa_CurrentLang"]=="") 
+    setLang(1);
+  
+  
+  define ('MODIFY',         'modifyrow');
+  define ('CHANGE',         'changerow');
+  define ('ADD',            'addrow');
+  define ('INSERT',         'insertrow');
+  define ('DELETE',         'delrow');
+  define ('MULTIPLEDELETE', 'delmultrow');
+  define ('RPC',            'rpcfunction');
 
   //check the authorization
   auth();
 
   //load the lang settings
-  lang(getSynUser(),$str);
+  lang(getSynUser(), $str);
 
-  if (isset($_REQUEST["aa_service"])) $_SESSION["aa_service"]=$_REQUEST["aa_service"];
+  if (isset($_REQUEST["aa_service"])) 
+    $_SESSION["aa_service"] = $_REQUEST["aa_service"];
 
   $res = $db->Execute("SELECT path FROM aa_services WHERE id=".$_SESSION["aa_service"]);
   list($targetFileName)=$res->FetchRow();
-  if ($targetFileName=="") $targetFileName="ihtml/auto_service.php";
+  
+  if ($targetFileName=="") 
+    $targetFileName = "ihtml/auto_service.php";
 
  /***************************************************************************
   *                             MULTILANG SECTION

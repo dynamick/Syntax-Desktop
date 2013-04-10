@@ -2,8 +2,9 @@
 /******************************************************************************
 ***                                  PAGE FUNCTIONS
 *******************************************************************************/
-
-function createPath($id) {
+$languages = null;
+/*
+function createPath_DEPRECATED($id) {
   global $db;
   if($id==0) return;
   
@@ -25,26 +26,39 @@ EOQ;
   endif;
   return $path.sanitizePath($a['title'])."/";
 }
+*/
 
+function createPath($id) {
+  global $db, $languages;
+  
+  if($id == 0) return;
+  //echo 'languages: <pre>', var_dump($languages), '</pre>';
+  
+  $lng = $_SESSION['synSiteLangInitial'];
+  $qry = <<<EOQ
+  
+     SELECT p.parent, t.{$lng} AS slug
+       FROM aa_page p
+  LEFT JOIN aa_translation t ON p.slug = t.id
+      WHERE p.id = '{$id}'
+      
+EOQ;
+  //echo $qry.'<br>';
+  $res = $db->Execute($qry);
+  if($arr = $res->FetchRow()){
+    $path = '';
+    if (intval($arr['parent'])>0) :
+      $path = createPath($arr['parent']);
+    else :
+      $path = ($lng == $languages['default']) ? '' : '/'.$lng;
+    endif;
+    $path .= $arr['slug'];
+  }
 
-function createlink($id) {
-  global $db;
-
-  // compute the path
-  $qry="SELECT * FROM scheda WHERE id='$id'";
-  $res=$db->Execute($qry);
-  $arr=$res->FetchRow();
-  $section=$arr["sezione"];
-  $path=createPath($section);
-
-  // add the ending filename
-  $tit=sanitizePath($arr["titolo"]);
-  $titolo.="_".$id.".html";
-
-  // merge path + filename
-  $ret=$path."/".$titolo;
-  return $ret;
+  return $path.'/';
 }
+
+
 
 
 function sanitizePath($txt) {
@@ -114,20 +128,115 @@ function getDomain(){
 
 
 function getHomepageId() {
-  global $db,$synEntryPoint;
+  global $db, $synEntryPoint;
+  
   extract(getDomain());
-  if (is_array($synEntryPoint) && array_key_exists($domain,$synEntryPoint)) $ret = $synEntryPoint[$domain]; 
-  else {
-    $qry="SELECT * FROM aa_page WHERE parent=0";
-    $res=$db->Execute($qry);
-    $arr=$res->FetchRow();
-    $ret = $arr["id"];
+  if ( is_array($synEntryPoint) 
+    && array_key_exists($domain, $synEntryPoint)
+    ){
+    $ret = $synEntryPoint[$domain]; 
+  } else {
+    $qry = "SELECT id FROM aa_page WHERE parent = 0 LIMIT 0,1";
+    $res = $db->Execute($qry);
+    $arr = $res->FetchRow();
+    $ret = $arr['id'];
   }
   return $ret;
 }
 
+/*
+function get404pageId() {
+  global $db;
+  
+  $qry = "SELECT p.id FROM aa_page p LEFT JOIN aa_translation t ON p.title = t.id WHERE  LIMIT 0,1";
+  $res = $db->Execute($qry);
+  $arr = $res->FetchRow();
+  $ret = $arr['id'];
+  return $ret;
+}*/
+
 
 function getPageId() {
+  global $db, $synEntryPoint, $languages;
+  
+  $pattern = '/^\/([a-z]{2}\/)*'        // matcha la lingua, es. 'en/' - opzionale
+           . '([a-z0-9-_\+]+\/)*'       // matcha 'pagina/' - opzionale (cattura solo l'ultima occorrenza)
+           . '(?:[a-z0-9-_~\.\/]+)?$/'; // matcha 'cat~1/', 'pippo~1.html' o 'index.html' - opzionale (NON viene catturato)
+  
+  if (isset($_SERVER['HTTP_X_REWRITE_URL'])) {
+    $_SERVER['REQUEST_URI'] = $_SERVER['HTTP_X_REWRITE_URL'];
+  }  
+  
+  if(isset($_GET['spt'])) {
+    $uri = DIRECTORY_SEPARATOR . $_GET['spt'];
+  } else {
+    $uri = $_SERVER['REQUEST_URI'];
+  }
+  
+  $ret = false;
+  //die('uri: '.$uri);
+  
+  if(empty($languages))
+    $languages  = getLangList();
+  
+  if(empty($uri) || $uri == 'index.php' || $uri == '/'){
+    // URI vuoto
+    $ret = getHomepageId();
+    $lang = $languages['default'];
+    
+  } else {
+    if (preg_match($pattern, $uri, $matches)) {
+      //echo 'matches: <pre>', print_r($matches), '</pre>';
+
+      $lang = rtrim($matches[1], '/');
+      if ( empty($lang) // lingua non passata
+        || !in_array($lang, $languages['list']) // lingua non disponibile
+        ){
+        // utilizzo lingua di default
+        $lang = $languages['default'];
+      }
+      $required_slug = rtrim($matches[2], '/');
+      if(empty($required_slug)){
+        // slug vuoto
+        $ret = getHomepageId();
+      } else {
+        // cerco lo slug
+        $qry = "SELECT p.id FROM aa_page p LEFT JOIN aa_translation t ON p.slug = t.id WHERE t.{$lang} = '{$required_slug}'";
+        // echo $qry.'<br>';
+        $res = $db->execute($qry);
+        if($arr = $res->fetchRow()){
+          $ret = $arr['id'];
+        } else {
+          // slug non trovato
+          echo 'slug non trovato<br>';
+        }
+      }
+    } else {
+      // uri non valido? 404
+      echo 'uri non valido<br>';
+    }
+  }
+
+  // imposto la lingua selezionata
+  $lang_id = array_search($lang, $languages['list']);  
+  setLang($lang_id, $lang);
+  
+  // TODO: recuperare dinamicamente la 404?
+  if($ret === false){
+    // $ret = '404';
+    // pagina non trovata o non valida
+    header('HTTP/1.0 404 Not Found');
+    header('Location: /404/');
+    exit;
+  }
+
+  return $ret;
+}
+
+
+
+/*
+function getPageId_DEPRECATED() {
   global $db,$synEntryPoint;
 
   if (isset($_SERVER['HTTP_X_REWRITE_URL'])) {
@@ -228,7 +337,7 @@ function getPageId() {
 
   return $found;
 }
-
+*/
 
 function pageParent($id) {
   global $db;
@@ -317,6 +426,7 @@ function createMenu($id=0, $includeParent=false, $first_child=false) {
 
       if (translateSite($arr["url"])=="") {
         $link = createPath($arr["id"]);
+          //die('429: '.$link.'|');
         $event = " rel=\"\" ";
         $img = "";
       } else {

@@ -105,7 +105,7 @@ function buildTree($table, $titleField='title', $where, $order, $parentPage, $re
 
   while ($arr=$res->fetchRow()) {
     $id = $arr[0];
-    $title = (is_numeric($arr[1])) ? translateSite($arr[1]) : $arr[1];
+    $title = (is_numeric($arr[1])) ? translate($arr[1]) : $arr[1];
     if($parentPage){
       # collection
       if($niceurl){

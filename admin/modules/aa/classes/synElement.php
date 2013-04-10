@@ -252,7 +252,12 @@ class synElement {
 
   //translate an element. If err==true display the error message
   function getLang() {
-    global $db,$aa_CurrentLang;
+    global $db; //,$aa_CurrentLang;
+
+    if(!isset($_SESSION))
+      session_start();
+    $aa_CurrentLang = $_SESSION['aa_CurrentLang'];
+    
     $qry="SELECT * FROM aa_lang WHERE id='".$aa_CurrentLang."'";
     $res=$db->Execute($qry);
     $arr=$res->FetchRow();

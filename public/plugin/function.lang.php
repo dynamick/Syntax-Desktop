@@ -5,34 +5,42 @@
 * File:     function.lang.php
 * Type:     function
 * Name:     lang
-* Purpose:  outputs the list of flag and set the current language
+* Purpose:  outputs the list of flags and sets the current language
 * -------------------------------------------------------------
 */
 function smarty_function_lang($params, &$smarty){
-  global $db, $synPublicPath, $synSiteLang;
+  global $db, $synPublicPath;
 
-  $get = '';
+  if (!isset($_SESSION))
+    session_start();
+
+  $session_lang = (isset($_SESSION['synSiteLang'])) 
+                  ? intval($_SESSION['synSiteLang']) 
+                  : 0;
   $html = '';
+  $list = '';
 
-  if (getenv("QUERY_STRING")!="") {
-    $getArray=explode("&",getenv("QUERY_STRING"));
-    foreach ($getArray as $k=>$v)
-      if (substr($v,0,11)!="synSiteLang") $get.=$v."&amp;";
-  }
-
-  $attr = $params["attr"];
-  $qry = "SELECT * FROM `aa_lang` WHERE `active`=1";
+  $qry = 'SELECT * FROM `aa_lang` WHERE `active`="1"';
   $res = $db->Execute($qry);
-  while ($arr = $res->FetchRow()) {
-    $id          = $arr["id"];
-    $lang        = $arr["lang"];
-    $initial     = $arr["initial"];
-    $flag        = "<img src=\"{$synPublicPath}/mat/flag/".$arr['flag']."\" alt=\"{$lang}\" /> ";
-    $selected    = (intval($id)==intval($_SESSION["synSiteLang"])) ? ' class="selected"' : '';
-    $getWithLang = $get."synSiteLang=$id";
 
-    $html .= "<li><a href=\"/?{$getWithLang}\" title=\"{$lang}\"{$selected}>{$flag}{$lang}</a></li>\n";
+  while ($arr = $res->FetchRow()) {
+    extract($arr);
+    $flag     = "<img src=\"{$synPublicPath}/mat/flag/{$flag}\" alt=\"{$lang}\" />";
+    $selected = ($id == $session_lang) 
+                ? ' class="active"' 
+                : null;
+    $path     = ($default == '1')      
+                ? null 
+                : $initial.'/';
+    $list    .= "  <li><a href=\"/{$path}\" title=\"{$lang}\"{$selected}>{$flag} {$lang}</a></li>\n";
   }
+  
+  if (!empty($list)) {
+    $html = "<ul class=\"lang-selector\">\n"
+          . $list
+          . "</ul>\n";
+  }
+  
   return $html;
 }
 

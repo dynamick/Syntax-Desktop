@@ -628,82 +628,111 @@ class synContainer {
     return urlencode(substr($ret, 0, strlen($ret)-4));
   }
 
+  
   function dbSynchronize() {
     global $db;
     $primaryKeys = $resetKey = null;
     //$db->debug=true;
-    $tables=$db->MetaTables('TABLES');
-    if (!in_array($this->table,$tables))
-      $db->Execute("CREATE TABLE IF NOT EXISTS `".$this->table."` (`tobedropped` VARCHAR(1) NOT NULL) DEFAULT CHARSET=utf8 ENGINE=INNODB;");
+    $tables = $db->MetaTables('TABLES');
+    if (!in_array($this->table, $tables))
+      $db->Execute("CREATE TABLE IF NOT EXISTS `{$this->table}` (`tobedropped` VARCHAR(1) NOT NULL) DEFAULT CHARSET=utf8 ENGINE=INNODB;");
 
-    $columns=$db->MetaColumns($this->table);
-    foreach($this->element as $k=>$v) {
+    $columns = $db->MetaColumns($this->table);
+    foreach($this->element as $k => $v) {
       //Add fields to table
-      if ($this->element[$k]->name!="") {
-        $name=$this->element[$k]->name;
-        $fieldType=$this->element[$k]->db;
-        #$fieldSpecificType=split(" ",$fieldType);
-        #$fieldSpecificType=split("\(",$fieldSpecificType[1]);
-        $fieldSpecificType=explode(' ',$fieldType);
-        $fieldSpecificType=explode('\(',$fieldSpecificType[1]);
-        $fieldSpecificType=strtolower($fieldSpecificType[0]);
-        if (!isset($columns[strtoupper($name)]) or $columns[strtoupper($name)]->name!=$name) {
-          if (!($v->isJoin())) {
-            if ($v->isKey()) $dboption=" PRIMARY KEY"; else $dboption="";
-              $qry = "ALTER TABLE `".$this->table."` ADD `".$name."` ".$fieldType.$dboption;
-              $db->Execute($qry);
+      if ($this->element[$k]->name != '') {
+        $name              = $this->element[$k]->name;
+        $fieldType         = $this->element[$k]->db;
+        $fieldSpecificType = explode(' ', $fieldType);
+        $fieldSpecificType = explode('\(', $fieldSpecificType[1]);
+        $fieldSpecificType = strtolower($fieldSpecificType[0]);
+        
+        if ( !isset($columns[strtoupper($name)]) 
+          || $columns[strtoupper($name)]->name!=$name
+          ){
+          if (!$v->isJoin()) {
+            $dboption = $v->isKey() ? ' PRIMARY KEY' : '';
+
+            $qry = "ALTER TABLE `{$this->table}` ADD `{$name}` {$fieldType}{$dboption}";
+            $db->Execute($qry);
           }
         }
       }
-
+      
       //Modify fields
       $colSize = 0;
       $colType = 0;
       if (isset($columns[strtoupper($name)])) {
-        $colSize=$columns[strtoupper($name)]->max_length;
-        $colType=$columns[strtoupper($name)]->type;
+        $colSize = $columns[strtoupper($name)]->max_length;
+        $colType = $columns[strtoupper($name)]->type;
+
+        if($colType=='varchar') // tacon?
+          $colSize = $colSize/3;
+          
+        $colTypeSize = ($colType == 'text') ? $colType : "{$colType}({$colSize})";
       }
-      if ($colSize==-1) $colSize=$colType;
-      //echo $fieldSpecificType." - ".$colType."<br>";
-      if (stristr($fieldType,$colSize)==false or $fieldSpecificType!=$colType) {
-        //if ($v->isKey()) $dboption=" PRIMARY KEY"; else $dboption="";
-//        $db->Execute("ALTER TABLE `".$this->table."` CHANGE `".$name."` `".$name."` ".$fieldType);
-        if (($v->isJoin())) {
+      if ($colSize==-1) 
+        $colSize = $colType;
+
+      if ( $fieldSpecificType != $colTypeSize ){
+            //if ($v->isKey()) $dboption=" PRIMARY KEY"; else $dboption="";
+            //$db->Execute("ALTER TABLE `".$this->table."` CHANGE `".$name."` `".$name."` ".$fieldType);
+            
+        if ($v->isJoin()) {
           $table2 = $v->table_join;
-          $qry = "CREATE TABLE IF NOT EXISTS `".$this->table."-".$table2."` (`id_".$this->table."` int(11) NOT NULL, `id_".$table2."` int(11) NOT NULL, `$name` varchar(255), PRIMARY KEY  (`id_".$this->table."`, `id_".$table2."`)) DEFAULT CHARSET=utf8 ENGINE=INNODB";
+          $qry = <<<ENDOFQUERY
+          
+          CREATE TABLE IF NOT EXISTS `{$this->table}-{$table2}` (
+            `id_{$this->table}` int(11) NOT NULL, 
+            `id_{$table2}` int(11) NOT NULL, 
+            `{$name}` varchar(255), 
+            PRIMARY KEY (`id_{$this->table}`, `id_{$table2}`)
+          ) DEFAULT CHARSET = utf8 ENGINE = INNODB"
+          
+ENDOFQUERY;
+
         } else {
-          $qry = "ALTER TABLE `".$this->table."` CHANGE `".$name."` `".$name."` ".$fieldType;
+          $qry = "ALTER TABLE `{$this->table}` CHANGE `{$name}` `{$name}` {$fieldType}";
         }
         $db->Execute($qry);    
       }
 
       //check the primary keys
-      if (isset($columns[strtoupper($name)]) and $v->isKey()!=$columns[strtoupper($name)]->primary_key) $resetKey=1;
-      if ($v->isKey()===true) $primaryKeys.=$this->element[$k]->getSQLName().",";
-      //echo $v->isKey()." - ".$columns[strtoupper($name)]->primary_key."<br>";
+      if ( isset($columns[strtoupper($name)]) 
+        && $v->isKey()!=$columns[strtoupper($name)]->primary_key
+        ) $resetKey=1;
+      if ($v->isKey() === true) 
+        $primaryKeys .= $this->element[$k]->getSQLName().",";
+
+     //echo $v->isKey()." - ".$columns[strtoupper($name)]->primary_key."<br>";
     }
     reset($this->element);
 
-    //index regeneration if something is change
-    if (strlen($primaryKeys)>0) $primaryKeys=substr($primaryKeys,0,-1);
+    //index regeneration if something changed
+    if (strlen($primaryKeys)>0) 
+      $primaryKeys = substr($primaryKeys,0,-1);
+      
     if ($resetKey==1) {
-      $qry="ALTER TABLE `".$this->table."` DROP PRIMARY KEY , ADD PRIMARY KEY ( $primaryKeys )";
+      $qry="ALTER TABLE `".$this->table."` DROP PRIMARY KEY , ADD PRIMARY KEY ( {$primaryKeys} )";
       //echo "$primaryKeys - Da resettare - $qry";
       $db->Execute($qry);
     }
 
     //drop unused fields
-    foreach ($columns as $k=>$v) {
-      $colName=$v->name;
-      $ret=false;
-      foreach($this->element as $ke=>$ve) {if ($ve->name==$colName) $ret=true;}
-      if ($ret==false) {
-        $db->Execute("ALTER TABLE `".$this->table."` DROP `$colName`");
+    foreach ($columns as $k => $v) {
+      $colName = $v->name;
+      $ret = false;
+      foreach($this->element as $ke=>$ve) {
+        if ($ve->name == $colName) 
+          $ret = true;
+      }
+      if ($ret == false) {
+        $db->Execute("ALTER TABLE `{$this->table}` DROP `{$colName}`");
       }
     }
     reset($this->element);
-
   }
+
 /*
   function prepare_update() {
     $ret = true;

@@ -32,9 +32,9 @@
 {if $synPageLevel neq 0}
  {submenu|indent:10 startPage=$synPageNode1}
 {/if}
-        <ul id="lang">
+        <div id="lang">
 {lang|indent:10 attr="height=10"}
-        </ul>
+        </div>
 
         <ul id="servicemenu">
 {if !isset($smarty.cookies.web_user) || $smarty.cookies.web_user eq ""}

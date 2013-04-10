@@ -31,7 +31,7 @@ EOQRY;
       $grp .= "  <td><select class=\"toggleable\" name=\"menuitem[{$groupid}]\" disabled=\"disabled\">\n";
       do {
         $service = $arr['id'];
-        $name = translateSite($arr['name']);
+        $name = translate($arr['name']);
         $grp .= "    <option value=\"{$service}\">{$name}</option>\n";
         $next = $arr = $res->fetchrow();
       } while ($next && $groupid==$arr['group']);

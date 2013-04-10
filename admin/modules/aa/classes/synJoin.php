@@ -80,7 +80,7 @@ var $icon;
       $qry="SELECT ".$arr["name"]." FROM ".$arr["syntable"]." WHERE id=".$value;
       $res=$db->Execute($qry);
       $arr=$res->FetchRow();
-      $ret=translateSite($arr[0]);
+      $ret=translate($arr[0]);
     } else $ret="";
     return $ret;
   }

@@ -10,7 +10,7 @@ Deny from all
 RewriteEngine On
 RewriteBase /
 
-RewriteRule ^(.*)/([A-Za-z0-9-_]+)~(\d+)\.html$ $1/?title=$2&id=$3 [QSA]
+RewriteRule ^(.*)/([A-Za-z0-9-_]+)~(\d+)\.html$  $1/?title=$2&id=$3 [QSA]
 RewriteRule ^(.*)/index([0-9]+)\.html$           $1/?_next_page=$2&parent=$1 [QSA]
 
 RewriteCond %{REQUEST_FILENAME} !-f

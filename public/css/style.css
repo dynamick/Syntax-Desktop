@@ -55,10 +55,13 @@ blockquote p {font: 160% Georgia; color: #aaa; padding: 0 10% 0 0; line-height: 
 #header .menu-lv1 a:hover {border-bottom: 2px solid #388CBA; color: #fff; }
 #header .menu-lv1 a.active {border-bottom: 2px solid #388CBA; color: #fff; }
 
-#lang {position: absolute;  top: -18px;  right: 0;  list-style: none; }
-#lang li {float: left;  margin-right: 10px;  }
-#lang li a {text-decoration: none;   line-height: 21px; }
-#lang li img {float: left; }
+#header #lang {position:absolute; top:-18px; right:0;}
+.lang-selector {list-style:none;}
+.lang-selector li {float:left; margin-left:20px;  }
+.lang-selector li a {display:block; text-decoration:none; line-height:21px; }
+.lang-selector li a:hover {background-color:#fff;}
+.lang-selector li a.active {outline:1px dotted #aaa;}
+.lang-selector li img {display:inline; margin:0 3px; padding:0; border:none; vertical-align: baseline;}
 
 #servicemenu {position: absolute;  top: 76px;  right: 0;  list-style: none; }
 #servicemenu li {float: left;  margin-right: 10px;  color: white; }

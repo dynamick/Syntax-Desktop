@@ -126,7 +126,7 @@ class synPackage {
               $opt="";
               $res2=$db->Execute($qry);
               while ($arr2=$res2->FetchRow()) {
-                $opt.="<option value=\"".$arr2["id"]."\">".translateSite($arr2["name"])."</option>";
+                $opt.="<option value=\"".$arr2["id"]."\">".translate($arr2["name"])."</option>";
               }
               $txt.= "- Parent menu item: <select name=\"startingPoint[".$idgroup."]\">".$opt."</select><br/>";
             }

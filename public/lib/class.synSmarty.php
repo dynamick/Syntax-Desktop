@@ -51,14 +51,16 @@ class synSmarty extends Smarty {
     global $db, $synPublicPath, $synAdminPath, $synAbsolutePath, $ADODB_FETCH_MODE;
 
     $qry = <<<EOQRY
+    
     SELECT aa_page.*, 
            aa_template.id as template_id, aa_template.filename 
       FROM aa_page, 
            aa_template 
      WHERE aa_page.id = '{$pageId}'
        AND aa_page.template = aa_template.id
+       
 EOQRY;
-//echo $qry, '<br>';
+    //echo $qry, '<br>';
     $ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;
     $res = $db->Execute($qry);
     $ADODB_FETCH_MODE = ADODB_FETCH_BOTH;

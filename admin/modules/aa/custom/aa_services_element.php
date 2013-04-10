@@ -9,21 +9,13 @@ global $cmd;
   echo "</script>\n";      
 
   switch($_REQUEST["cmd"]) {
-    case ADD:  
-    break;
-    case MODIFY:  
-    break;
-    case CHANGE:  
-    break;
-    case INSERT:
-    break;
-    case DELETE: 
-    break;
-    case MULTIPLEDELETE:
-    break;
-    case RPC:
-    break;
-
+    case ADD:             break;
+    case MODIFY:          break;
+    case CHANGE:          break;
+    case INSERT:          break;
+    case DELETE:          break;
+    case MULTIPLEDELETE:  break;
+    case RPC:             break;
     
     /**************************************************************************
     *                             STEP 0
@@ -540,7 +532,7 @@ global $cmd;
           $opt="";
           $res2=$db->Execute($qry);
           while ($arr2=$res2->FetchRow()) {
-            $opt.="<option value=\"".$arr2["id"]."\">".translateSite($arr2["name"])."</option>";
+            $opt.="<option value=\"".$arr2["id"]."\">".translate($arr2["name"])."</option>";
           }
           echo "- Parent menu item: <select name=\"startingPoint[".$idgroup."]\">".$opt."</select><br/>";
         }

@@ -40,9 +40,21 @@ function setLang($id, $initial='') {
   }
 }
 
+function getLangList(){
+  global $db;
+  $ret = array();
+  $res = $db->Execute("SELECT * FROM aa_lang WHERE `active`=1");
+  while($arr = $res->fetchrow()){
+    extract($arr, EXTR_PREFIX_ALL, 'lang');
+    if($lang_default=='1')
+      $ret['default'] = $lang_initial;
+    $ret['list'][$lang_id] = $lang_initial;
+  }
+  return $ret;
+}
 
 //DEPRECATED - return the language list (i.e. en,it,es)
-function getLangList() {
+function getLangList_DEPRECATED() {
   global $db;
   $res=$db->Execute("SELECT initial FROM aa_lang ");
   while (list($lang)=$res->FetchRow()) $ret.=$lang.", ";

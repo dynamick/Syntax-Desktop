@@ -295,8 +295,11 @@ EOC;
 
   //create the file name
   function createFilename($withLang=true) {
-    global $aa_CurrentLang;
-
+    //global $aa_CurrentLang;
+    if(!isset($_SESSION))
+      session_start();
+    $aa_CurrentLang = $_SESSION['aa_CurrentLang'];
+    
     $container = $this->container;
     $key       = $container->getKey();
     $table     = $container->table;
