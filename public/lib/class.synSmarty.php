@@ -32,7 +32,6 @@ class synSmarty extends Smarty {
       $this->caching        = false;
       $this->cache_lifetime = 100;
 
-
       $this->synTemplate    = $this->getSynTemplate($pageId);
 
       $this->clearCompiledTemplate($this->synTemplate);
@@ -48,7 +47,7 @@ class synSmarty extends Smarty {
   // synPageXxxxx
 
   function getSynTemplate($pageId) {
-    global $db, $synPublicPath, $synAdminPath, $synAbsolutePath, $ADODB_FETCH_MODE;
+    global $db, $synPublicPath, $synAdminPath, $synAbsolutePath;
 
     $qry = <<<EOQRY
     
@@ -61,11 +60,11 @@ class synSmarty extends Smarty {
        
 EOQRY;
     //echo $qry, '<br>';
-    $ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;
+    
+    $db->setFetchMode(ADODB_FETCH_ASSOC);
     $res = $db->Execute($qry);
-    $ADODB_FETCH_MODE = ADODB_FETCH_BOTH;
 
-    if ($res->RecordCount()>0) 
+    if ($res->RecordCount() > 0) 
       $arr = $res->FetchRow();
     else 
       return false;
@@ -91,13 +90,14 @@ EOQRY;
     $this->assign('synAbsolutePath', $synAbsolutePath);
 
     //se il template esiste su file allora prendo quello, altrimenti lo carico dal database
-    $filename = $arr["filename"];
-    $template_id = $arr["template_id"];
-    if ($filename!="") 
+    $filename = $arr['filename'];
+    $template_id = $arr['template_id'];
+    if ($filename != '') 
       $template = $filename;
     else 
       $template = "db:".$template_id;
-
+    
+    $db->setFetchMode(ADODB_FETCH_BOTH);
     return $template;
   }
 
