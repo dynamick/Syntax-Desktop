@@ -137,18 +137,20 @@ EOQRY;
     global $db;
     static $synLevel=0;
     if(!$id) return;
-    
+
     $lng = $_SESSION['synSiteLangInitial'];
     $qry = <<<EOQ
-    SELECT p.parent, t.$lng AS title
+    SELECT p.parent, t1.$lng AS title, t2.$lng AS slug
       FROM aa_page p
- LEFT JOIN aa_translation t ON p.title=t.id
+ LEFT JOIN aa_translation t1 ON p.title = t1.id
+ LEFT JOIN aa_translation t2 ON p.slug = t2.id
      WHERE p.id={$id}
 EOQ;
     $res = $db->Execute($qry);
     if($arr = $res->FetchRow()){
       $this->traverseTree($arr['parent']);
       $this->synPageNode[$synLevel]['id'] = $id;
+      $this->synPageNode[$synLevel]['slug'] = $arr['slug'];
       $this->synPageNode[$synLevel]['title'] = $arr['title'];
       $this->assign('synPageNode'.$synLevel, $id);
       $this->assign('synPageLevel', $synLevel);
