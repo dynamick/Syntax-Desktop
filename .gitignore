@@ -3,6 +3,7 @@ admin/modules/phpMyBackupPro/global_conf.php
 public/templates_c/*.php
 public/mat/*.*
 public/mat/thumb/*
+cache/*
 *.db
 .DS*
 .project

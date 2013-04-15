@@ -22,8 +22,8 @@ class synSmarty extends Smarty {
 
       # paths
       $this->template_dir   = $synAbsolutePath.$synPublicPath.'/templates/';
-      $this->compile_dir    = $synAbsolutePath.$synPublicPath.'/templates_c/';
-      $this->cache_dir      = $synAbsolutePath.$synPublicPath.'/lib/smarty/cache/';
+      $this->compile_dir    = $synAbsolutePath.'/cache/';
+      $this->cache_dir      = $synAbsolutePath.'/cache/';
       $this->plugins_dir    = array(
                                 $synAbsolutePath.$synPublicPath.'/lib/smarty/plugins/',
                                 $synAbsolutePath.$synPublicPath.$synPluginPath);
@@ -31,11 +31,9 @@ class synSmarty extends Smarty {
       $this->debugging      = false;
       $this->caching        = false;
       $this->cache_lifetime = 100;
-
       $this->synTemplate    = $this->getSynTemplate($pageId);
 
       $this->clearCompiledTemplate($this->synTemplate);
-
       $this->traverseTree($pageId);
       $this->assign('synTemplate', $this->synTemplate);
    }
@@ -89,6 +87,10 @@ EOQRY;
     $this->assign('synPublicPath', $synPublicPath);
     $this->assign('synAbsolutePath', $synAbsolutePath);
 
+    //variabile per riconoscere le chiamate via AJAX
+    $xhr = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && (strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
+    $this->assign('ajax_call', $xhr);    
+    
     //se il template esiste su file allora prendo quello, altrimenti lo carico dal database
     $filename = $arr['filename'];
     $template_id = $arr['template_id'];
@@ -159,4 +161,5 @@ EOQ;
     return;
   }
 }
-?>
+
+// EOF class.synSmarty.php

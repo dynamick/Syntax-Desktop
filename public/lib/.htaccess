@@ -1,0 +1,4 @@
+#Allow from 192.168.0.0/24
+#Order Allow,Deny
+
+Deny from all

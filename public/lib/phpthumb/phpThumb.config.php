@@ -18,7 +18,7 @@ if (!file_exists(dirname(__FILE__).'/phpthumb.functions.php') || !include_once(d
 ob_end_clean();
 
 $PHPTHUMB_CONFIG['document_root']                        = realpath(($_SERVER["DOCUMENT_ROOT"] && ereg('^'.preg_quote(realpath($_SERVER["DOCUMENT_ROOT"])), realpath(__FILE__))) ? $_SERVER["DOCUMENT_ROOT"] : str_replace(dirname(@$_SERVER['PHP_SELF']), '', str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__))));
-$PHPTHUMB_CONFIG['cache_directory']                      = $_SERVER["DOCUMENT_ROOT"].'/public/mat/thumb/';
+$PHPTHUMB_CONFIG['cache_directory']                      = $_SERVER["DOCUMENT_ROOT"].'/cache/';
 $PHPTHUMB_CONFIG['cache_disable_warning']                = false;
 $PHPTHUMB_CONFIG['cache_directory_depth']                = 1;
 $PHPTHUMB_CONFIG['cache_maxage']                         = 86400 * 90;        // 90 days
@@ -29,7 +29,7 @@ $PHPTHUMB_CONFIG['cache_source_directory']               = dirname(__FILE__).'/c
 $PHPTHUMB_CONFIG['cache_source_filemtime_ignore_local']  = false;
 $PHPTHUMB_CONFIG['cache_source_filemtime_ignore_remote'] = true;
 $PHPTHUMB_CONFIG['cache_default_only_suffix']            = '';
-$PHPTHUMB_CONFIG['cache_prefix']                         = 'phpThumb_cache_'.str_replace('www.', '', @$_SERVER['SERVER_NAME']);
+$PHPTHUMB_CONFIG['cache_prefix']                         = 'thumb_'.str_replace('www.', '', @$_SERVER['SERVER_NAME']);
 $PHPTHUMB_CONFIG['cache_force_passthru']                 = true;
 $PHPTHUMB_CONFIG['temp_directory']                       = $PHPTHUMB_CONFIG['cache_directory'];
 if (phpthumb_functions::version_compare_replacement(phpversion(), '4.3.2', '>=')

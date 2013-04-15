@@ -81,7 +81,7 @@ $_CONFIG = array(
     'thumbWidth' => 100,
     'thumbHeight' => 100,
 
-    'thumbsDir' => "thumb",
+    'thumbsDir' => '../../cache/',
 
     'jpegQuality' => 75,
 

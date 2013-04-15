@@ -55,7 +55,7 @@ EOQ;
           $src = $synPublicPath.'/mat/default.jpg';
         }
 
-        $thumb = "{$synPublicPath}/lib/phpthumb/phpThumb.php?src={$src}&amp;w={$imgw}&amp;h={$imgh}&amp;aoe=1&amp;far=C";
+        $thumb = "{$synPublicPath}/thumb.php?src={$src}&amp;w={$imgw}&amp;h={$imgh}&amp;aoe=1&amp;far=C";
         $alt   = troncaTesto(strip_tags($titolo), 20);
 
         $list .= <<<EOLIST
@@ -116,7 +116,7 @@ EOQ;
         $src = $synPublicPath.'/mat/default.jpg';
       }
 
-      $thumb = "{$synPublicPath}/lib/phpthumb/phpThumb.php?src={$src}&amp;w={$imgw}&amp;h={$imgh}&amp;zc=1";
+      $thumb = "{$synPublicPath}/thumb.php?src={$src}&amp;w={$imgw}&amp;h={$imgh}&amp;zc=1";
       $navlinks = getPrevNextLinks($db, $date, $newsPage, $lang);
       
       $html = <<<EOHTML

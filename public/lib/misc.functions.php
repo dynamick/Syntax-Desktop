@@ -85,7 +85,7 @@ if(!function_exists('cleverThumb')) {
     if($filename=='' || $foto=='') return;
     $ROOT        = $synAbsolutePath;
     $img         = $synPublicPath."/mat/".$path.$filename.".".$foto;
-    $resultimg   = $synPublicPath."/mat/thumb/".$suffix.$filename.".".$foto;
+    $resultimg   = "/cache/".$suffix.$filename.".".$foto;
     if(file_exists($ROOT.$img)) {
       $tmb_exists  = file_exists($ROOT.$resultimg);
       $img_created = date("Y-m-d H:i:s", @filectime($ROOT.$img));
