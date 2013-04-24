@@ -10,7 +10,13 @@ Deny from all
 RewriteEngine On
 RewriteBase /
 
+# /pagina/area~x/linea~y/prodotto~z.html
+# RewriteRule ^([a-z0-9-_/]+)/([A-Za-z0-9-_]+)~(\d+)/(?:([A-Za-z0-9-_]+)~(\d+)/)??(?:([A-Za-z0-9-_\.]+)~(\d+)\.html)??$ $1/?area=$2&idarea=$3&linea=$4&idlinea=$5&prodotto=$6&id=$7
+
+# /pagina/notizia~n.html
 RewriteRule ^(.*)/([A-Za-z0-9-_]+)~(\d+)\.html$  $1/?title=$2&id=$3 [QSA]
+
+# /pagina/index10.html
 RewriteRule ^(.*)/index([0-9]+)\.html$           $1/?_next_page=$2&parent=$1 [QSA]
 
 RewriteCond %{REQUEST_FILENAME} !-f

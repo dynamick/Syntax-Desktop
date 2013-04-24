@@ -39,14 +39,14 @@ EOQ;
       $catid = $arr['category_id'];
       $catname = $arr['category'];
 
-      $html .= "<div class=\"download-content\">\n";
+      //$html .= "<div class=\"download-content\">\n";
       $html .= "  <h4>{$catname}</h4>\n";
-      $html .= "  <ul class=\"file\">\n";
+      $html .= "  <ul class=\"item-list\">\n";
       do {
         $ext        = $arr['file'];
         $file       = "{$synPublicPath}/mat/documents/documents_file_id{$arr['id']}.{$ext}";
         $size       = @filesize($synAbsolutePath.$file);
-        $file_label = $ext.", ".byteConvert($size);
+        $file_label = "<strong>{$ext}</strong> ".byteConvert($size);
         $status     = $arr['status'];
 
         if($arr['enabled_groups']){
@@ -96,26 +96,33 @@ EOQ;
           }
 
           $html .= <<<EOHTML
+          
           <li>
-            <a class="download" href="{$link}">
-              <span class="icon {$class}"></span>
-              <h4>{$arr['title']}</h4>
-              <p>{$arr['description']}</p>
-              <span>{$file_label}</span>
-            </a>
-          </li>
+            <article>
+              <a href="{$link}" class="download">
+                <header>
+                  <h1>{$arr['title']}</h1>
+                </header>
+                <span>{$arr['description']}</span>
+                <footer class="meta">
+                  {$file_label}
+                </footer>
+              </a>
+            </article>
+          </li>   
+
 EOHTML;
         }
         $next = ($arr=$res->FetchRow());
       } while ($next && $catid==$arr['category_id']);
 
       $html .= "  </ul>\n";
-      $html .= "</div>\n";
+//      $html .= "</div>\n";
     } while ($next);
     
   } else {
     $html .= $nav;
-    $html .= "<h4>Nessun elemento disponibile.</h4>";
+    $html .= "<div class=\"alert\">Nessun elemento disponibile.</div>";
   }
 
   return $html;

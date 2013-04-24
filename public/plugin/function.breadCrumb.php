@@ -65,7 +65,7 @@ function smarty_function_breadCrumb($params, &$smarty) {
     }
   }
 
-  return "<div class=\"breadcrumb\">{$crumbs}</div>\n";
+  return $crumbs;
 }
 
 // EOF function.breadcrumb.php

@@ -1,4 +1,4 @@
-{include file="_header.tpl"}
+﻿{include file="_header.tpl"}
 
     <section class="main-section" id="{$synPageSlug}">
       <div class="wrapper">
@@ -20,10 +20,7 @@
         </footer>          
                 
         <div class="content">
-          <div class="rich-text">
           {$synPageText}
-          </div>
-          {documents}
         </div>
         
         <aside class="sidebar">

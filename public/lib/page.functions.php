@@ -413,7 +413,7 @@ function createMenu($id=0, $includeParent=false, $first_child=false) {
 
     $class_li = ($count==$rows) ? ' class="last"' : '';
 
-    $ret .= "<li{$class_li}><a href=\"{$link}\" {$event}{$class}>{$title}{$img}</a></li>";
+    $ret .= "<li{$class_li}><a href=\"{$link}\" {$event}{$class}>{$title}{$img}</a></li>\n";
     $count ++;
   }
   
@@ -436,7 +436,7 @@ function createMenu($id=0, $includeParent=false, $first_child=false) {
       }
 
       if($arr["id"]==$currPage) $class=" class=\"active\" "; else $class="";
-      $ret="<li><a href=\"$link\" $event $class>".$title.$img."</a></li>".$ret;
+      $ret="<li><a href=\"$link\" $event $class>".$title.$img."</a></li>\n".$ret;
     }
   }
   return $ret;
@@ -529,7 +529,7 @@ function createSubmenuPrivate($id=0, $expand=false, $includeParent=false, $first
     $ret.="</li>\n";
 
   }
-  if($ret!="") $ret="<ul class=\"menu-lv".$count."\">".$ret."</ul>";
+  if($ret!="") $ret="<ul class=\"menu lv".$count."\">".$ret."</ul>";
   return $ret;
 }
 ?>

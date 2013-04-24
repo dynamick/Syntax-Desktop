@@ -1,45 +1,44 @@
 {include file="_header.tpl"}
-{include file="_left.tpl"}		
-{include file="_right.tpl"}		
-		
-		<div id="content">
-        <div class="main shadow">
-{slideshow|indent:10 nav=true gal=true}
-          <div id="caption"></div>
+
+    <section class="main-section" id="{$synPageSlug}">
+      <div class="wrapper">
+        <hgroup class="page-header2">
+          <h1>{$synPageTitle}</h1>
+        </hgroup>
+        
+        <footer class="page-footer">
+          <div class="searchform">
+            <form action="" method="post">
+              <input type="text" name="q" placeholder="Cerchi qualcosa?" tabindex="1"/>
+              <button type="submit">Ok</button>
+            </form>
+          </div>
+
+          <nav class="breadcrumb">
+            {breadcrumb}
+          </nav>          
+        </footer>          
+                
+        <div class="content">
+{if $smarty.get.id eq ''}          
+          <div class="rich-text">
+            {$synPageText}
+          </div>
+{/if}
+{gallery}          
         </div>
-
-        <script type="text/javascript">
-        //<![CDATA[ {literal}
-        $(document).ready(function(){
-          $('.slideshow').cycle({
-            timeout: 0,
-            pager:'#slide-nav',
-            pagerAnchorBuilder: function(idx, slide) {return '#slide-nav li:eq('+idx+') a';},
-            before: onBefore,
-            after: onAfter
-          });
-
-          if (($(".gallery-in li").length)>8) { // se ci sono più di 3 foto
-            // appendo i comandi per lo scroll
-            $('#gallery-out').prepend("<a class='arrow back disabled' href='javascript:void(0)'>&laquo;</a>");
-            $('#gallery-out').append("<a class='arrow forward' href='javascript:void(0)'>&raquo;</a>");
-            // lancio la gallery
-            $('.gallery-in').jCarouselLite({
-              btnNext:'.forward', btnPrev:'.back', mouseWheel:true, circular:false, visible:8, scroll:1
-            });
-          }
-        });
-
-        function onBefore() { 
-          $('#caption').fadeOut('slow'); 
-        } 
-
-        function onAfter() { 
-          $('#caption').html('<h3>'+this.alt+'</h3>').fadeIn('slow'); 
-        }        
-        //]]> {/literal}
-        </script>
-
-		</div>
+        
+        <aside class="sidebar">
+          <div class="box">
+            {submenu}
+          </div>          
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sodales urna non odio egestas tempor. Nunc vel vehicula ante. Etiam bibendum iaculis libero, eget molestie nisl pharetra in. In semper consequat est, eu porta velit mollis nec. Curabitur posuere enim eget turpis feugiat tempor. Etiam ullamcorper lorem dapibus velit suscipit ultrices.</p>
+          <div>
+            <script src="http://www.ohloh.net/p/345/widgets/project_factoids_stats.js"></script>
+          </div>
+        </aside>      
+      </div>
+    </section>
+  
 
 {include file='_footer.tpl'}

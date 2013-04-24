@@ -25,6 +25,6 @@ function smarty_function_menu($params, &$smarty){
   $firstChild    = isset($params["firstChild"])    ? $params["firstChild"]    : false;
 
   $ret = createMenu($startPage, $includeParent, $firstChild);
-  return "<ul id=\"nav\">".$ret."</ul>";
+  return "<ul class=\"main-menu\">".$ret."</ul>";
 }
 ?>

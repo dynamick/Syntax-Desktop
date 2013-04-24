@@ -209,7 +209,7 @@ class formBuilder {
     $this->hook['captcha'] = $this->captchaLabel;
     $this->hook['privacy'] = 'privacy';
 
-    $ret  = "<div class=\"error\">\n";
+    $ret  = "<div class=\"alert error\">\n";
     if (is_array($error)){
       $ret .= '<strong>'.$this->checkfields.'</strong>';
       $ret .= "<ul>\n";    

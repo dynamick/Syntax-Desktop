@@ -1,14 +1,46 @@
-{include file="_header.tpl"}
-{include file="_left.tpl"}    
-{include file="_right.tpl"}   
+﻿{include file="_header.tpl"}
+
+    <section class="home">
+      <div class="wrapper">
+        <div class="box hero">
+          <h2>Welcome to<br> <strong>Syntax Desktop</strong></h2>
+          <p>Syntax Desktop è un sistema professionale di gestione dei contenuti Open Source.</p>
+        </div>
+      </div>
+    </section>
     
-    <div id="content">
-      {if !isset($smarty.get.id) || $smarty.get.id eq ""}
-        <h2 id="Intro"><a href="#">{$synPageTitle}</a></h2>
-        {$synPageText}
-      {else}
-        {news}
-      {/if}
-    </div>
+    <section class="teaser">
+      <div class="wrapper">
+        <div class="row clearfix">
+          <div class="third">
+            <div class="box teaser">
+              <h3>Semplice.</h3>
+              <p>Syntax Desktop è un sistema professionale di gestione dei contenuti Open Source.</p>
+              <a class="btn btn-block" href="#">scopri</a>
+            </div>
+          </div>
+          <div class="third">
+            <div class="box">
+              <h3>Versatile.</h3>
+              <p>Syntax Desktop è un sistema professionale di gestione dei contenuti Open Source.</p>
+              <a class="btn btn-block" href="#">scopri</a>
+            </div>
+          </div>
+          <div class="third">
+            <div class="box">
+              <h3>Potente.</h3>
+              <p>Syntax Desktop è un sistema professionale di gestione dei contenuti Open Source.</p>
+              <a class="btn btn-block" href="#">scopri</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>    
+
+    <section class="main-section" id="page">
+      <div class="wrapper">
+        {$synPageText}      
+      </div>
+    </section>    
 
 {include file='_footer.tpl'}

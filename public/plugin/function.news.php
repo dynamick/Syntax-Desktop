@@ -1,6 +1,6 @@
-<?php
+﻿<?php
 function smarty_function_news($params, &$smarty) {
-  global $db, $smarty, $synPublicPath;
+  global $db, $synPublicPath;
 
   $newsPage = createPath(55);
   $req      = isset($_GET['id']) ? intval($_GET['id']) : 0;
@@ -11,9 +11,8 @@ function smarty_function_news($params, &$smarty) {
   if ($req==0) {
     #-------------------------------- ELENCO NEWS -----------------------------#
     $maxitems = 10;
-    $imgw     = 100;
-    $imgh     = 120;
-    
+    $imgw     = 180;
+    $imgh     = 180;
     $cnt      = 0;
     $list     = '';
     
@@ -38,16 +37,16 @@ EOQ;
     # echo '<pre>', print_r(array($tot, $prt, $pag, $start, $step)), '</pre>', PHP_EOL;
 
     if ($tot==0) {
-      $html = "<p>Nessuna notizia disponibile.</p>\n";
+      $html = "<div class=\"alert\">Nessuna notizia disponibile.</div>\n";
 
     } else {
       while ($arr=$res->FetchRow()) {
         extract($arr);
         unset($imgtag);
         $cnt ++;
-        $date = htmlentities(sql2human($date, '%d %B %Y'));
+        $data = htmlentities(sql2human($date, '%d %B %Y'));
         $link = $newsPage.sanitizePath($titolo)."~{$id}.html"; // nice url
-        $abstract = troncaTesto(strip_tags($testo), 120);
+        $abstract = troncaTesto(strip_tags($testo), 150);
 
         if($image){
           $src = "{$synPublicPath}/mat/news_image_id{$id}.{$image}";
@@ -55,40 +54,63 @@ EOQ;
           $src = $synPublicPath.'/mat/default.jpg';
         }
 
-        $thumb = "{$synPublicPath}/thumb.php?src={$src}&amp;w={$imgw}&amp;h={$imgh}&amp;aoe=1&amp;far=C";
+        $thumb = htmlentities("{$synPublicPath}/thumb.php?src={$src}&w={$imgw}&h={$imgh}&zc=1");
         $alt   = troncaTesto(strip_tags($titolo), 20);
 
         $list .= <<<EOLIST
 
         <li>
-          <a href="{$link}"><img width="{$imgw}" height="{$imgh}" alt="{$alt}" src="{$thumb}"/></a>
-          <div>
-            <h3>{$titolo}</h3>
-            <p><strong>{$date}</strong> - {$abstract}</p>
-            <a class="more" href="{$link}">Continua</a>
-          </div>
+          <article class="clearfix">
+            <img class="item-figure" src="{$thumb}" alt="{$alt}" width="{$imgw}" height="{$imgh}">
+            <a href="{$link}" class="block container">
+              <header>
+                <h1>{$titolo}</h1>
+                <time class="item-subheader" datetime="{$date}" pubdate>{$data}</time>
+              </header>
+              <p>
+                {$abstract}<br>
+                <span class="follow">continua &rarr;</span>
+              </p>
+            </a>
+          </article>
         </li>
 
 EOLIST;
       }
 
 
-      $html .= "<h2>".$smarty->getTemplateVars('synPageTitle')."</h2>\n";
-      $html .= "<ul class=\"items\">\n".$list." </ul>\n";
+      $html = <<<EOHTML
+      
+      <div class="content">
+        <ol class="item-list">
+{$list}
+        </ol>
+      </div>
+      
+EOHTML;
 
     } //if($tot==0)
 
     //stampo i bottoni della paginazione
-    $html .= "<div class=\"pager\">\n";
-    if ($pgr->rs->LastPageNo()>1) $html .= $pgr->renderPgr();
-    $html .= "  <span class=\"status\">Notizie <b>{$step}</b> di <b>{$tot}</b></span>";
-    $html .= "</div>\n";
-
+    if ($pgr->rs->LastPageNo()>1){
+      $html .= "<div class=\"pagination\">\n";
+      $html .= "  <nav>\n";
+      $html .= $pgr->renderPgr();
+      /*        <span class="disabled">&larr;</span>
+              <span class="active">1</span>
+              <a href="#">2</a>
+              <a href="#">3</a>
+              <a href="#" class="next">&rarr;</a>*/
+      $html .= "  </nav>\n";
+      $html .= "</div>\n";
+    }
+    
+    $smarty->assign('tagline', '<h2 class="tagline">ultime novità</h2>');
 
   } else {
     #---------------------------- DETTAGLIO NEWS ------------------------------#
-    $imgw     = 200;
-    $imgh     = 150;
+    $imgw     = 1280;
+    $imgh     = 400;
     $html     = '';
     
     $qry = <<<EOQ
@@ -108,7 +130,7 @@ EOQ;
       $safeurl = rawurlencode($permalink);
       $safettl = rawurlencode($title);
       $safeabs = rawurlencode(troncaTesto(strip_tags($text),100));
-      $data  = htmlentities(sql2human($date));
+      $data  = sql2human($date, '%d %B %Y');
 
       if($image){
         $src = "{$synPublicPath}/mat/news_image_id{$id}.{$image}";
@@ -116,38 +138,51 @@ EOQ;
         $src = $synPublicPath.'/mat/default.jpg';
       }
 
-      $thumb = "{$synPublicPath}/thumb.php?src={$src}&amp;w={$imgw}&amp;h={$imgh}&amp;zc=1";
+      $thumb = htmlentities("{$synPublicPath}/thumb.php?src={$src}&w={$imgw}&h={$imgh}&zc=1");
       $navlinks = getPrevNextLinks($db, $date, $newsPage, $lang);
       
       $html = <<<EOHTML
-      <h2>{$title}</h2>
-      <a href="{$src}" class="imgzoom" title="{$titolo}"><img src="{$thumb}" width="{$imgw}" height="{$imgh}" alt="{$titolo}" /></a>
-      <div class="rich-text">
-        <p class="date"><b>{$data}</b></p>
-        {$text}
-      </div>
+    
+      <figure class="article-figure">
+        <img src="{$thumb}" alt="{$safettl}">
+      </figure>
       
-      <div class="share">
-        <iframe src="//www.facebook.com/plugins/like.php?href={$permalink}&amp;send=false&amp;layout=box_count&amp;width=75&amp;show_faces=false&amp;action=recommend&amp;colorscheme=light&amp;font=arial&amp;height=62"
-          scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:75px; height:62px;" allowTransparency="true"></iframe>
-        <a href="http://twitter.com/share" class="twitter-share-button" data-count="vertical" data-lang="it">Tweet</a>
-        <g:plusone size="tall" href="{$permalink}"></g:plusone>
-      </div>
-      <script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
-      <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+      <div class="content">
+        <div class="rich-text">
+          {$text}
+        </div>
+        
+        <aside class="social-share">
+          <iframe src="//www.facebook.com/plugins/like.php?href={$permalink}&amp;send=false&amp;layout=box_count&amp;width=75&amp;show_faces=false&amp;action=recommend&amp;colorscheme=light&amp;font=arial&amp;height=62"
+            scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:75px; height:62px;" allowTransparency="true"></iframe>
+          <a href="http://twitter.com/share" class="twitter-share-button" data-count="vertical" data-lang="it">Tweet</a>
+          <g:plusone size="tall" href="{$permalink}"></g:plusone>        
+        </aside>
 
-      <div class="newsnav">
-        <a href="{$newsPage}">&uarr; torna all archivio</a>
-        {$navlinks}
+        <div class="pagination">
+          <nav>
+            {$navlinks}
+            <!--span class="disabled">&larr; precedente</span>
+            <a href="#" class="next">successiva &rarr;</a-->
+          </nav>
+        </div>
       </div>
+
+      <script src="https://apis.google.com/js/plusone.js"></script>
+      <script src="http://platform.twitter.com/widgets.js"></script>
       
 EOHTML;
 
+      $smarty->assign('pagetitle', $title);
+      $smarty->assign('tagline', "<time class=\"tagline\" time=\"{$date}\">{$data}</time>");
     }
   }
 
-  return $html;
+  $smarty->assign('output', $html);
+  //return $html;
 }
+
+
 
 function getPrevNextLinks($db, $date, $page, $lang='it'){
   $ret = '';
@@ -177,13 +212,15 @@ EOSQL;
     $url = $page.sanitizePath($title).'~'.$id.'.html';
     switch($type){
       case 'prev':
-        $ret .= "  <a class=\"prev\" href=\"{$url}\">&larr; Evento precedente</a>\n";
+        $ret .= "  <a class=\"prev\" href=\"{$url}\">&larr; precedente</a>\n";
         break;
       case 'next':
-        $ret .= "  <a class=\"next\" href=\"{$url}\">Evento successivo &rarr;</a>\n";
+        $ret .= "  <a class=\"next\" href=\"{$url}\">successiva &rarr;</a>\n";
         break;
     }
   }
   return $ret;
 }
-?>
+
+
+// EOF function.news.php
