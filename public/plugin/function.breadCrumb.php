@@ -8,7 +8,7 @@
 * Purpose:  Ritorna il path "Briciole di pane" dalla posizione corrente
 * -------------------------------------------------------------
 */
-function smarty_function_breadCrumb($params, &$smarty) {
+function smarty_function_breadcrumb($params, &$smarty) {
   if(!isset($_SESSION))
     session_start();
 

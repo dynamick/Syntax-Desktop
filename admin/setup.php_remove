@@ -467,7 +467,7 @@ function checkfeatures(){
 		  $errors[] = array("EXPORT not writeable","The <em>{$export}</em> directory permissions must be set to 777.");
 		  $allok = false;
     }
-
+/*
     $mat="../public/mat/";
     $p = fileperms($mat);
     $canWrite = (($p & 0x0002) ? true : false);
@@ -483,6 +483,15 @@ function checkfeatures(){
 		  $errors[] = array("TEMPLATES_C not writeable","The <em>{$templates_c}</em> directory permissions must be set to 777.");
 		  $allok = false;
     }
+*/   
+
+    $cache = "../cache/";
+    $p = fileperms($cache);
+    $canWrite = (($p & 0x0002) ? true : false);
+    if (!$canWrite){
+		  $errors[] = array("CACHE not writeable","The <em>{$cache}</em> directory permissions must be set to 777.");
+		  $allok = false;
+    } 
   }
 
 	$error_reporting = ini_get('error_reporting');
