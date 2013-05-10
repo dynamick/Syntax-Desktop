@@ -20,7 +20,7 @@ function smarty_function_submenu($params, &$smarty){
   $firstChild    = empty($params['firstChild'])    ? false : $params['firstChild'];
   
  
-  $ret  = "<h3>".$nodeArr[$level]['title']."</h3>\n";
+  $ret  = "<h3 class=\"menu-header\">".$nodeArr[$level]['title']."</h3>\n";
   $ret .= createSubmenu($startPage, $expand, $includeParent, $firstChild, "title");
 
   return $ret;

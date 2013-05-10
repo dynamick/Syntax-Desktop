@@ -8,7 +8,7 @@
         
         <footer class="page-footer">
           <div class="searchform">
-            <form action="" method="post">
+            <form action="{createPath page=57}" method="get">
               <input type="text" name="q" placeholder="Cerchi qualcosa?" tabindex="1"/>
               <button type="submit">Ok</button>
             </form>

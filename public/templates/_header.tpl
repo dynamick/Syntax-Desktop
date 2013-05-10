@@ -40,5 +40,4 @@
         </nav>
         {* <div id="lang">{lang}</div> *}
       </div>
-		</header>    
-
+		</header>
