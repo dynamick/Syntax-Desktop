@@ -190,10 +190,10 @@ function __autoload($class) {
 
   switch($cmd) {
 
-    ////////////////////////////////////////////////////////////////////////////
-    //
-    //                            ADD A ROW
-    //
+        ////////////////////////////////////////////////////////////////////////////
+       //                                                                        //
+      //                            ADD A ROW                                   //
+     //                                                                        //
     ////////////////////////////////////////////////////////////////////////////
 
     case ADD:
@@ -249,18 +249,83 @@ function __autoload($class) {
       break;
 
 
-    ////////////////////////////////////////////////////////////////////////////
-    //
-    //                            MODIFY A ROW
-    //
+        ////////////////////////////////////////////////////////////////////////
+       //                                                                    //
+      //                          INSERT A ROW                              //
+     //                                                                    //
+    ////////////////////////////////////////////////////////////////////////
+
+    case INSERT:
+      $synPrimaryKey = $contenitore->getKeyURLString();
+      $err = '';
+      //upload available documents
+      $contenitore->uploadDocument();
+
+      
+      //execute insert qry
+      $qry = "INSERT INTO `{$synTable}` ({$contenitore->getFieldsString()}) VALUES ({$contenitore->getInsertString()})";
+      $err = $res = $db->Execute($qry);
+
+      $insertId = $db->Insert_Id();
+      $contenitore->setKeyValue($insertId);
+
+      $err = $err && $contenitore->execute_callbacks('insert');
+      
+      //error check
+      if (!$err) {
+        //echo "<script>alert(\"$err\"); history.go(-1);</script>";
+        echo "<script>alert(\"{$err}\");</script>";
+      }
+
+      //set the next page
+      if ($_REQUEST["changeto"]!='') {
+        $after = 'changelang';
+      }
+
+      switch ($after) {
+        case 'changelang': // salva & cambia lingua
+          resetClone($synTable);
+          $jumpTo = $PHP_SELF."?cmd=".MODIFY."&synPrimaryKey={$synPrimaryKey}&synSetLang=".$_REQUEST["changeto"];
+          break;
+
+        case 'exit': // salva & torna alla lista
+          resetClone($synTable);
+          $jumpTo = $PHP_SELF;
+          break;
+
+        case 'clone': // salva & duplica
+          unset($_POST['id']); //altrimenti continua a lavorare sullo stesso record
+          $_SESSION[$synTable.'_clone'] = serialize($_POST);
+          $jumpTo = $PHP_SELF."?cmd=".ADD;
+          break;
+
+        case 'new': // salva & nuovo
+          resetClone($synTable);
+          $jumpTo = $PHP_SELF."?cmd=".ADD;
+          break;
+
+        case 'stay': // salva & continua
+        default:
+          resetClone($synTable);
+          $jumpTo = $PHP_SELF."?cmd=".MODIFY."&synPrimaryKey={$synPrimaryKey}";
+          break;
+      }
+
+      break;
+      
+
+        ////////////////////////////////////////////////////////////////////////////
+       //                                                                        //
+      //                            MODIFY A ROW                                //
+     //                                                                        //
     ////////////////////////////////////////////////////////////////////////////
 
     case MODIFY:
-      aaHeader($str["modifyrow"],$str["modifyrow_bis"]);
-      $synPrimaryKey=stripslashes(urldecode(trim($_REQUEST["synPrimaryKey"])));
+      aaHeader($str["modifyrow"], $str["modifyrow_bis"]);
+      $synPrimaryKey = stripslashes(urldecode(trim($_REQUEST["synPrimaryKey"])));
 
-      echo $synHtml->form("action=\"$PHP_SELF\" method=\"post\" enctype=\"multipart/form-data\" autocomplete=\"off\"");
-      $res = $db->Execute("select * from $synTable where $synPrimaryKey");
+      echo $synHtml->form("action=\"{$PHP_SELF}\" method=\"post\" enctype=\"multipart/form-data\" autocomplete=\"off\"");
+      $res = $db->Execute("SELECT * FROM `{$synTable}` WHERE {$synPrimaryKey}");
       $contenitore->updateValues($res->FetchRow());
       $contenitore->getHtml();
 
@@ -320,21 +385,22 @@ function __autoload($class) {
 
     case CHANGE:
 
-      $synPrimaryKey=urldecode(trim($_POST["synPrimaryKey"]));
+      $synPrimaryKey = urldecode(trim($_POST["synPrimaryKey"]));
       
       $contenitore->uploadDocument();
       $upd = $contenitore->getUpdateString();
       $ok = true;
 
       if ($upd!="") {
-        $qry = "UPDATE `$synTable` SET $upd WHERE $synPrimaryKey";
+        $qry = "UPDATE `{$synTable}` SET {$upd} WHERE {$synPrimaryKey}";
         $ok = $db->Execute($qry);
         $ok = $ok && $contenitore->execute_callbacks('update');
       }
 
       #die('done');
       //controllo errori
-      if (!$ok) echo "<script>alert(\"$ok\"); history.go(-1);</script>";
+      if (!$ok) 
+        echo "<script>alert(\"{$ok}\"); history.go(-1);</script>";
       //else echo 'ok';
 
       //set the next page
@@ -384,72 +450,7 @@ function __autoload($class) {
       break;
 
 
-        ////////////////////////////////////////////////////////////////////////
-       //                                                                    //
-      //                          INSERT A ROW                              //
-     //                                                                    //
-    ////////////////////////////////////////////////////////////////////////
-
-    case INSERT:
-      $synPrimaryKey=$contenitore->getKeyURLString();
-      $err = '';
-      //upload available documents
-      $contenitore->uploadDocument();
-
       
-      //execute insert qry
-      $qry = "INSERT INTO `{$synTable}` (".$contenitore->getFieldsString().") VALUES (".$contenitore->getInsertString().")";
-      $err = $res = $db->Execute($qry);
-
-      $insertId = $db->Insert_Id();
-      $contenitore->setKeyValue($insertId);
-
-      $err = $err && $contenitore->execute_callbacks('insert');
-      
-      //error check
-      if (!$err) {
-        //echo "<script>alert(\"$err\"); history.go(-1);</script>";
-        echo "<script>alert(\"$err\");</script>";
-      }
-
-      //set the next page
-      if ($_REQUEST["changeto"]!='') {
-        $after = 'changelang';
-      }
-
-      switch ($after) {
-        case 'changelang': // salva & cambia lingua
-          resetClone($synTable);
-          $jumpTo = $PHP_SELF."?cmd=".MODIFY."&synPrimaryKey={$synPrimaryKey}&synSetLang=".$_REQUEST["changeto"];
-          break;
-
-        case 'exit': // salva & torna alla lista
-          resetClone($synTable);
-          $jumpTo = $PHP_SELF;
-          break;
-
-        case 'clone': // salva & duplica
-          unset($_POST['id']); //altrimenti continua a lavorare sullo stesso record
-          $_SESSION[$synTable.'_clone'] = serialize($_POST);
-          $jumpTo = $PHP_SELF."?cmd=".ADD;
-          break;
-
-        case 'new': // salva & nuovo
-          resetClone($synTable);
-          $jumpTo = $PHP_SELF."?cmd=".ADD;
-          break;
-
-        case 'stay': // salva & continua
-        default:
-          resetClone($synTable);
-          $jumpTo = $PHP_SELF."?cmd=".MODIFY."&synPrimaryKey={$synPrimaryKey}";
-          break;
-      }
-
-      break;
-
-
-
         ////////////////////////////////////////////////////////////////////////
        //                                                                    //
       //                          DELETE A ROW                              //
@@ -459,26 +460,26 @@ function __autoload($class) {
 
     case DELETE:
 
-      $synPrimaryKey=stripslashes(urldecode($_REQUEST["synPrimaryKey"]));
-      $res=$db->Execute("select * from $synTable where $synPrimaryKey");
+      $synPrimaryKey = stripslashes(urldecode($_REQUEST["synPrimaryKey"]));
+      $res = $db->Execute("SELECT * FROM {$synTable} WHERE {$synPrimaryKey}");
 
       //delete if the user has the owner permission
-      $arr=$res->FetchRow();
+      $arr = $res->FetchRow();
       $contenitore->updateValues($arr);
       //if ($contenitore->ownerField=="" OR in_array($arr[$contenitore->ownerField],$_SESSION["synGroupChild"]) OR $arr[$contenitore->ownerField]==0) {
-      $canDelete=$contenitore->isDeletable();
+      $canDelete = $contenitore->isDeletable();
       if ($canDelete===true) {
         $contenitore->deleteDocument();
         $contenitore->execute_callbacks('delete');
         
-        $res = $db->Execute("DELETE FROM $synTable WHERE $synPrimaryKey" );
+        $res = $db->Execute("DELETE FROM {$synTable} WHERE {$synPrimaryKey}" );
 
       } else {
-        echo "<script>alert(\"".$canDelete."\");</script>";
+        echo "<script>alert(\"{$canDelete}\");</script>";
       }
 
       //set the next page
-      $jumpTo=$PHP_SELF;
+      $jumpTo = $PHP_SELF;
 
       break;
 
@@ -491,29 +492,27 @@ function __autoload($class) {
 
     case MULTIPLEDELETE:
       //TODO: attenzione alle chiavi. Prende solamente l'id!!!!!!!!!
-      $i=0;
+      $i = 0;
       if (isset($checkrow)) {
-      foreach ($checkrow as $id) {
-          $key=urldecode($id);
-          $res=$db->Execute("select * from $synTable where $key");
+        foreach ($checkrow as $id) {
+          $key = urldecode($id);
+          $res = $db->Execute("SELECT * FROM `{$synTable}` WHERE {$key}");
           $contenitore->updateValues($res->FetchRow());
 
-          $canDelete=$contenitore->isDeletable();
+          $canDelete = $contenitore->isDeletable();
           if ($canDelete===true) {
             @$contenitore->deleteDocument();
-            //$res=$db->Execute("DELETE FROM $synTable WHERE $synPrimaryKey" );
-            $res=$db->Execute("DELETE FROM $synTable WHERE $key" );
+            $res = $db->Execute("DELETE FROM `{$synTable}` WHERE {$key}" );
             $i++;
           } else {
-            echo "<script>alert(\"Row $key: ".$canDelete."\");</script>";
+            echo "<script>alert(\"Row {$key}: {$canDelete}\");</script>";
           }
-
         }
-        echo "<script>alert(\"$i ".$str["row_deleted"]."\");</script>";
+        echo "<script>alert(\"{$i} {$str['row_deleted']}\");</script>";
       }
 
       //set the next page
-      $jumpTo=$PHP_SELF;
+      $jumpTo = $PHP_SELF;
 
       break;
 
@@ -527,16 +526,17 @@ function __autoload($class) {
     case RPC:
       global $contenitore, $debug;
 
-      $synPrimaryKey=stripslashes($_GET["synPrimaryKey"]);
-      $field=$_GET["field"];
-      $value=$_GET["value"];
-      $synTable=$contenitore->getTable();
+      $synPrimaryKey = stripslashes($_GET["synPrimaryKey"]);
+      $field = $_GET["field"];
+      $value = $_GET["value"];
+      $synTable = $contenitore->getTable();
 
-      $qry = "update $synTable set `$field`='$value' where $synPrimaryKey";
+      $qry = "UPDATE {$synTable} SET `{$field}`='{$value}' WHERE {$synPrimaryKey}";
       $err = $db->Execute($qry);
 
       //controllo errori
-      if (!$err) echo "<script>alert(\"".htmlentities($err)."\");</script>";
+      if (!$err) 
+        echo "<script>alert(\"".htmlentities($err)."\");</script>";
     break;
 
 
@@ -575,42 +575,44 @@ function __autoload($class) {
       //perfrom the qry
       $qry = addQueryWhere("SELECT `{$synTable}`.* FROM `{$synTable}`");
 
-      $pager = new synPager($db, 'syntax', 'content.php', 'content', true);//$db, $id, $targetFile, $targetFrame, $showpagelink
-      $res=$pager->Execute($qry,$synRowsPerPage);
-      if ($treeFrame=="true") {$contenitore->getTree($qry);/*die();*/}
-      else {
+      $pager = new synPager($db, 'syntax', 'content.php', 'content', true, true, $synTable);
+      $res = $pager->Execute($qry, $synRowsPerPage);
+      
+      if ($treeFrame == "true") {
+        $contenitore->getTree($qry);
+        // die();
+      } else {
         if ($contenitore->treeExists()===true) {
           echo "<script type=\"text/javascript\">\n"
-              ."  parent.refreshTreeFrame();\n"
-              ."  parent.openTreeFrame();\n"
-              ."</script>\n";
+             . "  parent.refreshTreeFrame();\n"
+             . "  parent.openTreeFrame();\n"
+             . "</script>\n";
         }
-        echo "<form action=\"?cmd=".MULTIPLEDELETE."\" method=\"post\" style=\"margin: 0px;\">\n";
-        echo "  <table id=\"mainTable\" cellpadding=\"0\" cellspacing=\"0\">\n";
-        echo "    <thead>\n";
-        echo "      <tr>\n".$contenitore->getHeader()."      </tr>\n";
-        echo "    </thead>\n";
-        echo "    <tbody>\n";
+        echo "<form action=\"?cmd=".MULTIPLEDELETE."\" method=\"post\" style=\"margin: 0px;\">\n"
+           . "  <table id=\"mainTable\" cellpadding=\"0\" cellspacing=\"0\">\n"
+           . "    <thead>\n"
+           . "      <tr>\n".$contenitore->getHeader()."      </tr>\n"
+           . "    </thead>\n"
+           . "    <tbody>\n";
         while ($arr = $res->FetchRow()) {
           $contenitore->updateValues($arr);
           echo "      <tr>\n".$contenitore->getRow()."      </tr>\n";
         }
-        echo "    </tbody>\n";
-        echo "  </table>\n</form>\n";
+        echo "    </tbody>\n"
+           . "  </table>\n</form>\n";
 
         if ($synLoggedUser->canDelete==1) {
-          echo "  <p class=\"selezione\">\n";
-          echo "    <a href=\"javascript:void(0)\" onfocus=\"markAllRows('mainTable'); return false;\" accesskey=\"s\"><img alt=\"freccia\" src=\"img/container_arrow.png\" /> ".$str["selectdeselect"]." [s]</a>\n";
-          echo "  </p>\n";
+          echo "  <p class=\"selezione\">\n"
+             . "    <a href=\"javascript:void(0)\" onfocus=\"markAllRows('mainTable'); return false;\" accesskey=\"s\"><img alt=\"freccia\" src=\"img/container_arrow.png\" /> ".$str["selectdeselect"]." [s]</a>\n"
+             . "  </p>\n";
         }
 
-        echo "<script type=\"text/javascript\">\n"; // start page scripts
-          //paging system
-          echo "  var arrpage = ['".implode("','", explode("  ", $pager->index))."'];\n";
-          echo "  paging('".$pager->firstPage."','".$pager->prevPage."','".$pager->nextPage."','".$pager->lastPage."', arrpage, '".$pager->footer."');\n";
-          //initToolbar ( newBtn, saveBtn, removeBtn, switchBtn, refreshBtn, homeBtn, backBtn)
-          echo "  initToolbar (".$synLoggedUser->canInsert.",0,".$synLoggedUser->canDelete.",1,1,0);\n";
-        echo "</script>\n"; // end page scripts
+        echo "<script type=\"text/javascript\">\n" // start page scripts
+           . "  var arrpage = ['".implode("','", explode("  ", $pager->index))."'];\n"
+           . "  paging('".$pager->firstPage."','".$pager->prevPage."','".$pager->nextPage."','".$pager->lastPage."', arrpage, '".$pager->footer."');\n"
+            //  initToolbar ( newBtn, saveBtn, removeBtn, switchBtn, refreshBtn, homeBtn, backBtn)
+           . "  initToolbar (".$synLoggedUser->canInsert.", 0, ".$synLoggedUser->canDelete.", 1, 1, 0);\n"
+           . "</script>\n"; // end page scripts
 
         //update the columns field for searching
         echo $contenitore->getColumnSearch();

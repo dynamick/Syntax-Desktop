@@ -18,7 +18,7 @@ foreach($script as $file){
   if (file_exists($file)){
     readfile($file);
     echo PHP_EOL, PHP_EOL;
-  } else die("//== {$file} not found!!! ===================================//");
+  } else die("alert('{$file} not found!!');\n//== {$file} not found!!! ===================================//");
 }
 
 ob_flush();

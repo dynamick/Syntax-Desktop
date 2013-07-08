@@ -104,7 +104,8 @@ class synContainer {
   //update the values of each element, given an associative array
   function updateValues($arr) {
     foreach($this->element as $k=>$v) {
-      $this->element[$k]->setValue($arr[$v->name]);
+      if (isset($arr[$v->name]))
+        $this->element[$k]->setValue($arr[$v->name]);
     }
   }
 
@@ -387,21 +388,23 @@ class synContainer {
     //insert in all the language the same value?
     if ($synInsertValueInAllLang==true) {
       //get the list of languages
-      $res=$db->Execute("SELECT initial FROM aa_lang");
+      $res=$db->Execute("SELECT `initial` FROM `aa_lang`");
+      $languagelist = '';
+      $valuelist = '';
       while (list($lang)=$res->FetchRow()) {
-        $languagelist.="`$lang`, ";
-        $valuelist.="$key, ";
+        $languagelist.="`{$lang}`, ";
+        $valuelist.="{$key}, ";
       }
       $languagelist=substr($languagelist,0,-2);
       $valuelist=substr($valuelist,0,-2);
-      $insertQry="INSERT INTO aa_translation ($languagelist) VALUES ($valuelist)";
+      $insertQry="INSERT INTO aa_translation ({$languagelist}) VALUES ({$valuelist})";
     } else {
       //get the current lang
       $qry="SELECT initial FROM aa_lang WHERE id=".$_SESSION["aa_CurrentLang"];
       $res=$db->Execute($qry);
       $arr=$res->FetchRow();
       $currlang=$arr[0];
-      $insertQry="INSERT INTO aa_translation ($currlang) VALUES ($key)";
+      $insertQry="INSERT INTO aa_translation ({$currlang}) VALUES ({$key})";
     }
 
     //check if already exist a translation for this key
@@ -662,6 +665,7 @@ class synContainer {
       //Modify fields
       $colSize = 0;
       $colType = 0;
+      $colTypeSize = 0;
       if (isset($columns[strtoupper($name)])) {
         $colSize = $columns[strtoupper($name)]->max_length;
         $colType = $columns[strtoupper($name)]->type;
@@ -674,7 +678,9 @@ class synContainer {
       if ($colSize==-1) 
         $colSize = $colType;
 
-      if ( $fieldSpecificType != $colTypeSize ){
+      if ( $fieldSpecificType !== $colTypeSize 
+        && !empty($fieldType)
+        ){
             //if ($v->isKey()) $dboption=" PRIMARY KEY"; else $dboption="";
             //$db->Execute("ALTER TABLE `".$this->table."` CHANGE `".$name."` `".$name."` ".$fieldType);
             
@@ -687,7 +693,7 @@ class synContainer {
             `id_{$table2}` int(11) NOT NULL, 
             `{$name}` varchar(255), 
             PRIMARY KEY (`id_{$this->table}`, `id_{$table2}`)
-          ) DEFAULT CHARSET = utf8 ENGINE = INNODB"
+          ) DEFAULT CHARSET=utf8 ENGINE=INNODB
           
 ENDOFQUERY;
 
