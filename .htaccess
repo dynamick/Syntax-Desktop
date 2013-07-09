@@ -9,9 +9,13 @@ php_flag magic_quotes_gpc off
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
-
+  
+  # add trailing slash
+  RewriteCond %{REQUEST_URI} !(/$|\.) 
+  RewriteRule (.*) %{REQUEST_URI}/ [R=301,L]   
+  
   # /pagina/area~x/linea~y/prodotto~z.html
-  # RewriteRule ^([a-z0-9-_/]+)/([A-Za-z0-9-_]+)~(\d+)/(?:([A-Za-z0-9-_]+)~(\d+)/)??(?:([A-Za-z0-9-_\.]+)~(\d+)\.html)??$ $1/?area=$2&idarea=$3&linea=$4&idlinea=$5&prodotto=$6&id=$7
+  # RewriteRule ^([a-z0-9-_/]+)/([A-Za-z0-9-_]+)~(\d+)/(?:([A-Za-z0-9-_]+)~(\d+)/)??(?:([A-Za-z0-9-_\.]+)~(\d+)\.html)??$ $1/?area=$2&idarea=$3&linea=$4&idlinea=$5&prodotto=$6&id=$7 [QSA]
 
   # /pagina/notizia~n.html
   RewriteRule ^(.*)/([A-Za-z0-9-_]+)~(\d+)\.html$  $1/?title=$2&id=$3 [QSA]

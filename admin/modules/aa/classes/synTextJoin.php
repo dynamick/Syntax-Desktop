@@ -39,12 +39,14 @@ class synTextJoin extends synElement {
     $txt = "";
     $value = $this->createArray();
     if (is_array($value)) { 
+      $txt .= '<table>'.PHP_EOL;
       foreach($value as $v) {
         $id = $v['key'];
         $name = $v['name'];
         $value = $v['value'];
-        $txt .= '<p>'.translateDesktop($name).' <input type="text" name="'.$this->name.'_value['.$id.']" value="'.$value.'"/></p>'.PHP_EOL;
+        $txt .= '<tr><th>'.translateDesktop($name).'</th><td><input type="text" name="'.$this->name.'_value['.$id.']" value="'.$value.'"/></td></tr>'.PHP_EOL;
       }
+      $txt .= '</table>'.PHP_EOL;
     }  
     return $txt; 
   }
@@ -59,8 +61,15 @@ class synTextJoin extends synElement {
 
   //get the label of the element
   function getCell() {
-    return false;
+    $ret = array();
+    $values = $this->createArray();
+    foreach($values as $value){
+      if(!empty($value['value']))
+        $ret[] = "<b>{$value['name']}:</b> {$value['value']}";
+    }
+    return implode(', ', $ret);
   }
+  
   
   function setQry($qry) {
     $this->qry = $qry;

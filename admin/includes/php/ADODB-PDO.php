@@ -668,7 +668,7 @@ class synPager {
   private $moreLinks;
   private $page;
   
-  public function __construct($db, $id='adodb', $targetFile, $targetFrame, $showPageLinks=false, $use_session=false)
+  public function __construct($db, $id='adodb', $targetFile, $targetFrame, $showPageLinks=false, $use_session=false, $session_key=false)
   {
     $this->db = $db;
     $this->id = $id;
@@ -680,19 +680,23 @@ class synPager {
     $this->targetFrame = $targetFrame;
 
     if($use_session==true){
-      # if current page is to be kept in session
+      if(!$session_key)
+        $session_key = $this->id; // if set, avoids session collision
+
+      // if current page is to be kept in session
       if (isset($_GET[$this->next_page])) {
-        $_SESSION[$this->curr_page] = intval($_GET[$this->next_page]);
+        $_SESSION[$session_key][$this->curr_page] = intval($_GET[$this->next_page]);
       }
-      if(empty($_SESSION[$this->curr_page]))
-        $_SESSION[$this->curr_page]=1;
-      $this->curr_page = $_SESSION[$this->curr_page];
+      if(empty($_SESSION[$session_key][$this->curr_page]))
+        $_SESSION[$session_key][$this->curr_page]=1;
+
+      $this->curr_page = $_SESSION[$session_key][$this->curr_page];
 
     } else {
-      # current page comes from $_GET
+      // current page comes from $_GET
       if(isset($_GET[$this->next_page]) && $_GET[$this->next_page]!=false)
         $this->curr_page = intval($_GET[$this->next_page]);
-      else 
+      else
         $this->curr_page = 1;
     }
   }

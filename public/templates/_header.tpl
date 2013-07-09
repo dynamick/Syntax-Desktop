@@ -31,7 +31,7 @@
 		<header class="main-header" role="banner">
       <div class="wrapper">
         <div class="hgroup">
-          <h1><a class="logo" href="#">{* $synWebsiteTitle *} Syntax Demo</a></h1>
+          <h1><a class="logo" href="/">{$synWebsiteTitle}</a></h1>
           <h2>A Demo site for SyntaxDesktop CMS</h2>
         </div>
         

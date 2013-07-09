@@ -225,28 +225,40 @@ class synElement {
   //translate an element. If err==true display the error message
   function translate($id,$err=false) {
     global $db;
-    if ($this->multilang==1 and $id!="" ) {
+    
+    if ( $this->multilang == 1 
+      && $id != "" 
+      ){
       //if a service field will be transformed in a multilanguage field,
       //uncomment this two lines, navigate all the rows with syntax, then
       //re-comment
-      if (!is_int(trim($id))) { 
+      if ( !is_int(trim($id)) ) { 
          //$this->container->updateMultilangValue($this);
          //return $id;
       }
-      $qry="SELECT * FROM aa_translation WHERE id='".addslashes($id)."'";
-      $res=$db->Execute($qry);
+      $qry = "SELECT * FROM aa_translation WHERE id='".addslashes($id)."'";
+      $res = $db->Execute($qry);
       if ($res->RecordCount()==0) {  //umm... the field is multilang but there isn't a row in the translation table... 
-        $ret=$id;
+        $ret = $id;
       } else {
-        $arr=$res->FetchRow();
-        $ret=$arr[$this->getLang($_SESSION["aa_CurrentLang"])];
-        if ($ret=="" and $err===true) {
-          foreach ($arr as $mylang=>$mytrans) 
-            if (!is_numeric($mylang) and $mylang!="id" and $mytrans!="") $alt.="\n$mylang: ".substr(strip_tags($mytrans),0,10);
-          if (isset($alt) and $alt!="") $ret="<span style='color: gray' title=\"".htmlentities("Other Translations:".$alt)."\">[no translation]</span>";
+        $arr = $res->FetchRow();
+        $ret = $arr[$this->getLang($_SESSION["aa_CurrentLang"])];
+        if ( $ret == "" 
+          && $err === true
+          ){
+          $alt = '';
+          foreach ($arr as $mylang => $mytrans) 
+            if ( !is_numeric($mylang) 
+              && $mylang != "id" 
+              && $mytrans != ""
+              ) $alt .= "\n{$mylang}: ".substr(strip_tags($mytrans), 0, 10);
+          if ($alt != "") 
+            $ret="<span style='color: gray' title=\"".htmlentities("Other Translations:".$alt)."\">[no translation]</span>";
         }
       }
-    } else $ret=$id;
+    } else 
+      $ret = $id;
+      
     return $ret;
   }
 
@@ -258,9 +270,9 @@ class synElement {
       session_start();
     $aa_CurrentLang = $_SESSION['aa_CurrentLang'];
     
-    $qry="SELECT * FROM aa_lang WHERE id='".$aa_CurrentLang."'";
-    $res=$db->Execute($qry);
-    $arr=$res->FetchRow();
+    $qry = "SELECT * FROM aa_lang WHERE id='{$aa_CurrentLang}'";
+    $res = $db->Execute($qry);
+    $arr = $res->FetchRow();
     return $arr["initial"];
   }
   
@@ -272,8 +284,8 @@ class synElement {
     $ismultilang = 0;
 # echo $qry, '##<br>';
     preg_match("/^SELECT ([a-zA-Z0-9-_, `\*]+) FROM ([a-zA-Z-_`]+)(?:.*)?$/i", $qry, $matches);
-    $field = isset($matches[1]) ? str_replace('`','',$matches[1]) : "";
-    $table = isset($matches[2]) ? str_replace('`','',$matches[2]) : "";
+    $field = isset($matches[1]) ? str_replace('`', '', $matches[1]) : '';
+    $table = isset($matches[2]) ? str_replace('`', '', $matches[2]) : '';
 # echo $field, ' - ', $table, '<br>';
     if ($table!='') {
       if($field=='*'){

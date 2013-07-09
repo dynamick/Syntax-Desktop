@@ -168,7 +168,7 @@ if ( !$chunks
 
   $info        = pathinfo($filePath);
   $description = $info['filename'];
-  $ext         = $info['extension'];
+  $ext         = strtolower($info['extension']);
   $ordine     += 10;
 
   $qry = <<<EOQINS
