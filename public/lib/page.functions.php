@@ -171,7 +171,8 @@ function get404pageId() {
 
 function getPageId() {
   global $db, $synEntryPoint, $languages;
-  
+
+  $ret     = false;  
   $pattern = '/^\/([a-z]{2}\/)*'        // matcha la lingua, es. 'en/' - opzionale
            . '([a-z0-9-_\+]+\/)*'       // matcha 'pagina/' - opzionale (cattura solo l'ultima occorrenza)
            . '(?:[a-z0-9-_~\.\/]+)?$/'; // matcha 'cat~1/', 'pippo~1.html' o 'index.html' - opzionale (NON viene catturato)
@@ -180,13 +181,15 @@ function getPageId() {
     $_SERVER['REQUEST_URI'] = $_SERVER['HTTP_X_REWRITE_URL'];
   }  
   
-  if(isset($_GET['spt'])) {
+  if (isset($_GET['spt'])) {
     $uri = DIRECTORY_SEPARATOR . $_GET['spt'];
   } else {
     $uri = $_SERVER['REQUEST_URI'];
   }
   
-  $ret = false;
+  // elimino eventuale querystring
+  if (strpos($uri, '?'))
+    $uri = strstr($uri, '?', true);
   
   if (empty($languages))
     $languages  = getLangList();
@@ -237,7 +240,7 @@ function getPageId() {
   setLang($lang_id, $lang);
   
   // TODO: recuperare dinamicamente la 404?
-  if($ret === false){
+  if ($ret === false) {
     //echo "{$uri} not found";
     // $ret = '404';
     // pagina non trovata o non valida
