@@ -10,24 +10,39 @@ function smarty_function_rss($params, &$smarty) {
   $rss->link           = "http://".$_SERVER["SERVER_NAME"]."/news";
   $rss->syndicationURL = "http://".$_SERVER["SERVER_NAME"]."/".$PHP_SELF;
 
-  $qry="SELECT * FROM news ORDER BY `date` DESC LIMIT 0,10";
+  if ($_SESSION["synSiteLangInitial"]=="" or !isset($_SESSION["synSiteLangInitial"])){
+    updateLang();
+  }
+  $lang = $_SESSION['synSiteLangInitial'];
+
+  $qry = <<<QRY
+  SELECT n.id, n.date, n.image,
+      t1.{$lang} AS title,
+      t2.{$lang} AS text
+  FROM news n
+    LEFT JOIN aa_translation t1 ON n.title = t1.id
+    LEFT JOIN aa_translation t2 ON n.text  = t2.id
+  ORDER BY `date` 
+  DESC LIMIT 0,10
+QRY;
+
   $res=$db->Execute($qry);
 
   while ($arr=$res->FetchRow()) {
-    $data = $arr["date"];
-  	if (!strpos($data,":")) {
-		  $ar_data = explode("-",$data);
+    extract($arr);
+    if (!strpos($date,":")) {
+      $ar_data = explode("-",$date);
       $ar_ora = array('0','0','0');
-		} else {
-		  $dd = explode(" ",$data);
-		  $ar_data = explode("-",$dd[0]);
-		  $ar_ora = explode(":",$dd[1]);
+    } else {
+      $dd = explode(" ",$date);
+      $ar_data = explode("-",$dd[0]);
+      $ar_ora = explode(":",$dd[1]);
     }
 
     $item              = new FeedItem();
-    $item->title       = translateSite($arr["title"]);
-    $item->link        = "http://".$_SERVER["SERVER_NAME"]."/news/?id=".$arr["id"];
-    $item->description = translateSite($arr["text"]);
+    $item->title       = $title;
+    $item->link        = "http://".$_SERVER["SERVER_NAME"]."/news/?id={$id}";
+    $item->description = $text;
     // data in formato "Thu, 28 Aug 1975 15:30:00 +0100"
     $item->date        = date("D, d M Y H:i:s O", mktime($ar_ora[0], $ar_ora[1], $ar_ora[2], $ar_data[1], $ar_data[2], $ar_data[0]));
     $item->source      = "http://".$_SERVER["SERVER_NAME"];

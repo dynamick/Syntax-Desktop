@@ -69,7 +69,9 @@ EOC;
     $this->configuration[4]="Altezza: ".$synHtml->text(" name=\"synElmSize[$i]\" value=\"$synElmSize[$i]\"");
 
     $array=array("Default"=>"Default", "Basic"=>"Basic", "Deluxe"=>"Deluxe");
-    $this->configuration[5]="Tipo: ".$synHtml->select(" name=\"synElmPath[$i]\" value=\"$synElmPath[$i]\"",$array,$synElmPath[$i]);
+    $value = "";
+    if (isset($synElmPath[$i])) $value = $synElmPath[$i];    
+    $this->configuration[5]="Tipo: ".$synHtml->select(" name=\"synElmPath[$i]\"",$array,$value);
 
 #    if (!isset($synElmQry[$i]) or $synElmQry[$i]=="") $checked=""; else $checked=" checked='checked' ";
 #    $this->configuration[6]="Gigante: ".$synHtml->check(" name=\"synElmQry[$i]\" value=\"1\" $checked");

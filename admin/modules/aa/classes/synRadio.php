@@ -92,7 +92,10 @@ class synRadio extends synElement {
     
     $synHtml = new synHtml();
     //parent::configuration();
-    $this->configuration[4]="Query: ".$synHtml->text(" name=\"synElmQry[$i]\" value=\"".htmlentities($synElmQry[$i])."\"");
+    
+    $value = "";
+    if (isset($synElmQry[$i])) $value = htmlentities($synElmQry[$i]);
+    $this->configuration[4]="Query: ".$synHtml->text(" name=\"synElmQry[$i]\" value=\"{$value}\"");
 
     #if (!isset($synElmPath[$i]) or $synElmPath[$i]=="") $checked=""; else $checked=" checked='checked' ";
     #$this->configuration[5]="NULL: ".$synHtml->check(" name=\"synElmPath[$i]\" value=\"1\" $checked");

@@ -575,7 +575,7 @@ function __autoload($class) {
       //perfrom the qry
       $qry = addQueryWhere("SELECT `{$synTable}`.* FROM `{$synTable}`");
 
-      $pager = new synPager($db, 'syntax', 'content.php', 'content', true, true, $synTable);
+      $pager = new synPager($db, 'syntax', 'content.php', 'content', true, true, "pager_{$synTable}");
       $res = $pager->Execute($qry, $synRowsPerPage);
       
       if ($treeFrame == "true") {

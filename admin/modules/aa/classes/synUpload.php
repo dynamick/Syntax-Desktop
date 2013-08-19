@@ -332,15 +332,19 @@ EOC;
     }
 
     $save_path = '';
-    $file = $_FILES['userfile'];
-    $k = count($file['name']);
-    for($i=0 ; $i < $k ; $i++){
-    	if ( isset($save_path)
-        && $save_path != ''
-        ){
-    		$name = explode('/', $file['name'][$i]);
-    		move_uploaded_file($file['tmp_name'][$i], $save_path.$name[count($name)-1]);
-    	}
+    $file = '';
+    if(isset($_FILES['userfile'])) {
+      $file = $_FILES['userfile'];
+    
+      $k = count($file['name']);
+      for($i=0 ; $i < $k ; $i++){
+        if ( isset($save_path)
+          && $save_path != ''
+          ){
+          $name = explode('/', $file['name'][$i]);
+          move_uploaded_file($file['tmp_name'][$i], $save_path.$name[count($name)-1]);
+        }
+      }
     }
   }
 
