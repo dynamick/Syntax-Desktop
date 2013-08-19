@@ -422,7 +422,12 @@ class ADODB_PDO
     return $qryRecs;
   }
 
-
+  
+  public function showError(){
+    return $this->_db->errorInfo();
+  }
+  
+  
   private function debug($sql=null, $vars=null) {
     $error = array("Error" => $this->error);
     $msg = "";
@@ -459,7 +464,7 @@ class ADODB_PDO
     $msg .= "<style type=\"text/css\">\n".$css."\n</style>";
     $msg .= "\n" . '<div class="db-error">' . "\n\t<h3>SQL Error</h3>";
     foreach($error as $key => $val){
-      $msg .= "\n\t<label>".$key.":</label>".$val;
+      $msg .= "\n\t<label>".$key.":</label> ".htmlspecialchars($val);
     }
     $msg .= "\n\t</div>\n";
 
