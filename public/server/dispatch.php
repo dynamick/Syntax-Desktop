@@ -89,9 +89,8 @@ EOSQL;
         $error ++;
         $_SESSION['form'.$form_id]['error']['privacy'] = 'empty';
       }
-      if ( $form_captcha!='nessuno'
-        && strtolower($_POST['captcha'])!=strtolower($_SESSION['security_code'])
-        ){
+      if($form_captcha!='nessuno' && 
+        (!isset($_POST['captcha']) || trim($_POST['captcha'])=="" || strtolower($_POST['captcha'])!=strtolower($_SESSION['security_code']))){
         $error ++;
         $_SESSION['form'.$form_id]['error']['captcha'] = 'empty';
       }
