@@ -1,8 +1,6 @@
 admin/config/config.php
 admin/modules/phpMyBackupPro/global_conf.php
-public/templates_c/*.php
 public/mat/*.*
-public/mat/thumb/*
 _public/*
 cache/*
 *.db

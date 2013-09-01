@@ -4,6 +4,7 @@
   ini_set('display_errors', 1);  
   
   header('Content-type: text/html; charset=utf-8');
+  header('X-UA-Compatible: IE=edge,chrome=1');
   
   if(!isset($_SESSION))
     session_start();

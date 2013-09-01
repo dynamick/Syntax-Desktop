@@ -111,7 +111,7 @@ body {background-color:#eee; font:18px/30px 'Open Sans', Helvetica, Helvetica Ne
 
 .main-section {border-bottom:5px solid #ccc; background-color:#fff;}
 .main-section .content {float:left; margin-right:25%; padding-right:3.98%; width:71%}
-.main-section .sidebar {float:left; margin-left:-25%; width:25%;}
+.main-section .sidebar {float:left; margin-left:-25%; width:25%; color:#777;}
 .main-section .menu {margin:0 0 30px; padding:0; border-top:1px solid #ddd; list-style:none;}
 .main-section .menu a {display:block; padding:5px 20px 4px; border-bottom:1px solid #ddd; color:#09c; font-weight:bold; text-transform:uppercase;}
 .main-section .menu a:hover {background-color:#09c; color:#fff;}

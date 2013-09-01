@@ -1,11 +1,10 @@
 ﻿<!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<!--[if lt IE 7]>     <html class="no-js lt-ie9 lt-ie8 lt-ie7"><![endif]-->
+<!--[if IE 7]>        <html class="no-js lt-ie9 lt-ie8"><![endif]-->
+<!--[if IE 8]>        <html class="no-js lt-ie9"><![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js"><!--<![endif]-->
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>{if isset($smarty.get.title)}{$smarty.get.title|replace:'-':' '|capitalize} > {/if}{$synPageTitle|htmlspecialchars} > Syntax Demo Site</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -31,7 +30,7 @@
 		<header class="main-header" role="banner">
       <div class="wrapper">
         <div class="hgroup">
-          <h1><a class="logo" href="#">{* $synWebsiteTitle *} Syntax Demo</a></h1>
+          <h1><a class="logo" href="/">{$synWebsiteTitle}</a></h1>
           <h2>A Demo site for SyntaxDesktop CMS</h2>
         </div>
         

@@ -45,7 +45,7 @@ class synSmarty extends Smarty {
   // synPageXxxxx
 
   function getSynTemplate($pageId) {
-    global $db, $synPublicPath, $synAdminPath, $synAbsolutePath;
+    global $db, $synPublicPath, $synAdminPath, $synAbsolutePath, $synWebsiteTitle;
 
     $qry = <<<EOQRY
     
@@ -86,6 +86,7 @@ EOQRY;
     $this->assign('synAdminPath', $synAdminPath);
     $this->assign('synPublicPath', $synPublicPath);
     $this->assign('synAbsolutePath', $synAbsolutePath);
+    $this->assign('synWebsiteTitle', $synWebsiteTitle);
 
     //variabile per riconoscere le chiamate via AJAX
     $xhr = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && (strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');

@@ -15,9 +15,11 @@
         </p>
       </div>
     </footer>
-    
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2/jquery.min.js"></script>
+<!--
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="{$synPublicPath}/js/vendor/jquery-2.0.0.min.js"><\/script>')</script>
+-->
+    <script src="{$synPublicPath}/js/vendor/jquery-2.0.0.min.js"></script>
     <script src="{$synPublicPath}/js/vendor/jquery.colorbox-min.js"></script>
     <script src="{$synPublicPath}/js/jquery.validate.min.js"></script>
     <script src="{$synPublicPath}/js/plugins.js"></script>

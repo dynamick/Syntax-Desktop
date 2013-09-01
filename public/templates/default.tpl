@@ -2,14 +2,15 @@
 
     <section class="main-section" id="{$synPageSlug}">
       <div class="wrapper">
-        <hgroup class="page-header2">
+        <header class="page-header2">
           <h1>{$synPageTitle}</h1>
-        </hgroup>
+          {lang}
+        </header>
         
         <footer class="page-footer">
           <div class="searchform">
-            <form action="" method="post">
-              <input type="text" name="q" placeholder="Cerchi qualcosa?" tabindex="1"/>
+            <form action="{createPath page=51}" method="post">
+              <input type="text" name="q" placeholder="Cerchi qualcosa?" tabindex="1">
               <button type="submit">Ok</button>
             </form>
           </div>
@@ -20,7 +21,9 @@
         </footer>          
                 
         <div class="content">
+          <div class="rich-text">
           {$synPageText}
+          </div>
         </div>
         
         <aside class="sidebar">
