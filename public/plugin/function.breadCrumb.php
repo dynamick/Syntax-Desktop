@@ -8,7 +8,7 @@
 * Purpose:  Ritorna il path "Briciole di pane" dalla posizione corrente
 * -------------------------------------------------------------
 */
-function smarty_function_breadCrumb($params, &$smarty) {
+function smarty_function_breadcrumb($params, &$smarty) {
   if(!isset($_SESSION))
     session_start();
 
@@ -19,8 +19,15 @@ function smarty_function_breadCrumb($params, &$smarty) {
   $crumbs  = '';
   $url     = '/';
   
+  $base_title = 'Home'; // titolo per tutte le pagine di livello root
+  $home_siblings = array(); // id delle pagine a livello root
+  
   foreach($nodes as $k => $node) {
+    if (in_array($node['id'], $home_siblings)) 
+      $node['title'] = $base_title; // se è di livello root cambio il titolo
+      
     $pages[$node['slug']] = $node['title'];
+    
     if($k == 0)
       $pageArr[$lang] = $node['title'];
   }

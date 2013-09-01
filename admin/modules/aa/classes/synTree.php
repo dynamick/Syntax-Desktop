@@ -65,7 +65,7 @@ class synTree extends synElement {
     $join      = '';
     $joinfield = '';
     //$synPrimaryKey = preg_filter('/(\D+)/', '', $_GET['synPrimaryKey']); //php 5.3+
-    $synPrimaryKey = preg_replace('/(\D+)/', '', $_GET['synPrimaryKey']);
+    $synPrimaryKey = isset($_GET['synPrimaryKey']) ? preg_replace('/(\D+)/', '', $_GET['synPrimaryKey']) : null;
 
     if($this->multilang){
       $joinfield = ", t.{$this->getlang()} AS {$this->caption} ";
@@ -88,7 +88,8 @@ class synTree extends synElement {
 
     $res  = $db->Execute($qry);
     while($arr = $res->fetchrow()){
-      $indent = str_repeat('+-', $recursion);
+      //$indent = str_repeat('+-', $recursion);
+      $indent = str_repeat('&nbsp;&nbsp;', $recursion);
 
       if ($synPrimaryKey == $arr['id']){
         $myself = 1; // found myself
@@ -119,8 +120,8 @@ class synTree extends synElement {
       }
     }
     return $ret;
-  }  
-  
+  }
+
 
   //get the label of the element
   function getCell() {
@@ -265,6 +266,7 @@ class synTree extends synElement {
 
 <?php
   } // end of PRIVATE FUNCTIONS
-  
-} //end of class tree
-?>
+
+} 
+
+//end of class tree

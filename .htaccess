@@ -2,25 +2,30 @@ php_flag magic_quotes_gpc off
 
 # exclude unauthorized HTTP verbs
 <LimitExcept POST GET HEAD OPTIONS>
-Deny from all
+  Deny from all
 </LimitExcept>
 
 # BEGIN Syntax Desktop
 <IfModule mod_rewrite.c>
-RewriteEngine On
-RewriteBase /
+  RewriteEngine On
+  RewriteBase /
+  
+  # add trailing slash
+  RewriteCond %{REQUEST_URI} !(/$|\.) 
+  RewriteRule (.*) %{REQUEST_URI}/ [R=301,L]   
+  
+  # /pagina/area~x/linea~y/prodotto~z.html
+  # RewriteRule ^([a-z0-9-_/]+)/([A-Za-z0-9-_]+)~(\d+)/(?:([A-Za-z0-9-_]+)~(\d+)/)??(?:([A-Za-z0-9-_\.]+)~(\d+)\.html)??$ $1/?area=$2&idarea=$3&linea=$4&idlinea=$5&prodotto=$6&id=$7 [QSA]
 
-# /pagina/area~x/linea~y/prodotto~z.html
-# RewriteRule ^([a-z0-9-_/]+)/([A-Za-z0-9-_]+)~(\d+)/(?:([A-Za-z0-9-_]+)~(\d+)/)??(?:([A-Za-z0-9-_\.]+)~(\d+)\.html)??$ $1/?area=$2&idarea=$3&linea=$4&idlinea=$5&prodotto=$6&id=$7
+  # /pagina/notizia~n.html
+  RewriteRule ^(.*)/([A-Za-z0-9-_]+)~(\d+)\.html$  $1/?title=$2&id=$3 [QSA]
 
-# /pagina/notizia~n.html
-RewriteRule ^(.*)/([A-Za-z0-9-_]+)~(\d+)\.html$  $1/?title=$2&id=$3 [QSA]
+  # /pagina/index10.html
+  RewriteRule ^(.*)/index([0-9]+)\.html$           $1/?_next_page=$2&parent=$1 [QSA]
 
-# /pagina/index10.html
-RewriteRule ^(.*)/index([0-9]+)\.html$           $1/?_next_page=$2&parent=$1 [QSA]
-
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule . /index.php [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  
+  RewriteRule . /index.php [L]
 </IfModule>
 # END Syntax Desktop

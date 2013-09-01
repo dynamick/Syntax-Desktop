@@ -131,7 +131,7 @@ class synInputfile extends synElement {
       if (is_array($value)) {
         $ext = end(explode(".", $value["name"]));
       } else {
-        if ($ext=="") $ext = $_REQUEST[$this->name."_old"];
+        if ($ext=="" && isset($_REQUEST[$this->name."_old"])) $ext = $_REQUEST[$this->name."_old"];
         if ($ext=="") $ext = $value;
       }
       return strtolower($ext);

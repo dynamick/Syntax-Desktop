@@ -38,6 +38,12 @@ if(!function_exists('troncaTesto')) {
   }
 }
 
+if(!function_exists('pulisciTesto')) {
+  function pulisciTesto($testo) {
+    return str_replace("<p>\r\n\t&nbsp;</p>", "", $testo);
+  }
+}
+
 if(!function_exists('tabIndex')) {
   function tabindex(){
     static $tab = 1;

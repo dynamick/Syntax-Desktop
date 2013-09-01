@@ -211,20 +211,21 @@ function translateDictionary($label){
 
   if(!isset($_SESSION))
     session_start();
+    
   $lng = $_SESSION['synSiteLangInitial'];
-  $qry = "SELECT t.$lng AS value FROM dictionary v JOIN aa_translation t ON v.value=t.id WHERE v.label='".$label."'";
+  $qry = "SELECT t.{$lng} AS value FROM dictionary v JOIN aa_translation t ON v.value=t.id WHERE v.label='{$label}'";
   $res = $db->Execute($qry);
-  if($res->RecordCount()==0){
+  if ($res->RecordCount()==0) {
     $ret = $label;
   } else {
-    $arr=$res->FetchRow();
-    $ret = $arr["value"];
+    $arr = $res->FetchRow();
+    $ret = $arr['value'];
   }
   return $ret;
 }
 
 
-function multiTranslateDictionary($label=array()){
+function multiTranslateDictionary($labels=array(), $auto_insert=false){
   // traduzione multipla, ritorna un array
   global $db;
 
@@ -233,14 +234,31 @@ function multiTranslateDictionary($label=array()){
 
   $lng = $_SESSION["synSiteLangInitial"];
   $ret = array();
-  $qry = "SELECT v.label, t.$lng AS value FROM dictionary v JOIN aa_translation t ON v.value=t.id WHERE v.label='".implode("' OR v.label='", $label)."'";
+  $qry = "SELECT v.label, t.{$lng} AS value "
+       . "FROM dictionary v "
+       . "LEFT JOIN aa_translation t ON v.value=t.id "
+       . "WHERE v.label='".implode("' OR v.label='", $labels)."'";
   $res = $db->Execute($qry);
   $ret = array();
-  while($arr = $res->FetchRow()) {
-    $ret[$arr['label']] = $arr['value'];
+  while ($arr = $res->FetchRow()) {
+    $ret[$arr['label']] = !empty($arr['value']) ? $arr['value'] : "<mark>[missing translation]</mark> {$arr['label']}";
+  }
+  // aggiungo le chiavi non trovate
+  foreach ($labels as $label) {
+    if (!array_key_exists($label, $ret)) {
+      $ret[$label] = "<mark>[missing translation]</mark> {$label}";
+      if ($auto_insert == true) {
+        // inserisco nel dizionario la voce mancante
+        $qry = "INSERT INTO dictionary (`label`) VALUES ('{$label}')";
+        $res = $db->Execute($qry);
+      }
+    }
   }
   return $ret;
 }
+
+
+
 
 function get_languages(){
 	$user_languages = array();

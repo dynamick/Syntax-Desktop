@@ -9,8 +9,8 @@
         
         <footer class="page-footer">
           <div class="searchform">
-            <form action="{createPath page=51}" method="post">
-              <input type="text" name="q" placeholder="Cerchi qualcosa?" tabindex="1">
+            <form action="{createPath page=57}" method="get">
+              <input type="text" name="q" placeholder="Cerchi qualcosa?" tabindex="1"/>
               <button type="submit">Ok</button>
             </form>
           </div>
