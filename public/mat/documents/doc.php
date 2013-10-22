@@ -68,29 +68,33 @@ function dl_file($file){
       default: die("<b>Cannot be used for ".$file_extension." files!</b>"); break;
       //default: $ctype="application/force-download";
     }
+    
+    try {
+      $nicefilename = getNiceFileName($filename, $file_extension);
+    } catch (Exception $e){
+      die($e->getMessage());
+    }
+    
+    //Begin writing headers
+    header("Pragma: public");
+    header("Expires: 0");
+    header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+    header("Cache-Control: public");
+    header("Content-Description: File Transfer");
 
-   $nicefilename = getNiceFileName($filename,$file_extension);
+    //Use the switch-generated Content-Type
+    header("Content-Type: {$ctype}");
 
-   //Begin writing headers
-   header("Pragma: public");
-   header("Expires: 0");
-   header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-   header("Cache-Control: public");
-   header("Content-Description: File Transfer");
+    //Force the download
+    header("Content-Disposition: attachment; filename={$nicefilename}.{$file_extension}");
+    header("Content-Transfer-Encoding: binary");
+    header("Content-Length: ".$len);
 
-   //Use the switch-generated Content-Type
-   header("Content-Type: {$ctype}");
+    @readfile($file);
+    exit;
+  }
 
-   //Force the download
-   header("Content-Disposition: attachment; filename={$nicefilename}.{$file_extension}");
-   header("Content-Transfer-Encoding: binary");
-   header("Content-Length: ".$len);
-
-   @readfile($file);
-   exit;
-}
-
-function getNiceFileName($filename,$ext) {
+function getNiceFileName($filename, $ext) {
   global $db;
   
   $t = multiTranslateDictionary(array('doc_riservato'));
@@ -103,38 +107,60 @@ function getNiceFileName($filename,$ext) {
     $usergroup = explode('|', $usergroup);
   } else $usergroup = array();
 
-  $arr=explode("_",$filename);
-  if ($arr[0]=="aa") {$arr[0]="aa_page"; $arr[2]=$arr[3];}
-  $qry="SELECT ".CAPTION_FIELD_NAME.", enabled_groups, status FROM ".$arr[0]." WHERE id=".intval(substr($arr[2],2));
-  @$res=$db->Execute($qry);
-  if ($res!==false) {
+  $arr = explode("_", $filename);
+  if ($arr[0]=="aa"){
+    $arr[0] = "aa_page"; 
+    $arr[2] = $arr[3];
+  }
+  $qry = "SELECT ".CAPTION_FIELD_NAME.", enabled_groups, status FROM ".$arr[0]." WHERE id=".intval(substr($arr[2],2));
+  @$res = $db->Execute($qry);
+  if ($res !== false) {
     $row    = $res->FetchRow();
     $titolo = translateSite($row[CAPTION_FIELD_NAME]);
     $status = $row["status"];
-    if($row['enabled_groups']) $owner    = explode('|', $row['enabled_groups']);
-    else $owner = Array(); 
+    
+    if($row['enabled_groups']) 
+      $owner = explode('|', $row['enabled_groups']);
+    else 
+      $owner = array(); 
 
     $intersect = array_intersect($usergroup, $owner);
 
-    if(is_array($intersect) && count($intersect) > 0) $have_same_group = true;
-    else $have_same_group = false;
+    if ( is_array($intersect)  && count($intersect) > 0 ) 
+       $have_same_group = true;
+    else 
+      $have_same_group = false;
+      
+    $is_public = ($status == 'public');
+    $is_protected = ( $status == 'protected' && $userid != '' );
+    $is_private = ($status == 'private' || $status == 'secret') && ($have_same_group && $userid != '');
    
-    if( !isset($_SESSION['synUser']) and !(
-      ($status == 'public') ||
-      ($status == 'protected' && $userid != '') ||
-      (($status == 'private' || $status == 'secret') && ($have_same_group && $userid != '') )   
-    )){     
-      die("<b>{$t['doc_riservato']}</b>");
-      exit;
+    if ( !isset($_SESSION['synUser']) 
+      && !$is_public
+      && !$is_protected
+      && !$is_private
+      ){     
+      throw new Exception("<b>{$t['doc_riservato']}</b>");
     }
 
-    if ($titolo=="") $titolo=$filename; // if something has been found, use it as filename...
-    else $titolo=str_replace(" ","-",trim(strtolower(ereg_replace("[^[:alpha:][:space:]0-9+]","",$titolo)))).".".$ext;
-  } else $titolo=$filename; // ...otherwise keep the original filename
-    return $titolo;
+    if (empty($titolo)) {
+      $titolo = $filename; 
+    } else {
+      // something has been found, sanitize it to output a valid filename:
+      $sanitized_title = trim(strtolower(preg_replace('/[\s\W]+/', '-', $titolo)));
+      if (empty($sanitized))
+        throw new Exception(CAPTION_FIELD_NAME.' is not a valid string');
+      $titolo = $sanitized_title;
+    }
+  } else {
+    $titolo = $filename; // ...otherwise keep the original filename
+  }
+  return $titolo;
 }
 
-$file=$_SERVER["REQUEST_URI"];
-$fullpath=$_SERVER["DOCUMENT_ROOT"].$file;
-dl_file($fullpath)
-?>
+$file     = $_SERVER["REQUEST_URI"];
+$fullpath = $_SERVER["DOCUMENT_ROOT"].$file;
+
+dl_file($fullpath);
+
+// EOF

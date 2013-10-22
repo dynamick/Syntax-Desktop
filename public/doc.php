@@ -68,7 +68,12 @@ function dl_file($file){
     //default: $ctype="application/force-download";
   }
 
-  $filename = getNiceFileName($filename,$file_extension);
+  try {
+    $filename = getNiceFileName($filename, $file_extension);
+  } catch (Exception $e){
+    die($e->getMessage());
+  }
+  
 
   //Begin writing headers
   header("Pragma: public");
@@ -99,19 +104,27 @@ function getNiceFileName($filename,$ext) {
   }
 
   $qry="SELECT ".CAPTION_FIELD_NAME." FROM ".$arr[0]." WHERE id=".intval(substr($arr[2],2));
-  # echo $qry; die();
   @$res=$db->Execute($qry);
   if ($res!==false) {
-    $row=$res->FetchRow();
-    $titolo=translateSite($row[CAPTION_FIELD_NAME]);
+    $row = $res->FetchRow();
+    $titolo = translateSite($row[CAPTION_FIELD_NAME]);
 
-    if ($titolo=="") $titolo=$filename; // if something has been found, use it as filename...
-    else $titolo=str_replace(" ","-",trim(strtolower(ereg_replace("[^[:alpha:][:space:]0-9+]","",$titolo)))).".".$ext;
-  } else $titolo=$filename; // ...otherwise keep the original filename
+    if (empty($titolo)) {
+      $titolo = $filename; // if something has been found, use it as filename...
+    } else {
+      $sanitized = trim(strtolower(preg_replace('/[\s\W]+/', '-', $titolo)));
+      if (empty($sanitized))
+        throw new Exception(CAPTION_FIELD_NAME.' is not a valid string');
+      $titolo = $sanitized;
+    }
+  } else {
+    $titolo = $filename; // ...otherwise keep the original filename
+  }
   return $titolo;
 }
 
 $file = $_SERVER["REQUEST_URI"];
 $fullpath = $_SERVER["DOCUMENT_ROOT"].$file;
 dl_file($fullpath);
-?>
+
+// EOF
