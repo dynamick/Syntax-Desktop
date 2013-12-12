@@ -481,12 +481,12 @@ function createSubmenu($id=0, $expand=false, $includeParent=false, $first_child=
     }
   }
   
-  return array_merge($menu, createSubmenuPrivate($id, $expand, $includeParent, $first_child, $field));
+  return array_merge($menu, createSubmenuPrivate($id, $expand, $first_child, $field));
 }
 
 
 //create the entire tree
-function createSubmenuPrivate($id=0, $expand=false, $includeParent=false, $first_child=false, $field="title") {
+function createSubmenuPrivate($id=0, $expand=false, $first_child=false, $field="title") {
   global $db,$smarty,$synPublicPath;
   
   $lang     = $_SESSION["synSiteLang"];
@@ -503,7 +503,7 @@ function createSubmenuPrivate($id=0, $expand=false, $includeParent=false, $first
     $active = ($arr["id"] == $currPage) || (is_array($idArr) && in_array($arr["id"],$idArr)) ? TRUE : FALSE;
 
     $child = array();
-    if($expand || $first_child || $active) $child = createSubmenuPrivate($arr["id"], $field);
+    if($expand || $first_child || $active) $child = createSubmenuPrivate($arr["id"], $expand, $first_child, $field);
     
 
     if($first_child) {
