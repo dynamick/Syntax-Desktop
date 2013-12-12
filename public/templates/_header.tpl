@@ -35,7 +35,21 @@
         </div>
         
         <nav role="navigation">
-          {menu|indent:10 includeParent=false}
+{menu includeParent=false}
+          {if count($menu) > 0}
+            <ul class="main-menu">          
+              {foreach name=menuCycle from=$menu item=item}
+                <li class="{if $smarty.foreach.menuCycle.last}last{/if}">
+                    <a href="{$item.link}" {if $item.is_url}onclick="window.open(this.href); return false;"{/if} class="{if $item.active}active{/if}">
+                      {$item.title}
+                      {if $item.is_url}
+                        <img src={$synPublicPath}/img/link_site.gif alt="External Site" />
+                      {/if}
+                    </a>
+                </li>
+              {/foreach}
+            </ul>
+          {/if}
         </nav>
         {* <div id="lang">{lang}</div> *}
       </div>

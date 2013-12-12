@@ -375,7 +375,8 @@ function url_decode($s){
 //create the entire menu
 function createMenu($id=0, $includeParent=false, $first_child=false) {
   global $db,$smarty,$synPublicPath;;
-  $ret="";
+  
+  $ret = array();
   $nodeArr = $smarty->synPageNode;
   foreach($nodeArr as $node) 
     $idArr[] = $node["id"];
@@ -385,55 +386,42 @@ function createMenu($id=0, $includeParent=false, $first_child=false) {
   $qry="SELECT * FROM `aa_page` WHERE CONCAT('|', `visible`, '|') LIKE '%|{$lang}|%' AND `parent`=$id ORDER BY `order`";
   $res=$db->Execute($qry);
   $rows=$res->RecordCount();
-  $count=1;
-  while ($arr=$res->FetchRow()) {
-    $title=translateSite($arr["title"]);
-    if($first_child==true) {
+  $count = 1;
+  while ($arr = $res->FetchRow()) {
+    $title = translateSite($arr["title"]);
+    if($first_child == true) {
       $qry="SELECT * FROM `aa_page` WHERE CONCAT('|', `visible`, '|') LIKE '%|{$lang}|%' AND `parent`=".$arr["id"]." ORDER BY `order`";
-      $res_c=$db->Execute($qry);
-      if ($arr_c=$res_c->FetchRow()) {
-        if (trim($arr_c['url'])==''){
-          $link=createPath($arr_c["id"]);
-          $event = " rel=\"\" ";
-          $img = "";
+      $res_c = $db->Execute($qry);
+      if ($arr_c = $res_c->FetchRow()) {
+        if (trim($arr_c['url']) == ''){
+          $link = createPath($arr_c["id"]);
+          $is_url = FALSE;
         } else {
-          $link=$arr_c["url"];
-          $event = " onclick=\"window.open(this.href); return false;\"";
-          $img = " <img src=\"".$synPublicPath."/img/link_site.gif\" alt=\"External Site\" />";
+          $link = $arr_c["url"];
+          $is_url = TRUE;
         }
       } else {
         if (trim($arr['url'])=='') {
-          $link=createPath($arr["id"]);
-          $event = " rel=\"\" ";
-          $img = "";
+          $link = createPath($arr["id"]);
+          $is_url = FALSE;
         } else {
-          $link=$arr["url"];
-          $event = " onclick=\"window.open(this.href); return false;\"";
-          $img = " <img src=\"".$synPublicPath."/img/link_site.gif\" alt=\"External Site\" />";
+          $link = $arr["url"];
+          $is_url = TRUE;
         }
       }
     } else {
       if (trim($arr['url'])=='') {
         $link=createPath($arr["id"]);
-        $event = " rel=\"\" ";
-        $img = "";
+        $is_url = FALSE;
       } else {
         $link=$arr["url"];
-        $event = " onclick=\"window.open(this.href); return false;\"";
-        $img = " <img src=\"".$synPublicPath."/img/link_site.gif\" alt=\"External Site\" />";
+        $is_url = TRUE;
       }
     }
 
-    if(($arr["id"]==$currPage)||((is_array($idArr))&&(in_array($arr["id"],$idArr)))){
-      $class=" class=\"active\" ";
-    }else{
-      $class="";
-    }
+    $active = ($arr["id"]==$currPage)||((is_array($idArr))&&(in_array($arr["id"],$idArr))) ? TRUE : FALSE;
 
-    $class_li = ($count==$rows) ? ' class="last"' : '';
-
-    $ret .= "<li{$class_li}><a href=\"{$link}\" {$event}{$class}>{$title}{$img}</a></li>\n";
-    $count ++;
+    $ret[] = array("title"=>$title, "link" => $link, "active" => $active, "is_url" => $is_url);
   }
   
   if($includeParent===true){
@@ -445,17 +433,14 @@ function createMenu($id=0, $includeParent=false, $first_child=false) {
 
       if (translateSite($arr["url"])=="") {
         $link = createPath($arr["id"]);
-          //die('429: '.$link.'|');
-        $event = " rel=\"\" ";
-        $img = "";
+        $is_url = FALSE;
       } else {
         $link = translateSite($arr["url"]);
-        $event = " onclick=\"window.open(this.href); return false;\"";
-        $img = " <img src=\"".$synPublicPath."/img/link_site.gif\" alt=\"External Site\" />";
+        $is_url = TRUE;
       }
 
-      if($arr["id"]==$currPage) $class=" class=\"active\" "; else $class="";
-      $ret="<li><a href=\"$link\" $event $class>".$title.$img."</a></li>\n".$ret;
+      $active = $arr["id"]==$currPage ? TRUE : FALSE;
+      array_unshift($ret, array("title"=>$title, "link" => $link, "active" => $active, "is_url" => $is_url));
     }
   }
   return $ret;
