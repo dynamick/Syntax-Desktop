@@ -503,10 +503,10 @@ function createSubmenuPrivate($id=0, $expand=false, $first_child=false, $field="
     $active = ($arr["id"] == $currPage) || (is_array($idArr) && in_array($arr["id"],$idArr)) ? TRUE : FALSE;
 
     $child = array();
-    if($expand || $first_child || $active) $child = createSubmenuPrivate($arr["id"], $expand, $first_child, $field);
+    if($expand || $first_child || $active) $child = createSubmenuPrivate($arr["id"], $expand, false, $field);
     
 
-    if($first_child) {
+    if($first_child && count($child) > 0) {
       $item   = reset($child);
       $link   = $item["link"];
       $is_url = FALSE;
