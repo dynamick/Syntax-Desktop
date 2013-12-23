@@ -18,20 +18,23 @@
 function smarty_function_pageInfo($params, &$smarty) {
   global $db;
 
-  $ret = "";
-  if (isset($params["page"]) && isset($params["info"])) {
-    $id = intval($params["page"]);
-    $info = $params["info"];
-    if($info=="path") {
+  $ret = null;
+  if ( isset($params['page']) 
+    && isset($params['info'])
+    ){
+    $id = intval($params['page']);
+    $info = $params['info'];
+    if ($info == 'path') {
       $ret = createPath($id);
     } else {    
-      $qry="SELECT * FROM `aa_page` WHERE `id`='$id' ";
-      $res=$db->Execute($qry);
-      if($arr=$res->FetchRow()) {  
-        $ret = translateSite($arr[$params["info"]]);
+      $qry = "SELECT * FROM `aa_page` WHERE `id`='{$id}'";
+      $res = $db->Execute($qry);
+      if ($arr = $res->FetchRow() ){
+        $ret = translateSite($arr[$params['info']]);
       }
     }  
   }  
   return $ret;
 }
-?> 
+
+// EOF function.pageInfo.php

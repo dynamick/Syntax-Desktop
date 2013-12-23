@@ -178,6 +178,7 @@ body {background-color:#eee; font:18px/30px 'Open Sans', Helvetica, Helvetica Ne
 .synform .button-wrap button {padding:4px 19px;}
 .synform .button-wrap button[type='reset'] {float:left;}
 .synform .button-wrap button[type='submit'] {margin:-5px 0; height:50px; font-size:120%;}
+.synform .hp {display:none;}
 
 .main-footer {position:relative; padding:0 0 50px; text-shadow:1px 1px 0 #fff;}
 .main-footer a {display:block; padding:10px; color:#333; border-radius:6px;}

@@ -1,4 +1,4 @@
-{include file="_header.tpl"}
+{include file="partial/_header.tpl"}
 {news}
 
     <section class="main-section" id="{$synPageSlug}">
@@ -9,12 +9,7 @@
         </hgroup>
         
         <footer class="page-footer">
-          <div class="searchform">
-            <form action="" method="post">
-              <input type="text" name="q" placeholder="Cerchi qualcosa?" tabindex="1"/>
-              <button type="submit">Ok</button>
-            </form>
-          </div>
+{include file='partial/_searchform.tpl'}
 
           <nav class="breadcrumb">
             {breadcrumb}
@@ -25,7 +20,8 @@
         
         <aside class="sidebar">
           <div class="box">
-            {submenu}
+            <h3 class="menu-header">{pageInfo page=$synPageNode1 info='title'}</h3>
+{include file='partial/_submenu.tpl'}
           </div>          
           <div>
             <script src="http://www.ohloh.net/p/345/widgets/project_factoids_stats.js"></script>
@@ -35,4 +31,4 @@
     </section>
   
 
-{include file='_footer.tpl'}
+{include file='partial/_footer.tpl'}

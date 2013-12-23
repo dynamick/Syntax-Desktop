@@ -469,7 +469,7 @@ insert into `aa_services_element` values ('529', '152', 'pagina', '12', '', '1',
 insert into `aa_services_element` values ('530', '152', 'descrizione', '6', '', '', '', '645', '150', '646', 'Default', '', '', '', '20', '', '1');
 insert into `aa_services_element` values ('531', '152', 'destinatario', '2', '', '1', '', '647', '255', '648', '', '', '', '', '30', '', '');
 insert into `aa_services_element` values ('533', '152', 'privacy', '9', '', '', '', '651', '255', '652', '', '', '1', '', '50', '', '');
-insert into `aa_services_element` values ('534', '152', 'captcha', '23', '', '', '', '653', '0', '654', '', 'nessuno|basic|synCaptcha', '', '', '60', '', '');
+insert into `aa_services_element` values ('534', '152', 'captcha', '23', '', '', '', '653', '0', '654', '', 'nessuno|basic|synCaptcha|honeypot', '', '', '60', '', '');
 insert into `aa_services_element` values ('535', '152', 'risposta', '6', '', '', '', '655', '150', '656', 'Default', '', '', '', '70', '', '1');
 insert into `aa_services_element` values ('536', '152', 'data', '15', '', '1', '', '657', '0', '658', '', '', '', '', '80', '', '');
 insert into `aa_services_element` values ('537', '152', 'visibile', '9', '', '1', '', '659', '255', '660', '', '', '1', '', '90', '', '');
