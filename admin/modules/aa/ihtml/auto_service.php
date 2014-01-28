@@ -100,7 +100,7 @@ function __autoload($class) {
       $fieldObj=$contenitore->getElement($field);
       if ($fieldObj->isMultilang()) {
         $qry.=" LEFT JOIN aa_translation ON ".$synTable.".".$field." = aa_translation.id";
-        $field = "aa_translation`.`".$_SESSION['synSiteLangInitial'];
+        $field = "aa_translation`.`".$_SESSION['aa_CurrentLangInitial'];
       }
 
       if (strpos($qry,"WHERE")===false) $qry.=" WHERE ";

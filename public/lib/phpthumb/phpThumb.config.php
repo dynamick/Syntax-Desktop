@@ -17,7 +17,8 @@ if (!file_exists(dirname(__FILE__).'/phpthumb.functions.php') || !include_once(d
 }
 ob_end_clean();
 
-$PHPTHUMB_CONFIG['document_root']                        = realpath(($_SERVER["DOCUMENT_ROOT"] && ereg('^'.preg_quote(realpath($_SERVER["DOCUMENT_ROOT"])), realpath(__FILE__))) ? $_SERVER["DOCUMENT_ROOT"] : str_replace(dirname(@$_SERVER['PHP_SELF']), '', str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__))));
+//$PHPTHUMB_CONFIG['document_root']                        = realpath(($_SERVER["DOCUMENT_ROOT"] && ereg('^'.preg_quote(realpath($_SERVER["DOCUMENT_ROOT"])), realpath(__FILE__))) ? $_SERVER["DOCUMENT_ROOT"] : str_replace(dirname(@$_SERVER['PHP_SELF']), '', str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__))));
+$PHPTHUMB_CONFIG['document_root']                        = $_SERVER["DOCUMENT_ROOT"];
 $PHPTHUMB_CONFIG['cache_directory']                      = $_SERVER["DOCUMENT_ROOT"].'/cache/';
 $PHPTHUMB_CONFIG['cache_disable_warning']                = false;
 $PHPTHUMB_CONFIG['cache_directory_depth']                = 1;

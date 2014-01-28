@@ -148,7 +148,7 @@ function getNiceFileName($filename, $ext) {
     } else {
       // something has been found, sanitize it to output a valid filename:
       $sanitized_title = trim(strtolower(preg_replace('/[\s\W]+/', '-', $titolo)));
-      if (empty($sanitized))
+      if (empty($sanitized_title))
         throw new Exception(CAPTION_FIELD_NAME.' is not a valid string');
       $titolo = $sanitized_title;
     }
