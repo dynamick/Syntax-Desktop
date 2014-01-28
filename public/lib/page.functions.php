@@ -375,7 +375,8 @@ function url_decode($s){
 //create the entire menu
 function createMenu($id=0, $includeParent=false, $first_child=false) {
   global $db,$smarty,$synPublicPath;;
-  $ret="";
+  
+  $ret = array();
   $nodeArr = $smarty->synPageNode;
   foreach($nodeArr as $node) 
     $idArr[] = $node["id"];
@@ -385,55 +386,42 @@ function createMenu($id=0, $includeParent=false, $first_child=false) {
   $qry="SELECT * FROM `aa_page` WHERE CONCAT('|', `visible`, '|') LIKE '%|{$lang}|%' AND `parent`=$id ORDER BY `order`";
   $res=$db->Execute($qry);
   $rows=$res->RecordCount();
-  $count=1;
-  while ($arr=$res->FetchRow()) {
-    $title=translateSite($arr["title"]);
-    if($first_child==true) {
+  $count = 1;
+  while ($arr = $res->FetchRow()) {
+    $title = translateSite($arr["title"]);
+    if($first_child == true) {
       $qry="SELECT * FROM `aa_page` WHERE CONCAT('|', `visible`, '|') LIKE '%|{$lang}|%' AND `parent`=".$arr["id"]." ORDER BY `order`";
-      $res_c=$db->Execute($qry);
-      if ($arr_c=$res_c->FetchRow()) {
-        if (trim($arr_c['url'])==''){
-          $link=createPath($arr_c["id"]);
-          $event = " rel=\"\" ";
-          $img = "";
+      $res_c = $db->Execute($qry);
+      if ($arr_c = $res_c->FetchRow()) {
+        if (trim($arr_c['url']) == ''){
+          $link = createPath($arr_c["id"]);
+          $is_url = FALSE;
         } else {
-          $link=$arr_c["url"];
-          $event = " onclick=\"window.open(this.href); return false;\"";
-          $img = " <img src=\"".$synPublicPath."/img/link_site.gif\" alt=\"External Site\" />";
+          $link = $arr_c["url"];
+          $is_url = TRUE;
         }
       } else {
         if (trim($arr['url'])=='') {
-          $link=createPath($arr["id"]);
-          $event = " rel=\"\" ";
-          $img = "";
+          $link = createPath($arr["id"]);
+          $is_url = FALSE;
         } else {
-          $link=$arr["url"];
-          $event = " onclick=\"window.open(this.href); return false;\"";
-          $img = " <img src=\"".$synPublicPath."/img/link_site.gif\" alt=\"External Site\" />";
+          $link = $arr["url"];
+          $is_url = TRUE;
         }
       }
     } else {
       if (trim($arr['url'])=='') {
         $link=createPath($arr["id"]);
-        $event = " rel=\"\" ";
-        $img = "";
+        $is_url = FALSE;
       } else {
         $link=$arr["url"];
-        $event = " onclick=\"window.open(this.href); return false;\"";
-        $img = " <img src=\"".$synPublicPath."/img/link_site.gif\" alt=\"External Site\" />";
+        $is_url = TRUE;
       }
     }
 
-    if(($arr["id"]==$currPage)||((is_array($idArr))&&(in_array($arr["id"],$idArr)))){
-      $class=" class=\"active\" ";
-    }else{
-      $class="";
-    }
+    $active = ($arr["id"]==$currPage)||((is_array($idArr))&&(in_array($arr["id"],$idArr))) ? TRUE : FALSE;
 
-    $class_li = ($count==$rows) ? ' class="last"' : '';
-
-    $ret .= "<li{$class_li}><a href=\"{$link}\" {$event}{$class}>{$title}{$img}</a></li>\n";
-    $count ++;
+    $ret[] = array("title"=>$title, "link" => $link, "active" => $active, "is_url" => $is_url);
   }
   
   if($includeParent===true){
@@ -445,17 +433,14 @@ function createMenu($id=0, $includeParent=false, $first_child=false) {
 
       if (translateSite($arr["url"])=="") {
         $link = createPath($arr["id"]);
-          //die('429: '.$link.'|');
-        $event = " rel=\"\" ";
-        $img = "";
+        $is_url = FALSE;
       } else {
         $link = translateSite($arr["url"]);
-        $event = " onclick=\"window.open(this.href); return false;\"";
-        $img = " <img src=\"".$synPublicPath."/img/link_site.gif\" alt=\"External Site\" />";
+        $is_url = TRUE;
       }
 
-      if($arr["id"]==$currPage) $class=" class=\"active\" "; else $class="";
-      $ret="<li><a href=\"$link\" $event $class>".$title.$img."</a></li>\n".$ret;
+      $active = $arr["id"]==$currPage ? TRUE : FALSE;
+      array_unshift($ret, array("title"=>$title, "link" => $link, "active" => $active, "is_url" => $is_url));
     }
   }
   return $ret;
@@ -470,85 +455,75 @@ function createMenu($id=0, $includeParent=false, $first_child=false) {
 // $includeParent: include the parent node itself
 // $title: database field used for node label
 // $first_child: parent node link is set to the first child link
-
 function createSubmenu($id=0, $expand=false, $includeParent=false, $first_child=false, $field="title") {
-  $temp=null;
-  return createSubmenuPrivate($id, $expand, $includeParent, $first_child, $field, 0, $temp);
+  global $db,$smarty;
+  
+  $lang     = $_SESSION["synSiteLang"];
+  $currPage = $smarty->getTemplateVars('synPageId');
+  $menu     = array();
+  
+  if ($includeParent === true) {
+    $qry="SELECT * FROM `aa_page` WHERE CONCAT('|', `visible`, '|') LIKE '%|{$lang}|%' AND `id` = $id";
+    $res=$db->Execute($qry);
+    if ($arr=$res->FetchRow()) {
+      $title = translateSite($arr[$field]);
+
+      if (trim($arr['url'])=='') {
+        $link = createPath($arr["id"]);
+        $is_url = FALSE;
+      } else {
+        $link = $arr["url"];
+        $is_url = TRUE;
+      }
+
+      $active = $arr["id"] == $currPage ? TRUE : FALSE;
+      $menu[] = array("title" => $title, "link" => $link, "active" => $active, "is_url" => $is_url);      
+    }
+  }
+  
+  return array_merge($menu, createSubmenuPrivate($id, $expand, $first_child, $field));
 }
 
 
 //create the entire tree
-function createSubmenuPrivate($id=0, $expand=false, $includeParent=false, $first_child=false, $field="title" , $count=0, &$link_child) {
+function createSubmenuPrivate($id=0, $expand=false, $first_child=false, $field="title") {
   global $db,$smarty,$synPublicPath;
-  $ret="";
-  $count++;
-  $nodeArr=$smarty->synPageNode;
-  foreach($nodeArr as $node) $idArr[]=$node["id"];
+  
+  $lang     = $_SESSION["synSiteLang"];
   $currPage = $smarty->getTemplateVars('synPageId');
-  $lang = $_SESSION["synSiteLang"];
+  $nodeArr  = $smarty->synPageNode;
+  $menu     = array();
+  
+  foreach($nodeArr as $node) $idArr[] = $node["id"];  
 
-  if ($includeParent===true) {
-    $qry="SELECT * FROM `aa_page` WHERE CONCAT('|', `visible`, '|') LIKE '%|{$lang}|%' AND `id`=$id";
-    $res=$db->Execute($qry);
-    if ($arr=$res->FetchRow()) {
-      $title=translateSite($arr[$field]);
+  $qry = "SELECT * FROM `aa_page` WHERE CONCAT('|', `visible`, '|') LIKE '%|{$lang}|%' AND `parent`=$id ORDER BY `order`";
+  $res = $db->Execute($qry);
+  while($arr = $res->FetchRow()) {
+    $title = translateSite($arr[$field]);
+    $active = ($arr["id"] == $currPage) || (is_array($idArr) && in_array($arr["id"],$idArr)) ? TRUE : FALSE;
 
-      if (trim($arr['url'])=='') {
-        $link = createPath($arr["id"]);
-        $event = " rel=\"\" ";
-        $img = "";
-      } else {
-        $link = $arr["url"];
-        $event = " onclick=\"window.open(this.href); return false;\"";
-        $img = " <img src=\"".$synPublicPath."/img/link_site.gif\" alt=\"External Site\" />";
-      }
+    $child = array();
+    if($expand || $first_child || $active) $child = createSubmenuPrivate($arr["id"], $expand, false, $field);
+    
 
-      if ($arr["id"]==$currPage) $class=" class=\"active\" ";
-      else $class="";
-
-      $ret.="<li><a href=\"".$link."\"".$event.$class.">".$title.$img."</a></li>";
-    }
-  }
-
-  $qry="SELECT * FROM `aa_page` WHERE CONCAT('|', `visible`, '|') LIKE '%|{$lang}|%' AND `parent`=$id ORDER BY `order`";
-  $res=$db->Execute($qry);
-  $num_child=0;
-  while($arr=$res->FetchRow()) {
-    $title=translateSite($arr[$field]);
-
-    if (trim($arr['url'])=='') {
-      $link = createPath($arr["id"]);
-      $event = " rel=\"\" ";
-      $img = "";
+    if($first_child && count($child) > 0) {
+      $item   = reset($child);
+      $link   = $item["link"];
+      $is_url = FALSE;
     } else {
-      $link = $arr["url"];
-      $event = " onclick=\"window.open(this.href); return false;\"";
-      $img = " <img src=\"".$synPublicPath."/img/link_site.gif\" alt=\"External Site\" />";
+      if (trim($arr['url']) == '') {
+        $link   = createPath($arr["id"]);
+        $is_url = FALSE;
+      } else {
+        $link   = $arr["url"];
+        $is_url = TRUE;
+      }
     }
-
-    if($num_child==0)$link_child=$link;
-    $num_child++;
-
-    $link_my_child="";
-    $childret = createSubmenuPrivate($arr["id"], false, false, $first_child, $field, $count, $link_my_child);
-
-    if($first_child && $link_my_child!="") 
-      $link = $link_my_child;
-
-    if(($arr["id"]==$currPage) || ((is_array($idArr)) && (in_array($arr["id"],$idArr))))
-      $class=" class=\"active\" ";
-    else 
-      $class="";
-
-    $ret.="<li>";
-    //$ret.="<a href=\"$link\" $class>".$title."</a>";
-    $ret.="<a href=\"".$link."\"".$event.$class.">".$title.$img."</a>";
-
-    if ((($arr["id"]==$currPage)||((is_array($idArr))&&(in_array($arr["id"],$idArr)))) || $expand===true) $ret.=$childret;
-    $ret.="</li>\n";
-
+        
+    if(!$active && !$expand) $child = array();
+    
+    $ret[] = array("title" => $title, "link" => $link, "active" => $active, "is_url" => $is_url, "child" => $child);
   }
-  if($ret!="") $ret="<ul class=\"menu lv".$count."\">".$ret."</ul>";
   return $ret;
 }
 ?>

@@ -75,11 +75,13 @@ function smarty_function_form($params, &$smarty) {
       }
     }
 
+    
     $form->setAttributes(array( // configurazione
       'action'        => $synPublicPath.'/server/dispatch.php',
       'xhtml'         => false,
       'method'        => 'post',
       'class'         => 'synform',
+      'hide_label'    => true,
       'resetLabel'    => $t['cancella'],
       'submitLabel'   => $t['invia'],
       'captcha'       => $form_var['captcha'],
@@ -92,6 +94,8 @@ function smarty_function_form($params, &$smarty) {
       'error1'        => $t['campo_obbligatorio'],
       'error2'        => $t['email_non_valida'],
       'error3'        => $t['verifica_valore'],
+      'include_script' => false,
+      'ajax_submit'   => true,
       'debug'         => false
       ));
 
@@ -111,6 +115,9 @@ function smarty_function_form($params, &$smarty) {
     unset($_SESSION['form'.$form_id]);
   }
   
+  if ($form_cfg['include_script'] == false)
+    $smarty->assign('pageScript', strip_tags($form->validateScript()));  
+    
   return $html;
 }
 

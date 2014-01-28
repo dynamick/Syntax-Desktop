@@ -1,4 +1,4 @@
-{include file="_header.tpl"}
+{include file="partial/_header.tpl"}
 
     <section class="main-section" id="{$synPageSlug}">
       <div class="wrapper">
@@ -7,12 +7,7 @@
         </hgroup>
         
         <footer class="page-footer">
-          <div class="searchform">
-            <form action="" method="post">
-              <input type="text" name="q" placeholder="Cerchi qualcosa?" tabindex="1"/>
-              <button type="submit">Ok</button>
-            </form>
-          </div>
+{include file='partial/_searchform.tpl'}        
 
           <nav class="breadcrumb">
             {breadcrumb}
@@ -20,12 +15,13 @@
         </footer>          
                 
         <div class="content">
-{form id=$synPageId}
+{form id=1}
         </div>
         
         <aside class="sidebar">
           <div class="box">
-            {submenu}
+            <h3 class="menu-header">{pageInfo page=$synPageNode1 info='title'}</h3>
+{include file='partial/_submenu.tpl'}
           </div>          
           <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sodales urna non odio egestas tempor. Nunc vel vehicula ante. Etiam bibendum iaculis libero, eget molestie nisl pharetra in. In semper consequat est, eu porta velit mollis nec. Curabitur posuere enim eget turpis feugiat tempor. Etiam ullamcorper lorem dapibus velit suscipit ultrices.</p>
           <div>
@@ -36,4 +32,4 @@
     </section>
   
 
-{include file='_footer.tpl'}
+{include file='partial/_footer.tpl'}

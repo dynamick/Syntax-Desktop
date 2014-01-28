@@ -1,4 +1,4 @@
-﻿{include file="_header.tpl"}
+﻿{include file="partial/_header.tpl"}
 
     <section class="home">
       <div class="wrapper">
@@ -43,4 +43,4 @@
       </div>
     </section>    
 
-{include file='_footer.tpl'}
+{include file='partial/_footer.tpl'}

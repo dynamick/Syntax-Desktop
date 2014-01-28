@@ -24,5 +24,10 @@
     <script src="{$synPublicPath}/js/jquery.validate.min.js"></script>
     <script src="{$synPublicPath}/js/plugins.js"></script>
     <script src="{$synPublicPath}/js/main.js"></script>
+{if $pageScript neq ''}
+    <script type="text/javascript">
+    {$pageScript}
+    </script>
+{/if}
   </body>
 </html>

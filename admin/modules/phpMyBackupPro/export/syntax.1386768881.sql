@@ -1,5 +1,5 @@
 # MySQL dump of database 'syntax' on host 'localhost'
-# backup date and time: 08/04/2013 18.25.30
+# backup date and time: 12/11/13 14:34:41
 # built by phpMyBackupPro v.2.1
 # http://www.phpMyBackupPro.net
 
@@ -201,7 +201,7 @@ CREATE TABLE `aa_page` (
 
 ### data of table `aa_page` ###
 
-insert into `aa_page` values ('22', '92', '93', '0', '4', '1|2', '5', '1', '', '833', '834', '835', '898');
+insert into `aa_page` values ('22', '92', '93', '0', '14', '1|2', '5', '1', '', '833', '834', '835', '898');
 insert into `aa_page` values ('39', '398', '399', '22', '4', '1|2', '10', '1', '', '851', '852', '853', '899');
 insert into `aa_page` values ('40', '400', '401', '22', '4', '', '20', '1', '', '901', '902', '903', '900');
 insert into `aa_page` values ('41', '402', '403', '22', '4', '1|2', '40', '1', '', '854', '855', '856', '904');
@@ -469,7 +469,7 @@ insert into `aa_services_element` values ('529', '152', 'pagina', '12', '', '1',
 insert into `aa_services_element` values ('530', '152', 'descrizione', '6', '', '', '', '645', '150', '646', 'Default', '', '', '', '20', '', '1');
 insert into `aa_services_element` values ('531', '152', 'destinatario', '2', '', '1', '', '647', '255', '648', '', '', '', '', '30', '', '');
 insert into `aa_services_element` values ('533', '152', 'privacy', '9', '', '', '', '651', '255', '652', '', '', '1', '', '50', '', '');
-insert into `aa_services_element` values ('534', '152', 'captcha', '23', '', '', '', '653', '0', '654', '', 'nessuno|basic|synCaptcha', '', '', '60', '', '');
+insert into `aa_services_element` values ('534', '152', 'captcha', '23', '', '', '', '653', '0', '654', '', 'nessuno|basic|synCaptcha|honeypot', '', '', '60', '', '');
 insert into `aa_services_element` values ('535', '152', 'risposta', '6', '', '', '', '655', '150', '656', 'Default', '', '', '', '70', '', '1');
 insert into `aa_services_element` values ('536', '152', 'data', '15', '', '1', '', '657', '0', '658', '', '', '', '', '80', '', '');
 insert into `aa_services_element` values ('537', '152', 'visibile', '9', '', '1', '', '659', '255', '660', '', '', '1', '', '90', '', '');
@@ -515,22 +515,23 @@ DROP TABLE IF EXISTS `aa_template`;
 CREATE TABLE `aa_template` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL DEFAULT '',
-  `timestamp` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `timestamp` datetime NOT NULL,
   `filename` varchar(255) NOT NULL DEFAULT '',
   `owner` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 AUTO_INCREMENT=14;
+) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 AUTO_INCREMENT=15;
 
 
 ### data of table `aa_template` ###
 
-insert into `aa_template` values ('4', 'standard template', '2004-04-28 16:27:54', 'index.tpl', '1');
+insert into `aa_template` values ('4', 'standard template', '2004-04-28 16:27:54', 'default.tpl', '1');
 insert into `aa_template` values ('10', 'Documents', '2010-03-24 15:51:19', 'documents.tpl', '1');
 insert into `aa_template` values ('8', 'RSS', '2008-06-18 18:02:16', 'rss.tpl', '1');
 insert into `aa_template` values ('9', 'Account', '2010-03-23 16:19:38', 'account.tpl', '1');
 insert into `aa_template` values ('11', 'Gallery', '2010-03-24 16:22:14', 'gallery.tpl', '1');
 insert into `aa_template` values ('12', 'news', '2010-12-21 16:13:44', 'news.tpl', '1');
 insert into `aa_template` values ('13', 'form', '2010-12-21 16:13:51', 'form.tpl', '1');
+insert into `aa_template` values ('14', 'index', '2013-12-11 14:33:08', 'index.tpl', '1');
 
 
 ### structure of table `aa_translation` ###
@@ -1342,7 +1343,7 @@ CREATE TABLE `aa_users` (
   `login` varchar(255) NOT NULL,
   `passwd` varchar(255) NOT NULL,
   `id_group` int(255) NOT NULL,
-  `lang` int(255) NOT NULL,
+  `lang` int(11) NOT NULL,
   `owner` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=300 DEFAULT CHARSET=utf8 AUTO_INCREMENT=300;
@@ -1350,7 +1351,7 @@ CREATE TABLE `aa_users` (
 
 ### data of table `aa_users` ###
 
-insert into `aa_users` values ('299', 'root', '19e04cdb256873434fd1371a289c0a4c', '1', '1', '1');
+insert into `aa_users` values ('299', 'root', '817ca32104bbe02ca21c17d29b9b7ed3', '1', '1', '1');
 
 
 ### structure of table `album` ###
