@@ -568,25 +568,26 @@ EOPD;
       $params[] = "    rules:{".implode(",\n", $this->validateRules)."}";
     }
 
-    $params[] = <<<EOSB
-    submitHandler: function(form) {
-      var _form = $(form), data = _form.serialize(), action = _form.attr('action');
-      $.post(action, data)
-        .done(function(res){
-          console.log('message: '+res.message);
-          if (res.status == 'ok'){
-            $('#form{$this->id}').replaceWith(res.message);
-          } else {
-            $('#form{$this->id}').prepend(res.message);
-          }
-        })
-        .fail(function() {
-          alert( "error" );
-        })
-      return false;
-    }
+    if ($this->ajax_submit) {
+      $params[] = <<<EOSB
+      submitHandler: function(form) {
+        var _form = $(form), data = _form.serialize(), action = _form.attr('action');
+        $.post(action, data)
+          .done(function(res){
+            console.log('message: '+res.message);
+            if (res.status == 'ok'){
+              $('#form{$this->id}').replaceWith(res.message);
+            } else {
+              $('#form{$this->id}').prepend(res.message);
+            }
+          })
+          .fail(function() {
+            alert( "error" );
+          })
+        return false;
+      }
 EOSB;
-
+    }
 
 
     $js  = "<script type=\"text/javascript\">\n".($this->xhtml==true ? "//<![CDATA[\n" : '');

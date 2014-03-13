@@ -44,7 +44,7 @@ $PHPTHUMB_CONFIG['imagemagick_use_thumbnail']            = false;
 if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') {
   $PHPTHUMB_CONFIG['imagemagick_path']                   = 'C:/ImageMagick/convert.exe';
 } else {
-  $PHPTHUMB_CONFIG['imagemagick_path']                   = null;
+  $PHPTHUMB_CONFIG['imagemagick_path']                   = '/non_esisto'; //null // in caso escapeshellarg() sia proibito dal server
 }
 $PHPTHUMB_CONFIG['output_format']                        = 'jpeg';
 $PHPTHUMB_CONFIG['output_maxwidth']                      = 0;

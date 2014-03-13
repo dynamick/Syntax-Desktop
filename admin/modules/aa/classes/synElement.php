@@ -321,11 +321,16 @@ class synElement {
         $value=$v["value"];
         $hash['join|value|id_join='.$joinId] = $value;
       }
+    } else { // sono arrivato sul servizio senza passare dal join...
+      preg_match('/(#{join\|value\|id_join\=\d+})/', $qry, $matches);
+      if (!empty($matches)) {
+        $qry = str_replace($matches[1], 'NULL', $qry);
+      }
     }
-    $qry=interpolate($qry,$hash);
+    $qry = interpolate($qry, $hash);
     return $qry;
   }
-
+  
   //function for the auto-configuration
   function configuration($i=0, $k=99) {
     global $db, $synElmName, $synElmType, $synElmLabel, $synElmLabelLang, $synElmSize, $synElmHelp, $synElmHelpLang, $synElmJoinsItem, $synElmOrder, $synElmFilter, $synInitOrder;

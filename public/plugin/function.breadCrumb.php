@@ -9,18 +9,32 @@
 * -------------------------------------------------------------
 */
 function smarty_function_breadcrumb($params, &$smarty) {
-  if(!isset($_SESSION))
+  global $db;
+
+  if (!isset($_SESSION))
     session_start();
 
-  $divider = (isset($params['divider'])) ? $params['divider'] : '&rsaquo;';
+  if (!isset($_SESSION['synSiteLang']))
+    setLang();
+
   $lang    = $_SESSION['synSiteLangInitial'];
+  $lang_ar = getLangList();
   $nodes   = $smarty->synPageNode;
   $pages   = array();
+  $url     = ($lang_ar['default'] == $lang) ? '/' : "/{$lang}/";  
+  $divider = (isset($params['divider'])) ? $params['divider'] : '&rsaquo;';
   $crumbs  = '';
-  $url     = '/';
+  
   
   $base_title = 'Home'; // titolo per tutte le pagine di livello root
-  $home_siblings = array(); // id delle pagine a livello root
+  
+  // id delle pagine a livello root
+  $home_siblings = array(); 
+  $qry = "SELECT id FROM aa_page WHERE parent = 0";
+  $res = $db->Execute($qry);
+  while ($arr = $res->FetchRow())
+    $home_siblings[] = $arr['id'];
+  
   
   foreach($nodes as $k => $node) {
     if (in_array($node['id'], $home_siblings)) 
@@ -31,15 +45,17 @@ function smarty_function_breadcrumb($params, &$smarty) {
     if($k == 0)
       $pageArr[$lang] = $node['title'];
   }
-
+  
   // array elementi URL
   $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
   $uri_elems = array_values(array_filter(explode('/', $uri)));
 
-  if($uri_elems[0] != $lang){
-    // aggiungo la Home come primo elemento
-    array_unshift($uri_elems, $nodes[0]['slug']);
+  if ($uri_elems[0] == $lang){
+    array_shift($uri_elems);
   }
+
+  // aggiungo la Home come primo elemento
+  array_unshift($uri_elems, $nodes[0]['slug']);
 
   $depth  = count($uri_elems)-1;
 
