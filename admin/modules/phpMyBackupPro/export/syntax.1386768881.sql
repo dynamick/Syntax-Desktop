@@ -1514,7 +1514,7 @@ CREATE TABLE `form_fields` (
   `tipo` enum('text','textarea','checkbox','radio','select','file','password') NOT NULL DEFAULT 'text',
   `value` varchar(255) NOT NULL,
   `formato` enum('text','date','digits','email') NOT NULL DEFAULT 'text',
-  `obbligatorio` varchar(255) NOT NULL,
+  `obbligatorio` varchar(255) NOT NULL DEFAULT '',
   `fieldset` int(11) NOT NULL DEFAULT '0',
   `ordine` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
@@ -1523,7 +1523,7 @@ CREATE TABLE `form_fields` (
 
 ### data of table `form_fields` ###
 
-insert into `form_fields` values ('1', '1', 'nome', '741', 'text', '', '', '', '0', '10');
+insert into `form_fields` values ('1', '1', 'nome', '741', 'text', '', 'text', '', '0', '10');
 insert into `form_fields` values ('2', '1', 'email', '742', 'text', '', 'email', '1', '0', '20');
 insert into `form_fields` values ('3', '1', 'messaggio', '749', 'textarea', '', 'text', '1', '0', '30');
 insert into `form_fields` values ('4', '2', 'nome', '839', 'text', '', 'text', '1', '0', '10');
