@@ -30,9 +30,10 @@ require $admin.'includes/php/ADODB-PDO.php';
 
 // library inclusion (Website libraries)
 require $pub.'lib/class.synSmarty.php';
-require $pub.'lib/class.ImageToolbox.php';
+//require $pub.'lib/class.ImageToolbox.php';
 require $pub.'lib/class.formBuilder.php';
-require $pub.'lib/class.feedCreator.php';
+//require $pub.'lib/class.feedCreator.php';
+require $pub.'lib/class.synPagerPublic.php';
 require $pub.'lib/phpmailer/class.phpmailer.php';
 require $pub.'lib/lang.functions.php';
 require $pub.'lib/page.functions.php';
@@ -61,5 +62,9 @@ if ($a!==false AND count($a)==0 and basename(getenv("SCRIPT_FILENAME"))!="setup.
 if (file_exists($synAbsolutePath.$synAdminPath."/setup.php") and basename(getenv("SCRIPT_FILENAME"))!="setup.php") {
   die("Please <strong>remove</strong> the <strong>".$synAdminPath."/setup.php</strong> before proceeding and refresh this page.");
 }
+
+// nome del cookie di autenticazione
+define('COOKIE_NAME', 'web_user');
+
 
 ?>

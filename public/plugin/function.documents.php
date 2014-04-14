@@ -6,8 +6,8 @@ function smarty_function_documents($params, &$smarty) {
     session_start();
 
   $cat       = isset($params['cat']) ? $params['cat'] : '';
-  $userid    = isset($_COOKIE['web_user']['id']) ? $_COOKIE['web_user']['id'] : 0;
-  $usergroup = isset($_COOKIE['web_user']['group']) ? $_COOKIE['web_user']['group'] : 0;
+  $userid    = isset($_COOKIE[COOKIE_NAME]['id'])    ? $_COOKIE[COOKIE_NAME]['id']    : 0;
+  $usergroup = isset($_COOKIE[COOKIE_NAME]['group']) ? $_COOKIE[COOKIE_NAME]['group'] : 0;
   $lng       = $_SESSION['synSiteLangInitial'];
   $html      = '';
 //echo $usergroup;
@@ -25,7 +25,9 @@ function smarty_function_documents($params, &$smarty) {
 LEFT JOIN aa_translation t1 ON d.title = t1.id
 LEFT JOIN aa_translation t2 ON c.category = t2.id
 LEFT JOIN aa_translation t3 ON d.description = t3.id
- ORDER BY c.`order`, d.`date` DESC, d.title
+ ORDER BY c.`order`, 
+          d.`date` DESC, 
+          d.title
 EOQ;
 
   //$pgr = new synPager($db, '', '', '', false, true);
@@ -49,9 +51,9 @@ EOQ;
         $file_label = "<strong>{$ext}</strong> ".byteConvert($size);
         $status     = $arr['status'];
 
-        if($arr['enabled_groups']){
+        if ($arr['enabled_groups'])
           $owner = explode('|', $arr['enabled_groups']);
-        } else 
+        else 
           $owner = array();
 
         switch(strtolower($ext)) {
@@ -68,17 +70,19 @@ EOQ;
         
         $intersect = array_intersect($usergroup, $owner);
         
-        if(is_array($intersect) && count($intersect) > 0) $have_same_group = true;
-        else $have_same_group = false;
+        if (is_array($intersect) && count($intersect) > 0) 
+          $have_same_group = true;
+        else 
+          $have_same_group = false;
         
         if (
 //            ($status == 'secret' && ((in_array($usergroup, $owner) || !$owner) && $userid != '') ) ||
             ($status == 'secret' && ($have_same_group && $userid != '') ) ||
-            ($status == 'private' && $userid!='' ) ||
+            ($status == 'private' && $userid != '' ) ||
             ($status == 'public') ||
             ($status == 'protected')
           ){
-          # file pubblico o autorizzato per l'utente o visibile
+          // file pubblico o autorizzato per l'utente o visibile
           $privato = ($status != 'public') ? ' class=\"privato"' : '';
           //$testo   = ($arr['abstract']) ? $arr['abstract']."<br />" : '';
           if(
@@ -87,10 +91,10 @@ EOQ;
 //            (($status == 'private' || $status == 'secret') && ((in_array($usergroup, $owner) || !$owner) && $userid != '') )
             (($status == 'private' || $status == 'secret') && ($have_same_group && $userid != '') )
             ){
-            # file pubblico o autorizzato per l'utente
+            // file pubblico o autorizzato per l'utente
             $link  = $file;
           } else {
-            # file privato o non autorizzato per l'utente
+            // file privato o non autorizzato per l'utente
             $alert = ($userid ? $t['doc_no_abilitazione'] : $t['doc_riservato']);
             $link  = "javascript:alert('{$alert}')";
           }

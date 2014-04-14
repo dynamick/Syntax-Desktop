@@ -1,8 +1,11 @@
 <?php
-/******************************************************************************
-***                                  VARIOUS FUNCTIONS
-*******************************************************************************/
 
+/******************************************************************************
+ ***                        MISCELLANEOUS FUNCTIONS                         ***
+ ******************************************************************************
+ */
+
+/* DEPRECATED *
 if (!function_exists('glob')) {
   function glob ($pattern) {
     $path_parts = pathinfo ($pattern);
@@ -15,6 +18,7 @@ if (!function_exists('glob')) {
     return $result;
   }
 }
+* DEPRECATED */
 
 if(!function_exists('file_put_contents')) {
   function file_put_contents($filename,$content,$mode="w+") {
@@ -50,6 +54,21 @@ if(!function_exists('tabIndex')) {
     return $tab ++;
   }
 }
+
+
+// sanitizes text to be used as html attribute
+if(!function_exists('attributize')) {
+  function attributize($str, $cut = NULL) {
+    $str = str_replace('"', NULL, $str);
+    $str = filter_var(html_entity_decode($str), FILTER_SANITIZE_STRING);
+    $str = trim(preg_replace('/\s+/', ' ', $str));
+
+    if ($cut)
+      $str = html_entity_decode(troncaTesto($str, $cut));
+    return $str;
+  }
+}
+
 
 if(!function_exists('str_makerand')) {
   function str_makerand ($minlength, $maxlength, $useupper, $usespecial, $usenumbers) {
@@ -92,6 +111,7 @@ if(!function_exists('str_makerand')) {
   - rotazione (inverte altezza e larghezza se l'immagine � verticale) [optional]
   - attributi html (classe, id, ecc.) [optional]
 */
+/* DEPRECATED *
 if(!function_exists('cleverThumb')) {
   function cleverThumb($path="", $filename, $foto, $suffix="", $alt="", $width=50, $height=50, $rotate=false, $attr='', $mode=1, $mask=false, $center=true){
     global $synPublicPath, $synAbsolutePath;
@@ -124,11 +144,14 @@ if(!function_exists('cleverThumb')) {
     } #else echo $ROOT.$img.' non trovato!<br>';
   }
 }
+* DEPRECATED */
 
 /*
 EXAMPLE: htmlmail('user@domain.com', 'Look ma, HTML e-mails','You just got <a href="http://www.yougotrickrolled.com/">Rick Rolled</a>');
 NOTE: $headers is optional, but can be used to set From, CC, etc. Go to http://www.htmlite.com/php029.php for info
 */
+
+/* DEPRECATED *
 if(!function_exists('htmlmail')) {
   function htmlmail($to, $subject, $message, $from = NULL) {
   	$mime_boundary = md5(time());
@@ -160,10 +183,12 @@ if(!function_exists('htmlmail')) {
   	return mail($to, $subject, $newmessage, $headers);
   }
 }
+* DEPRECATED */
 
 /******************************************************************************/
 /********************      LIST MESSENGER INTEGRATION     *********************/
 /******************************************************************************/
+/* DEPRECATED *
 function _checkMailExists($email){
   global $db;
   if(trim($email)=='') return false;
@@ -187,7 +212,9 @@ function _delUserFromNewsletter($email){
   $res=$db->Execute($qry);
   if($res!==false) return true; else return false;
 }
+* DEPRECATED */
 
+/* DEPRECATED *
 function getDocument($productname, $document, $line, $classe, $spessore=''){
   global $synPublicPath, $synAbsolutePath;
   $ret = NULL;
@@ -251,19 +278,72 @@ function getDocument($productname, $document, $line, $classe, $spessore=''){
     $ret = "      <li><a class=\"dl $classe\" href=\"$file_pdf\">$label</a></li>\n";  
   } else if (file_exists($synAbsolutePath.$file_doc)) {
     $ret = "      <li><a class=\"dl $classe\" href=\"$file_doc\">$label</a></li>\n";  
-  } #else $ret = "<li>".$file." non trovato</li>\n";
+  } //else $ret = "<li>".$file." non trovato</li>\n";
   
   return $ret;
 }
+* DEPRECATED */
+
 
 if(!function_exists('byteConvert')) {
   function byteConvert( $bytes ) {
-    if ($bytes<=0) return '0 Byte';
-    $convention=1000; //[1000->10^x|1024->2^x]
-    $s=array('B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB');
-    $e=floor(log($bytes,$convention));
+    if ($bytes <= 0) 
+      return '0 Byte';
+    
+    $convention = 1000; //[1000->10^x|1024->2^x]
+    $s = array('B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB');
+    $e = floor(log($bytes,$convention));
+    
     return round($bytes/pow($convention,$e),2).' '.$s[$e];
   }
 }
 
-?>
+
+// hashes a string
+if (!function_exists('hash')) {
+  function hash($str){
+    global $synRootPasswordSalt;
+    return md5($str.$synRootPasswordSalt);
+  }
+}
+
+
+// puts message in session
+if(!function_exists('set_flash_message')) {
+  function set_flash_message($message, $type=null){
+    if (!isset($_SESSION))
+      session_start();
+
+    $_SESSION['flash_message'] = array('text' => $message, 'type' => $type);
+  }
+}
+
+
+// reads message from session (and optionally deletes it)
+if(!function_exists('get_flash_message')) {
+  function get_flash_message($clean = TRUE) {
+    if (!isset($_SESSION))
+      session_start();
+
+    $ret = null;
+    if ( isset($_SESSION['flash_message'])
+      && !empty($_SESSION['flash_message'])
+      ){
+      $message = $_SESSION['flash_message']['text'];
+      $type = $_SESSION['flash_message']['type'];
+      if ($clean)
+        unset($_SESSION['flash_message']);
+
+      $ret = <<<EORET
+      <div class="alert {$type}">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {$message}
+      </div>
+EORET;
+    }
+
+    return $ret;
+  }
+}
+
+// EOF misc.functions.php

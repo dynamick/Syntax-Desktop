@@ -14,6 +14,7 @@ class synSmarty extends Smarty {
    var $synTemplate, $synPackagePath, $synPluginPath;
    
    public $synPageNode = array();
+   public $synPageScript = array();
    
    function synSmarty($pageId) {
       global $synAbsolutePath, $synPublicPath, $synPluginPath;
@@ -35,7 +36,9 @@ class synSmarty extends Smarty {
 
       $this->clearCompiledTemplate($this->synTemplate);
       $this->traverseTree($pageId);
+      
       $this->assign('synTemplate', $this->synTemplate);
+      $this->assign('synPageScript', $this->synPageScript);
    }
 
 

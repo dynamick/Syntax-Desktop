@@ -15,26 +15,26 @@ page_contents($page);
 
 function page_contents(&$page) {
   switch($page) {
-    case "2":
+    case '2':
 
-      if (file_exists(dirname(__FILE__)."/config/config.php")) {
-        include ("config/config.php");
-      } elseif (file_exists(dirname(__FILE__)."/config/config.sample.php")) {
-        include ("config/config.sample.php");
+      if (file_exists(dirname(__FILE__).'/config/config.php')) {
+        include ('config/config.php');
+      } elseif (file_exists(dirname(__FILE__).'/config/config.sample.php')) {
+        include ('config/config.sample.php');
       } else {
-        die("Cannot find config_sample.php. Setup cannot proceed.");
+        die('Cannot find config_sample.php. Setup cannot proceed.');
       }
 
       $dati = array (
-        'synDbHost'           => $_SESSION["synDbHost"]?$_SESSION["synDbHost"]:$synDbHost,
-        'synDbUser'           => $_SESSION["synDbUser"]?$_SESSION["synDbUser"]:$synDbUser,
-        'synDbPassword'       => $_SESSION["synDbPassword"]?$_SESSION["synDbPassword"]:$synDbPassword,
-        'synDbName'           => $_SESSION["synDbName"]?$_SESSION["synDbName"]:$synDbName,
-        'synRootUser'         => $_SESSION["synRootUser"]?$_SESSION["synRootUser"]:$synRootUser,
-        'synRootPassword'     => $_SESSION["synRootPassword"]?$_SESSION["synRootPassword"]:$synRootPassword,
-        'synRootPasswordSalt' => md5(time()),
-        'synAdministrator'    => $_SESSION["synAdministrator"]?$_SESSION["synAdministrator"]:$synAdministrator,
-        'synWebsiteTitle'     => $_SESSION["synWebsiteTitle"]?$_SESSION["synWebsiteTitle"]:$synWebsiteTitle,
+        'synDbHost'           => isset($_SESSION['synDbHost'])        ? $_SESSION['synDbHost']        : $synDbHost,
+        'synDbUser'           => isset($_SESSION['synDbUser'])        ? $_SESSION['synDbUser']        : $synDbUser,
+        'synDbPassword'       => isset($_SESSION['synDbPassword'])    ? $_SESSION['synDbPassword']    : $synDbPassword,
+        'synDbName'           => isset($_SESSION['synDbName'])        ? $_SESSION['synDbName']        : $synDbName,
+        'synRootUser'         => isset($_SESSION['synRootUser'])      ? $_SESSION['synRootUser']      : $synRootUser,
+        'synRootPassword'     => isset($_SESSION['synRootPassword'])  ? $_SESSION['synRootPassword']  : $synRootPassword,
+        'synAdministrator'    => isset($_SESSION['synAdministrator']) ? $_SESSION['synAdministrator'] : $synAdministrator,
+        'synWebsiteTitle'     => isset($_SESSION['synWebsiteTitle'])  ? $_SESSION['synWebsiteTitle']  : $synWebsiteTitle,
+        'synRootPasswordSalt' => md5(time()),        
         'synRowsPerPage'      => $synRowsPerPage,
         'synWebsite'          => $synWebsite,
         'synVersion'          => $synVersion,
@@ -107,10 +107,11 @@ function page_contents(&$page) {
 
         if (isset($_POST["db_drop"]) and $_POST["db_drop"]==1) {
           if (is_array($a) and count($a)>0) {
+            $tables = '';
             foreach ($a as $t) {
-              $tables.="`".$t."`,";
+              $tables .= "`{$t}`,";
             }
-            $tables=substr($tables,0,-1);
+            $tables = substr($tables,0,-1);
             $db->Execute("DROP TABLE ".$tables);
           }
         }

@@ -630,7 +630,8 @@ function PMBP_dump($db,$tables,$data,$drop,$zip,$comment) {
                         // run through each field
                         for ($k=0;$k<$nf=mysql_num_fields($res2);$k++) {
                             // identify null values and save them as null instead of ''
-                            if (is_null($row2[$k])) $out .="null"; else $out .="'".mysql_escape_string($row2[$k])."'";
+                            //if (is_null($row2[$k])) $out .="null"; else $out .="'".mysql_escape_string($row2[$k])."'";
+                            if (is_null($row2[$k])) $out .="null"; else $out .="'".mysql_real_escape_string($row2[$k])."'";
                             if ($k<($nf-1)) $out .=", ";
                         }
                         $out .=");\n";

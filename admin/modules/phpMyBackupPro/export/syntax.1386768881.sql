@@ -1,5 +1,5 @@
 # MySQL dump of database 'syntax' on host 'localhost'
-# backup date and time: 12/11/13 14:34:41
+# backup date and time: 04/14/14 14:52:40
 # built by phpMyBackupPro v.2.1
 # http://www.phpMyBackupPro.net
 
@@ -16,7 +16,7 @@ CREATE TABLE `aa_element` (
   `order` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `id` (`classname`)
-) ENGINE=MyISAM AUTO_INCREMENT=30 DEFAULT CHARSET=utf8 COMMENT='Elementi che compongono un contenitore' AUTO_INCREMENT=30;
+) ENGINE=MyISAM AUTO_INCREMENT=31 DEFAULT CHARSET=utf8 COMMENT='Elementi che compongono un contenitore' AUTO_INCREMENT=31;
 
 
 ### data of table `aa_element` ###
@@ -49,6 +49,7 @@ insert into `aa_element` values ('26', 'Choose multi Pictures from tags', 'synMu
 insert into `aa_element` values ('27', 'TextField Numeric Decimal', 'synTextDecimal', '150');
 insert into `aa_element` values ('28', 'Text Multiple Join', 'synTextJoin', '160');
 insert into `aa_element` values ('29', 'Page Slug', 'synSlug', '170');
+insert into `aa_element` values ('30', 'Date and Time (read-only)', 'synDateTimeReadonly', '91');
 
 
 ### structure of table `aa_group_services` ###
@@ -320,7 +321,7 @@ CREATE TABLE `aa_services_element` (
   `ismultilang` varchar(1) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `container` (`container`)
-) ENGINE=MyISAM AUTO_INCREMENT=572 DEFAULT CHARSET=utf8 COMMENT='Containers' AUTO_INCREMENT=572;
+) ENGINE=MyISAM AUTO_INCREMENT=580 DEFAULT CHARSET=utf8 COMMENT='Containers' AUTO_INCREMENT=580;
 
 
 ### data of table `aa_services_element` ###
@@ -447,7 +448,7 @@ insert into `aa_services_element` values ('504', '148', 'province', '2', '', '',
 insert into `aa_services_element` values ('505', '148', 'confirmation_code', '2', '', '', '', '552', '255', '553', '', '', '', '', '90', '', '');
 insert into `aa_services_element` values ('506', '148', 'active', '9', '', '1', '', '554', '255', '555', '', '', '1', '', '100', '', '');
 insert into `aa_services_element` values ('507', '148', 'group', '24', '', '1', '', '556', '11', '557', '', 'SELECT * FROM groups', '', '', '110', '', '');
-insert into `aa_services_element` values ('508', '148', 'timestamp', '15', '', '1', '', '558', '0', '559', '', '', '', '', '120', '', '');
+insert into `aa_services_element` values ('508', '148', 'created_at', '30', '', '1', '', '558', '0', '559', '', '', '', '', '145', '', '');
 insert into `aa_services_element` values ('509', '148', 'password', '4', '', '', '', '560', '255', '561', '', '', '', '', '130', '', '');
 insert into `aa_services_element` values ('510', '148', 'newsletter', '9', '', '', '', '562', '255', '563', '', '', '1', '', '140', '', '');
 insert into `aa_services_element` values ('511', '149', 'id', '1', '1', '', '', '568', '0', '569', '', '', '', '', '0', '', '');
@@ -506,6 +507,14 @@ insert into `aa_services_element` values ('568', '156', 'name', '2', '', '1', ''
 insert into `aa_services_element` values ('569', '156', 'order', '3', '', '1', '', '891', '11', '892', '', '', '', '', '30', '', '');
 insert into `aa_services_element` values ('570', '136', 'default', '9', '', '1', '', '894', '255', '895', '', '', '1', '', '60', '', '');
 insert into `aa_services_element` values ('571', '116', 'slug', '29', '', '', '', '896', '1024', '897', '', '', '', '', '15', '', '1');
+insert into `aa_services_element` values ('572', '148', 'last_update', '15', '', '', '', '926', '0', '927', '', '', '', '', '150', '', '');
+insert into `aa_services_element` values ('573', '148', 'last_access', '30', '', '', '', '928', '0', '929', '', '', '', '', '160', '', '');
+insert into `aa_services_element` values ('574', '148', 'last_ip', '2', '', '', '', '930', '255', '931', '', '', '', '', '170', '', '');
+insert into `aa_services_element` values ('575', '148', 'new_password_key', '2', '', '', '', '932', '255', '933', '', '', '', '', '180', '', '');
+insert into `aa_services_element` values ('576', '148', 'new_password_requested', '2', '', '', '', '934', '255', '935', '', '', '', '', '190', '', '');
+insert into `aa_services_element` values ('577', '148', 'new_email', '2', '', '', '', '936', '255', '937', '', '', '', '', '200', '', '');
+insert into `aa_services_element` values ('578', '148', 'new_email_key', '2', '', '', '', '938', '255', '939', '', '', '', '', '210', '', '');
+insert into `aa_services_element` values ('579', '148', 'hashed_id', '2', '', '', '', '940', '255', '941', '', '', '', '', '220', '', '');
 
 
 ### structure of table `aa_template` ###
@@ -543,7 +552,7 @@ CREATE TABLE `aa_translation` (
   `it` text NOT NULL,
   `en` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=926 DEFAULT CHARSET=utf8 AUTO_INCREMENT=926;
+) ENGINE=MyISAM AUTO_INCREMENT=947 DEFAULT CHARSET=utf8 AUTO_INCREMENT=947;
 
 
 ### data of table `aa_translation` ###
@@ -1332,6 +1341,27 @@ insert into `aa_translation` values ('922', 'template', 'template');
 insert into `aa_translation` values ('923', 'pagine', 'pages');
 insert into `aa_translation` values ('924', 'tag-predefiniti', 'predefined-tags');
 insert into `aa_translation` values ('925', 'stili', 'stili');
+insert into `aa_translation` values ('926', 'Last_update', 'Last_update');
+insert into `aa_translation` values ('927', '', '');
+insert into `aa_translation` values ('928', 'Last_access', 'Last_access');
+insert into `aa_translation` values ('929', '', '');
+insert into `aa_translation` values ('930', 'Last_ip', 'Last_ip');
+insert into `aa_translation` values ('931', '', '');
+insert into `aa_translation` values ('932', 'New_password_key', 'New_password_key');
+insert into `aa_translation` values ('933', '', '');
+insert into `aa_translation` values ('934', 'New_password_requested', 'New_password_requested');
+insert into `aa_translation` values ('935', '', '');
+insert into `aa_translation` values ('936', 'New_email', 'New_email');
+insert into `aa_translation` values ('937', '', '');
+insert into `aa_translation` values ('938', 'New_email_key', 'New_email_key');
+insert into `aa_translation` values ('939', '', '');
+insert into `aa_translation` values ('940', 'Hashed_id', 'Hashed_id');
+insert into `aa_translation` values ('941', '', '');
+insert into `aa_translation` values ('942', 'Utente autenticato come <strong>%s</strong>.', 'User logged in as <strong>%s</strong>.');
+insert into `aa_translation` values ('943', 'Logout eseguito correttamente.', 'Logout succesful.');
+insert into `aa_translation` values ('944', '<strong>Errore:</strong> password non corretta.', '<strong>Error:</strong> incorrect password.');
+insert into `aa_translation` values ('945', '<strong>Errore:</strong> account non valido.', '<strong>Error:</strong> account not validated.');
+insert into `aa_translation` values ('946', '<strong>Errore:</strong> utente %s non riconosciuto. Verificare di aver inserito correttamente il nome utente.', '<strong>Error:</strong> user %s not recognized. Please check your username.');
 
 
 ### structure of table `aa_users` ###
@@ -1346,12 +1376,12 @@ CREATE TABLE `aa_users` (
   `lang` int(11) NOT NULL,
   `owner` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=300 DEFAULT CHARSET=utf8 AUTO_INCREMENT=300;
+) ENGINE=MyISAM AUTO_INCREMENT=8686 DEFAULT CHARSET=utf8 AUTO_INCREMENT=8686;
 
 
 ### data of table `aa_users` ###
 
-insert into `aa_users` values ('299', 'root', '817ca32104bbe02ca21c17d29b9b7ed3', '1', '1', '1');
+insert into `aa_users` values ('8685', 'root', 'b7d3c0aaac3060bd1ce4faf1764ca88a', '1', '1', '1');
 
 
 ### structure of table `album` ###
@@ -1399,7 +1429,7 @@ CREATE TABLE `dictionary` (
   `value` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `label` (`label`)
-) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8 AUTO_INCREMENT=59;
+) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=utf8 AUTO_INCREMENT=64;
 
 
 ### data of table `dictionary` ###
@@ -1459,6 +1489,11 @@ insert into `dictionary` values ('55', 'riprova', '815');
 insert into `dictionary` values ('56', 'codice_sicurezza', '816');
 insert into `dictionary` values ('57', 'doc_no_abilitazione', '817');
 insert into `dictionary` values ('58', 'doc_riservato', '818');
+insert into `dictionary` values ('59', 'flash_login_success', '942');
+insert into `dictionary` values ('60', 'flash_logout', '943');
+insert into `dictionary` values ('61', 'flash_error_password', '944');
+insert into `dictionary` values ('62', 'flash_error_account', '945');
+insert into `dictionary` values ('63', 'flash_error_user', '946');
 
 
 ### structure of table `documents` ###
@@ -1611,8 +1646,6 @@ CREATE TABLE `media` (
 
 ### data of table `media` ###
 
-insert into `media` values ('1', 'photofunia_4d281.jpg', '/public/mat/2010/03', '', '', '', '2010-03-23 10:39:14');
-insert into `media` values ('2', 'ragazza-miniatura-1.jpg', '/public/mat/2010/03', 'Eva', 'Bella gnocca', 'Mick', '2010-03-23 10:39:38');
 
 
 ### structure of table `news` ###
@@ -1675,10 +1708,6 @@ CREATE TABLE `tagged` (
 
 ### data of table `tagged` ###
 
-insert into `tagged` values ('1', '2', '1');
-insert into `tagged` values ('2', '2', '2');
-insert into `tagged` values ('3', '2', '3');
-insert into `tagged` values ('4', '2', '4');
 
 
 ### structure of table `tags` ###
@@ -1694,10 +1723,6 @@ CREATE TABLE `tags` (
 
 ### data of table `tags` ###
 
-insert into `tags` values ('1', 'occhi');
-insert into `tags` values ('2', 'capelli');
-insert into `tags` values ('3', 'naso');
-insert into `tags` values ('4', 'bocca');
 
 
 ### structure of table `users` ###
@@ -1716,14 +1741,22 @@ CREATE TABLE `users` (
   `province` varchar(255) NOT NULL,
   `confirmation_code` varchar(255) NOT NULL,
   `active` varchar(255) NOT NULL,
-  `group` varchar(11) NOT NULL,
-  `timestamp` datetime NOT NULL,
+  `group` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `newsletter` varchar(255) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `last_update` datetime NOT NULL,
+  `last_access` datetime NOT NULL,
+  `last_ip` varchar(255) NOT NULL,
+  `new_password_key` varchar(255) NOT NULL,
+  `new_password_requested` varchar(255) NOT NULL,
+  `new_email` varchar(255) NOT NULL,
+  `new_email_key` varchar(255) NOT NULL,
+  `hashed_id` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 AUTO_INCREMENT=11;
 
 
 ### data of table `users` ###
 
-insert into `users` values ('4', 'Dummy', 'Dude', 'SyntaxDesktop', 'info@syntaxdesktop.com', 'via Garibaldi', 'Villafranca', '37069', 'Verona', '', '1', '2', '2010-03-24 12:07:13', 'ea52ba980ec513579f5a61cb051434c6', '1');
+insert into `users` values ('4', 'Dummy', 'Dude', 'SyntaxDesktop', 'info@syntaxdesktop.com', 'via Garibaldi', 'Villafranca', '37069', 'Verona', '', '1', '2', 'ea52ba980ec513579f5a61cb051434c6', '1', '2010-01-01 00:00:00', '2010-01-01 00:00:00', '2010-01-01 00:00:00', '', '', '', '', '', '');
