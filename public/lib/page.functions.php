@@ -226,12 +226,12 @@ function getPageId() {
           $ret = $arr['id'];
         } else {
           // slug non trovato
-          echo 'slug non trovato<br>';
+          $ret = false;
         }
       }
     } else {
       // uri non valido? 404
-      echo 'uri non valido<br>';
+      $ret = false;
     }
   }
 
