@@ -37,7 +37,7 @@ function smarty_function_form($params, &$smarty) {
 
   $fieldset = getFormFieldset($form_id, $lng); // vedi sotto
   $fields   = getFormFields($form_id, $lng, $params); // vedi sotto
-  $form     = new formBuilder($form_id);
+  $form     = new bsForm($form_id);
   
   $session  = isset($_SESSION['form'.$form_id]) 
             ? $_SESSION['form'.$form_id] 
