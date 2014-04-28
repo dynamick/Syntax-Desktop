@@ -32,6 +32,7 @@ require $admin.'includes/php/ADODB-PDO.php';
 require $pub.'lib/class.synSmarty.php';
 //require $pub.'lib/class.ImageToolbox.php';
 require $pub.'lib/class.formBuilder.php';
+require $pub.'lib/class.bsForm.php';
 //require $pub.'lib/class.feedCreator.php';
 require $pub.'lib/class.synPagerPublic.php';
 require $pub.'lib/phpmailer/class.phpmailer.php';
