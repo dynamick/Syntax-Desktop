@@ -54,8 +54,10 @@
     <meta http-equiv="content-script-type" content="text/javascript" />
     <link rel="stylesheet" type="text/css" href="content.css" />
     <script type="text/javascript" src="<?=$synAdminPath?>/includes/js/DateTimePicker/datetimepicker.js"></script>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script type="text/javascript" src="<?=$synAdminPath?>/includes/js/ckeditor/ckeditor.js"></script>
-    <script type="text/javascript" src="plupload/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="<?=$synAdminPath?>/includes/js/ckeditor/adapters/jquery.js"></script>
     <script type="text/javascript" src="content.js?rand=<?=rand(0,1000)?>"></script>
     <script type="text/javascript">
     //<![CDATA[

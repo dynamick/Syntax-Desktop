@@ -1,16 +1,22 @@
 <?php
+  header("Content-Type: text/javascript");
   session_start();
   $lng = (isset($_SESSION['synSiteLangInitial'])) ? $_SESSION['synSiteLangInitial'] : 'it'; ?>
+
 CKEDITOR.editorConfig = function(config)
 {
   config.language = '<?php echo $lng; ?>';
-  config.uiColor = '#ddd';
-  config.skin = 'syntax';
+  config.uiColor = '#f6f6f6';
   config.width = '100%';
   config.resize_enabled = false;
   config.toolbarCanCollapse = false;
   config.entities = false;
   config.entities_latin = false;
+  
+  
+  config.extraPlugins = 'youtube,justify,colorbutton,magicline,showblocks';
+  config.allowedContent = true;
+  //http://docs.cksource.com/CKEditor_3.x/Developers_Guide/Toolbar
 
   config.toolbar = 'Basic';
   config.toolbar_Basic = [
@@ -23,10 +29,11 @@ CKEDITOR.editorConfig = function(config)
     ['Save','Preview'],
     ['Cut','Copy','Paste','PasteText'],
     ['Undo','Redo','-','SelectAll','RemoveFormat'],
-    ['Image','Flash','Table','HorizontalRule','SpecialChar',],
+    ['Image','Flash','Table','HorizontalRule','SpecialChar','Youtube'],
     ['Maximize','ShowBlocks','Source'],
     '/',
-    ['Format','-','Bold','Italic','Strike','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
+    ['Format','-','TextColor', 'BGColor'],
+    ['Bold','Italic','Strike','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
     ['NumberedList','BulletedList','-','Outdent','Indent','Blockquote'],
     ['Link','Unlink','Anchor'],
     ['About']
@@ -60,4 +67,10 @@ CKEDITOR.editorConfig = function(config)
   config.filebrowserImageUploadUrl = kcPath+'upload.php?type=image';
   config.filebrowserFlashBrowseUrl = kcPath+'browse.php?type=flash';
   config.filebrowserFlashUploadUrl = kcPath+'upload.php?type=flash';
+  
+  config.youtube_width = '640';
+  config.youtube_height = '480';
+  config.youtube_related = true;
+  config.youtube_older = false;
+  config.youtube_privacy = false;
 };

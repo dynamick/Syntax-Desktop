@@ -1,6 +1,6 @@
 <?php
 /*************************************
-* class TEXTAREA CKEditor 3.0        *
+* class TEXTAREA CKEditor 4.0        *
 * Create a input type="text" obj     *
 **************************************/
 class synTextArea extends synElement {
@@ -9,26 +9,32 @@ class synTextArea extends synElement {
 
   //constructor(name, value, label, size, help)
   function synTextArea($n='', $v=null , $l=null, $s=150, $h='') {
-    if ($n=='') $n =  'textarea'.date('his');
-    if ($l=='') $l =  ucfirst($n);
+    if ($n=='') 
+      $n            = 'textarea'.date('his');
+    if ($l=='') 
+      $l            = ucfirst($n);
 
-    $this->type  = 'Default';
-    $this->name  = $n;
-    if ($v==null) { global $$n; $this->value = $$n; } else $this->value = $v;
-    $this->label = $l;
-    $this->size  = $s;
-    $this->help  = $h;
-    $this->db    = ' text NOT NULL';
+    $this->type     = 'Default';
+    $this->name     = $n;
+    if ($v==null) { 
+      global $$n; 
+      $this->value  = $$n; 
+    } else 
+      $this->value  = $v;
+    $this->label    = $l;
+    $this->size     = $s;
+    $this->help     = $h;
+    $this->db       = ' text NOT NULL';
   }
 
   //set the Type of TextArea
   function setPath($value) {
-    $this->type=$value;
+    $this->type = $value;
   }
 
   //get the label of the element
   function getCell() {
-    return $this->translate(substr(strip_tags($this->getValue()),0,200),true);
+    return $this->translate( substr(strip_tags($this->getValue()), 0, 200), true);
   }
 
 
@@ -43,7 +49,9 @@ class synTextArea extends synElement {
     {$value}
   </textarea>
   <script type="text/javascript">
-   CKEDITOR.replace('ck_{$this->name}', {customConfig:'{$ckConfig}', toolbar:'{$this->type}', height:$height});
+    $('#ck_{$this->name}').ckeditor({ 
+      customConfig:'{$ckConfig}', toolbar:'{$this->type}', height:{$height} 
+    });
   </script>
 EOC;
     // NB: quando passiamo a jquery lo script sopra va centralizzato!
