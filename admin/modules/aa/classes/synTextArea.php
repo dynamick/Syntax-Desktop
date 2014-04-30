@@ -49,9 +49,7 @@ class synTextArea extends synElement {
     {$value}
   </textarea>
   <script type="text/javascript">
-    $('#ck_{$this->name}').ckeditor({ 
-      customConfig:'{$ckConfig}', toolbar:'{$this->type}', height:{$height} 
-    });
+    CKEDITOR.replace( 'ck_{$this->name}', {customConfig:'{$ckConfig}', toolbar:'{$this->type}', height:{$height} } );
   </script>
 EOC;
     // NB: quando passiamo a jquery lo script sopra va centralizzato!
