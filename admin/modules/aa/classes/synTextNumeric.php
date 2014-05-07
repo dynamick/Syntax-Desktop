@@ -46,6 +46,10 @@ class synTextNumeric extends synElement {
     else return $this->configuration[$k];
   }
   
+  function getSQLValue() {
+    return intval($this->getValue());
+  } 
+
   
 } //end of class text
 

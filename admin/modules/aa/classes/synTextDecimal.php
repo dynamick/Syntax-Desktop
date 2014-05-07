@@ -45,6 +45,10 @@ class synTextDecimal extends synElement {
     if ($k==99) return $this->configuration;
     else return $this->configuration[$k];
   }
+
+  function getSQLValue() {
+    return floatval($this->getValue());
+  } 
   
   
 } //end of class text
