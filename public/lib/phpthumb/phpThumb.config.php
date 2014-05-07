@@ -94,7 +94,6 @@ $PHPTHUMB_CONFIG['use_exif_thumbnail_for_speed']         = false;
 $PHPTHUMB_CONFIG['allow_local_http_src']                 = false;
 $PHPTHUMB_DEFAULTS_GETSTRINGOVERRIDE                     = true;
 $PHPTHUMB_DEFAULTS_DISABLEGETPARAMS                      = false;
-$PHPTHUMB_DEFAULTS['q']                                  = 95;
 
 function phpThumbURL($ParameterString) {
   global $PHPTHUMB_CONFIG;
