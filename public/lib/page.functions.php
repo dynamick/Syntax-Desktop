@@ -193,15 +193,28 @@ function getPageId() {
   
   if (empty($languages))
     $languages  = getLangList();
-  
+
   if ( empty($uri) 
     || $uri == 'index.php' 
     || $uri == '/'
     ){ 
     // URI vuoto
+
+    if (!isset($_SESSION['synSiteLang'])) {
+      // provo a determinare la lingua dell'utente 
+      $user_languages = get_languages();
+      $user_available_languages = array_intersect($user_languages, $languages['list']); 
+      $preferred = array_shift($user_available_languages);
+      if ($preferred != $languages['default']) {
+        // lingua trovata e diversa dal default, redirigo alla home in lingua
+        header("Location: /{$preferred}/", true, 302);
+        exit();
+      }
+    } 
+ 
     $ret = getHomepageId();
     $lang = $languages['default'];
-    
+
   } else {
     if (preg_match($pattern, $uri, $matches)) {
       //echo 'matches: <pre>', print_r($matches), '</pre>';
@@ -213,6 +226,7 @@ function getPageId() {
         // utilizzo lingua di default
         $lang = $languages['default'];
       }
+
       $required_slug = rtrim($matches[2], '/');
       if (empty($required_slug)) {
         // slug vuoto

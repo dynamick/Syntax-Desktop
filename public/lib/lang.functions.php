@@ -123,8 +123,10 @@ function updateLang() {
   if ( !isset($_SESSION['synSiteLang'])
     || $_SESSION['synSiteLang'] == ''
     ){
+//echo 'pref: <pre>', print_r(get_languages()), '</pre>';
     $available = array();
     $preferred = implode("', '", array_reverse(get_languages()));
+//echo 'pref: <pre>', print_r($preferred), '</pre>';
 
 /*
     perchè $preferred è girato al contrario?

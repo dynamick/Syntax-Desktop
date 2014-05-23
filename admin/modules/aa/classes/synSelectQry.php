@@ -58,6 +58,10 @@ class synSelectQry extends synElement {
     return intval($this->selected);
   }  
 
+  function getSQLValue() {
+    return intval($this->getValue());
+  } 
+
   //get the label of the element
   function getCell() {
     if ($this->chkTargetMultilang($this->qry)==1) $this->multilang=1;
