@@ -204,16 +204,20 @@ function getPageId() {
       // provo a determinare la lingua dell'utente 
       $user_languages = get_languages();
       $user_available_languages = array_intersect($user_languages, $languages['list']); 
-      $preferred = array_shift($user_available_languages);
-      if ($preferred != $languages['default']) {
+      $lang = array_shift($user_available_languages);
+
+      if ( $lang 
+        && $lang != $languages['default']
+        ){
         // lingua trovata e diversa dal default, redirigo alla home in lingua
-        header("Location: /{$preferred}/", true, 302);
+        header("Location: /{$lang}/", true, 302);
         exit();
-      }
-    } 
- 
+      } 
+    }
+
+    $lang = $languages['default']; 
     $ret = getHomepageId();
-    $lang = $languages['default'];
+
 
   } else {
     if (preg_match($pattern, $uri, $matches)) {
