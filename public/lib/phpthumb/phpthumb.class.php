@@ -1123,10 +1123,12 @@ class phpthumb {
 			if (empty($open_basedirs) || in_array(dirname($filename), $open_basedirs)) {
 				$file_exists_cache[$filename] = file_exists($filename);
 			} elseif ($this->iswindows) {
-				$ls_filename = trim(phpthumb_functions::SafeExec('dir '.escapeshellarg($filename)));
+				//$ls_filename = trim(phpthumb_functions::SafeExec('dir '.escapeshellarg($filename)));
+				$ls_filename = trim(phpthumb_functions::SafeExec('ls "' . addcslashes($filename, '\\"')));
 				$file_exists_cache[$filename] = !preg_match('#File Not Found#i', $ls_filename);
 			} else {
-				$ls_filename = trim(phpthumb_functions::SafeExec('ls '.escapeshellarg($filename)));
+				//$ls_filename = trim(phpthumb_functions::SafeExec('ls '.escapeshellarg($filename)));
+				$ls_filename = trim(phpthumb_functions::SafeExec('ls "' . addcslashes($filename, '\\"')));
 				$file_exists_cache[$filename] = ($ls_filename == $filename);
 			}
 		}
@@ -1303,7 +1305,7 @@ class phpthumb {
 			// $UnAllowedParameters contains options that can only be processed in GD, not ImageMagick
 			// note: 'fltr' *may* need to be processed by GD, but we'll check that in more detail below
 			$UnAllowedParameters = array('xto', 'ar', 'bg', 'bc');
-			// 'ra' may be part of this list, if not a multiple of 90°
+			// 'ra' may be part of this list, if not a multiple of 90ï¿½
 			foreach ($UnAllowedParameters as $parameter) {
 				if (isset($this->$parameter)) {
 					$this->DebugMessage('$this->useRawIMoutput=false because "'.$parameter.'" is set', __FILE__, __LINE__);
