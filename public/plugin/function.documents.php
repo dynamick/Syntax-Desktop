@@ -33,22 +33,19 @@ EOQ;
   //$pgr = new synPager($db, '', '', '', false, true);
   //$res = $pgr->Execute($qry, 8, "cat=".$cat);
   //$nav = $pgr->renderPagerPublic('', true, true);
+  
+  $documents = array();
   $res = $db->execute($qry);
 
   if($arr=$res->FetchRow()) {
     $t = multiTranslateDictionary(array('doc_riservato','doc_no_abilitazione'));
     do {
-      $catid = $arr['category_id'];
-      $catname = $arr['category'];
-
-      //$html .= "<div class=\"download-content\">\n";
-      $html .= "  <h4>{$catname}</h4>\n";
-      $html .= "  <ul class=\"item-list\">\n";
+      $documents[$arr['category_id']] = array('name' => $arr['category'], 'documents' => array());
       do {
         $ext        = $arr['file'];
         $file       = "{$synPublicPath}/mat/documents/documents_file_id{$arr['id']}.{$ext}";
-        $size       = @filesize($synAbsolutePath.$file);
-        $file_label = "<strong>{$ext}</strong> ".byteConvert($size);
+        $size       = byteConvert(@filesize($synAbsolutePath.$file));
+        $date       = sql2human($arr['date']);
         $status     = $arr['status'];
 
         if ($arr['enabled_groups'])
@@ -76,19 +73,15 @@ EOQ;
           $have_same_group = false;
         
         if (
-//            ($status == 'secret' && ((in_array($usergroup, $owner) || !$owner) && $userid != '') ) ||
             ($status == 'secret' && ($have_same_group && $userid != '') ) ||
             ($status == 'private' && $userid != '' ) ||
             ($status == 'public') ||
             ($status == 'protected')
           ){
           // file pubblico o autorizzato per l'utente o visibile
-          $privato = ($status != 'public') ? ' class=\"privato"' : '';
-          //$testo   = ($arr['abstract']) ? $arr['abstract']."<br />" : '';
           if(
             ($status == 'public') ||
             ($status == 'protected' && $userid != '') ||
-//            (($status == 'private' || $status == 'secret') && ((in_array($usergroup, $owner) || !$owner) && $userid != '') )
             (($status == 'private' || $status == 'secret') && ($have_same_group && $userid != '') )
             ){
             // file pubblico o autorizzato per l'utente
@@ -98,38 +91,23 @@ EOQ;
             $alert = ($userid ? $t['doc_no_abilitazione'] : $t['doc_riservato']);
             $link  = "javascript:alert('{$alert}')";
           }
-
-          $html .= <<<EOHTML
-          
-          <li>
-            <article>
-              <a href="{$link}" class="download">
-                <header>
-                  <h1>{$arr['title']}</h1>
-                </header>
-                <span>{$arr['description']}</span>
-                <footer class="meta">
-                  {$file_label}
-                </footer>
-              </a>
-            </article>
-          </li>   
-
-EOHTML;
+          $documents[$arr['category_id']]['documents'][] = array(
+            'link'        => $link, 
+            'title'       => $arr['title'], 
+            'description' => $arr['description'], 
+            'ext'         => $ext, 
+            'size'        => $size,
+            'date'        => $date,
+            'class'       => $class
+          ); 
         }
         $next = ($arr=$res->FetchRow());
       } while ($next && $catid==$arr['category_id']);
 
-      $html .= "  </ul>\n";
-//      $html .= "</div>\n";
     } while ($next);
     
-  } else {
-    $html .= $nav;
-    $html .= "<div class=\"alert\">Nessun elemento disponibile.</div>";
   }
-
-  return $html;
+  $smarty->assign('documents', $documents);
 }
 
 // EOF

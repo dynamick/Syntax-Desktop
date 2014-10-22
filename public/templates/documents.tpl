@@ -19,7 +19,33 @@
           {$synPageText}
           </div>
           {documents}
-        </div>
+          {if count($documents) > 0}
+            {foreach from=$documents item=category}
+              {if count($category.documents) > 0}
+                <h4>{$category.name}</h4>
+                <ul class="item-list">
+                  {foreach from=$category.documents item=document}
+                    <li>
+                      <article>
+                        <a href="{$document.link}" class="download">
+                          <header>
+                            <h1>{$document.title}</h1>
+                            <span>{$document.date}</span>
+                          </header>
+                          <span>{$document.description}</span>
+                          <footer class="meta">
+                            <strong>{$document.ext}</strong> {$document.size}
+                          </footer>
+                        </a>
+                      </article>
+                    </li>   
+                  {/foreach}
+                </ul>
+              {/if}
+            {/foreach}
+          {else}
+            <div class="alert">Nessun elemento disponibile.</div>
+          {/if}
         
         <aside class="sidebar">
           <div class="box">
