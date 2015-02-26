@@ -150,6 +150,9 @@ ENDOFFIELD;
         } else
           $cnt = 2;
       }
+      if ($cnt == 2) {
+        $form .= "</div>\n";
+      }       
 
       $form .= "<div class=\"row\"><div class=\"col-md-12 text-center\">\n";
       if ($this->captcha!='nessuno')
