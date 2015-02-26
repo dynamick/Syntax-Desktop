@@ -9,8 +9,7 @@ function smarty_function_documents($params, &$smarty) {
   $userid    = isset($_COOKIE[COOKIE_NAME]['id'])    ? $_COOKIE[COOKIE_NAME]['id']    : 0;
   $usergroup = isset($_COOKIE[COOKIE_NAME]['group']) ? $_COOKIE[COOKIE_NAME]['group'] : 0;
   $lng       = $_SESSION['synSiteLangInitial'];
-  $html      = '';
-//echo $usergroup;
+  $document_count = 0;
 
   if($usergroup != "") {
     $usergroup = explode('|', $usergroup);
@@ -91,6 +90,7 @@ EOQ;
             $alert = ($userid ? $t['doc_no_abilitazione'] : $t['doc_riservato']);
             $link  = "javascript:alert('{$alert}')";
           }
+          $document_count++;
           $documents[$arr['category_id']]['documents'][] = array(
             'link'        => $link, 
             'title'       => $arr['title'], 
@@ -107,6 +107,7 @@ EOQ;
     } while ($next);
     
   }
+  $documents['document_count'] = $document_count;
   $smarty->assign('documents', $documents);
 }
 

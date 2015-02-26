@@ -19,7 +19,7 @@
           {$synPageText}
           </div>
           {documents}
-          {if count($documents) > 0}
+          {if $documents.document_count > 0}
             {foreach from=$documents item=category}
               {if count($category.documents) > 0}
                 <h4>{$category.name}</h4>
