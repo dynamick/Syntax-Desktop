@@ -3,54 +3,33 @@
 ***                                  PAGE FUNCTIONS
 *******************************************************************************/
 $languages = null;
-/*
-function createPath_DEPRECATED($id) {
-  global $db;
-  if($id==0) return;
-  
-  $lng = $_SESSION['synSiteLangInitial'];
-  $qry = <<<EOQ
-   SELECT p.parent, t.$lng AS title
-     FROM aa_page p
-LEFT JOIN aa_translation t ON p.title = t.id
-    WHERE p.id=$id
-      AND p.parent>0
-EOQ;
-  $res = $db->Execute($qry);
-  if ($res->RecordCount()==0) return "/";
-  $a = $res->FetchRow();
-  if($a['parent']!=$id && $a['parent']>0):
-    $path = createPath($a['parent']);
-  else:
-    $path = '';
-  endif;
-  return $path.sanitizePath($a['title'])."/";
-}
-*/
 
-function createPath($id) {
+
+function createPath($id, $lang = '') {
   global $db, $languages;
-  
-  if($id == 0) return;
-  //echo 'languages: <pre>', var_dump($languages), '</pre>';
-  
-  $lng = $_SESSION['synSiteLangInitial'];
+
+  if (empty($id) OR $id == 0)
+    return;
+
+  if (empty($lang))
+    $lang = getLangInitial();
+
   $qry = <<<EOQ
-  
-     SELECT p.parent, t.{$lng} AS slug
+
+     SELECT p.parent, t.{$lang} AS slug
        FROM aa_page p
   LEFT JOIN aa_translation t ON p.slug = t.id
       WHERE p.id = '{$id}'
-      
+
 EOQ;
-  //echo $qry.'<br>';
+
   $res = $db->Execute($qry);
   if($arr = $res->FetchRow()){
     $path = '';
-    if (intval($arr['parent'])>0) :
-      $path = createPath($arr['parent']);
+    if (intval($arr['parent']) > 0) :
+      $path = createPath( $arr['parent'], $lang );
     else :
-      $path = ($lng == $languages['default']) ? '' : '/'.$lng;
+      $path = ($lang == $languages['default']) ? '' : '/'.$lang;
     endif;
     $path .= $arr['slug'];
   }
@@ -60,14 +39,13 @@ EOQ;
 
 
 
-
 function sanitizePath($txt) {
   # sostituzione caratteri cirillici
   $enlow =  array('a', 'a', 'b', 'b', 'v', 'v', 'g', 'g', 'd', 'd', 'je', 'je', 'jo', 'jo', 'zh', 'zh', 'z', 'z', 'i', 'i', 'j', 'j', 'k', 'k', 'l', 'l', 'm', 'm', 'n', 'n', 'o', 'o', 'p', 'p', 'r', 'r', 's', 's', 't', 't', 'u', 'u', 'f', 'f', 'h', 'h', 'ts', 'ts', 'ch', 'ch', 'sh', 'sh', 'shch', 'shch', '', '', 'y', 'y', '', '', 'e', 'e', 'ju', 'ju', 'ja', 'ja');
   $ru = array('А', 'а', 'Б', 'б', 'В', 'в', 'Г', 'г', 'Д', 'д', 'Е', 'е', 'Ё', 'ё', 'Ж', 'ж', 'З', 'з', 'И', 'и', 'Й', 'й', 'К', 'к', 'Л', 'л', 'М', 'м', 'Н', 'н', 'О', 'о', 'П', 'п', 'Р', 'р', 'С', 'с', 'Т', 'т', 'У', 'у', 'Ф', 'ф', 'Х', 'х', 'Ц', 'ц', 'Ч', 'ч', 'Ш', 'ш', 'Щ', 'щ', 'Ъ', 'ъ', 'Ы', 'ы', 'Ь', 'ь', 'Э', 'э', 'Ю', 'ю', 'Я', 'я');
   $uni = array('А'=>'А', 'а'=>'а', 'Б'=>'Б', 'б'=>'б', 'В'=>'В', 'в'=>'в', 'Г'=>'Г', 'г'=>'г', 'Д'=>'Д', 'д'=>'д', 'Е'=>'Е', 'е'=>'е', 'Ж'=>'Ж', 'ж'=>'ж', 'З'=>'З', 'з'=>'з', 'И'=>'И', 'и'=>'и', 'Й'=>'Й', 'й'=>'й', 'К'=>'К', 'к'=>'к', 'Л'=>'Л', 'л'=>'л', 'М'=>'М', 'м'=>'м', 'Н'=>'Н', 'н'=>'н', 'О'=>'О', 'о'=>'о', 'П'=>'П', 'п'=>'п', 'Р'=>'Р', 'р'=>'р', 'С'=>'С', 'с'=>'с', 'Т'=>'Т', 'т'=>'т', 'У'=>'У', 'у'=>'у', 'Ф'=>'Ф', 'ф'=>'ф', 'Х'=>'Х', 'х'=>'х', 'Ц'=>'Ц', 'ц'=>'ц', 'Ч'=>'Ч', 'ч'=>'ч', 'Ш'=>'Ш', 'ш'=>'ш', 'Щ'=>'Щ', 'щ'=>'щ', 'Ъ'=>'Ъ', 'ъ'=>'ъ', 'Ы'=>'Ы', 'ы'=>'ы', 'Ь'=>'Ь', 'ь'=>'ь', 'Э'=>'Э', 'э'=>'э', 'Ю'=>'Ю', 'ю'=>'ю', 'Я'=>'Я', 'я'=>'я');
   $txt =  stripslashes(str_replace($ru, $enlow, strtr($txt, $uni)));
-  
+
   // accent folding
   $search = array(
     'À','Á','Â','Ä','Å','Æ','Ã','Ă','à','á','â','ä','å','æ','ã','ă',
@@ -75,7 +53,7 @@ function sanitizePath($txt) {
     'Ç','Ć','Ĉ','Ċ','Č','ç','ć','ĉ','ċ','č',
     'Ď','Đ','ď','đ',
     'È','É','Ë','Ē','Ĕ','Ě','Ê','è','é','ë','ē','ĕ','ě','ê',
-    'Ĝ','Ğ','Ġ','Ģ','ĝ','ğ','ġ','ģ', 
+    'Ĝ','Ğ','Ġ','Ģ','ĝ','ğ','ġ','ģ',
     'Ĥ','Ħ','ĥ','ħ',
     'Ì','Í','Ï','Î','Ĩ','ì','í','ï', 'î','ĩ',
     'Ñ','ñ',
@@ -97,11 +75,11 @@ function sanitizePath($txt) {
     'U','U','UE','U','U','u','u','ue','u','u',
     '-percent','-eq','_','-','-plus','-point'
   );
-    
+
   $txt = str_replace($search, $replace, $txt);
   $txt = trim(strtolower(preg_replace('/[^A-Za-z0-9_]/', ' ', $txt)));
   $txt = str_replace(' ', '-', $txt);
-  while (strstr($txt, '--')) 
+  while (strstr($txt, '--'))
     $txt = str_replace('--','-',$txt);
 
   return $txt;
@@ -117,7 +95,7 @@ function getDomain(){
   $subdomainArr = explode(".", getenv("HTTP_X_FORWARDED_HOST"));
   $subdomain = $subdomainArr[0];
 
-  if($subdomain=="www") 
+  if($subdomain=="www")
     $subdomain = '';
   //return
   return array(
@@ -129,12 +107,12 @@ function getDomain(){
 
 function getHomepageId() {
   global $db, $synEntryPoint;
-  
+
   extract(getDomain());
-  if ( is_array($synEntryPoint) 
+  if ( is_array($synEntryPoint)
     && array_key_exists($domain, $synEntryPoint)
     ){
-    $ret = $synEntryPoint[$domain]; 
+    $ret = $synEntryPoint[$domain];
   } else {
     $qry = "SELECT id FROM aa_page WHERE parent = 0 LIMIT 0,1";
     $res = $db->Execute($qry);
@@ -147,21 +125,21 @@ function getHomepageId() {
 /*
 function get404pageId() {
   global $db;
-  
+
   $qry = "SELECT p.id FROM aa_page p LEFT JOIN aa_translation t ON p.title = t.id WHERE  LIMIT 0,1";
   $res = $db->Execute($qry);
   $arr = $res->FetchRow();
   $ret = $arr['id'];
   return $ret;
-  
+
   // http://www.phpliveregex.com/
   // filtra tutto quello che non è una pagina
   // OCCHIO: se manca il trailing slash si mangia anche l'ultima pagina!
-  $filter_pattern = '/^(?:[^\?#~\.]+)(\/.*?)$/i'; 
-  
+  $filter_pattern = '/^(?:[^\?#~\.]+)(\/.*?)$/i';
+
   // filtra l'ultima pagina e l'eventuale lingua
   $page_pattern = '/^\/([a-z]{2}\/)*([a-z0-9-_\+]+\/)*$/i';
-  
+
   if(!empty($qs)){
     echo "QS presente: {$qs}<br>";
     $uri = str_replace('?'.$qs, '', $uri);
@@ -172,50 +150,50 @@ function get404pageId() {
 function getPageId() {
   global $db, $synEntryPoint, $languages;
 
-  $ret     = false;  
+  $ret     = false;
   $pattern = '/^\/([a-z]{2}\/)*'        // matcha la lingua, es. 'en/' - opzionale
            . '([a-z0-9-_\+]+\/)*'       // matcha 'pagina/' - opzionale (cattura solo l'ultima occorrenza)
            . '(?:[a-z0-9-_~\.\/]+)?$/'; // matcha 'cat~1/', 'pippo~1.html' o 'index.html' - opzionale (NON viene catturato)
-  
+
   if (isset($_SERVER['HTTP_X_REWRITE_URL'])) {
     $_SERVER['REQUEST_URI'] = $_SERVER['HTTP_X_REWRITE_URL'];
-  }  
-  
+  }
+
   if (isset($_GET['spt'])) {
     $uri = DIRECTORY_SEPARATOR . $_GET['spt'];
   } else {
     $uri = $_SERVER['REQUEST_URI'];
   }
-  
+
   // elimino eventuale querystring
   if (strpos($uri, '?'))
     $uri = strstr($uri, '?', true);
-  
+
   if (empty($languages))
     $languages  = getLangList();
 
-  if ( empty($uri) 
-    || $uri == 'index.php' 
+  if ( empty($uri)
+    || $uri == 'index.php'
     || $uri == '/'
-    ){ 
+    ){
     // URI vuoto
 
     if (!isset($_SESSION['synSiteLang'])) {
-      // provo a determinare la lingua dell'utente 
+      // provo a determinare la lingua dell'utente
       $user_languages = get_languages();
-      $user_available_languages = array_intersect($user_languages, $languages['list']); 
+      $user_available_languages = array_intersect($user_languages, $languages['list']);
       $lang = array_shift($user_available_languages);
 
-      if ( $lang 
+      if ( $lang
         && $lang != $languages['default']
         ){
         // lingua trovata e diversa dal default, redirigo alla home in lingua
         header("Location: /{$lang}/", true, 302);
         exit();
-      } 
+      }
     }
 
-    $lang = $languages['default']; 
+    $lang = $languages['default'];
     $ret = getHomepageId();
 
 
@@ -254,9 +232,9 @@ function getPageId() {
   }
 
   // imposto la lingua selezionata
-  $lang_id = array_search($lang, $languages['list']);  
+  $lang_id = array_search($lang, $languages['list']);
   setLang($lang_id, $lang);
-  
+
   // TODO: recuperare dinamicamente la 404?
   if ($ret === false) {
     //echo "{$uri} not found";
@@ -271,110 +249,6 @@ function getPageId() {
 }
 
 
-
-/*
-function getPageId_DEPRECATED() {
-  global $db,$synEntryPoint;
-
-  if (isset($_SERVER['HTTP_X_REWRITE_URL'])) {
-      $_SERVER['REQUEST_URI'] = $_SERVER['HTTP_X_REWRITE_URL'];
-  }
-  #echo $_SERVER['REQUEST_URI'] ." - ". $_SERVER['HTTP_X_REWRITE_URL'];
-
-  if(isset($_GET['spt'])) {
-    $uri = "/".$_GET['spt'];
-  } else {
-    $uri = $_SERVER["REQUEST_URI"];
-  }
-  $page404 = false;
-  $homepageId = getHomepageId();
-  $ret = false;
-
-  // create an array of pages
-  $langArr = getLangArr();
-  $pageArr = array();
-
-  $qry = "SELECT p.id AS pageid, t.* FROM aa_page p LEFT JOIN aa_translation t ON p.title=t.id";
-  $res = $db->Execute($qry);
-  while ($arr=$res->FetchRow()) {
-    extract($arr);
-    foreach ($langArr as $l) {
-      $l=trim($l);
-      $pageArr[$l][$pageid] = sanitizePath($$l);
-      if ($pageArr[$l][$pageid]=="404" && !$page404)
-        $page404 = $pageArr[$l][$pageid];
-    }
-  }
-  #echo 'PageArr:<pre>', print_r($pageArr), '</pre>', PHP_EOL; //die();
-
-  // delete the trailing "/" and the GET information from uri
-  if (strpos($uri,"?")!==false) {
-    $uri = substr($uri, 0, strpos($uri, "?"));
-    if (substr($uri, -1)=="?") {
-      $uri = substr($uri, 0, -1);
-    }
-  }
-  if (substr($uri, -1)=="/") {
-    $uri = substr($uri, 0, -1);
-  }
-
-
-  // split the path
-  $arr = explode("/", $uri);
-  if ($arr===false or $uri=="") return $homepageId;
-  $count = count($arr);
-
-  if (substr($uri, -5, 5)==".html" or substr($uri, -4, 4)==".php") {
-    //file
-    $filename = $arr[count($arr)-1];
-    array_pop($arr);
-  } else {
-    //directory
-    $filename = '';
-  }
-
-  //check if it's the homepage
-  if ($filename=="index.php" and count($arr)==1) 
-    return $homepageId;
-
-  // search for page match
-  $lastParent="";
-  $level=0;
-  foreach($arr as $npage=>$page) {
-    $found=false;
-    foreach($langArr as $l) {
-      if ($page=="") $found=$homepageId;
-      else {
-       if(is_array($pageArr[$l])){
-          $matchingKeys = array_keys($pageArr[$l], $arr[$npage]);
-          if (is_array($matchingKeys)) {
-            foreach ($matchingKeys as $id) {
-              $parent=pageParent($id);
-              if ($parent==$lastParent || ($level<=1 && pageParent($parent)==0 && !in_array($parent,$synEntryPoint) ) ) {
-                $found = $id;
-                break;
-              }
-            }
-          }
-        }
-      }
-    }
-    // add level
-    $level++;
-
-    // Error 404
-    if ($found===false) {
-      header("HTTP/1.0 404 Not Found");
-      if ($page404!==false) header("Location: /".$page404);
-      exit;
-    } else {
-      $lastParent=$found;
-    }
-  }
-
-  return $found;
-}
-*/
 
 function pageParent($id) {
   global $db;
@@ -391,24 +265,24 @@ function url_decode($s){
 
 
 //create the entire menu
-function createMenu($id=0, $includeParent=false, $first_child=false) {
-  global $db,$smarty,$synPublicPath;;
-  
+function createMenu( $id = 0, $includeParent = false, $first_child = false ) {
+  global $db, $smarty, $synPublicPath;
+
   $ret = array();
   $nodeArr = $smarty->synPageNode;
-  foreach($nodeArr as $node) 
+  foreach($nodeArr as $node)
     $idArr[] = $node["id"];
   $currPage = $smarty->getTemplateVars('synPageId');
-  $lang = $_SESSION["synSiteLang"];
-  
-  $qry="SELECT * FROM `aa_page` WHERE CONCAT('|', `visible`, '|') LIKE '%|{$lang}|%' AND `parent`=$id ORDER BY `order`";
-  $res=$db->Execute($qry);
-  $rows=$res->RecordCount();
+  $lang = getLangId();
+
+  $qry = "SELECT * FROM `aa_page` WHERE CONCAT('|', `visible`, '|') LIKE '%|{$lang}|%' AND `parent`='{$id}'' ORDER BY `order`";
+  $res = $db->Execute($qry);
+  $rows = $res->RecordCount();
   $count = 1;
   while ($arr = $res->FetchRow()) {
     $title = translateSite($arr["title"]);
-    if($first_child == true) {
-      $qry="SELECT * FROM `aa_page` WHERE CONCAT('|', `visible`, '|') LIKE '%|{$lang}|%' AND `parent`=".$arr["id"]." ORDER BY `order`";
+    if ($first_child == true) {
+      $qry = "SELECT * FROM `aa_page` WHERE CONCAT('|', `visible`, '|') LIKE '%|{$lang}|%' AND `parent`='{$arr["id"]}' ORDER BY `order`";
       $res_c = $db->Execute($qry);
       if ($arr_c = $res_c->FetchRow()) {
         if (trim($arr_c['url']) == ''){
@@ -437,27 +311,31 @@ function createMenu($id=0, $includeParent=false, $first_child=false) {
       }
     }
 
-    $active = ($arr["id"]==$currPage)||((is_array($idArr))&&(in_array($arr["id"],$idArr))) ? TRUE : FALSE;
+    $active = ($arr["id"] == $currPage) || ((is_array($idArr)) && (in_array($arr["id"], $idArr)))
+            ? TRUE
+            : FALSE;
 
     $ret[] = array("title"=>$title, "link" => $link, "active" => $active, "is_url" => $is_url);
   }
-  
-  if($includeParent===true){
-    $qry="SELECT * FROM `aa_page` WHERE CONCAT('|', `visible`, '|') LIKE '%|{$lang}|%' AND `id`=$id";
-    $res=$db->Execute($qry);
-    if($res!=false){
-      $arr=$res->FetchRow();
-      $title=translateSite($arr["title"]);
 
-      if (translateSite($arr["url"])=="") {
-        $link = createPath($arr["id"]);
+  if ($includeParent === true){
+    $qry = "SELECT * FROM `aa_page` WHERE CONCAT('|', `visible`, '|') LIKE '%|{$lang}|%' AND `id`='{$id}'";
+    $res = $db->Execute($qry);
+    if ($res != false){
+      $arr = $res->FetchRow();
+      $title = translateSite($arr['title']);
+
+      if ( empty($arr['url']) ) {
+        $link = createPath( $arr['id'] );
         $is_url = FALSE;
       } else {
-        $link = translateSite($arr["url"]);
+        $link = $arr['url'];
         $is_url = TRUE;
       }
 
-      $active = $arr["id"]==$currPage ? TRUE : FALSE;
+      $active = ( $arr['id'] == $currPage )
+              ? TRUE
+              : FALSE;
       array_unshift($ret, array("title"=>$title, "link" => $link, "active" => $active, "is_url" => $is_url));
     }
   }
@@ -473,17 +351,17 @@ function createMenu($id=0, $includeParent=false, $first_child=false) {
 // $includeParent: include the parent node itself
 // $title: database field used for node label
 // $first_child: parent node link is set to the first child link
-function createSubmenu($id=0, $expand=false, $includeParent=false, $first_child=false, $field="title") {
+function createSubmenu( $id = 0, $expand = false, $includeParent = false, $first_child = false, $field = "title") {
   global $db,$smarty;
-  
-  $lang     = $_SESSION["synSiteLang"];
+
+  $lang     = getLangId();
   $currPage = $smarty->getTemplateVars('synPageId');
   $menu     = array();
-  
+
   if ($includeParent === true) {
-    $qry="SELECT * FROM `aa_page` WHERE CONCAT('|', `visible`, '|') LIKE '%|{$lang}|%' AND `id` = $id";
-    $res=$db->Execute($qry);
-    if ($arr=$res->FetchRow()) {
+    $qry = "SELECT * FROM `aa_page` WHERE CONCAT('|', `visible`, '|') LIKE '%|{$lang}|%' AND `id` = $id";
+    $res = $db->Execute($qry);
+    if ($arr = $res->FetchRow()) {
       $title = translateSite($arr[$field]);
 
       if (trim($arr['url'])=='') {
@@ -495,10 +373,10 @@ function createSubmenu($id=0, $expand=false, $includeParent=false, $first_child=
       }
 
       $active = $arr["id"] == $currPage ? TRUE : FALSE;
-      $menu[] = array("title" => $title, "link" => $link, "active" => $active, "is_url" => $is_url);      
+      $menu[] = array("title" => $title, "link" => $link, "active" => $active, "is_url" => $is_url);
     }
   }
-  
+
   return array_merge($menu, createSubmenuPrivate($id, $expand, $first_child, $field));
 }
 
@@ -506,13 +384,13 @@ function createSubmenu($id=0, $expand=false, $includeParent=false, $first_child=
 //create the entire tree
 function createSubmenuPrivate($id=0, $expand=false, $first_child=false, $field="title") {
   global $db,$smarty,$synPublicPath;
-  
+
   $lang     = $_SESSION["synSiteLang"];
   $currPage = $smarty->getTemplateVars('synPageId');
   $nodeArr  = $smarty->synPageNode;
   $menu     = array();
-  
-  foreach($nodeArr as $node) $idArr[] = $node["id"];  
+
+  foreach($nodeArr as $node) $idArr[] = $node["id"];
 
   $qry = "SELECT * FROM `aa_page` WHERE CONCAT('|', `visible`, '|') LIKE '%|{$lang}|%' AND `parent`=$id ORDER BY `order`";
   $res = $db->Execute($qry);
@@ -522,7 +400,7 @@ function createSubmenuPrivate($id=0, $expand=false, $first_child=false, $field="
 
     $child = array();
     if($expand || $first_child || $active) $child = createSubmenuPrivate($arr["id"], $expand, false, $field);
-    
+
 
     if($first_child && count($child) > 0) {
       $item   = reset($child);
@@ -537,9 +415,9 @@ function createSubmenuPrivate($id=0, $expand=false, $first_child=false, $field="
         $is_url = TRUE;
       }
     }
-        
+
     if(!$active && !$expand) $child = array();
-    
+
     $ret[] = array("title" => $title, "link" => $link, "active" => $active, "is_url" => $is_url, "child" => $child);
   }
   return $ret;
