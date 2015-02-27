@@ -275,7 +275,7 @@ function createMenu( $id = 0, $includeParent = false, $first_child = false ) {
   $currPage = $smarty->getTemplateVars('synPageId');
   $lang = getLangId();
 
-  $qry = "SELECT * FROM `aa_page` WHERE CONCAT('|', `visible`, '|') LIKE '%|{$lang}|%' AND `parent`='{$id}'' ORDER BY `order`";
+  $qry = "SELECT * FROM `aa_page` WHERE CONCAT('|', `visible`, '|') LIKE '%|{$lang}|%' AND `parent`='{$id}' ORDER BY `order`";
   $res = $db->Execute($qry);
   $rows = $res->RecordCount();
   $count = 1;
