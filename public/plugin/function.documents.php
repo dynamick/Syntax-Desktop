@@ -1,7 +1,7 @@
 <?php
 function smarty_function_documents($params, &$smarty) {
   global $db, $synPublicPath, $synAbsolutePath;
-  
+
   if(!isset($_SESSION))
     session_start();
 
@@ -13,7 +13,7 @@ function smarty_function_documents($params, &$smarty) {
 
   if($usergroup != "") {
     $usergroup = explode('|', $usergroup);
-  } else 
+  } else
     $usergroup = array();
 
   $qry = <<<EOQ
@@ -24,15 +24,11 @@ function smarty_function_documents($params, &$smarty) {
 LEFT JOIN aa_translation t1 ON d.title = t1.id
 LEFT JOIN aa_translation t2 ON c.category = t2.id
 LEFT JOIN aa_translation t3 ON d.description = t3.id
- ORDER BY c.`order`, 
-          d.`date` DESC, 
+ ORDER BY c.`order`,
+          d.`date` DESC,
           d.title
 EOQ;
 
-  //$pgr = new synPager($db, '', '', '', false, true);
-  //$res = $pgr->Execute($qry, 8, "cat=".$cat);
-  //$nav = $pgr->renderPagerPublic('', true, true);
-  
   $documents = array();
   $res = $db->execute($qry);
 
@@ -40,6 +36,7 @@ EOQ;
     $t = multiTranslateDictionary(array('doc_riservato','doc_no_abilitazione'));
     do {
       $documents[$arr['category_id']] = array('name' => $arr['category'], 'documents' => array());
+      $catid = $arr['category_id'];
       do {
         $ext        = $arr['file'];
         $file       = "{$synPublicPath}/mat/documents/documents_file_id{$arr['id']}.{$ext}";
@@ -49,7 +46,7 @@ EOQ;
 
         if ($arr['enabled_groups'])
           $owner = explode('|', $arr['enabled_groups']);
-        else 
+        else
           $owner = array();
 
         switch(strtolower($ext)) {
@@ -63,14 +60,14 @@ EOQ;
           default :
             $class= "pdf"; break;
         }
-        
+
         $intersect = array_intersect($usergroup, $owner);
-        
-        if (is_array($intersect) && count($intersect) > 0) 
+
+        if (is_array($intersect) && count($intersect) > 0)
           $have_same_group = true;
-        else 
+        else
           $have_same_group = false;
-        
+
         if (
             ($status == 'secret' && ($have_same_group && $userid != '') ) ||
             ($status == 'private' && $userid != '' ) ||
@@ -92,20 +89,20 @@ EOQ;
           }
           $document_count++;
           $documents[$arr['category_id']]['documents'][] = array(
-            'link'        => $link, 
-            'title'       => $arr['title'], 
-            'description' => $arr['description'], 
-            'ext'         => $ext, 
+            'link'        => $link,
+            'title'       => $arr['title'],
+            'description' => $arr['description'],
+            'ext'         => $ext,
             'size'        => $size,
             'date'        => $date,
             'class'       => $class
-          ); 
+          );
         }
         $next = ($arr=$res->FetchRow());
       } while ($next && $catid==$arr['category_id']);
 
     } while ($next);
-    
+
   }
   $documents['document_count'] = $document_count;
   $smarty->assign('documents', $documents);
