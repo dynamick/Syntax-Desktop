@@ -6,10 +6,10 @@
 //set the current language
 function setLang($id, $initial='') {
   global $db;
-  
+
   if(!isset($_SESSION))
     session_start();
-    
+
   $lang = intval($id);
 
   if ($lang == 0) {
@@ -77,21 +77,25 @@ function translateSite($id, $err=false) {
   if(!isset($_SESSION))
     session_start();
 
-  if (isset($_GET["synSiteLang"])) setLang($_GET["synSiteLang"]);
-  if ($_SESSION["synSiteLang"]=="" or !isset($_SESSION["synSiteLang"])){
-    updateLang();
-  }
+  if (isset($_GET["synSiteLang"]))
+    setLang($_GET["synSiteLang"]);
 
-  $qry="SELECT * FROM aa_translation WHERE id='".addslashes($id)."'";
-  $res=$db->Execute($qry);
+  if ($_SESSION["synSiteLang"]=="" or !isset($_SESSION["synSiteLang"]))
+    updateLang();
+
+  $qry = "SELECT * FROM aa_translation WHERE id='".addslashes($id)."'";
+  $res = $db->Execute($qry);
   if ($res->RecordCount()==0) {  //umm... the field is multilang but there isn't a row in the translation table...
-    $ret=$id;
+    $ret = $id;
   } else {
-    $arr=$res->FetchRow();
-    $ret=$arr[$_SESSION["synSiteLangInitial"]];
+    $arr = $res->FetchRow();
+    $ret = $arr[$_SESSION["synSiteLangInitial"]];
 
     if ($ret=="" and $err===true) {
-      foreach ($arr as $mylang=>$mytrans) if (!is_numeric($mylang) and $mylang!="id" and $mytrans!="") $alt.="\n$mylang: ".substr(strip_tags($mytrans),0,10);
+      foreach ($arr as $mylang=>$mytrans) {
+        if (!is_numeric($mylang) and $mylang!="id" and $mytrans!="")
+          $alt .= "\n$mylang: ".substr(strip_tags($mytrans),0,10);
+      }
       $ret="<span style='color: gray' title=\"".htmlentities("Other Translations:".$alt)."\">[no translation]</span>";
     }
   }
@@ -211,10 +215,7 @@ function translateDictionary($label){
   // es. translateDictionary("home_title_realizzazioni")
   global $db;
 
-  if(!isset($_SESSION))
-    session_start();
-    
-  $lng = $_SESSION['synSiteLangInitial'];
+  $lng = getLangInitial();
   $qry = "SELECT t.{$lng} AS value FROM dictionary v JOIN aa_translation t ON v.value=t.id WHERE v.label='{$label}'";
   $res = $db->Execute($qry);
   if ($res->RecordCount()==0) {
@@ -231,10 +232,7 @@ function multiTranslateDictionary($labels=array(), $auto_insert=false){
   // traduzione multipla, ritorna un array
   global $db;
 
-  if(!isset($_SESSION))
-    session_start();
-
-  $lng = $_SESSION["synSiteLangInitial"];
+  $lng = getLangInitial();
   $ret = array();
   $qry = "SELECT v.label, t.{$lng} AS value "
        . "FROM dictionary v "
@@ -258,7 +256,6 @@ function multiTranslateDictionary($labels=array(), $auto_insert=false){
   }
   return $ret;
 }
-
 
 
 
@@ -289,11 +286,48 @@ function get_languages(){
         unset($langshort);
       }
 		}
-	}	else {// trovato niente
+	}	else {
+    // nothing found
 		$user_languages[0] = '';
 	}
 
   return $user_languages;
+}
+
+
+// returns the active language
+function getActiveLang($variable = 'synSiteLangInitial') {
+  if (!isset($_SESSION))
+    session_start();
+
+  if (!isset($_SESSION[ $variable ]))
+    updateLang();
+
+  return $_SESSION[ $variable ];
+}
+
+
+// shorthand to get active language's abbreviation (ISO code)
+function getLangInitial() {
+  return getActiveLang('synSiteLangInitial');
+}
+
+
+// shorthand to get the active language's ID
+function getLangId() {
+  return getActiveLang('synSiteLang');
+}
+
+
+// returns the non-active languages
+function getOtherLangs( $lang = '' ){
+  if (empty($lang))
+    $lang = getLangId();
+
+  $lang_list = getLangList();
+  unset( $lang_list['list'][ intval($lang) ] );
+
+  return $lang_list['list'];
 }
 
 // EOF lang.functions.php

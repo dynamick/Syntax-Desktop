@@ -201,14 +201,14 @@ function _checkMailExists($email){
 }
 function _addUserToNewsletter($email,$group,$name='',$surname=''){
   global $db;
-  $qry="INSERT INTO `lm_users`(`group_id`,`firstname`,`lastname`,`email_address`) "; 
+  $qry="INSERT INTO `lm_users`(`group_id`,`firstname`,`lastname`,`email_address`) ";
   $qry.="VALUES ('".addslashes($group)."','".addslashes($name)."','".addslashes($surname)."','".addslashes($email)."') ";
   $res=$db->Execute($qry);
   if($res!==false) return true; else return false;
 }
 function _delUserFromNewsletter($email){
   global $db;
-  $qry="DELETE FROM `lm_users` WHERE `email_address`='".addslashes($email)."' "; 
+  $qry="DELETE FROM `lm_users` WHERE `email_address`='".addslashes($email)."' ";
   $res=$db->Execute($qry);
   if($res!==false) return true; else return false;
 }
@@ -218,68 +218,68 @@ function _delUserFromNewsletter($email){
 function getDocument($productname, $document, $line, $classe, $spessore=''){
   global $synPublicPath, $synAbsolutePath;
   $ret = NULL;
-  
+
   switch($line){
     case 1: $lineinitial = 'C'; break;
     case 2: $lineinitial = 'R'; break;
     case 3: $lineinitial = 'S'; break;
     case 4: $lineinitial = 'D'; break;
   }
-  
+
   $tail = '';
-  
+
   switch($document){
     case 'CE': $label = 'PDF Cartiglio CE'; break;
-    case 'CT': 
+    case 'CT':
       $label = 'PDF Conduttivit&agrave; term.';
       if(substr_count(strtolower($productname), 'trieste')>0) {
         $tail = ($spessore ? '_sp'.$spessore : '');
-      } 
+      }
       break;
-    case 'CM': 
-      $label = 'PDF resistenza comp.'; 
+    case 'CM':
+      $label = 'PDF resistenza comp.';
       break;
-    case 'CR': 
-      $label = 'PDF Resistenza al fuoco'; 
-      $tail = ($spessore ? '_sp'.$spessore : ''); 
+    case 'CR':
+      $label = 'PDF Resistenza al fuoco';
+      $tail = ($spessore ? '_sp'.$spessore : '');
       break;
     //case 'VC': $label = 'PDF voci di capitolato'; break;
-    case 'RD': 
+    case 'RD':
       $label = 'PDF cert. radioattivit&agrave;';
       $pos = strpos($productname, ' ');
       $productname = substr($productname, 0, $pos);
-      break;    
-    case 'PF': 
-      $label = 'PDF potere fonoassorb.'; 
-      $tail = ($spessore ? '_sp'.$spessore : '');      
       break;
-    case 'CL': 
+    case 'PF':
+      $label = 'PDF potere fonoassorb.';
+      $tail = ($spessore ? '_sp'.$spessore : '');
+      break;
+    case 'CL':
       $label = 'PDF dilatazione lineare';
       //$pos = strpos($productname, ' ');
       //$productname = substr($productname, 0, $pos);
       //$tail = ($spessore ? '_sp'.$spessore : '');
       break;
     case 'CU':
-      $label = 'PDF dilatazione umidit&agrave;'; 
+      $label = 'PDF dilatazione umidit&agrave;';
       //$pos = strpos($productname, ' ');
       //$productname = substr($productname, 0, $pos);
       //$tail = ($spessore ? '_sp'.$spessore : '');
       break;
   }
-  
+
   $productname = str_replace(' ', '_', strtolower($productname));
-  $productname = str_replace('/', '-', strtolower($productname));  
-  
+  $productname = str_replace('/', '-', strtolower($productname));
+
   $file = $synPublicPath."/mat/prodotti/".$document."_".$lineinitial."_".$productname.$tail;
   $file_pdf = $file.".pdf";
-  $file_doc = $file.".doc";  
-  
+  $file_doc = $file.".doc";
+
   if(file_exists($synAbsolutePath.$file_pdf)) {
-    $ret = "      <li><a class=\"dl $classe\" href=\"$file_pdf\">$label</a></li>\n";  
+    $ret = "      <li><a class=\"dl $classe\" href=\"$file_pdf\">$label</a></li>\n";
   } else if (file_exists($synAbsolutePath.$file_doc)) {
-    $ret = "      <li><a class=\"dl $classe\" href=\"$file_doc\">$label</a></li>\n";  
+    $ret = "      <li><a class=\"dl $classe\" href=\"$file_doc\">$label</a></li>\n";
   } //else $ret = "<li>".$file." non trovato</li>\n";
-  
+
   return $ret;
 }
 * DEPRECATED */
@@ -287,13 +287,13 @@ function getDocument($productname, $document, $line, $classe, $spessore=''){
 
 if(!function_exists('byteConvert')) {
   function byteConvert( $bytes ) {
-    if ($bytes <= 0) 
+    if ($bytes <= 0)
       return '0 Byte';
-    
+
     $convention = 1000; //[1000->10^x|1024->2^x]
     $s = array('B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB');
     $e = floor(log($bytes,$convention));
-    
+
     return round($bytes/pow($convention,$e),2).' '.$s[$e];
   }
 }
@@ -343,6 +343,15 @@ EORET;
     }
 
     return $ret;
+  }
+}
+
+if (!function_exists('print_debug')) {
+  function print_debug( $var, $dump = false ) {
+    if ($dump)
+      echo '<pre>', htmlspecialchars( var_dump(  $var, 1 ) ), '</pre>';
+    else
+      echo '<pre>', htmlspecialchars( print_r(  $var, 1 ) ), '</pre>';
   }
 }
 

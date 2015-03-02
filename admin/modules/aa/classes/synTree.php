@@ -64,8 +64,11 @@ class synTree extends synElement {
     $clause    = '';
     $join      = '';
     $joinfield = '';
+    $synPrimaryKey = 0;
     //$synPrimaryKey = preg_filter('/(\D+)/', '', $_GET['synPrimaryKey']); //php 5.3+
-    $synPrimaryKey = isset($_GET['synPrimaryKey']) ? preg_replace('/(\D+)/', '', $_GET['synPrimaryKey']) : null;
+    if (isset($_GET['synPrimaryKey'])) {
+      $synPrimaryKey = preg_replace('/(\D+)/', '', $_GET['synPrimaryKey']);
+    }
 
     if($this->multilang){
       $joinfield = ", t.{$this->getlang()} AS {$this->caption} ";
@@ -267,6 +270,6 @@ class synTree extends synElement {
 <?php
   } // end of PRIVATE FUNCTIONS
 
-} 
+}
 
 //end of class tree
