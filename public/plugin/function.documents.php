@@ -1,20 +1,29 @@
 <?php
 function smarty_function_documents($params, &$smarty) {
-  global $db, $synPublicPath, $synAbsolutePath;
+  global $db, $synPublicPath, $synAbsolutePath, $synRootPasswordSalt;
 
   if(!isset($_SESSION))
     session_start();
 
   $cat       = isset($params['cat']) ? $params['cat'] : '';
-  $userid    = isset($_COOKIE[COOKIE_NAME]['id'])    ? $_COOKIE[COOKIE_NAME]['id']    : 0;
-  $usergroup = isset($_COOKIE[COOKIE_NAME]['group']) ? $_COOKIE[COOKIE_NAME]['group'] : 0;
   $lng       = $_SESSION['synSiteLangInitial'];
   $document_count = 0;
 
-  if($usergroup != "") {
+  $userid = "";
+  $usergroup = "";
+
+  $account = new synAccount($db, $synRootPasswordSalt, ACCOUNT_KEY);
+  if ( $account->is_logged_in() ) {
+    $user = $account->getUserData();
+    $userid = $user['id'];
+    $usergroup = $user['group'];
+  }
+
+  if ( $usergroup != "" ) {
     $usergroup = explode('|', $usergroup);
-  } else
+  } else {
     $usergroup = array();
+  }
 
   $qry = <<<EOQ
    SELECT d.id, d.file, d.date, d.status, d.enabled_groups, d.category_id,
