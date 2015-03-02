@@ -1,5 +1,5 @@
 # MySQL dump of database 'syntax' on host 'localhost'
-# backup date and time: 03/02/15 16:01:34
+# backup date and time: 03/02/15 16:06:21
 # built by phpMyBackupPro v.2.1
 # http://www.phpMyBackupPro.net
 
@@ -1623,7 +1623,7 @@ CREATE TABLE `documents` (
 
 ### data of table `documents` ###
 
-insert into `documents` values ('1', '635', '636', '2010-03-24', 'zip', '1', '1|2', 'public');
+insert into `documents` values ('1', '635', '636', '2010-03-24', 'zip', '1', '1|2', 'private');
 
 
 ### structure of table `field_options` ###
@@ -1867,4 +1867,4 @@ CREATE TABLE `users` (
 
 ### data of table `users` ###
 
-insert into `users` values ('4', 'Luciano', 'Melotti', 'SyntaxDesktop', 'assistenza+1@kleis.it', 'via Garibaldi', 'Villafranca', '37069', 'Verona', '', '2', '13d99a00ea52ea8cb59b8e8ac0832450', '1', '2010-01-01 00:00:00', '2015-03-02 15:30:41', '2010-01-01 00:00:00', '', '', '', '', '', '', '1');
+insert into `users` values ('4', 'Dummy', 'Dummy', 'SyntaxDesktop', 'info@syntaxdesktop.com', 'via Garibaldi', 'Villafranca', '37069', 'Verona', '', '2', '81d18a0be8726c44c22d96b248040c1d', '1', '2010-01-01 00:00:00', '2015-03-02 15:30:41', '2010-01-01 00:00:00', '', '', '', '', '', '', '1');
