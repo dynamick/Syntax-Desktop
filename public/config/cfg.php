@@ -33,9 +33,12 @@ require $pub.'lib/class.synSmarty.php';
 //require $pub.'lib/class.ImageToolbox.php';
 require $pub.'lib/class.formBuilder.php';
 require $pub.'lib/class.bsForm.php';
+require $pub.'lib/class.synMailer.php';
+require $pub.'lib/class.synUser.php';
+require $pub.'lib/class.synAccount.php';
 //require $pub.'lib/class.feedCreator.php';
 require $pub.'lib/class.synPagerPublic.php';
-require $pub.'lib/phpmailer/class.phpmailer.php';
+//require $pub.'lib/phpmailer/class.phpmailer.php';
 require $pub.'lib/lang.functions.php';
 require $pub.'lib/page.functions.php';
 require $pub.'lib/date.functions.php';
@@ -65,7 +68,12 @@ if (file_exists($synAbsolutePath.$synAdminPath."/setup.php") and basename(getenv
 }
 
 // nome del cookie di autenticazione
-define('COOKIE_NAME', 'web_user');
+define('COOKIE_NAME', 'syntax_web_user');
 
+define('PAGE_ACCOUNT',  52);
+define('DEFAULT_GROUP', 1); // gruppo utenti default
+define('ACCOUNT_KEY',   'syntax_user'); // nome del cookie
+define('ADMIN_NAME',    'Admin');
+define('ADMIN_MAIL',    'assistenza@kleis.it');
 
 ?>

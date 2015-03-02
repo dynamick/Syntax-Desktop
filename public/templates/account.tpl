@@ -1,6 +1,7 @@
-{include file="partial/_header.tpl"}		
+{include file="partial/_header.tpl"}
 		<div id="content">
-        {account}
+      {account}
+      {$content}
 		</div>
 
 {include file='partial/_footer.tpl'}

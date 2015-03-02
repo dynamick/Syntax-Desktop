@@ -4,11 +4,11 @@
           {changeLog max=4}
         </div>
       </div>
-      
+
       <div class="wrapper">
-        <p class="badges"><a href="http://www.w3.org/html/logo/"><img 
-            src="http://www.w3.org/html/logo/badge/html5-badge-h-css3-semantics.png" 
-            width="165" height="64" alt="HTML5 Powered with CSS3 / Styling, and Semantics" 
+        <p class="badges"><a href="http://www.w3.org/html/logo/"><img
+            src="http://www.w3.org/html/logo/badge/html5-badge-h-css3-semantics.png"
+            width="165" height="64" alt="HTML5 Powered with CSS3 / Styling, and Semantics"
             title="HTML5 Powered with CSS3 / Styling, and Semantics"></a></p>
         <p class="copyright">
           © Untitled. All rights reserved.
@@ -25,9 +25,7 @@
     <script src="{$synPublicPath}/js/plugins.js"></script>
     <script src="{$synPublicPath}/js/main.js"></script>
 {if $pageScript neq ''}
-    <script type="text/javascript">
     {$pageScript}
-    </script>
 {/if}
   </body>
 </html>
