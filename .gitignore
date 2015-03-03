@@ -1,9 +1,6 @@
 admin/config/config.php
 admin/modules/phpMyBackupPro/global_conf.php
-public/mat/**/*
-_public/*
-cache/*
 logs/*
 *.db
-.DS*
+*DS_Store*
 .project
