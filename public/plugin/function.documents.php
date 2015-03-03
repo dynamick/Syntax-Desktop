@@ -6,11 +6,10 @@ function smarty_function_documents($params, &$smarty) {
     session_start();
 
   $cat       = isset($params['cat']) ? $params['cat'] : '';
-  $lng       = $_SESSION['synSiteLangInitial'];
+  $lng       = getLangInitial();
   $document_count = 0;
-
-  $userid = "";
-  $usergroup = "";
+  $userid    = '';
+  $usergroup = '';
 
   $account = new synAccount($db, $synRootPasswordSalt, ACCOUNT_KEY);
   if ( $account->is_logged_in() ) {
@@ -19,7 +18,7 @@ function smarty_function_documents($params, &$smarty) {
     $usergroup = $user['group'];
   }
 
-  if ( $usergroup != "" ) {
+  if ( !empty($usergroup) ) {
     $usergroup = explode('|', $usergroup);
   } else {
     $usergroup = array();

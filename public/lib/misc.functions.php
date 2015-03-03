@@ -42,6 +42,142 @@ if(!function_exists('troncaTesto')) {
   }
 }
 
+
+if(!function_exists('excerpt')) {
+  //http://stackoverflow.com/questions/1436582/how-to-generate-excerpt-with-most-searched-words-in-php/2159813#2159813
+  function excerpt($text, $phrase, $span = 100, $delimiter = '...'){
+    $phrases = preg_split('/\s+/', $phrase);
+
+    $regexp = '/\b(?:';
+    foreach ($phrases as $phrase) {
+      $regexp .= preg_quote($phrase, '/') . '|';
+    }
+
+    $regexp = substr($regexp, 0, -1) . ')\b/i';
+    $matches = array();
+    preg_match_all($regexp, $text, $matches, PREG_OFFSET_CAPTURE);
+    $matches = $matches[0];
+
+    $nodes = array();
+    foreach ($matches as $match) {
+      $node = new stdClass;
+      $node->phraseLength = strlen($match[0]);
+      $node->position = $match[1];
+      $nodes[] = $node;
+    }
+
+    if (count($nodes) > 0) {
+      $clust = new stdClass;
+      $clust->nodes[] = array_shift($nodes);
+      $clust->length = $clust->nodes[0]->phraseLength;
+      $clust->i = 0;
+      $clusters = new stdClass;
+      $clusters->data = array($clust);
+      $clusters->i = 0;
+      foreach ($nodes as $node) {
+        $lastClust = $clusters->data[$clusters->i];
+        $lastNode = $lastClust->nodes[$lastClust->i];
+        $addedLength = $node->position - $lastNode->position - $lastNode->phraseLength + $node->phraseLength;
+        if ($lastClust->length + $addedLength <= $span) {
+          $lastClust->nodes[] = $node;
+          $lastClust->length += $addedLength;
+          $lastClust->i += 1;
+        } else {
+          if ($addedLength > $span) {
+            $newClust = new stdClass;
+            $newClust->nodes = array($node);
+            $newClust->i = 0;
+            $newClust->length = $node->phraseLength;
+            $clusters->data[] = $newClust;
+            $clusters->i += 1;
+          } else {
+            $newClust = clone $lastClust;
+            while ($newClust->length + $addedLength > $span) {
+              $shiftedNode = array_shift($newClust->nodes);
+              if ($shiftedNode === null) {
+                break;
+              }
+              $newClust->i -= 1;
+              $removedLength = $shiftedNode->phraseLength;
+              if (isset($newClust->nodes[0])) {
+                $removedLength += $newClust->nodes[0]->position - $shiftedNode->position;
+              }
+              $newClust->length -= $removedLength;
+            }
+            if ($newClust->i < 0) {
+              $newClust->i = 0;
+            }
+            $newClust->nodes[] = $node;
+            $newClust->length += $addedLength;
+            $clusters->data[] = $newClust;
+            $clusters->i += 1;
+          }
+        }
+      }
+      $bestClust = $clusters->data[0];
+      $bestClustSize = count($bestClust->nodes);
+      foreach ($clusters->data as $clust) {
+        $newClustSize = count($clust->nodes);
+        if ($newClustSize > $bestClustSize) {
+          $bestClust = $clust;
+          $bestClustSize = $newClustSize;
+        }
+      }
+      $clustLeft = $bestClust->nodes[0]->position;
+      $clustLen = $bestClust->length;
+      $padding = round(($span - $clustLen)/2);
+      $clustLeft -= $padding;
+      if ($clustLeft < 0) {
+        $clustLen += $clustLeft*-1 + $padding;
+        $clustLeft = 0;
+      } else {
+        $clustLen += $padding*2;
+      }
+    } else {
+      $clustLeft = 0;
+      $clustLen = $span;
+    }
+
+    $textLen = strlen($text);
+    $prefix = '';
+    $suffix = '';
+
+    if ( !ctype_space($text[intval($clustLeft)])
+      && isset($text[$clustLeft-1])
+      && !ctype_space($text[intval($clustLeft-1)])
+      ){
+      while (!ctype_space($text[intval($clustLeft)])) {
+        $clustLeft += 1;
+      }
+      $prefix = $delimiter;
+    }
+
+    $lastChar = $clustLeft + $clustLen;
+
+    if ( isset($text{intval($lastChar)})
+      && !ctype_space($text[intval($lastChar)])
+      && isset($text[intval($lastChar+1)])
+      && !ctype_space($text[intval($lastChar+1)])
+      ){
+      while (!ctype_space($text[intval($lastChar)])) {
+        $lastChar -= 1;
+      }
+      $suffix = $delimiter;
+      $clustLen = $lastChar - $clustLeft;
+    }
+
+    if ($clustLeft > 0) {
+      $prefix = $delimiter;
+    }
+
+    if ($clustLeft + $clustLen < $textLen) {
+      $suffix = $delimiter;
+    }
+    return $prefix . trim(substr($text, $clustLeft, $clustLen+1)) . $suffix;
+  }
+}
+
+
 if(!function_exists('pulisciTesto')) {
   function pulisciTesto($testo) {
     return str_replace("<p>\r\n\t&nbsp;</p>", "", $testo);

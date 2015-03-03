@@ -3,15 +3,21 @@
 function smarty_function_meta($params, &$smarty){
   global $db, $synWebsiteTitle;
 
-  $req  = isset($_GET['id'])      ? intval($_GET['id']) : 0;
-  $line = isset($_GET['idlinea']) ? intval($_GET['idlinea']) : 0;
-  $area = isset($_GET['idarea'])  ? intval($_GET['idarea']) : 0;
-	$lang = $_SESSION["synSiteLangInitial"];
+  $req      = isset($_GET['id'])
+            ? intval($_GET['id'])
+            : 0;
+  //$line = isset($_GET['idlinea']) ? intval($_GET['idlinea']) : 0;
+  //$area = isset($_GET['idarea'])  ? intval($_GET['idarea']) : 0;
+  $lang     = getLangInitial();
+  $server   = 'http://'.$_SERVER['SERVER_NAME'];
 
+  $page_id          = $smarty->getTemplateVars('synPageId');
   $template         = $smarty->getTemplateVars('synTemplate');
-  $title_page 			= $smarty->getTemplateVars('synPageMeta_title') ? $smarty->getTemplateVars('synPageMeta_title') : $smarty->getTemplateVars('synPageTitle');
+  $title_page       = $smarty->getTemplateVars('synPageMeta_title')
+                    ? $smarty->getTemplateVars('synPageMeta_title')
+                    : $smarty->getTemplateVars('synPageTitle');
   $description_page = $smarty->getTemplateVars('synPageMeta_description');
-  $keyword_page 		= $smarty->getTemplateVars('synPageMeta_keywords');
+  $keyword_page     = $smarty->getTemplateVars('synPageMeta_keywords');
   $canonical        = '';
   $qry              = '';
   $qry_model        = <<<EOQ
@@ -28,7 +34,7 @@ function smarty_function_meta($params, &$smarty){
 EOQ;
 
   // valorizzo la qry
-  if($template == 'news.tpl' && $req>0){
+  /*if($template == 'news.tpl' && $req>0){
     // notizie
     $qry = sprintf($qry_model, 'news', 'title', $req);
 
@@ -49,47 +55,61 @@ EOQ;
 
   } else if ($template == 'referenze.tpl' && $req>0) {
     $qry = sprintf($qry_model, 'referenze', 'nome', $req);
-  }
+  }*/
 
   //echo $qry.'<br>';
   if (!empty($qry)) {
-		$res = $db->Execute($qry);
-		if($arr = $res->FetchRow()){
-  		extract($arr);
+    $res = $db->Execute($qry);
+    if($arr = $res->FetchRow()){
+      extract($arr);
       $title       = ($meta_title!='') ? $meta_title : $title; //fallback su titolo dell'item
-  		$description = $meta_description;
-  		$keyword     = $meta_keywords;
-  	}
+      $description = $meta_description;
+      $keyword     = $meta_keywords;
+    }
   }
 
   if(trim($title)=='')
-  	$title = $title_page;
+    $title = $title_page;
 
-	if(trim($description)=='')
-  	$description = $description_page;
+  if(trim($description)=='')
+    $description = $description_page;
 
   if(trim($keyword)=='')
-  	$keyword = $keyword_page;
+    $keyword = $keyword_page;
 
   if ( isset($_GET['synSiteLang'])
     || isset($_GET['_next_page'])
     ){
-    $server = $_SERVER['SERVER_NAME'];
-    $page_path = createPath($smarty->getTemplateVars('synPageId'));
+
+    $page_path = createPath( $page_id );
 
     if (isset($_GET['title'])){
-      $page_path .= $_GET['title'].'~'.$_GET['id'].($template=='referenze.tpl' ? '/' : '.html');
+      $page_path .= $_GET['title'].'~'.$_GET['id'].'.html';
     }
     if (isset($_GET['parent'])){
       $page_path .= htmlspecialchars($_GET['parent']);
     }
-    $canonical = "<link rel=\"canonical\" href=\"http://{$server}{$page_path}\">\n";
+    $canonical = "<link rel=\"canonical\" href=\"{$server}{$page_path}\">\n";
   }
 
- 	$smarty->assign('meta_title',       $title.' > '.$synWebsiteTitle);
-	$smarty->assign('meta_description', $description);
-	$smarty->assign('meta_keywords',    $keyword);
+  $languages = getOtherLangs();
+  $hreflang = array();
+  foreach( $languages as $lang ){
+    // createPath($id, $lang)$
+    $hreflang[] = array(
+      'lang' => $lang,
+      'url' => $server.createPath( $page_id, $lang )
+    );
+  }
+
+  //print_debug($hreflang); die('!');
+
+  $smarty->assign('meta_title',       $title.' > '.$synWebsiteTitle);
+  $smarty->assign('meta_description', $description);
+  $smarty->assign('meta_keywords',    $keyword);
   $smarty->assign('meta_canonical',   $canonical);
+  $smarty->assign('meta_hreflang',    $hreflang);
+
 }
 
 // EOF

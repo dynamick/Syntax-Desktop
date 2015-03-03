@@ -1,0 +1,18 @@
+.list-group-item.active > a,
+.list-group-item.active > a:hover,
+.list-group-item.active > a:focus {
+  color: #fff;
+}
+
+.rich-text {font-size:16px; line-height:1.5;}
+.rich-text p {margin:1em 0;}
+.rich-text p:last-child {margin-bottom:0;}
+.rich-text img[align='left'] {margin:0 1em 1em 0;}
+.rich-text img[align='right'] {margin:0 1em 0 1em;}
+.rich-text ul,
+.rich-text ol {margin:0 0 0 1em; padding:0; list-style-position: outside;}
+.rich-text ul {list-style-type:disc;}
+.rich-text ol {list-style-type:decimal;}
+.rich-text ul > li,
+.rich-text ol > li {margin:1em 0; list-style:inherit;}
+.rich-text table {margin:0; width:100%;}

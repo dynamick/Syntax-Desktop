@@ -10,23 +10,23 @@ function smarty_function_form($params, &$smarty) {
   $formid   = intval($params['id']);
   $lng      = $_SESSION['synSiteLangInitial'];
   $t        = multiTranslateDictionary(array(
-            'informativa', 
-            'informativa_privacy', 
-            'checkfields', 
-            'campo_obbligatorio', 
-            'email_non_valida', 
-            'verifica_valore', 
-            'cancella', 
-            'invia', 
+            'informativa',
+            'informativa_privacy',
+            'checkfields',
+            'campo_obbligatorio',
+            'email_non_valida',
+            'verifica_valore',
+            'cancella',
+            'invia',
             'codice_sicurezza'
             ));
 
   if (!empty($page))
     $form_var = getFormAttributesByPage($page, $lng); // vedi sotto
-    
+
   elseif (!empty($formid))
     $form_var = getFormAttributesById($formid, $lng); // vedi sotto
-    
+
   else
     return false;
 
@@ -38,13 +38,13 @@ function smarty_function_form($params, &$smarty) {
   $fieldset = getFormFieldset($form_id, $lng); // vedi sotto
   $fields   = getFormFields($form_id, $lng, $params); // vedi sotto
   $form     = new bsForm($form_id);
-  
-  $session  = isset($_SESSION['form'.$form_id]) 
-            ? $_SESSION['form'.$form_id] 
+
+  $session  = isset($_SESSION['form'.$form_id])
+            ? $_SESSION['form'.$form_id]
             : false;
   $html     = "<h2>{$form_var['titolo']}</h2>\n";
 
-  if ( isset($session) 
+  if ( isset($session)
     && $session['submitted']==true
     ){
     // - form sottomesso correttamente, presento il messaggio di conferma
@@ -75,28 +75,28 @@ function smarty_function_form($params, &$smarty) {
       }
     }
 
-    
+
     $form->setAttributes(array( // configurazione
-      'action'        => $synPublicPath.'/server/dispatch.php',
-      'xhtml'         => false,
-      'method'        => 'post',
-      'class'         => 'synform',
-      'hide_label'    => true,
-      'resetLabel'    => $t['cancella'],
-      'submitLabel'   => $t['invia'],
-      'captcha'       => $form_var['captcha'],
-      'captchaConfig' => array( 'width'=>270, 'height'=>50 ),
-      'captchaLabel'  => $t['codice_sicurezza'],
-      'privacy'       => nl2br($form_var['privacy']),
-      'informativa'   => $t['informativa_privacy'],
-      'approvazione'  => $t['informativa'],
-      'checkfields'   => $t['checkfields'],
-      'error1'        => $t['campo_obbligatorio'],
-      'error2'        => $t['email_non_valida'],
-      'error3'        => $t['verifica_valore'],
-      'include_script' => false,
-      'ajax_submit'   => true,
-      'debug'         => false
+      'action'          => $synPublicPath.'/server/dispatch.php',
+      'xhtml'           => false,
+      'method'          => 'post',
+      'class'           => 'synform',
+      'hide_label'      => false,
+      'resetLabel'      => $t['cancella'],
+      'submitLabel'     => $t['invia'],
+      'captcha'         => $form_var['captcha'],
+      'captchaConfig'   => array( 'width'=>270, 'height'=>50 ),
+      'captchaLabel'    => $t['codice_sicurezza'],
+      'privacy'         => $form_var['privacy'],
+      'informativa'     => nl2br($t['informativa_privacy']),
+      'approvazione'    => $t['informativa'],
+      'checkfields'     => $t['checkfields'],
+      'error1'          => $t['campo_obbligatorio'],
+      'error2'          => $t['email_non_valida'],
+      'error3'          => $t['verifica_valore'],
+      'include_script'  => false,
+      'ajax_submit'     => true,
+      'debug'           => false
       ));
 
     foreach($fieldset as $s => $l) {
@@ -114,10 +114,10 @@ function smarty_function_form($params, &$smarty) {
   	$html .= $form->render();
     unset($_SESSION['form'.$form_id]);
   }
-  
+
   if ($form_cfg['include_script'] == false)
-    $smarty->assign('pageScript', strip_tags($form->validateScript()));  
-    
+    $smarty->assign('pageScript', $form->validateScript() );
+
   return $html;
 }
 
@@ -126,7 +126,7 @@ function smarty_function_form($params, &$smarty) {
 function getFormAttributesByPage($req, $lng='it'){
   global $db;
   $qr1 = <<<EOSQL
-  
+
      SELECT f.id, f.destinatario, f.privacy, f.captcha,
             t1.{$lng} AS titolo, t2.{$lng} AS descrizione, t3.{$lng} AS risposta
        FROM forms f
@@ -135,7 +135,7 @@ function getFormAttributesByPage($req, $lng='it'){
   LEFT JOIN aa_translation t3 ON f.risposta=t3.id
       WHERE f.pagina = '{$req}'
       LIMIT 0,1
-      
+
 EOSQL;
   $re1 = $db->execute($qr1);
   $ar1 = $re1->fetchRow();
@@ -146,7 +146,7 @@ EOSQL;
 function getFormAttributesById($req, $lng='it'){
   global $db;
   $qr1 = <<<EOSQL
-  
+
      SELECT f.id, f.destinatario, f.privacy, f.captcha,
             t1.{$lng} AS titolo, t2.{$lng} AS descrizione, t3.{$lng} AS risposta
        FROM forms f
@@ -154,7 +154,7 @@ function getFormAttributesById($req, $lng='it'){
   LEFT JOIN aa_translation t2 ON f.descrizione=t2.id
   LEFT JOIN aa_translation t3 ON f.risposta=t3.id
       WHERE f.id = '{$req}'
-      
+
 EOSQL;
   $re1 = $db->execute($qr1);
   $ar1 = $re1->fetchRow();
@@ -167,14 +167,14 @@ function getFormFields($form_id, $lng='it', $params){
   global $db;
   $fields = array();
   $qr2 = <<<EOSQL
-  
+
      SELECT f.id, f.titolo, f.tipo, f.obbligatorio, f.formato, f.value, f.fieldset,
             t1.{$lng} AS label
        FROM form_fields f
   LEFT JOIN aa_translation t1 ON f.label=t1.id
       WHERE f.id_form = '{$form_id}'
    ORDER BY f.ordine
-   
+
 EOSQL;
   $re2 = $db->execute($qr2);
   while ($ar2 = $re2->fetchRow()){
@@ -188,18 +188,18 @@ EOSQL;
       $qr3 = "SELECT o.value, o.selezionato, t.$lng AS label FROM field_options o LEFT JOIN aa_translation t ON o.label=t.id WHERE o.id_field = $id ORDER BY o.ordine";
       $re3 = $db->execute($qr3);
       while ($ar3 = $re3->fetchRow()) {
-        $selezionato = (isset($params[$titolo]) && $params[$titolo] == $ar3['value']) 
-                     ? true 
+        $selezionato = (isset($params[$titolo]) && $params[$titolo] == $ar3['value'])
+                     ? true
                      : $ar3['selezionato'];
-                     
+
         $options[$ar3['value']] = array(
-          'label'       => $ar3['label'], 
+          'label'       => $ar3['label'],
           'selezionato' => $selezionato
           );
       }
     } else {
       // se impostato utilizzo il parametro smarty come value
-      if ( $value == '' 
+      if ( $value == ''
         && isset($params[$titolo])
         ){
         $value = $params[$titolo];

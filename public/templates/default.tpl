@@ -1,42 +1,58 @@
-﻿{include file="partial/_header.tpl"}
+﻿<!DOCTYPE html>
+<html lang="{$smarty.session.synSiteLangInitial}">
+{include file="partial/_head.tpl"}
+<body>
+  {include file="partial/_header.tpl"}
 
-    <section class="main-section" id="{$synPageSlug}">
-      <div class="wrapper">
-        <header class="page-header2">
-          <h1>{$synPageTitle}</h1>
-          {lang}
-        </header>
-        
-        <footer class="page-footer">
-{include file='partial/_searchform.tpl'}
 
-          <nav class="breadcrumb">
-            {breadcrumb}
-          </nav>          
-        </footer>          
-                
-        <div class="content">
-          <div class="rich-text">
-          {$synPageText}
-          </div>
-        </div>
-        
-        <aside class="sidebar">
-          <div class="box">
-            <h3 class="menu-header">{pageInfo page=$synPageNode1 info='title'}</h3>
-{include file='partial/_submenu.tpl'}
-          </div>
-          
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sodales urna non 
-          odio egestas tempor. Nunc vel vehicula ante. Etiam bibendum iaculis libero, eget molestie 
-          nisl pharetra in. In semper consequat est, eu porta velit mollis nec. Curabitur posuere 
-          enim eget turpis feugiat tempor. Etiam ullamcorper lorem dapibus velit suscipit ultrices.</p>
-          <div>
-            <script src="http://www.ohloh.net/p/345/widgets/project_factoids_stats.js"></script>
-          </div>
-        </aside>      
+  <!-- Page Content -->
+  <div class="container">
+
+    <!-- Page Heading/Breadcrumbs -->
+    <div class="row">
+      <div class="col-lg-12">
+        <h1 class="page-header">
+          {$synPageTitle}
+          <small>Subheading</small>
+        </h1>
+        {include file="partial/_breadcrumbs.tpl"}
       </div>
-    </section>
-  
+    </div>
+    <!-- /.row -->
 
-{include file='partial/_footer.tpl'}
+    <!-- Intro Content -->
+    <div class="row">
+      <div class="col-md-8">
+        <div class="rich-text">
+        {$synPageText}
+        </div>
+      </div>
+      <div class="col-md-4">
+      {include file='partial/_sidebar.tpl'}
+      </div>
+    </div>
+    <!-- /.row -->
+
+    <hr>
+
+    <!-- Call to Action Section -->
+    <div class="well">
+      <div class="row">
+        <div class="col-md-8">
+          <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+          <p>Molestias, expedita, saepe, vero rerum deleniti beatae veniam harum neque nemo praesentium.</p>
+        </div>
+        <div class="col-md-4">
+          <a class="btn btn-lg btn-default btn-block" href="#">Call to Action</a>
+        </div>
+      </div>
+    </div>
+
+    {include file="partial/_footer.tpl"}
+
+  </div>
+  <!-- /.container -->
+
+  {include file="partial/_scripts.tpl"}
+</body>
+</html>

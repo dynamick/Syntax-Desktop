@@ -1,34 +1,25 @@
-{include file="partial/_header.tpl"}
-{news}
+<!DOCTYPE html>
+<html lang="{$smarty.session.synSiteLangInitial}">
+{include file="partial/_head.tpl"}
+<body>
+  {include file="partial/_header.tpl"}
 
-    <section class="main-section" id="{$synPageSlug}">
-      <div class="wrapper">
-        <hgroup class="page-header2">
-          <h1>{$title|default:$synPageTitle}</h1>
-          {$tagline}
-        </hgroup>
-        
-        <footer class="page-footer">
-{include file='partial/_searchform.tpl'}
+  <!-- Page Content -->
+  <div class="container">
 
-          <nav class="breadcrumb">
-            {breadcrumb}
-          </nav>          
-        </footer>          
-        
-        {$output}
-        
-        <aside class="sidebar">
-          <div class="box">
-            <h3 class="menu-header">{pageInfo page=$synPageNode1 info='title'}</h3>
-{include file='partial/_submenu.tpl'}
-          </div>          
-          <div>
-            <script src="http://www.ohloh.net/p/345/widgets/project_factoids_stats.js"></script>
-          </div>
-        </aside>      
-      </div>
-    </section>
-  
+    <!-- Intro Content -->
+    {news}
+    {if isset($item)}
+      {include file="partial/_news_detail.tpl"}
+    {else}
+      {include file="partial/_news_list.tpl"}
+    {/if}
+    <!-- /.row -->
 
-{include file='partial/_footer.tpl'}
+    {include file="partial/_footer.tpl"}
+  </div>
+  <!-- /.container -->
+
+  {include file="partial/_scripts.tpl"}
+</body>
+</html>

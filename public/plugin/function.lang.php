@@ -11,37 +11,40 @@
 function smarty_function_lang($params, &$smarty){
   global $db, $synPublicPath;
 
-  if (!isset($_SESSION))
-    session_start();
+  $session_lang = getLangId();
+  $session_lang_initial = getLangInitial();
 
-  $session_lang = (isset($_SESSION['synSiteLang'])) 
-                  ? intval($_SESSION['synSiteLang']) 
-                  : 0;
-  $html = '';
-  $list = '';
+  $active_lang = null;
+  $list = array();
 
   $qry = 'SELECT * FROM `aa_lang` WHERE `active`="1"';
   $res = $db->Execute($qry);
-
-  while ($arr = $res->FetchRow()) {
+  while ( $arr = $res->FetchRow() ) {
     extract($arr);
-    $flag     = "<img src=\"{$synPublicPath}/mat/flag/{$flag}\" alt=\"{$lang}\" />";
-    $selected = ($id == $session_lang) 
-                ? ' class="active"' 
-                : null;
-    $path     = ($default == '1')      
-                ? null 
-                : $initial.'/';
-    $list    .= "  <li><a href=\"/{$path}\" title=\"{$lang}\"{$selected}>{$flag} {$lang}</a></li>\n";
+    if ( $id == $session_lang ) {
+      $selected = true;
+      $active_lang = array(
+        'id' => $id,
+        'name' => $lang,
+        'initial' => $initial
+        );
+    } else {
+      $selected = false;
+    }
+    $path = ($default == '1')
+          ? '/'
+          : '/'.$initial.'/';
+    $list[] = array(
+      'path'    => $path,
+      'name'    => $lang,
+      'initial' => $initial,
+      'active'  => $selected,
+      'flag'    => "{$synPublicPath}/mat/flag/{$flag}"
+      );
   }
-  
-  if (!empty($list)) {
-    $html = "<ul class=\"lang-selector\">\n"
-          . $list
-          . "</ul>\n";
-  }
-  
-  return $html;
+
+  $smarty->assign( 'active_lang', $active_lang );
+  $smarty->assign( 'langlist', $list );
 }
 
 // EOF

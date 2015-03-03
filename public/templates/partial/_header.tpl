@@ -1,56 +1,59 @@
-﻿<!DOCTYPE html>
-<!--[if lt IE 7]>     <html class="no-js lt-ie9 lt-ie8 lt-ie7"><![endif]-->
-<!--[if IE 7]>        <html class="no-js lt-ie9 lt-ie8"><![endif]-->
-<!--[if IE 8]>        <html class="no-js lt-ie9"><![endif]-->
-<!--[if gt IE 8]><!--><html class="no-js"><!--<![endif]-->
-  <head>
-    <meta charset="utf-8">
-    <title>{if isset($smarty.get.title)}{$smarty.get.title|replace:'-':' '|capitalize} > {/if}{$synPageTitle|htmlspecialchars} > Syntax Demo Site</title>
+﻿{function name=render_main_menu level=1 parent=0}
+          <ul {if $level eq 1}class="nav navbar-nav"{else}class="dropdown-menu lv{$level}" aria-labelledby="drop{$parent}"{/if}>
+{foreach $items as $item}{if count($item.child) > 0}{if $level eq 1}
+            <li class="dropdown{if $item.active} active{/if}">
+              <a href="{$item.link}" data-toggle="dropdown" class="dropdown-toggle" role="button" id="drop{$item.id}">
+                {$item.title} <b class="caret"></b>
+              </a>
+{else}
+            <li class="dropdown-submenu{if $item.active} active{/if}">
+              <a href="{$item.link}" data-toggle="dropdown" class="dropdown-toggle" role="button" id="drop{$item.id}">
+                {$item.title}
+              </a>
+{/if}
+{if count($item.child) > 0}{call name=render_main_menu items=$item.child level=$level+1 parent=$item.id}{/if}
+            </li>
+{else}
+            <li{if $item.active} class="active"{/if}>
+              <a href="{$item.link}"{if $item.is_url} target="_blank"{/if}>{$item.title}{if $item.is_url} <i class="fa fa-exterrnal-link"></i>{/if}</a>
+            </li>
+{/if}{/foreach}
+          </ul>
+{/function}
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width">
-    <meta name="author" content="info@syntaxdesktop.com">
-    <meta name="robots" content="index, follow">
-{if isset($smarty.get._next_page) && $smarty.get._next_page neq ''}
-    <link rel="canonical" href="/{$smarty.get.parent}/" />
-{/if}    
-		<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,800">
-    <link rel="stylesheet" href="{$synPublicPath}/css/normalize.min.css">
-    <link rel="stylesheet" href="{$synPublicPath}/css/colorbox.css">
-    <link rel="stylesheet" href="{$synPublicPath}/css/custom.css">
+<!-- Navigation -->
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="fa fa-bars"></span>
+      </button>
+      <a class="navbar-brand" href="/">{$synWebsiteTitle}</a>
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      {submenu startPage=22 includeParent=true expand=true}
+      {call render_main_menu items=$submenu}
 
-    <script src="{$synPublicPath}/js/vendor/modernizr-2.6.2.min.js"></script>
-  </head>
-  <body>
-    <!--[if lt IE 7]>
-        <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
-    <![endif]-->
-
-		<header class="main-header" role="banner">
-      <div class="wrapper">
-        <div class="hgroup">
-          <h1><a class="logo" href="/">{$synWebsiteTitle}</a></h1>
-          <h2>A Demo site for SyntaxDesktop CMS</h2>
-        </div>
-        
-        <nav role="navigation">
-{menu includeParent=false}
-          {if count($menu) > 0}
-            <ul class="main-menu">          
-              {foreach name=menuCycle from=$menu item=item}
-                <li class="{if $smarty.foreach.menuCycle.last}last{/if}">
-                  <a href="{$item.link}"{if $item.is_url} target="_blank"{/if} class="{if $item.active}active{/if}">
-                    {$item.title}
-                    {if $item.is_url}
-                      <img src={$synPublicPath}/img/link_site.gif alt="External Site" />
-                    {/if}
-                  </a>
-                </li>
-              {/foreach}
-            </ul>
-          {/if}
-        </nav>
-        {* <div id="lang">{lang}</div> *}
-      </div>
-    </header>
+      {lang}{if $langlist neq ''}
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown">
+            <i class="fa fa-globe"></i> {$active_lang.initial|upper} <i class="fa fa-angle-down"></i>
+          </a>
+          <ul class="dropdown-menu">
+          {foreach $langlist as $lang}
+            <li{if $lang.active} class="active"{/if}>
+              <a href="{$lang.path}">
+                <img src="{$lang.flag}" alt="{$lang.initial}"> {$lang.name|ucwords}
+              </a>
+            </li>
+          {/foreach}
+          </ul>
+        </li>
+      </ul>{/if}
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container -->
+</nav>

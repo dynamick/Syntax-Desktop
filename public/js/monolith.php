@@ -8,10 +8,10 @@ ob_start("ob_gzhandler");
 header("Content-Type: text/javascript");
 
 $script = array(
-	'jquery-1.6.4.min.js',
-	'jquery.cycle.min.js',
-	'jquery.validate.min.js',
-	'sitefunction.js'
+	'vendor/jquery.js',
+	'vendor/bootstrap.min.js',
+  'vendor/jquery.validate.min.js',
+	'main.js'
 );
 
 foreach($script as $file){

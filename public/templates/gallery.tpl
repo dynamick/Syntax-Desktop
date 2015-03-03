@@ -1,41 +1,39 @@
-{include file="partial/_header.tpl"}
+<!DOCTYPE html>
+<html lang="{$smarty.session.synSiteLangInitial}">
+{include file="partial/_head.tpl"}
+<body>
+  {include file="partial/_header.tpl"}
 
-    <section class="main-section" id="{$synPageSlug}">
-      <div class="wrapper">
-        <hgroup class="page-header2">
-          <h1>{$synPageTitle}</h1>
-        </hgroup>
-        
-        <footer class="page-footer">
-{include file='partial/_searchform.tpl'}
 
-          <nav class="breadcrumb">
-            {breadcrumb}
-          </nav>          
-        </footer>          
-                
-        <div class="content">
-{if $smarty.get.id eq ''}          
-          <div class="rich-text">
-            {$synPageText}
-          </div>
-{/if}
-{gallery}          
+  <!-- Page Content -->
+  <div class="container">
+    {gallery}
+    {if $smarty.get.id neq ''}
+      {include file="partial/gallery_detail.tpl"}
+    {else}
+      {include file="partial/gallery_list.tpl"}
+    {/if}
+
+    <hr>
+
+    <!-- Call to Action Section -->
+    <div class="well">
+      <div class="row">
+        <div class="col-md-8">
+          <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+          <p>Molestias, expedita, saepe, vero rerum deleniti beatae veniam harum neque nemo praesentium.</p>
         </div>
-        
-        <aside class="sidebar">
-          <div class="box">
-            <h3 class="menu-header">{pageInfo page=$synPageNode1 info='title'}</h3>
-{include file='partial/_submenu.tpl'}
-          </div>          
-
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sodales urna non odio egestas tempor. Nunc vel vehicula ante. Etiam bibendum iaculis libero, eget molestie nisl pharetra in. In semper consequat est, eu porta velit mollis nec. Curabitur posuere enim eget turpis feugiat tempor. Etiam ullamcorper lorem dapibus velit suscipit ultrices.</p>
-          <div>
-            <script src="http://www.ohloh.net/p/345/widgets/project_factoids_stats.js"></script>
-          </div>
-        </aside>      
+        <div class="col-md-4">
+          <a class="btn btn-lg btn-default btn-block" href="#">Call to Action</a>
+        </div>
       </div>
-    </section>
-  
+    </div>
 
-{include file='partial/_footer.tpl'}
+    {include file="partial/_footer.tpl"}
+
+  </div>
+  <!-- /.container -->
+
+  {include file="partial/_scripts.tpl"}
+</body>
+</html>
