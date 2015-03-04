@@ -417,31 +417,45 @@ function PMBP_confirm($text,$path,$link,$popupType=false){
 // $file can be a gzopen() or open() handler, $con is the database connection
 // $linespersession says how many lines should be executed; if false, all lines will be executed
 function PMBP_exec_sql($file,$con,$linespersession=false,$noFile=false) {
-    $query="";
-    $queries=0;
-    $error="";
-    if (isset($_GET["totalqueries"])) $totalqueries=$_GET["totalqueries"]; else $totalqueries=0;
-    if (isset($_GET["start"])) $linenumber=$_GET["start"]; else $linenumber=$_GET['start']=0;
-    if (!$linespersession) $_GET['start']=1;
-    $inparents=false;
-    $querylines=0;
+    $query = "";
+    $queries = 0;
+    $error = "";
+    if (isset($_GET["totalqueries"]))
+        $totalqueries = $_GET["totalqueries"];
+    else
+        $totalqueries = 0;
+
+    if (isset($_GET["start"]))
+        $linenumber = $_GET["start"];
+    else
+        $linenumber = $_GET['start']=0;
+
+    if (!$linespersession)
+        $_GET['start'] = 1;
+
+    $inparents = false;
+    $querylines = 0;
 
     // $tableQueries and $insertQueries only count this session
-    $tableQueries=0;
-    $insertQueries=0;
+    $tableQueries = 0;
+    $insertQueries = 0;
 
     // stop if a query is longer than 300 lines long
-    $max_query_lines=300;
+    $max_query_lines = 300;
 
     // lines starting with these strings are comments and will be ignored
-	$comment[0]="#";
-	$comment[1]="-- ";
+	$comment[0] = "#";
+	$comment[1] = "-- ";
 
-    while (($linenumber<$_GET["start"]+$linespersession || $query!="") && ($dumpline=gzgets($file,65536)))
+    // set utf8 charset!
+    mysql_query ( 'SET NAMES UTF8' );
+
+    while (($linenumber < $_GET["start"]+$linespersession || $query!="") && ($dumpline = gzgets($file,65536)))
     {
     	// increment $_GET['start'] when $linespersession was not set
     	// so all lines of $file will be exeuted at once
-    	if (!$linespersession) $_GET['start']++;
+    	if (!$linespersession)
+            $_GET['start']++;
 
         // handle DOS and Mac encoded linebreaks
         $dumpline = preg_replace('/\r\n$/', '', $dumpline);
@@ -464,42 +478,53 @@ function PMBP_exec_sql($file,$con,$linespersession=false,$noFile=false) {
         }
 
         // remove double back-slashes from the dumpline prior to count the quotes ('\\' can only be within strings)
-        $dumpline_deslashed=str_replace("\\\\","",$dumpline);
+        $dumpline_deslashed = str_replace("\\\\","",$dumpline);
 
         // count ' and \' in the dumpline to avoid query break within a text field ending by ;
         // please don't use double quotes ('"')to surround strings, it wont work
-        $parents=substr_count($dumpline_deslashed,"'")-substr_count($dumpline_deslashed,"\\'");
-        if ($parents%2!=0) $inparents=!$inparents;
+        $parents = substr_count($dumpline_deslashed,"'")-substr_count($dumpline_deslashed,"\\'");
+        if ($parents%2 != 0)
+            $inparents=!$inparents;
 
         // add the line to query
-        $query.=$dumpline;
+        $query .= $dumpline;
 
         // don't count the line if in parents (text fields may include unlimited linebreaks)
-        if (!$inparents) $querylines++;
+        if (!$inparents)
+            $querylines++;
 
         // stop if query contains more lines as defined by $max_query_lines
         if ($querylines>$max_query_lines) {
-            $error=sprintf(BI_WRONG_FILE."\n",$linenumber,$max_query_lines);
+            $error = sprintf(BI_WRONG_FILE."\n",$linenumber,$max_query_lines);
             break;
         }
 
         // execute query if end of query detected (; as last character) AND NOT in parents
         if (preg_match('/;$/', trim($dumpline)) && !$inparents) {
-            if (!mysql_query(trim($query),$con)) {
-                $error=SQ_ERROR." ".($linenumber+1)."<br>".nl2br(htmlentities(trim($query)))."\n<br>".htmlentities(mysql_error());
+            if (!mysql_query(trim($query), $con)) {
+                $error = SQ_ERROR." ".($linenumber+1)."<br>".nl2br(htmlentities(trim($query)))."\n<br>".htmlentities(mysql_error());
                 break;
             }
 
-            if (strtolower(substr(trim($query),0,6))=="insert") $tableQueries++;
-				elseif (strtolower(substr(trim($query),0,12))=="create table") $insertQueries++;
-            $totalqueries++;
-            $queries++;
-            $query="";
-            $querylines=0;
+            if (strtolower(substr(trim($query),0,6))=="insert")
+                $tableQueries ++;
+			elseif (strtolower(substr(trim($query),0,12))=="create table")
+                $insertQueries ++;
+            $totalqueries ++;
+            $queries ++;
+            $query = "";
+            $querylines = 0;
         }
-        $linenumber++;
+        $linenumber ++;
     }
-    return array("queries"=>$queries,"totalqueries"=>$totalqueries,"linenumber"=>$linenumber,"error"=>$error,"tableQueries"=>$tableQueries,"insertQueries"=>$insertQueries);
+    return array(
+        "queries" => $queries,
+        "totalqueries" => $totalqueries,
+        "linenumber" => $linenumber,
+        "error" => $error,
+        "tableQueries" => $tableQueries,
+        "insertQueries" => $insertQueries
+        );
 }
 
 
