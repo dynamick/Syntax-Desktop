@@ -118,7 +118,7 @@ function smarty_function_form($params, &$smarty) {
   if ($form_cfg['include_script'] == false)
     $smarty->assign('pageScript', $form->validateScript() );
 
-  return $html;
+  return '<div id="form'.$form_id.'-wrapper">'.$html.'</div>';
 }
 
 

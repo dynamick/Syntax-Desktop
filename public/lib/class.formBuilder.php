@@ -576,7 +576,7 @@ EOPD;
           .done(function(res){
             console.log('message: '+res.message);
             if (res.status == 'ok'){
-              $('#form{$this->id}').replaceWith(res.message);
+              $('#form{$this->id}-wrapper').replaceWith(res.message);
             } else {
               $('#form{$this->id}').prepend(res.message);
             }

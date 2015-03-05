@@ -5,5 +5,5 @@
   </ol>
 {/function}
 
-{breadcrumbs}
+{breadcrumbs base_title='<span class="fa fa-home"></span>'}
 {call render_breadcrumb items=$breadcrumbs}

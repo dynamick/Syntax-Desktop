@@ -1,27 +1,24 @@
 <?php
   error_reporting(E_ALL & ~(E_NOTICE | E_DEPRECATED | E_WARNING));
   ini_set('display_errors', 0);
-  
-  require_once("../config/cfg.php");
 
-  global $db, $synRootPasswordSalt, $synWebsiteTitle;
+  require_once('../config/cfg.php');
+  //global $db, $synRootPasswordSalt, $synPublicPath, $synWebsiteTitle;
 
   if (!isset($_SESSION))
     session_start();
-
-  if (!isset($_SESSION['synSiteLang']))
-    updateLang();
 
   if (!isset($_SESSION['spammer']))
     $_SESSION['spammer'] = 0;
 
   $sleep_time   = 5;
   $xhr          = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && (strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
-  $lng          = $_SESSION['synSiteLangInitial'];
-  $ref          = $_SERVER["HTTP_REFERER"];
+  $lng          = getLangInitial();
+  $ref          = $_SERVER['HTTP_REFERER'];
   $req          = intval($_POST['formId']);
   $admin_name   = 'Risorse umane';
-  $fields       = array();
+  $mandatory    = array();
+  $labels       = array();
   $mailpattern  = '/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,6}$/';
   $allowedTypes = array( //file ammessi per l'upload
     'application/msword'
@@ -46,10 +43,11 @@
   , 'image/bmp'
   );
 
-  #echo '<pre>', print_r($_POST), '</pre>';
-  # ============================================================================
-  # - recupero dal db i dati del form
-  # ============================================================================
+  //print_debug($_POST);
+
+  /* ============================================================================
+   * - recupero dal db i dati del form
+   * ============================================================================ */
   $qr1 = <<<EOFSQL
      SELECT f.id, f.destinatario, f.privacy, f.captcha,
             t1.{$lng} AS titolo, t2.{$lng} AS descrizione, t3.{$lng} AS risposta
@@ -59,66 +57,55 @@
   LEFT JOIN aa_translation t3 ON f.risposta = t3.id
       WHERE f.id = '{$req}'
 EOFSQL;
-// f.save_to, s.syntable,
-// LEFT JOIN aa_services s ON f.save_to = s.id
 
   $re1 = $db->execute($qr1);
-  if($ar1 = $re1->fetchRow()){
-    $form_id = $ar1['id'];
-    $form_titolo = $ar1['titolo'];
-    $form_descrizione = $ar1['descrizione'];
-    $form_destinatario = $ar1['destinatario'];
-    $form_risposta = $ar1['risposta'];
-    $form_privacy = $ar1['privacy'];
-    $form_captcha = $ar1['captcha'];
-    #$form_save_to = $ar1['save_to'];
-    #$form_syntable = $ar1['syntable'];
+  if ($ar1 = $re1->fetchRow()) {
+    extract($ar1, EXTR_PREFIX_ALL, 'form');
+    //$form_response = false;
 
-  } else { // form non trovato, sparo un errore 500 e tutti a casa
+  } else {
+    // form non trovato, sparo un errore 500 e tutti a casa
     header('X-Error-Message: Incorrect form ID', true, 500);
     die('Incorrect form ID');
   }
 
-  //echo '<pre>', var_dump($form_captcha, $_POST['captcha'], $_SESSION['security_code']), '</pre>';
-  # - recupero l'elenco dei campi obbligatori
+  // - recupero l'elenco dei campi
   $qr2 = <<<EOSQL
-     SELECT f.titolo, f.formato, f.tipo
+     SELECT f.titolo, f.formato, f.obbligatorio,
+            t1.{$lng} AS label
        FROM form_fields f
+  LEFT JOIN aa_translation t1 ON f.label = t1.id
       WHERE f.id_form = '{$form_id}'
-        AND f.obbligatorio = '1'
+
 EOSQL;
+  //AND f.obbligatorio = 1
   $re2 = $db->execute($qr2);
-  while($ar2 = $re2->fetchRow()){
-    $fields[$ar2['titolo']] = ($ar2['tipo']=='file') ? $ar2['tipo'] : $ar2['formato'];
+  while ($ar2 = $re2->fetchRow()) {
+    $labels[$ar2['titolo']] = $ar2['label'];
+    if (1 == $ar2['obbligatorio'])
+      $mandatory[$ar2['titolo']] = $ar2['formato'];
   }
 
   if($_POST['action']=='submit') {
     $error = 0;
     $_SESSION['form'.$form_id]['error'] = array();
 
-# - ciclo il $_POST per cercare dati mancanti
-    foreach ($fields as $k => $v) {
-      if ($v=='file') {
-        if (empty($_FILES[$k])) {
-          $error ++;
-          $_SESSION['form'.$form_id]['error'][$k] = 'empty';
-        }
-      } else {
-        if ($_POST[$k]=='') {
-          $error ++;
-          $_SESSION['form'.$form_id]['error'][$k] = 'empty';
-        }
-        if ($v=='email' && !preg_match($mailpattern, $_POST[$k])) {
-          $error ++;
-          $_SESSION['form'.$form_id]['error'][$k] = 'empty';
-        }
+// - ciclo il $_POST per cercare dati mancanti
+    foreach ($mandatory as $k => $v) {
+      if (empty($_POST[$k])) {
+        $error ++;
+        $_SESSION['form'.$form_id]['error'][$k] = 'empty';
       }
-      if($form_privacy==1 && $_POST['privacy']!=1){
+      if ($v == 'email' && !preg_match($mailpattern, $_POST[$k])) {
+        $error ++;
+        $_SESSION['form'.$form_id]['error'][$k] = 'empty';
+      }
+      if ($form_privacy==1 && $_POST['privacy'] != 1) {
         $error ++;
         $_SESSION['form'.$form_id]['error']['privacy'] = 'empty';
+
       }
-      
-      // spam protection
+      //if($form_captcha!='nessuno' && strtolower($_POST['captcha'])!=strtolower($_SESSION['security_code'])){
       $spammer = false;
       if ($form_captcha != 'nessuno') {
         if ($form_captcha == 'honeypot') {
@@ -145,111 +132,169 @@ EOSQL;
         $_SESSION['form'.$form_id]['error'] = 'Spam protection';
         sleep ($sleep_time * $_SESSION['spammer']);
         //header('Location: /index.php');
-        header('X-Error-Message: Spam your mother', true, 500);
-        die('Internal server error');
+        header('HTTP/1.1 401 Unauthorized', true, 401);
+        die('Unauthorized');
       }
     }
 
-    if($error>0){
-  # - errore, ripresento il form
+    if ($error > 0){
+  // - errore, ripresento il form
       $_SESSION['form'.$form_id]['data'] = serialize($_POST);
 
     } else {
-  # - tutto ok
+  // - tutto ok
       unset($_SESSION['form'.$form_id]['error']);
 
       if($form_destinatario){
-      # ========================================================================
-      # - mail all'admin
-      # ========================================================================
-        $ora   = date('d/m/Y \a\l\l\e H:i');
-        $table = "<table width=100% cellspacing=1 cellpadding=5 border=1>\n";
+      /* ========================================================================
+       * - mail all'admin
+       * ======================================================================== */
+        // elimino i campi irrilevanti
+        unset(
+          $_POST['MAX_FILE_SIZE'],
+          $_POST['captcha'],
+          $_POST['privacy'],
+          $_POST['action'],
+          $_POST['formId'],
+          $_POST['twitter_account']);
 
-        # elimino i campi irrilevanti
-        unset($_POST['MAX_FILE_SIZE'], $_POST['captcha'], $_POST['privacy'], $_POST['action'], $_POST['formId']);
-
-        foreach($_POST as $k=>$v){
+        $rows = '';
+        foreach ($_POST as $k => $v) {
           $$k = addslashes(strip_tags($v));
-          if($v!=''){
-            $table .= "<tr>\n";
-            $table .= "  <th width='15%'>{$k}</th>\n";
-            if(is_array($v)){
-              $table .= "  <td>".implode(', ',$v)."</td>\n";
+          if (!empty($v)) {
+            $rows .= "<tr>\n";
+            $rows .= "  <th width='15%' valign='top'>{$labels[$k]}</th>\n";
+            if (is_array($v)) {
+              $rows .= "  <td>".implode(', ', $v)."</td>\n";
             } else {
-              //$table .= "  <td>{$v}</td>\n";
-              $table .= "  <td>".nl2br(utf8_decode($v))."</td>\n";
+              $rows .= "  <td>".nl2br(utf8_decode($v))."</td>\n";
             }
-            $table .= "</tr>\n";
-          }
-        }
-        $table.= "</table>\n";
-
-        $body = <<<EOBODY
-        <h3>Nuovo messaggio da {$synWebsiteTitle}</h3>
-        <p>Un utente ha compilato il form "{$form_titolo}":</p>
-        {$table}
-        <hr>
-        Spedito il $ora.
-EOBODY;
-
-        $mail           = new PHPMailer(true);
-        $mail->From     = ($email) ? $email : $form_destinatario;
-        $mail->FromName = ($nome || $cognome) ? "$nome $cognome" : $synWebsiteTitle;
-        $mail->Subject  = "Messaggio da {$synWebsiteTitle}";
-        $mail->AltBody  = strip_tags($body);
-
-        $mail->MsgHTML($body);
-        $mail->AddAddress($form_destinatario, $admin_name);
-        //$mail->AddAddress('assistenza@kleis.it', 'Kleis');
-
-
-        if(!empty($_FILES)){ // allegati della mail
-          foreach($_FILES as $file){
-            if (in_array($file['type'], $allowedTypes)) {
-              $mail->AddAttachment($file['tmp_name'], $file['name']);
-            }
+            $rows .= "</tr>\n";
           }
         }
 
-    # - invio la mail
+        $sender = array(
+          'name' => ($nome || $cognome) ? "$nome $cognome" : $synWebsiteTitle,
+          'mail' => ($email) ? $email : $form_destinatario
+          );
+        $to = array(
+          'name' => $synWebsiteTitle,
+          'mail' => $form_destinatario
+          );
+        $subject = $form_titolo;
+        $data = array(
+          'site_name' => $synWebsiteTitle,
+          'form_name' => $form_titolo,
+          'rows' => $rows,
+          'time' => date('d/m/Y \a\l\l\e H:i')
+          );
+
+        $template = "email/mail_from_form{$form_id}.html"; // template specifico
+        if ( !is_file($synAbsolutePath.$synPublicPath.'template/'.$template) )
+          $template = 'email/mail_from_form.html'; // template generico
+
         try {
-          //die('invio');
-          $mail->Send();
-          $_SESSION['form'.$form_id]['submitted'] = true;
+          // - istanzio oggetto
+          $mail = new synMailer($sender, $to, $subject);
+          // - imposto template
+          $mail->setTemplate($template, $data);
+          if (!empty($_FILES)) {
+            // allegati della mail
+            foreach ($_FILES as $file) {
+              if (in_array($file['type'], $allowedTypes)) {
+                /*if (strpos($file['type'], 'image') !== false) {
+                  if ($file['size'] < $max_file_size) {
+                    // immagine troppo grande
+                  }
+                }*/
+                // - aggiungo allegato
+                $mail->AddAttachment( $file['tmp_name'], $file['name'] );
+              }
+            }
+          }
+          // - invio la mail
+          $mail->go();
 
-        } catch (phpmailerException $e) {
-          $error ++;
-          $_SESSION['form'.$form_id]['error'] = $e->errorMessage();
-          //Pretty error messages from PHPMailer
-
-        } catch (Exception $e) {
-          $error ++;
+        } catch(Exception $e) {
           $_SESSION['form'.$form_id]['error'] = $e->getMessage();
-          //Boring error messages from anything else!
         }
-      } //if($form_destinatario)
-//die('----');
-/*
-      // disabilitato - POTENZIALE DISASTRO
-      if($form_syntable){
-      # ========================================================================
-      # - salvataggio su db
-      # ========================================================================
-*/
-    }// if $error>0
-  }// if _POST[action]
 
-  # ============================================================================
-  # - fine
-  # ============================================================================
+      } //if($form_destinatario)
+
+
+      /*
+      if (1 == $form_response && !empty($email)) {
+         // mail all'utente
+        $sender = array(
+          'name' => $synWebsiteTitle,
+          'mail' => ADMIN_MAIL
+          );
+        $to = array(
+          'name' => ($nome || $cognome) ? "$nome $cognome" : $email,
+          'mail' => $email
+          );
+        $subject = $form_titolo;
+        $template = "email/response_from_form{$form_id}.html";
+        $data = array(
+          'site_name' => $synWebsiteTitle
+          );
+
+        try {
+          $mail = new synMailer($sender, $to, $subject);
+          $mail->setTemplate($template, $data);
+          $mail->go();
+
+        } catch(Exception $e) {
+          $_SESSION['form'.$form_id]['error'] = $e->getMessage();
+        }
+      } */
+
+
+
+      /* ========================================================================
+       * - salvataggio su db
+       * ======================================================================== */
+      // allegati come join???
+      $hash = addslashes(json_encode($_POST));
+      $insert = <<<EOINS
+      INSERT INTO dati_inviati (
+        id_form,
+        hash,
+        timestamp
+      ) VALUES (
+        '{$form_id}',
+        '{$hash}',
+         NOW()
+      )
+EOINS;
+      try {
+        $db->execute($insert);
+        // TODO: salvare gli allegati!
+        /*if (!empty($_FILES)) { // allegati della mail
+          foreach ($_FILES as $file) {
+            if (in_array($file['type'], $allowedTypes)) {
+              //_uploadDocument($id, $file, 'file_inviati', $synPublicPath.'mat/sent/')
+            }
+          }
+        }*/
+      } catch(Exception $e) {
+        $_SESSION['form'.$form_id]['error'] = $e->getMessage();
+      }
+
+      $_SESSION['form'.$form_id]['submitted'] = true;
+    } // if $error>0
+  } // if _POST[action]
+
+  /* ============================================================================
+   * - fine, rimando al referer
+   * ============================================================================ */
 
   if ($xhr) {
-    // ================================ submit AJAX ========================================= //
     if ($error > 0) {
       // errore
       $form_obj = new formBuilder($form_id);
       $status = 'error';
-      $message = $form_obj->errorMsg($_SESSION['form'.$form_id]['error']);
+      $message = $form_obj->errorMsg( $_SESSION['form'.$form_id]['error'] );
 
     } else {
       // tutto ok
@@ -262,30 +307,38 @@ EOBODY;
     echo json_encode($ret);
 
   } else {
-    // ================================ submit HTTP ========================================= //
     //echo "<a href=\"{$ref}\">OK &rarr; {$ref}</a>";
     header('P3P: CP="NOI ADM DEV PSAi COM NAV OUR OTRo STP IND DEM"'); // privacy policy per IE6
     header("location: ".$ref);
   }
 
 
-function _uploadDocument($id, $f, $stub, $mat) {
-  if(!$mat) return;
-  $name  = $f["name"];
-  $bits  = explode(".", $name);
-  $ext   = end($bits);
-  $fname = $stub.'_id'.$id.".".$ext;
-  $file  = $f["tmp_name"];
 
-  if (
-    $file != 'none' &&
-    $name != '' &&
-    $file != ''
-  ) {
-    move_uploaded_file($file, getenv('DOCUMENT_ROOT').$mat.$fname);
-    @chmod($mat.$fname,0777);
-    return $ext;
+if (!function_exists(_uploadDocument)) {
+  function _uploadDocument($id, $f, $stub, $mat) {
+    if (!$mat)
+      return;
+
+    $name  = $f["name"];
+    $bits  = explode(".", $name);
+    $ext   = end($bits);
+    $fname = $stub.'_id'.$id.'.'.$ext;
+    $file  = $f['tmp_name'];
+    $max_size = 1024 * 200; // 200Kb
+
+    if ( $file != 'none'
+      && $name != ''
+      && $file != ''
+      ){
+      if ( strpos($f['type'], 'image') !== false
+        && $f['size'] < $max_size
+        ){
+        $file = ''; // TODO: ridimensionare l'immagine
+      }
+      move_uploaded_file($file, getenv('DOCUMENT_ROOT').$mat.$fname);
+      @chmod($mat.$fname, 0777);
+      return $ext;
+    }
   }
 }
-
-// EOF dispatch.php
+?>
