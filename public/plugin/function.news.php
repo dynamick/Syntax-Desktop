@@ -79,6 +79,7 @@ EOQ;
   } else {
     #---------------------------- DETTAGLIO NEWS ------------------------------#
 
+    
     $qry = <<<EOQ
     SELECT n.id, n.image, n.date,
            t1.{$lang} AS title, t2.{$lang} AS text
@@ -91,24 +92,26 @@ EOQ;
 EOQ;
 
     $res = $db->Execute($qry);
-    if ($arr = $res->FetchRow()) {
-      extract($arr);
+    if ( $arr = $res->FetchRow() ) {
+      extract( $arr );
 
-      $permalink = 'http://'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
+      $permalink = 'http://'.$_SERVER['SERVER_NAME'].$newsPath.sanitizePath( $title ).'~'.$id.'.html';
       //$safeurl = rawurlencode($permalink);
       //$safettl = rawurlencode($title);
       //$safeabs = rawurlencode(troncaTesto(strip_tags($text),100));
+      
       $fdate  = sql2human($date, '%d %B %Y');
       $src = null;
 
       if ($image) {
         $src = "{$synPublicPath}/mat/news_image_id{$id}.{$image}";
 
-      } /*else {
+      } else {
         $src = $synPublicPath.'/mat/default.jpg';
-      }*/
+      }
 
-      $navlinks = getPrevNextLinks($db, $date, $newsPath, $lang);
+      $navlinks = getPrevNextLinks( $db, $date, $newsPath, $lang );
+      $ogmeta = getOpenGraph( $title, $text, $src, $permalink, 'article', $date );
 
       $output = array(
         'id' => $id,
@@ -122,7 +125,11 @@ EOQ;
       );
 
       $smarty->assign('item', $output);
+      $smarty->assign('title', $title);
+      $smarty->assign('ogmeta', $ogmeta);
+      $smarty->assign('canonical', $permalink);
 
+      
     } else {
       header('HTTP/1.0 404 Not Found');
       header('Location: /404/');

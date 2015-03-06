@@ -205,6 +205,67 @@ if(!function_exists('attributize')) {
   }
 }
 
+if (!function_exists(getOpenGraph)) {
+  // prepara l'array per costruire i metadati openGraph (facebook/twitter)
+  function getOpenGraph( $title, $text, $image, $url, $type = 'article', $time = null ) {
+    global $synWebsiteTitle, $synPublicPath;
+
+    $server = 'http://'.$_SERVER['SERVER_NAME'];
+    $title = attributize($title);
+    $text = attributize($text, 150);
+
+    if (is_array($image)) {
+      $imagearr = array();
+      foreach($image as $i) {
+        if (!empty($i))
+          $imagearr[] = htmlentities("{$server}{$synPublicPath}/thumb.php?src={$i}&w=600&h=400&zc=1");
+      }
+      $image = $imagearr;
+
+    } elseif (!empty($image))
+      $image = htmlentities("{$server}{$synPublicPath}/thumb.php?src={$image}&w=600&h=400&zc=1");
+
+    $meta = array(
+      'tw' => array(
+        'attr' => 'name',
+        'prefix' => 'twitter',
+        'props' => array(
+          'title'       => $title,
+          'description' => $text,
+          'image'       => $image,
+          'url'         => $url,
+          'card'        => 'summary'
+        )
+      ),
+      'fb' => array(
+        'attr' => 'property',
+        'prefix' => 'og',
+        'props' => array(
+          'title'       => $title,
+          'description' => $text,
+          'image'       => $image,
+          'url'         => $url,
+          'type'        => $type,
+          'site_name'   => $synWebsiteTitle,
+          'locale'      => 'it_IT'
+        )
+      )
+    );
+
+    if ($type == 'article') {
+      $date = new DateTime($time);
+      $meta['article'] = array(
+        'attr' => 'property',
+        'prefix' => 'article',
+        'props' => array(
+          'published_time' => $date->format(DateTime::ATOM)
+        )
+      );
+    }
+    return array_filter($meta);
+  }
+}
+
 
 if(!function_exists('str_makerand')) {
   function str_makerand ($minlength, $maxlength, $useupper, $usespecial, $usenumbers) {
