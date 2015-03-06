@@ -43,7 +43,7 @@
           {foreach from=$item.navlinks item=nav}
             <li class="{$nav.type}">
               <a href="{$nav.url}">
-                {if $nav.type eq 'previous'}<i class="fa fa-arrow-left"></i>{/if}
+                {if $nav.type eq 'prev'}<i class="fa fa-arrow-left"></i>{/if}
                 {$nav.title}
                 {if $nav.type eq 'next'}<i class="fa fa-arrow-right"></i>{/if}
               </a>

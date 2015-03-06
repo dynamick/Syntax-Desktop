@@ -152,7 +152,7 @@ function getPrevNextLinks($db, $date, $page, $lang='it'){
   $ret = array();
   $sql = <<<EOSQL
 (
-   SELECT n.id, t1.{$lang} AS title, 'previous' AS type
+   SELECT n.id, t1.{$lang} AS title, 'prev' AS type
      FROM news n
 LEFT JOIN aa_translation t1 ON n.title = t1.id
     WHERE n.date < '{$date}'

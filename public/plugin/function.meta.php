@@ -16,6 +16,7 @@ function smarty_function_meta($params, &$smarty){
   $visible          = explode('|', $smarty->getTemplateVars( 'synPageVisible' ));
   $ogmeta           = $smarty->getTemplateVars( 'ogmeta' );
   $canonical        = $smarty->getTemplateVars( 'canonical' );
+  $item             = $smarty->getTemplateVars( 'item' );
 
   $title            = (isset($ogmeta['fb']['props']['title']))
                     ? $ogmeta['fb']['props']['title']
@@ -55,9 +56,22 @@ function smarty_function_meta($params, &$smarty){
       $canonical = $server.$page_path;
     }
   }
-  if (!empty( $canonical ))
-    $meta[] = '<link rel="canonical" href="'.$canonical.'">';
 
+  if ( !empty($ogmeta) ) {
+    // ogmeta present
+    foreach( $ogmeta as $s) {
+      foreach( $s['props'] as $prop => $val ) {
+        if (!empty($val)) {
+          if (is_array( $val )) {
+            foreach( $val as $v)
+              $meta[] = '<meta '.$s['attr'].'='.$s['prefix'].':'.$prop.'" content="'.$v.'">';
+          } else {
+            $meta[] = '<meta '.$s['attr'].'="'.$s['prefix'].':'.$prop.'" content="'.$val.'">';
+          }
+        }
+      }
+    }
+  }
 
   if ( !in_array($langId, $visible) ) {
     // page not visible in current lang, block spiders
@@ -76,19 +90,13 @@ function smarty_function_meta($params, &$smarty){
     }
   }
 
-  if ( !empty($ogmeta) ) {
-    // ogmeta present
-    foreach( $ogmeta as $s) {
-      foreach( $s['props'] as $prop => $val ) {
-        if (!empty($val)) {
-          if (is_array( $val )) {
-            foreach( $val as $v)
-              $meta[] = '<meta '.$s['attr'].'='.$s['prefix'].':'.$prop.'" content="'.$v.'">';
-          } else {
-            $meta[] = '<meta '.$s['attr'].'="'.$s['prefix'].':'.$prop.'" content="'.$val.'">';
-          }
-        }
-      }
+  if (!empty( $canonical ))
+    $meta[] = '<link rel="canonical" href="'.$canonical.'">';
+
+  // prev-next navigation for news items
+  if ( !empty($item) && is_array($item['navlinks']) ) {
+    foreach( $item['navlinks'] as $nav ) {
+      $meta[] = '<link rel="'.$nav['type'].'" href="'.$server.$nav['url'].'" title="'.attributize( $nav['title'] ).'">';
     }
   }
 
