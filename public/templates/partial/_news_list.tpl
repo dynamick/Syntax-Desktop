@@ -16,13 +16,18 @@
       <h3>
         <a href="{$n.url}">{$n.title} </a>
       </h3>
+      {if $n.social_share neq ''}
       <div class="pull-right">
         <ul class="list-inline">
-          <li><a href="#"><i class="fa fa-2x fa-facebook-square"></i></a></li>
-          <li><a href="#"><i class="fa fa-2x fa-linkedin-square"></i></a></li>
-          <li><a href="#"><i class="fa fa-2x fa-twitter-square"></i></a></li>
+        {foreach $n.social_share as $social}
+          <li>
+            <a href="{$social.link}" target="_blank" title="{$social.title}">
+              <i class="fa fa-2x fa-{$social.icon}"></i>
+            </a>
+          </li>
+        {/foreach}
         </ul>
-      </div>
+      </div>{/if}
       <p>
         <i class="fa fa-calendar-o"></i>
         <time datetime="{$n.date}">{$n.fdate}</time>

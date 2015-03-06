@@ -27,4 +27,5 @@
     $("#form_login_user").validate();
   });
 </script>
-{/capture}{append var=synPageScript value=$smarty.capture.pageScript scope=parent}
+{/capture}
+{append var=synPageScript value=$smarty.capture.pageScript scope=parent}

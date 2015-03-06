@@ -1,7 +1,5 @@
 <?php
-//ini_set('display_errors','On');
 
-//$dir = dirname(__FILE__) . '/';
 $ROOT = $_SERVER['DOCUMENT_ROOT'];
 
 if (file_exists($ROOT.'/admin/config/config.php')) {
@@ -15,7 +13,7 @@ if (file_exists($ROOT.'/admin/config/config.php')) {
 //////////////////////////////////////////////////////////////////////////////
 
 // PAGE TREE Entry Point
-$synEntryPoint = array('syntax'=>22);
+$synEntryPoint = array( 'syntax' => 22 );
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -48,31 +46,54 @@ require $pub.'lib/utility.php';
 $db = NewADOConnection('mysql');
 
 //connect to Database
-$result=@$db->Connect($synDbHost, $synDbUser, $synDbPassword, $synDbName);
+$result = $db->Connect( $synDbHost, $synDbUser, $synDbPassword, $synDbName );
 
 //if some configuration fails... reconfigure the parameter
-if ($result===false) {
-  $txt.="<p style='color: red'>Database unavailable.</p>\n";
-  die($txt);
-  }
+if ( false === $result ) {
+  echo "<p style='color: red'>Database unavailable.</p>\n";
+  die();
+}
 
 //if the DB is empty, populate it!
 $a = $db->MetaTables();
-if ($a!==false AND count($a)==0 and basename(getenv("SCRIPT_FILENAME"))!="setup.php") {
-  die("Run <a href=\"".$synAdminPath."/setup.php\">Setup</a> to install Syntax Desktop. ");
+if ( false !== $a
+  && 0 == count( $a )
+  && basename( getenv('SCRIPT_FILENAME')) != 'setup.php'
+  ){
+  echo "<p>Run <a href=\"{$synAdminPath}/setup.php\">Setup</a> to install Syntax Desktop.</p>\n";
+  die();
 }
 
 //check if setup.php was removed
-if (file_exists($synAbsolutePath.$synAdminPath."/setup.php") and basename(getenv("SCRIPT_FILENAME"))!="setup.php") {
-  die("Please <strong>remove</strong> the <strong>".$synAdminPath."/setup.php</strong> before proceeding and refresh this page.");
+if ( is_file($synAbsolutePath.$synAdminPath.'/setup.php')
+  && basename( getenv('SCRIPT_FILENAME')) != 'setup.php'
+  ){
+  echo "<p>Please <strong>remove</strong> the <strong>{$synAdminPath}/setup.php</strong> before proceeding and refresh this page.</p>\n";
+  die();
 }
+
+
+// enable social network for sharing
+$enabled_socials = array(
+  'facebook',
+  'twitter',
+  'linked-in',
+  //'pinterest',
+  'google-plus',
+  //'delicious',
+  //'reddit',
+  //'stumble-upon',
+  //'digg'
+);
 
 // nome del cookie di autenticazione
 define('COOKIE_NAME', 'syntax_web_user');
 
 define('PAGE_ACCOUNT',  52);
 define('PAGE_SEARCH',   58);
+define('PAGE_PRIVACY',  59);
 define('DEFAULT_GROUP', 1); // gruppo utenti default
+
 define('ACCOUNT_KEY',   'syntax_user'); // nome del cookie
 define('ADMIN_NAME',    'Admin');
 define('ADMIN_MAIL',    'assistenza@kleis.it');

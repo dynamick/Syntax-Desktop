@@ -11,6 +11,7 @@ $script = array(
 	'vendor/jquery.js',
 	'vendor/bootstrap.min.js',
   'vendor/jquery.validate.min.js',
+  'jquery.cookieDisclaimer.js',
 	'main.js'
 );
 

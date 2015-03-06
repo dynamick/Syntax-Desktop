@@ -22,7 +22,7 @@
     <!-- Intro Content -->
     <div class="row">
       <div class="col-md-12">
-        {search maxitems=3}
+        {search maxitems=10}
         <div class="jumbotron">
           {include file='partial/_searchform.tpl'}
         </div>

@@ -10,7 +10,7 @@ function smarty_function_news($params, &$smarty) {
   $lang     = getLangInitial();
 
   if ($req==0) {
-    #-------------------------------- ELENCO NEWS -----------------------------#
+    // -------------------------------- ELENCO NEWS ----------------------------- //
     $maxitems = 10;
     $pager    = null;
     $list     = null;
@@ -47,6 +47,11 @@ EOQ;
         $fdate = htmlentities(sql2human($date, '%d %B %Y'));
         $abstract = troncaTesto(strip_tags($testo), 150);
 
+        $permalink = 'http://'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
+        $safeurl = rawurlencode($permalink);
+        $safettl = rawurlencode($title);
+        $social_share = social_share( $safeurl, $safettl );
+
         if ($image) {
           $src = "{$synPublicPath}/mat/news_image_id{$id}.{$image}";
 
@@ -62,7 +67,8 @@ EOQ;
           'date' => $date,
           'fdate' => $fdate,
           'title' => $titolo,
-          'abstract' => $abstract
+          'abstract' => $abstract,
+          'social_share' => $social_share
         );
       }
 
@@ -77,7 +83,7 @@ EOQ;
 
 
   } else {
-    #---------------------------- DETTAGLIO NEWS ------------------------------#
+    // ---------------------------- DETTAGLIO NEWS ------------------------------ //
 
     $qry = <<<EOQ
     SELECT n.id, n.image, n.date,
@@ -95,9 +101,11 @@ EOQ;
       extract($arr);
 
       $permalink = 'http://'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
-      //$safeurl = rawurlencode($permalink);
-      //$safettl = rawurlencode($title);
+      $safeurl = rawurlencode($permalink);
+      $safettl = rawurlencode($title);
       //$safeabs = rawurlencode(troncaTesto(strip_tags($text),100));
+      $social_share = social_share( $safeurl, $safettl );
+
       $fdate  = sql2human($date, '%d %B %Y');
       $src = null;
 
@@ -118,7 +126,8 @@ EOQ;
         'date' => $date,
         'fdate' => $fdate,
         'permalink' => $permalink,
-        'navlinks' => $navlinks
+        'navlinks' => $navlinks,
+        'social_share' => $social_share
       );
 
       $smarty->assign('item', $output);

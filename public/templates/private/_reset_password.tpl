@@ -15,9 +15,6 @@
   </div>
 </div>
 {capture name=pageScript}
-<script src="{$synPublicPath}/js/jquery-1.11.0.min.js"></script>
-<script src="{$synPublicPath}/js/private/bootstrap.min.js"></script>
-<script src="{$synPublicPath}/js/jquery.validate.min.js"></script>
 <script type="text/javascript">
   $(document).ready(function(){
     $.validator.messages.required="{$l.error_required_field}";
@@ -27,4 +24,5 @@
     $("#form_forgot_password").validate();
   });
 </script>
-{/capture}{assign pageScript $smarty.capture.pageScript scope="parent"}
+{/capture}
+{append var=synPageScript value=$smarty.capture.pageScript scope=parent}

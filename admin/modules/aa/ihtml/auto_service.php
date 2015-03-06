@@ -1,8 +1,8 @@
 <?php
 
-if(!isset($_SESSION)) 
+if(!isset($_SESSION))
   session_start();
-if(!isset($_REQUEST['cmd'])) 
+if(!isset($_REQUEST['cmd']))
   $_REQUEST['cmd'] = '';
 
 // auto-load delle classi istanziate
@@ -16,7 +16,7 @@ function __autoload($class) {
   $buttons=array();
 
   //creo il contenitore
-  if(!isset($db)) 
+  if(!isset($db))
     include_once ("../../../config/cfg.php"); //if RPC
 
   $res = $db->Execute("SELECT * FROM aa_services WHERE id='{$synContainer}'");
@@ -38,7 +38,7 @@ function __autoload($class) {
     if ($arr["iskey"]==1) $obj[$count]->setKey(true);
     if ($arr["ismultilang"]==1) $obj[$count]->setMultilang(true);
 
-    if ( $arr["qry"]!='' 
+    if ( $arr["qry"]!=''
       && ( !isset($_REQUEST[$arr['name']]) || $_REQUEST[$arr["name"]] == '' )
       ){
       $obj[$count]->setQry($arr["qry"]);
@@ -51,7 +51,7 @@ function __autoload($class) {
   }
 
   //sincronizzo il db con gli elementi aggiunti al contenitore
-  if ($dbSync=="1" && $_REQUEST["cmd"]=='') 
+  if ($dbSync=="1" && $_REQUEST["cmd"]=='')
     $contenitore->dbSynchronize();
 
   //----------------------------------------------------------------------------
@@ -76,7 +76,8 @@ function __autoload($class) {
     global $aa_qry, $synTable, $db, $aa_group_services, $contenitore, $treeFrame;
 
     //remove session to see the entire list
-    if (isset($_GET["aa_search_clean"])) session_unregister("aa_qry");
+    if (isset($_GET["aa_search_clean"]))
+      unset($_SESSION['aa_qry']);
 
     if (!isset($_SESSION["aa_joinStack"])) {
       $res=$db->Execute("SELECT gs.filter FROM aa_group_services gs INNER JOIN aa_groups g ON gs.group=g.id, aa_users u where u.id_group=g.id and u.id=".getSynUser()." and gs.id='".$_SESSION["aa_group_services"]."'");
@@ -261,7 +262,7 @@ function __autoload($class) {
       //upload available documents
       $contenitore->uploadDocument();
 
-      
+
       //execute insert qry
       $qry = "INSERT INTO `{$synTable}` ({$contenitore->getFieldsString()}) VALUES ({$contenitore->getInsertString()})";
       $err = $res = $db->Execute($qry);
@@ -270,7 +271,7 @@ function __autoload($class) {
       $contenitore->setKeyValue($insertId);
 
       $err = $err && $contenitore->execute_callbacks('insert');
-      
+
       //error check
       if (!$err) {
         //echo "<script>alert(\"$err\"); history.go(-1);</script>";
@@ -312,7 +313,7 @@ function __autoload($class) {
       }
 
       break;
-      
+
 
         ////////////////////////////////////////////////////////////////////////////
        //                                                                        //
@@ -386,7 +387,7 @@ function __autoload($class) {
     case CHANGE:
 
       $synPrimaryKey = urldecode(trim($_POST["synPrimaryKey"]));
-      
+
       $contenitore->uploadDocument();
       $upd = $contenitore->getUpdateString();
       $ok = true;
@@ -399,7 +400,7 @@ function __autoload($class) {
 
       #die('done');
       //controllo errori
-      if (!$ok) 
+      if (!$ok)
         echo "<script>alert(\"{$ok}\"); history.go(-1);</script>";
       //else echo 'ok';
 
@@ -450,7 +451,7 @@ function __autoload($class) {
       break;
 
 
-      
+
         ////////////////////////////////////////////////////////////////////////
        //                                                                    //
       //                          DELETE A ROW                              //
@@ -471,7 +472,7 @@ function __autoload($class) {
       if ($canDelete===true) {
         $contenitore->deleteDocument();
         $contenitore->execute_callbacks('delete');
-        
+
         $res = $db->Execute("DELETE FROM {$synTable} WHERE {$synPrimaryKey}" );
 
       } else {
@@ -535,7 +536,7 @@ function __autoload($class) {
       $err = $db->Execute($qry);
 
       //controllo errori
-      if (!$err) 
+      if (!$err)
         echo "<script>alert(\"".htmlentities($err)."\");</script>";
     break;
 
@@ -577,7 +578,7 @@ function __autoload($class) {
 
       $pager = new synPager($db, 'syntax', 'content.php', 'content', true, true, "pager_{$synTable}");
       $res = $pager->Execute($qry, $synRowsPerPage);
-      
+
       if ($treeFrame == "true") {
         $contenitore->getTree($qry);
         // die();
@@ -639,7 +640,7 @@ EOHEADER;
 
     echo $header;
   }
-  
+
   function resetClone($synTable){
     if(!isset($_SESSION)) session_start();
     if(isset($_SESSION[$synTable.'_clone']))

@@ -444,6 +444,64 @@ if (!function_exists('hash')) {
 }
 
 
+if (!function_exists('social_share')) {
+  function social_share($permalink, $title, $resource_path = ''){
+    global $enabled_socials;
+    $social_share = array(
+      'facebook' => array(
+        'icon'  => 'facebook-square',
+        'link'  => 'http://www.facebook.com/sharer.php?u='.$permalink.'&amp;t='.$title,
+        'title' => 'Share on Facebook'
+      ),
+      'twitter' => array(
+        'icon'  => 'twitter-square',
+        'link'  => 'http://twitter.com/home/?status='.$title.' - '.$permalink,
+        'title' => 'Tweet this!'
+      ),
+      'linked-in' => array(
+        'icon'  => 'linkedin-square',
+        'link'  => 'http://www.linkedin.com/shareArticle?mini=true&amp;title='.$title.'&amp;url=.'.$permalink,
+        'title' => 'Share on LinkedIn'
+      ),
+      'pinterest' => array(
+        'icon'  => 'pinterest',
+        'link'  => 'http://pinterest.com/pin/create/button/?url='.$permalink.'&media='.$resource_path,
+        'title' => 'Share in Pinterest'
+      ),
+      'google-plus' => array(
+        'icon'  => 'google-plus-square',
+        'link'  => 'https://plus.google.com/share?url='.$permalink,
+        'title' => 'Share on Google Plus'
+      ),
+      'delicious' => array(
+        'icon'  => 'delicious',
+        'link'  => 'http://del.icio.us/post?url='.$permalink.'&amp;title='.$title,
+        'title' => 'Bookmark on del.icio.us'
+      ),
+      'reddit' => array(
+        'icon'  => 'reddit',
+        'link'  => 'http://www.reddit.com/submit?url='.$permalink.'&amp;title='.$title,
+        'title' => 'Vote on Reddit'
+      ),
+      'stumble-upon' => array(
+        'icon'  => 'stumbleupon-circle',
+        'link'  => 'http://www.stumbleupon.com/submit?url='.$permalink.'&amp;title='.$title,
+        'title' => 'Stumble it'
+      ),
+      'digg' => array(
+        'icon'  => 'digg',
+        'link'  => 'http://digg.com/submit?url='.$permalink.'&amp;title='.$title,
+        'title' => 'Digg this!'
+      )
+    );
+    // I need keys for comparison
+    $enabled_socials_keys = array_combine( $enabled_socials, $enabled_socials );
+    // return only $social_share elements whose key is present in $enabled_socials
+    return array_intersect_key( $social_share, $enabled_socials_keys );
+  }
+}
+
+
 // puts message in session
 if(!function_exists('set_flash_message')) {
   function set_flash_message($message, $type=null){

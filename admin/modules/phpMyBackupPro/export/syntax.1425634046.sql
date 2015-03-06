@@ -1,5 +1,5 @@
 # MySQL dump of database 'syntax' on host 'localhost'
-# backup date and time: 03/05/15 14:09:32
+# backup date and time: 03/06/15 10:27:26
 # built by phpMyBackupPro v.2.1
 # http://www.phpMyBackupPro.net
 
@@ -199,7 +199,7 @@ CREATE TABLE `aa_page` (
   `metakeywords` varchar(175) NOT NULL,
   `slug` varchar(1024) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=59 DEFAULT CHARSET=utf8 AUTO_INCREMENT=59;
+) ENGINE=MyISAM AUTO_INCREMENT=60 DEFAULT CHARSET=utf8 AUTO_INCREMENT=60;
 
 
 ### data of table `aa_page` ###
@@ -222,6 +222,7 @@ insert into `aa_page` values ('55', '489', '490', '22', '12', '1|2', '45', '1', 
 insert into `aa_page` values ('56', '564', '565', '41', '4', '1|2', '330', '1', '', '572', '573', '574', '659');
 insert into `aa_page` values ('57', '688', '690', '0', '4', '', '1000', '1', '', '691', '692', '693', '689');
 insert into `aa_page` values ('58', '566', '568', '57', '15', '', '9090', '1', '', '569', '570', '571', '567');
+insert into `aa_page` values ('59', '745', '747', '57', '4', '', '3030', '1', '', '748', '749', '750', '746');
 
 
 ### structure of table `aa_service_joins` ###
@@ -426,7 +427,6 @@ insert into `aa_services_element` values ('474', '143', 'photo', '5', '', '1', '
 insert into `aa_services_element` values ('475', '143', 'album', '11', '', '1', '', '260', '11', '261', '', 'SELECT * FROM album', '', '', '40', '', '');
 insert into `aa_services_element` values ('476', '143', 'ordine', '3', '', '1', '1', '262', '0', '263', '', '', '', '', '50', '', '');
 insert into `aa_services_element` values ('477', '3', 'parent_id', '16', '', '1', '', '264', '11', '265', 'name', '', '', '', '20', '', '');
-insert into `aa_services_element` values ('479', '124', 'owner', '18', '', '1', '', '268', '0', '269', '', '', '', '', '40', '', '');
 insert into `aa_services_element` values ('480', '116', 'url', '2', '', '1', '1', '270', '255', '271', '', '', '', '', '70', '', '');
 insert into `aa_services_element` values ('481', '2', 'owner', '18', '', '1', '', '272', '0', '273', '', '', '', '', '60', '', '');
 insert into `aa_services_element` values ('482', '144', 'id', '1', '1', '', '', '283', '0', '284', '', '', '', '', '0', '', '');
@@ -543,22 +543,21 @@ CREATE TABLE `aa_template` (
   `title` varchar(255) NOT NULL DEFAULT '',
   `timestamp` datetime NOT NULL,
   `filename` varchar(255) NOT NULL DEFAULT '',
-  `owner` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 AUTO_INCREMENT=16;
 
 
 ### data of table `aa_template` ###
 
-insert into `aa_template` values ('4', 'standard template', '2004-04-28 16:27:54', 'default.tpl', '1');
-insert into `aa_template` values ('10', 'Documents', '2010-03-24 15:51:19', 'documents.tpl', '1');
-insert into `aa_template` values ('8', 'RSS', '2008-06-18 18:02:16', 'rss.tpl', '1');
-insert into `aa_template` values ('9', 'Account', '2010-03-23 16:19:38', 'account.tpl', '1');
-insert into `aa_template` values ('11', 'Gallery', '2010-03-24 16:22:14', 'gallery.tpl', '1');
-insert into `aa_template` values ('12', 'news', '2010-12-21 16:13:44', 'news.tpl', '1');
-insert into `aa_template` values ('13', 'form', '2010-12-21 16:13:51', 'form.tpl', '1');
-insert into `aa_template` values ('14', 'index', '2013-12-11 14:33:08', 'index.tpl', '1');
-insert into `aa_template` values ('15', 'search results', '2015-03-03 11:13:30', 'search.tpl', '1');
+insert into `aa_template` values ('4', 'standard template', '2004-04-28 16:27:54', 'default.tpl');
+insert into `aa_template` values ('10', 'Documents', '2010-03-24 15:51:19', 'documents.tpl');
+insert into `aa_template` values ('8', 'RSS', '2008-06-18 18:02:16', 'rss.tpl');
+insert into `aa_template` values ('9', 'Account', '2010-03-23 16:19:38', 'account.tpl');
+insert into `aa_template` values ('11', 'Gallery', '2010-03-24 16:22:14', 'gallery.tpl');
+insert into `aa_template` values ('12', 'news', '2010-12-21 16:13:44', 'news.tpl');
+insert into `aa_template` values ('13', 'form', '2010-12-21 16:13:51', 'form.tpl');
+insert into `aa_template` values ('14', 'index', '2013-12-11 14:33:08', 'index.tpl');
+insert into `aa_template` values ('15', 'search results', '2015-03-03 11:13:30', 'search.tpl');
 
 
 ### structure of table `aa_translation` ###
@@ -570,7 +569,7 @@ CREATE TABLE `aa_translation` (
   `it` text NOT NULL,
   `en` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=745 DEFAULT CHARSET=utf8 AUTO_INCREMENT=745;
+) ENGINE=MyISAM AUTO_INCREMENT=753 DEFAULT CHARSET=utf8 AUTO_INCREMENT=753;
 
 
 ### data of table `aa_translation` ###
@@ -1319,6 +1318,14 @@ insert into `aa_translation` values ('741', 'Pagine', 'Pagine');
 insert into `aa_translation` values ('742', 'Template', 'Template');
 insert into `aa_translation` values ('743', 'Gestione Pagine', 'Gestione Pagine');
 insert into `aa_translation` values ('744', 'Gestione Pagine', 'Gestione Pagine');
+insert into `aa_translation` values ('745', 'Privacy', 'Privacy');
+insert into `aa_translation` values ('746', 'privacy', 'privacy');
+insert into `aa_translation` values ('747', '', '');
+insert into `aa_translation` values ('748', '', '');
+insert into `aa_translation` values ('749', '', '');
+insert into `aa_translation` values ('750', '', '');
+insert into `aa_translation` values ('751', 'I cookie ci aiutano a fornire servizi di qualità. Navigando su questo sito accetti il loro utilizzo.', 'Cookies help us offer quality services. By navigating on this website you accept their use.');
+insert into `aa_translation` values ('752', 'Maggiori informazioni', 'Read more');
 
 
 ### structure of table `aa_users` ###
@@ -1386,7 +1393,7 @@ CREATE TABLE `dati_inviati` (
   `hash` text NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 AUTO_INCREMENT=4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
 
 ### data of table `dati_inviati` ###
@@ -1403,7 +1410,7 @@ CREATE TABLE `dictionary` (
   `value` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `label` (`label`)
-) ENGINE=InnoDB AUTO_INCREMENT=147 DEFAULT CHARSET=utf8 AUTO_INCREMENT=147;
+) ENGINE=InnoDB AUTO_INCREMENT=149 DEFAULT CHARSET=utf8 AUTO_INCREMENT=149;
 
 
 ### data of table `dictionary` ###
@@ -1545,6 +1552,8 @@ insert into `dictionary` values ('143', 'email_change_password_subject', '707');
 insert into `dictionary` values ('144', 'account_send', '708');
 insert into `dictionary` values ('145', 'error_required_field', '709');
 insert into `dictionary` values ('146', 'message_logout', '218');
+insert into `dictionary` values ('147', 'cookie_disclaimer', '751');
+insert into `dictionary` values ('148', 'read_more', '752');
 
 
 ### structure of table `documents` ###
@@ -1692,7 +1701,7 @@ CREATE TABLE `media` (
   `author` varchar(255) NOT NULL,
   `modified_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 AUTO_INCREMENT=3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
 
 ### data of table `media` ###
@@ -1773,7 +1782,7 @@ CREATE TABLE `tagged` (
   `media_id` int(11) NOT NULL,
   `tag_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 AUTO_INCREMENT=5;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
 
 ### data of table `tagged` ###
@@ -1788,7 +1797,7 @@ CREATE TABLE `tags` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `tag` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 AUTO_INCREMENT=5;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
 
 ### data of table `tags` ###
@@ -1826,9 +1835,9 @@ CREATE TABLE `users` (
   `login_attempts` int(11) NOT NULL DEFAULT '0',
   `login_count` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 AUTO_INCREMENT=11;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 AUTO_INCREMENT=5;
 
 
 ### data of table `users` ###
 
-insert into `users` values ('4', 'Dummy', 'Dummy', 'SyntaxDesktop', 'info@syntaxdesktop.com', 'via Garibaldi', 'Villafranca', '37069', 'Verona', '', '2', '2ae96aa0273507ab41936958fb4dfd4a', '1', '2010-01-01 00:00:00', '2015-03-02 15:30:41', '2015-03-03 12:23:01', '127.0.0.1', null, null, '', '', '', '1', '0', '3');
+insert into `users` values ('4', 'Dummy', 'Dummy', 'SyntaxDesktop', 'info@syntaxdesktop.com', 'via Garibaldi', 'Villafranca', '37069', 'Verona', '', '2', '2ae96aa0273507ab41936958fb4dfd4a', '1', '2010-01-01 00:00:00', '2015-03-02 15:30:41', '2015-03-05 17:59:33', '127.0.0.1', null, null, '', '', '', '1', '0', '4');
