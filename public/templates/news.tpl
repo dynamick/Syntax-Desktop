@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="{$smarty.session.synSiteLangInitial}">
-{include file="partial/_head.tpl"}
+{news}{include file="partial/_head.tpl"}
 <body>
   {include file="partial/_header.tpl"}
 
@@ -8,7 +8,6 @@
   <div class="container">
 
     <!-- Intro Content -->
-    {news}
     {if isset($item)}
       {include file="partial/_news_detail.tpl"}
     {else}

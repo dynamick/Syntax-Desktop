@@ -2,6 +2,7 @@
 function smarty_function_news($params, &$smarty) {
   global $db, $synPublicPath;
 
+  $server   = 'http://'.$_SERVER['SERVER_NAME'];
   $newsPage = $smarty->getTemplateVars( 'synPageId' );
   $newsPath = createPath( $newsPage );
   $req      = isset($_GET['id'])
@@ -10,7 +11,7 @@ function smarty_function_news($params, &$smarty) {
   $lang     = getLangInitial();
 
   if ($req==0) {
-    // -------------------------------- ELENCO NEWS ----------------------------- //
+    // -------------------------------- NEWS LIST ----------------------------- //
     $maxitems = 10;
     $pager    = null;
     $list     = null;
@@ -18,7 +19,7 @@ function smarty_function_news($params, &$smarty) {
     $qry = <<<EOQ
 
     SELECT n.id, n.date, n.image,
-           t1.{$lang} AS titolo, t2.{$lang} AS testo
+           t1.{$lang} AS title, t2.{$lang} AS text
 
       FROM news n
  LEFT JOIN aa_translation t1 ON n.title = t1.id
@@ -42,19 +43,18 @@ EOQ;
         extract($arr);
         unset($src);
 
-        $url = $newsPath.sanitizePath($titolo)."~{$id}.html";
+        $url = $newsPath.sanitizePath($title)."~{$id}.html";
         $alt = htmlspecialchars(trim(strip_tags($titolo)));
         $fdate = htmlentities(sql2human($date, '%d %B %Y'));
-        $abstract = troncaTesto(strip_tags($testo), 150);
+        $abstract = troncaTesto( strip_tags($text), 150 );
 
-        $permalink = 'http://'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
+        $permalink = $server.$url;
         $safeurl = rawurlencode($permalink);
         $safettl = rawurlencode($title);
         $social_share = social_share( $safeurl, $safettl );
 
         if ($image) {
           $src = "{$synPublicPath}/mat/news_image_id{$id}.{$image}";
-
         } else {
           $src = $synPublicPath.'/mat/default.jpg';
         }
@@ -66,7 +66,7 @@ EOQ;
           'alt' => $alt,
           'date' => $date,
           'fdate' => $fdate,
-          'title' => $titolo,
+          'title' => $title,
           'abstract' => $abstract,
           'social_share' => $social_share
         );
@@ -74,7 +74,7 @@ EOQ;
 
     }
 
-    //stampo i bottoni della paginazione
+    // print navigation buttons
     if ($pgr->rs->LastPageNo()>1)
       $pager = $pgr->pagerArrList();
 
@@ -83,7 +83,8 @@ EOQ;
 
 
   } else {
-    // ---------------------------- DETTAGLIO NEWS ------------------------------ //
+    // ---------------------------- NEWS DETAIL ------------------------------ //
+
 
     $qry = <<<EOQ
     SELECT n.id, n.image, n.date,
@@ -97,26 +98,25 @@ EOQ;
 EOQ;
 
     $res = $db->Execute($qry);
-    if ($arr = $res->FetchRow()) {
-      extract($arr);
+    if ( $arr = $res->FetchRow() ) {
+      extract( $arr );
 
-      $permalink = 'http://'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
-      $safeurl = rawurlencode($permalink);
-      $safettl = rawurlencode($title);
-      //$safeabs = rawurlencode(troncaTesto(strip_tags($text),100));
+      $permalink    = $server.$newsPath.sanitizePath( $title ).'~'.$id.'.html';
+      $safeurl      = rawurlencode($permalink);
+      $safettl      = rawurlencode($title);
       $social_share = social_share( $safeurl, $safettl );
-
-      $fdate  = sql2human($date, '%d %B %Y');
-      $src = null;
+      $fdate        = sql2human($date, '%d %B %Y');
+      $src          = null;
 
       if ($image) {
         $src = "{$synPublicPath}/mat/news_image_id{$id}.{$image}";
 
-      } /*else {
+      } else {
         $src = $synPublicPath.'/mat/default.jpg';
-      }*/
+      }
 
-      $navlinks = getPrevNextLinks($db, $date, $newsPath, $lang);
+      $navlinks = getPrevNextLinks( $db, $date, $newsPath, $lang );
+      $ogmeta = getOpenGraph( $title, $text, $src, $permalink, 'article', $date );
 
       $output = array(
         'id' => $id,
@@ -131,6 +131,10 @@ EOQ;
       );
 
       $smarty->assign('item', $output);
+      $smarty->assign('title', $title);
+      $smarty->assign('ogmeta', $ogmeta);
+      $smarty->assign('canonical', $permalink);
+
 
     } else {
       header('HTTP/1.0 404 Not Found');

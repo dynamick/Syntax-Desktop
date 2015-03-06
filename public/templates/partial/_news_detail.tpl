@@ -28,7 +28,7 @@
           </p>
           {if $item.src}<hr>
           <figure>
-            <img class="img-responsive img-thumbnail" src="{$synPublicPath}/thumb.php?src={$item.src}&amp;w=900&amp;h=300&amp;far=C&amp;aoe=1" alt="{$item.alt}" />
+            <img class="img-responsive img-thumbnail" src="{$synPublicPath}/thumb.php?src={$item.src}&amp;w=900&amp;h=300&amp;zc=1" alt="{$item.alt}" />
           </figure>{/if}
 
           <hr>
