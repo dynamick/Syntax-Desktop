@@ -16,19 +16,20 @@ function setLang($id, $initial='') {
     return false;
 
   } else {
-    if($initial==''){
-      //get the current initial for retro-compatibility
-      $qry = "SELECT initial FROM aa_lang WHERE id='{$lang}' AND `active`=1";
+    if ( empty($initial) ){
+      // get the current initial for retro-compatibility
+      $qry = "SELECT initial FROM aa_lang WHERE id='{$lang}' AND `active`='1'";
       $res = $db->Execute($qry);
       if ($arr = $res->fetchRow()) {
         $initial = $arr['initial'];
       } else {
         // è stata richiesta una lingua non attiva?
-        $qry = "SELECT initial FROM aa_lang WHERE `active`=1";
+        $qry = "SELECT initial FROM aa_lang WHERE `active`='1'";
         $res = $db->Execute($qry);
         if ($arr = $res->fetchRow()) {
           $initial = $arr['initial'];
-        } else die('nessuna lingua attivata'); // l'initial DEVE essere valorizzata...
+        } else 
+          die('nessuna lingua attivata'); // l'initial DEVE essere valorizzata...
       }
     }
 
@@ -46,27 +47,21 @@ function getLangList(){
   $res = $db->Execute("SELECT * FROM aa_lang WHERE `active`=1");
   while($arr = $res->fetchrow()){
     extract($arr, EXTR_PREFIX_ALL, 'lang');
-    if($lang_default=='1')
+    if ( $lang_default == '1' )
       $ret['default'] = $lang_initial;
     $ret['list'][$lang_id] = $lang_initial;
   }
   return $ret;
 }
 
-//DEPRECATED - return the language list (i.e. en,it,es)
-function getLangList_DEPRECATED() {
-  global $db;
-  $res=$db->Execute("SELECT initial FROM aa_lang ");
-  while (list($lang)=$res->FetchRow()) $ret.=$lang.", ";
-  return substr($ret,0,-2);
-}
 
 //return languages array
 function getLangArr() {
   global $db;
   $ret = array();
   $res = $db->Execute("SELECT initial FROM aa_lang");
-  while(list($l)=$res->FetchRow()) $ret[] = $l;
+  while( list($l) = $res->FetchRow() ) 
+    $ret[] = $l;
   return $ret;
 }
 
@@ -94,7 +89,7 @@ function translateSite($id, $err=false) {
     if ($ret=="" and $err===true) {
       foreach ($arr as $mylang=>$mytrans) {
         if (!is_numeric($mylang) and $mylang!="id" and $mytrans!="")
-          $alt .= "\n$mylang: ".substr(strip_tags($mytrans),0,10);
+          $alt .= "\n{$mylang}: ".substr(strip_tags($mytrans),0,10);
       }
       $ret="<span style='color: gray' title=\"".htmlentities("Other Translations:".$alt)."\">[no translation]</span>";
     }
@@ -321,13 +316,39 @@ function getLangId() {
 
 // returns the non-active languages
 function getOtherLangs( $lang = '' ){
+  global $languages;
+  
   if (empty($lang))
     $lang = getLangId();
 
-  $lang_list = getLangList();
+  $lang_list = empty($languages)
+             ? getLangList()
+             : $languages;
+             
   unset( $lang_list['list'][ intval($lang) ] );
 
   return $lang_list['list'];
 }
+
+
+function getLocaleCodes( $filter = array() ){
+  global $db, $languages;
+  
+  if (empty($filter))
+    $filter = array_keys( $languages );
+  
+  $lang = getLangInitial();
+  $locale = array( 'active' => '', 'alternate' => array() );
+  
+  foreach( $languages['list'] as $l ){
+    $iso_code = strtolower($l).'_'.strtoupper($l);
+    if ($l == $lang)
+      $locale['active'] = $iso_code;
+    else
+      $locale['alternate'][] = $iso_code;
+  }
+  return $locale;
+}
+
 
 // EOF lang.functions.php

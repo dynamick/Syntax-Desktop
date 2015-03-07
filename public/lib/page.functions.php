@@ -38,9 +38,48 @@ EOQ;
 }
 
 
+function createItemPath( $title, $id, $leaf = true ) {
+  $segment = sanitizePath($title).'~'.$id;
+  if ($leaf)
+    $segment .= '.html';
+  else
+    $segment .= '/';
+  return $segment;
+}
+
+// returns alternate (other languages) items url
+function getAlternateLinks( $page_id, $title_id, $item_id, $filter = array()) {
+  global $db, $languages;
+  $db->setFetchMode( ADODB_FETCH_ASSOC );
+  
+  if (empty($filter))
+    $filter = array_keys( $languages );
+  $server = 'http://'.$_SERVER['SERVER_NAME'];  
+  $active_lang_id = getLangId();
+  $titles = array();
+  $urls = array();
+  
+  $qry = "SELECT * FROM aa_translation WHERE id = '{$title_id}'";
+  $res = $db->execute( $qry );
+  if ($arr = $res->fetchRow())
+    $titles = $arr;
+
+  foreach( $languages['list'] as $lang_id => $lang ) {
+    if ( $active_lang_id != $lang_id 
+      && in_array( $lang_id, $filter )
+      ){
+      $urls[$lang] = $server
+                   . createPath( $page_id, $lang )
+                   . createItemPath( $titles[$lang], $item_id );
+    }
+  }
+  return $urls;
+}
+
+
 
 function sanitizePath($txt) {
-  # sostituzione caratteri cirillici
+  // substitutes cyrillic chars
   $enlow =  array('a', 'a', 'b', 'b', 'v', 'v', 'g', 'g', 'd', 'd', 'je', 'je', 'jo', 'jo', 'zh', 'zh', 'z', 'z', 'i', 'i', 'j', 'j', 'k', 'k', 'l', 'l', 'm', 'm', 'n', 'n', 'o', 'o', 'p', 'p', 'r', 'r', 's', 's', 't', 't', 'u', 'u', 'f', 'f', 'h', 'h', 'ts', 'ts', 'ch', 'ch', 'sh', 'sh', 'shch', 'shch', '', '', 'y', 'y', '', '', 'e', 'e', 'ju', 'ju', 'ja', 'ja');
   $ru = array('А', 'а', 'Б', 'б', 'В', 'в', 'Г', 'г', 'Д', 'д', 'Е', 'е', 'Ё', 'ё', 'Ж', 'ж', 'З', 'з', 'И', 'и', 'Й', 'й', 'К', 'к', 'Л', 'л', 'М', 'м', 'Н', 'н', 'О', 'о', 'П', 'п', 'Р', 'р', 'С', 'с', 'Т', 'т', 'У', 'у', 'Ф', 'ф', 'Х', 'х', 'Ц', 'ц', 'Ч', 'ч', 'Ш', 'ш', 'Щ', 'щ', 'Ъ', 'ъ', 'Ы', 'ы', 'Ь', 'ь', 'Э', 'э', 'Ю', 'ю', 'Я', 'я');
   $uni = array('А'=>'А', 'а'=>'а', 'Б'=>'Б', 'б'=>'б', 'В'=>'В', 'в'=>'в', 'Г'=>'Г', 'г'=>'г', 'Д'=>'Д', 'д'=>'д', 'Е'=>'Е', 'е'=>'е', 'Ж'=>'Ж', 'ж'=>'ж', 'З'=>'З', 'з'=>'з', 'И'=>'И', 'и'=>'и', 'Й'=>'Й', 'й'=>'й', 'К'=>'К', 'к'=>'к', 'Л'=>'Л', 'л'=>'л', 'М'=>'М', 'м'=>'м', 'Н'=>'Н', 'н'=>'н', 'О'=>'О', 'о'=>'о', 'П'=>'П', 'п'=>'п', 'Р'=>'Р', 'р'=>'р', 'С'=>'С', 'с'=>'с', 'Т'=>'Т', 'т'=>'т', 'У'=>'У', 'у'=>'у', 'Ф'=>'Ф', 'ф'=>'ф', 'Х'=>'Х', 'х'=>'х', 'Ц'=>'Ц', 'ц'=>'ц', 'Ч'=>'Ч', 'ч'=>'ч', 'Ш'=>'Ш', 'ш'=>'ш', 'Щ'=>'Щ', 'щ'=>'щ', 'Ъ'=>'Ъ', 'ъ'=>'ъ', 'Ы'=>'Ы', 'ы'=>'ы', 'Ь'=>'Ь', 'ь'=>'ь', 'Э'=>'Э', 'э'=>'э', 'Ю'=>'Ю', 'ю'=>'ю', 'Я'=>'Я', 'я'=>'я');

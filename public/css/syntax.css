@@ -1,8 +1,6 @@
 .list-group-item.active > a,
 .list-group-item.active > a:hover,
-.list-group-item.active > a:focus {
-  color: #fff;
-}
+.list-group-item.active > a:focus {color: #fff;}
 
 .rich-text {font-size:16px; line-height:1.5;}
 .rich-text p {margin:1em 0;}
@@ -16,3 +14,7 @@
 .rich-text ul > li,
 .rich-text ol > li {margin:1em 0; list-style:inherit;}
 .rich-text table {margin:0; width:100%;}
+
+.section, 
+.section-colored {padding:50px 0;}
+.section-colored {background-color: #e1e1e1;}

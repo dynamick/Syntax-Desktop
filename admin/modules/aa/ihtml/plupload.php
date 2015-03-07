@@ -9,6 +9,9 @@
 include_once ("../../../config/cfg.php");
 global $synAbsolutePath, $synPublicPath, $mat;
 
+if (!isset($_SESSION))
+  session_start();
+
 // HTTP headers for no cache etc
 header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
 header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
@@ -17,35 +20,34 @@ header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 
 
-if(isset($_REQUEST['path'])) {
+if (isset($_REQUEST['path'])) {
   $mat = trim(addslashes($_REQUEST['path']));
 } else {
   $mat = $synPublicPath.$mat;
 }
 
+$user 					         = $_SESSION['synUser'];
 $save_path               = $synAbsolutePath.$mat.'/';
-$key                     = intval($_REQUEST["key"]);
-$description_column_name = (trim(addslashes($_REQUEST['description']))!='' ? trim(addslashes($_REQUEST['description'])) : 'title');
-$order_column_name       = (trim(addslashes($_REQUEST['order']))!=''       ? trim(addslashes($_REQUEST['order']))       : 'ordine');
-$table                   = (trim(addslashes($_REQUEST['table']))!=''       ? trim(addslashes($_REQUEST['table']))       : 'photos');
-$field                   = (trim(addslashes($_REQUEST['field']))!=''       ? trim(addslashes($_REQUEST['field']))       : 'photo');
-$linkfield               = (trim(addslashes($_REQUEST['linkfield']))!=''   ? trim(addslashes($_REQUEST['linkfield']))   : 'album');
+$key                     = intval($_REQUEST['key']);
+$description_column_name = empty($_REQUEST['description']) ? 'title'  : trim(addslashes($_REQUEST['description']))  ;
+$order_column_name       = empty($_REQUEST['order'])       ? 'ordine' : trim(addslashes($_REQUEST['order']))        ;
+$table                   = empty($_REQUEST['table'])       ? 'photos' : trim(addslashes($_REQUEST['table']))        ;
+$field                   = empty($_REQUEST['field'])       ? 'photo'  : trim(addslashes($_REQUEST['field']))        ;
+$linkfield               = empty($_REQUEST['linkfield'])   ? 'album'  : trim(addslashes($_REQUEST['linkfield']))    ;
+
 
 $ordine = 0;
 $qo = "SELECT MAX(`{$order_column_name}`) AS max_order FROM `{$table}` WHERE `{$linkfield}`='{$key}'";
 $ro = $db->execute($qo);
-if($ao = $ro->fetchrow()){
+if ($ao = $ro->fetchrow()) {
   $ordine = $ao['max_order'];
 }
 
 
-
 // Settings
-//$targetDir = ini_get("upload_tmp_dir").DIRECTORY_SEPARATOR ."plupload"; // tmp_dir non è settata su kleis.eu???
-$targetDir = $synAbsolutePath.$synPublicPath.'/mat';
-
+$targetDir        = $synAbsolutePath.$mat.'/'.$key.'/';
 $cleanupTargetDir = true; // Remove old files
-$maxFileAge = 5 * 3600; // Temp file age in seconds
+$maxFileAge       = 5 * 3600; // Temp file age in seconds
 
 // 5 minutes execution time
 @set_time_limit(5 * 60);
@@ -170,6 +172,9 @@ if ( !$chunks
   $description = $info['filename'];
   $ext         = strtolower($info['extension']);
   $ordine     += 10;
+  
+  list($w, $h) = getimagesize("{$filePath}.part");  
+  $format      = ($h > $w) ? 'portrait' : 'landscape';
 
   $qry = <<<EOQINS
 
@@ -177,12 +182,18 @@ if ( !$chunks
       `{$description_column_name}`,
       `{$field}`,
       `{$linkfield}`,
-      `{$order_column_name}`
+      `{$order_column_name}`,
+      `date`,
+      `autore`,
+      `format`
     ) VALUES (
       '{$description}',
       '{$ext}',
       '{$key}',
-      '{$ordine}'
+      '{$ordine}',
+      NOW(), 
+      '{$user}',
+      '{$format}'
     )
 
 EOQINS;
@@ -191,15 +202,16 @@ EOQINS;
 
   if($res = $db->Execute($qry)){
     $id = $db->Insert_ID();
-    $newFilename = "{$table}_{$field}_id{$id}.{$ext}";
+    $newFilename = strtolower("{$table}_{$field}_id{$id}.{$ext}");
   }
 
   // add exif management???
 
 	// Strip the temp .part suffix off
   //rename("{$filePath}.part", $filePath);
-	//rename("{$filePath}.part", $targetDir.DIRECTORY_SEPARATOR .$newFilename);
-  rename("{$filePath}.part", $save_path.$newFilename);
+	rename("{$filePath}.part", $targetDir. DIRECTORY_SEPARATOR .$newFilename);
+  //rename("{$filePath}.part", $save_path.$newFilename);
+  
 
 
   die("{\"jsonrpc\" : \"2.0\", \"result\" : \"{$filePath}\", \"id\" : \"id\", \"message\": \"last part: {$filePath}.part, renamed to {$newFilename}\"}");

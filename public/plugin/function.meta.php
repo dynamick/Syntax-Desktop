@@ -17,6 +17,7 @@ function smarty_function_meta($params, &$smarty){
   $ogmeta           = $smarty->getTemplateVars( 'ogmeta' );
   $canonical        = $smarty->getTemplateVars( 'canonical' );
   $item             = $smarty->getTemplateVars( 'item' );
+  $alternate        = $smarty->getTemplateVars( 'alternate' );
 
   $title            = (isset($ogmeta['fb']['props']['title']))
                     ? $ogmeta['fb']['props']['title']
@@ -64,7 +65,7 @@ function smarty_function_meta($params, &$smarty){
         if (!empty($val)) {
           if (is_array( $val )) {
             foreach( $val as $v)
-              $meta[] = '<meta '.$s['attr'].'='.$s['prefix'].':'.$prop.'" content="'.$v.'">';
+              $meta[] = '<meta '.$s['attr'].'="'.$s['prefix'].':'.$prop.'" content="'.$v.'">';
           } else {
             $meta[] = '<meta '.$s['attr'].'="'.$s['prefix'].':'.$prop.'" content="'.$val.'">';
           }
@@ -80,13 +81,20 @@ function smarty_function_meta($params, &$smarty){
   } else {
     // page visible in current lang, let spiders indexing
     $meta[] = '<meta name="robots" content="index, follow">';
-    foreach( $visible as $lang_visible ){
-      // for each language different from the selected one, provide an alternate href
-      if ( $lang_visible != $langId ) {
-        $initial  = $languages['list'][$lang_visible];
-        $href     = $server.createPath( $page_id, $initial );
-        $meta[]   = '<link rel="alternate" hreflang="'.$initial.'" href="'.$href.'">';
+
+    if ( empty( $alternate ) && empty( $item )) {
+      foreach( $visible as $lang_visible ){
+        // for each language different from the selected one, provide an alternate href
+        if ( $lang_visible != $langId && in_array($langId, $visible) ) {
+          $initial  = $languages['list'][$lang_visible];
+          $href     = $server.createPath( $page_id, $initial );
+          $meta[]   = '<link rel="alternate" hreflang="'.$initial.'" href="'.$href.'">';
+        }
       }
+    } else {
+      // it's an item and there are alternate
+      foreach( $alternate as $alt_lang => $alt_link )
+        $meta[] = '<link rel="alternate" hreflang="'.$alt_lang.'" href="'.$alt_link.'">';
     }
   }
 

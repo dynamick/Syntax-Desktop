@@ -24,7 +24,7 @@
   </div><div class="row">
     {/if}
   {foreachelse}
-    {include '_alert.tpl' msg='Non sono disponibili album.'}
+    {include 'partial/_alert.tpl' msg='Non sono disponibili album.'}
   {/foreach}
   </div>
 

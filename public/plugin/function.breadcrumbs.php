@@ -16,6 +16,7 @@ function smarty_function_breadcrumbs($params, &$smarty) {
   $pages      = array();
   $crumbs     = array();
   $url        = '/';
+  $item       = $smarty->getTemplateVars( 'item' );
   $base_title = (isset($params['base_title']))
               ? $params['base_title']
               : 'Home';
@@ -53,7 +54,11 @@ function smarty_function_breadcrumbs($params, &$smarty) {
   foreach ($uri_elems as $k => $elem) {
     if ( strpos($elem, '~') > 0 ) {
       // prodotto/categoria...
-      $title = ucwords(url_decode(strtok($elem, '~'))); //strstr($elem, '~', true); php 5.3
+      if ( isset($item['title'])) {
+        $title = $item['title'];
+      } else {
+        $title = ucwords(url_decode(strtok($elem, '~'))); //strstr($elem, '~', true); php 5.3
+      }
       $url .= $elem . '/';
 
     } elseif (strpos($elem, '.')>0) {

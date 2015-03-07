@@ -205,14 +205,17 @@ if(!function_exists('attributize')) {
   }
 }
 
-if (!function_exists(getOpenGraph)) {
+if (!function_exists('getOpenGraph')) {
   // prepara l'array per costruire i metadati openGraph (facebook/twitter)
-  function getOpenGraph( $title, $text, $image, $url, $type = 'article', $time = null ) {
+  function getOpenGraph( $title, $text, $image, $url, $type = 'article', $time = null, $locale = null ) {
     global $synWebsiteTitle, $synPublicPath;
 
     $server = 'http://'.$_SERVER['SERVER_NAME'];
     $title = attributize($title);
     $text = attributize($text, 150);
+
+    if (empty($locale))
+      $locale = getLocaleCodes();
 
     if (is_array($image)) {
       $imagearr = array();
@@ -247,10 +250,18 @@ if (!function_exists(getOpenGraph)) {
           'url'         => $url,
           'type'        => $type,
           'site_name'   => $synWebsiteTitle,
-          'locale'      => 'it_IT'
         )
       )
     );
+    
+    if ( isset($locale['active']) )
+      $meta['fb']['props']['locale'] = $locale['active'];
+
+    if ( isset($locale['alternate']) ) {
+      $meta['fb']['props']['locale:alternate'] = array();
+      foreach( $locale['alternate'] as $alt )
+        $meta['fb']['props']['locale:alternate'][] = $alt;
+    }
 
     if ($type == 'article') {
       $date = new DateTime($time);
@@ -258,10 +269,11 @@ if (!function_exists(getOpenGraph)) {
         'attr' => 'property',
         'prefix' => 'article',
         'props' => array(
-          'published_time' => $date->format(DateTime::ATOM)
+          'published_time' => $date->format( DateTime::ATOM )
         )
       );
     }
+
     return array_filter($meta);
   }
 }
@@ -419,6 +431,17 @@ if (!function_exists('print_debug')) {
       echo '<pre>', htmlspecialchars( var_dump(  $var, 1 ) ), '</pre>';
     else
       echo '<pre>', htmlspecialchars( print_r(  $var, 1 ) ), '</pre>';
+  }
+}
+
+
+if (!function_exists('alternate_column_languages')) {
+  function alternate_column_languages( $languages, $table = 't', $alias = 'title' ) {
+    $ret = array();
+    foreach( $languages as $lang ) {
+      $ret[] = "{$table}.{$lang} AS {$alias}_{$lang}";
+    }
+    return implode( ',', $ret );
   }
 }
 

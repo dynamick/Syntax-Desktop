@@ -1,14 +1,12 @@
 <!DOCTYPE html>
 <html lang="{$smarty.session.synSiteLangInitial}">
-{include file="partial/_head.tpl"}
+{gallery}{include file="partial/_head.tpl"}
 <body>
   {include file="partial/_header.tpl"}
 
-
   <!-- Page Content -->
   <div class="container">
-    {gallery}
-    {if $smarty.get.id neq ''}
+    {if $item neq ''}
       {include file="partial/gallery_detail.tpl"}
     {else}
       {include file="partial/gallery_list.tpl"}

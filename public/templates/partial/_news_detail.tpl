@@ -41,7 +41,7 @@
 
           <ul class="pager">
           {foreach from=$item.navlinks item=nav}
-            <li class="{$nav.type}">
+            <li class="{if $nav.type eq 'prev'}previous{else}next{/if}">
               <a href="{$nav.url}">
                 {if $nav.type eq 'prev'}<i class="fa fa-arrow-left"></i>{/if}
                 {$nav.title}

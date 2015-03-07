@@ -1,5 +1,5 @@
 # MySQL dump of database 'syntax' on host 'localhost'
-# backup date and time: 03/06/15 10:27:26
+# backup date and time: 03/07/15 16:50:25
 # built by phpMyBackupPro v.2.1
 # http://www.phpMyBackupPro.net
 
@@ -287,7 +287,7 @@ insert into `aa_services` values ('129', '30', '', 'images/service_icon/table.pn
 insert into `aa_services` values ('136', '22', '', 'images/service_icon/bricks.png', '23', '2', 'aa_lang', '120', '1', '560', '');
 insert into `aa_services` values ('137', '24', '', 'images/service_icon/table.png', '25', '2', 'aa_translation', '110', '1', '454', '');
 insert into `aa_services` values ('142', '241', '', 'images/service_icon/report.png', '242', '0', 'album', '130', '1', '-469', '');
-insert into `aa_services` values ('143', '252', '', 'images/service_icon/picture.png', '253', '0', 'photos', '140', '1', '0', '');
+insert into `aa_services` values ('143', '252', '', 'images/service_icon/picture.png', '253', '0', 'photos', '140', '1', '471', '');
 insert into `aa_services` values ('144', '281', '', 'images/service_icon/images.png', '282', '0', 'media', '150', '1', '-488', '');
 insert into `aa_services` values ('145', '301', '', 'images/service_icon/tag_blue.png', '302', '0', 'tags', '160', '1', '490', '');
 insert into `aa_services` values ('146', '309', '', 'images/service_icon/vcard.png', '310', '0', 'tagged', '170', '1', '492', '');
@@ -329,7 +329,7 @@ CREATE TABLE `aa_services_element` (
   `ismultilang` varchar(1) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `container` (`container`)
-) ENGINE=MyISAM AUTO_INCREMENT=590 DEFAULT CHARSET=utf8 COMMENT='Containers' AUTO_INCREMENT=590;
+) ENGINE=MyISAM AUTO_INCREMENT=594 DEFAULT CHARSET=utf8 COMMENT='Containers' AUTO_INCREMENT=594;
 
 
 ### data of table `aa_services_element` ###
@@ -390,7 +390,7 @@ insert into `aa_services_element` values ('419', '129', 'path', '2', '', '', '',
 insert into `aa_services_element` values ('420', '129', 'qry', '8', '', '', '', '66', '0', '67', '', '', '', '', '110', '', '');
 insert into `aa_services_element` values ('421', '129', 'value', '2', '', '', '', '68', '255', '69', '', '', '', '', '120', '', '');
 insert into `aa_services_element` values ('422', '129', 'joins', '2', '', '', '', '70', '255', '71', '', '', '', '', '130', '', '');
-insert into `aa_services_element` values ('423', '129', 'order', '3', '', '1', '', '72', '8', '73', '', '', '', '', '140', '', '');
+insert into `aa_services_element` values ('423', '129', 'order', '3', '', '1', '1', '72', '8', '73', '', '', '', '', '140', '', '');
 insert into `aa_services_element` values ('424', '129', 'filter', '2', '', '', '', '74', '255', '75', '', '', '', '', '150', '', '');
 insert into `aa_services_element` values ('425', '128', 'container', '3', '', '', '', '138', '11', '139', '', '', '', '', '50', '', '');
 insert into `aa_services_element` values ('436', '136', 'id', '1', '1', '', '', '78', '0', '79', '', '', '', '', '0', '', '');
@@ -418,12 +418,12 @@ insert into `aa_services_element` values ('464', '140', 'photo', '5', '', '1', '
 insert into `aa_services_element` values ('465', '140', 'date', '15', '', '1', '', '235', '0', '236', '', '', '', '', '40', '', '');
 insert into `aa_services_element` values ('466', '141', 'id', '1', '1', '', '', '239', '0', '240', '', '', '', '', '0', '', '');
 insert into `aa_services_element` values ('467', '142', 'id', '1', '1', '', '', '243', '0', '244', '', '', '', '', '0', '', '');
-insert into `aa_services_element` values ('468', '142', 'title', '2', '', '1', '', '245', '255', '246', '', '', '', '', '10', '', '');
+insert into `aa_services_element` values ('468', '142', 'title', '2', '', '1', '', '245', '255', '246', '', '', '', '', '10', '', '1');
 insert into `aa_services_element` values ('469', '142', 'date', '15', '', '1', '', '247', '0', '248', '', '', '', '', '20', '', '');
-insert into `aa_services_element` values ('470', '142', 'photo', '10', '', '', '', '249', '0', '250', '/public/mat', '', 'title|ordine|photos|photo|album', '', '30', '', '');
+insert into `aa_services_element` values ('470', '142', 'photo', '10', '', '', '', '249', '0', '250', '/public/mat/album', '', 'title|ordine|photos|photo|album', '', '30', '', '');
 insert into `aa_services_element` values ('471', '143', 'id', '1', '1', '', '', '254', '0', '255', '', '', '', '', '0', '', '');
 insert into `aa_services_element` values ('472', '143', 'title', '2', '', '1', '', '256', '255', '257', '', '', '', '', '10', '', '');
-insert into `aa_services_element` values ('474', '143', 'photo', '5', '', '1', '', '258', '0', '259', '/public/mat', '', '', '', '30', '', '');
+insert into `aa_services_element` values ('474', '143', 'photo', '5', '', '1', '', '258', '0', '259', '/public/mat/album/#{join|value|id_join=20}', '', '', '', '30', '', '');
 insert into `aa_services_element` values ('475', '143', 'album', '11', '', '1', '', '260', '11', '261', '', 'SELECT * FROM album', '', '', '40', '', '');
 insert into `aa_services_element` values ('476', '143', 'ordine', '3', '', '1', '1', '262', '0', '263', '', '', '', '', '50', '', '');
 insert into `aa_services_element` values ('477', '3', 'parent_id', '16', '', '1', '', '264', '11', '265', 'name', '', '', '', '20', '', '');
@@ -532,6 +532,10 @@ insert into `aa_services_element` values ('586', '158', 'id', '1', '1', '', '', 
 insert into `aa_services_element` values ('587', '158', 'id_form', '3', '', '1', '', '733', '11', '734', '', '', '', '', '10', '', '');
 insert into `aa_services_element` values ('588', '158', 'hash', '8', '', '', '', '735', '0', '736', '', '', '', '', '20', '', '');
 insert into `aa_services_element` values ('589', '158', 'timestamp', '20', '', '1', '', '737', '0', '738', '', '', '', '', '30', '', '');
+insert into `aa_services_element` values ('590', '143', 'date', '30', '', '', '', '753', '0', '754', '', '', '', '', '50', '', '');
+insert into `aa_services_element` values ('591', '143', 'autore', '21', '', '', '', '755', '255', '756', '', '', '', '', '60', '', '');
+insert into `aa_services_element` values ('592', '143', 'format', '23', '', '', '', '757', '0', '758', '', 'portrait|landscape', '', '', '70', '', '');
+insert into `aa_services_element` values ('593', '142', 'visible', '24', '', '1', '', '760', '0', '761', '', 'SELECT id, lang FROM `aa_lang`', '', '', '25', '', '');
 
 
 ### structure of table `aa_template` ###
@@ -569,7 +573,7 @@ CREATE TABLE `aa_translation` (
   `it` text NOT NULL,
   `en` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=753 DEFAULT CHARSET=utf8 AUTO_INCREMENT=753;
+) ENGINE=MyISAM AUTO_INCREMENT=762 DEFAULT CHARSET=utf8 AUTO_INCREMENT=762;
 
 
 ### data of table `aa_translation` ###
@@ -713,7 +717,7 @@ insert into `aa_translation` values ('136', 'Description', 'Descrizione');
 insert into `aa_translation` values ('137', 'join description', 'Eventuali commenti');
 insert into `aa_translation` values ('138', 'Servizio', 'Service');
 insert into `aa_translation` values ('139', 'servizio di riferimento', 'reference service');
-insert into `aa_translation` values ('140', 'Id', 'Id');
+insert into `aa_translation` values ('140', '140', 'Id');
 insert into `aa_translation` values ('141', '', '');
 insert into `aa_translation` values ('142', 'Nome', 'Name');
 insert into `aa_translation` values ('143', '', '');
@@ -811,7 +815,7 @@ insert into `aa_translation` values ('234', '', '');
 insert into `aa_translation` values ('235', 'Date', 'Date');
 insert into `aa_translation` values ('236', '', '');
 insert into `aa_translation` values ('237', 'Open Source Contest 2004', 'Open Source Contest 2004');
-insert into `aa_translation` values ('238', '<p>\r\n  Syntax Desktop vince nella categoria Business il primo concorso italiano per i progetti Open source. Per informazioni visitare il sito www.opensourcecontest.it</p>\r\n', 'Syntax Desktop won the first italian contest for the open source projects in the business category. You can read more informations at www.opensourcecontest.it');
+insert into `aa_translation` values ('238', '<p>Syntax Desktop vince nella categoria Business il primo concorso italiano per i progetti Open source. Per informazioni visitare il sito www.opensourcecontest.it</p>\r\n', 'Syntax Desktop won the first italian contest for the open source projects in the business category. You can read more informations at www.opensourcecontest.it');
 insert into `aa_translation` values ('239', 'Id', 'Id');
 insert into `aa_translation` values ('240', '', '');
 insert into `aa_translation` values ('241', 'Album', 'Album');
@@ -1326,6 +1330,15 @@ insert into `aa_translation` values ('749', '', '');
 insert into `aa_translation` values ('750', '', '');
 insert into `aa_translation` values ('751', 'I cookie ci aiutano a fornire servizi di qualità. Navigando su questo sito accetti il loro utilizzo.', 'Cookies help us offer quality services. By navigating on this website you accept their use.');
 insert into `aa_translation` values ('752', 'Maggiori informazioni', 'Read more');
+insert into `aa_translation` values ('753', 'Date', 'Date');
+insert into `aa_translation` values ('754', '', '');
+insert into `aa_translation` values ('755', 'Autore', 'Autore');
+insert into `aa_translation` values ('756', '', '');
+insert into `aa_translation` values ('757', 'Format', 'Format');
+insert into `aa_translation` values ('758', '', '');
+insert into `aa_translation` values ('759', 'Album dimostrativo', 'Demo Album');
+insert into `aa_translation` values ('760', 'Visible', 'Visible');
+insert into `aa_translation` values ('761', '', '');
 
 
 ### structure of table `aa_users` ###
@@ -1345,7 +1358,7 @@ CREATE TABLE `aa_users` (
 
 ### data of table `aa_users` ###
 
-insert into `aa_users` values ('8685', 'root', '2e51c0895c310b11347dc020caffa0ab', '1', '1', '1');
+insert into `aa_users` values ('8685', 'root', '531e0254167bbe2fc0acbaee8d2b3e93', '1', '1', '1');
 
 
 ### structure of table `album` ###
@@ -1357,13 +1370,14 @@ CREATE TABLE `album` (
   `title` varchar(255) NOT NULL,
   `date` datetime NOT NULL,
   `photo` varchar(255) NOT NULL,
+  `visible` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 AUTO_INCREMENT=5;
 
 
 ### data of table `album` ###
 
-insert into `album` values ('4', 'Demo Album', '2010-03-24 16:25:00', '');
+insert into `album` values ('4', '759', '2010-03-24 16:25:00', 'title|ordine|photos|photo|album', '1|2');
 
 
 ### structure of table `categories` ###
@@ -1741,17 +1755,20 @@ CREATE TABLE `photos` (
   `photo` varchar(255) NOT NULL,
   `album` int(11) NOT NULL,
   `ordine` int(11) NOT NULL DEFAULT '0',
+  `date` datetime NOT NULL,
+  `autore` varchar(255) NOT NULL,
+  `format` enum('portrait','landscape') NOT NULL DEFAULT 'portrait',
   PRIMARY KEY (`id`),
   KEY `album` (`album`)
-) ENGINE=MyISAM AUTO_INCREMENT=29 DEFAULT CHARSET=utf8 AUTO_INCREMENT=29;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 AUTO_INCREMENT=5;
 
 
 ### data of table `photos` ###
 
-insert into `photos` values ('25', 'business-italy-ruby-on-rail', 'jpg', '4', '10');
-insert into `photos` values ('26', 'photofunia_4d281', 'jpg', '4', '20');
-insert into `photos` values ('27', '31', 'jpg', '4', '30');
-insert into `photos` values ('28', 'business-italy-2 (Custom)', 'jpg', '4', '40');
+insert into `photos` values ('1', '8ab6a787b8ba3df15cb4c458f2f6f8c1087e6166_2048', 'jpg', '4', '10', '2015-03-07 12:16:10', '8685', 'landscape');
+insert into `photos` values ('2', '9298626292fbf4371490aad63064dcbddb429f9f_2048', 'jpg', '4', '20', '2015-03-07 12:16:11', '8685', 'landscape');
+insert into `photos` values ('3', 'a3bed77987333ce78e33dba9aec6adc103375f9e_2048', 'jpg', '4', '30', '2015-03-07 12:16:11', '8685', 'landscape');
+insert into `photos` values ('4', 'fc64058e4f18255d34dbc6a6ece1f6cc961b6254_5', 'jpg', '4', '40', '2015-03-07 12:16:11', '8685', 'landscape');
 
 
 ### structure of table `social_network` ###

@@ -9,7 +9,7 @@
 * -------------------------------------------------------------
 */
 function smarty_function_lang($params, &$smarty){
-  global $db, $synPublicPath;
+  global $db, $synPublicPath, $languages;
 
   $session_lang = getLangId();
   $session_lang_initial = getLangInitial();

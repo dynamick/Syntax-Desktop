@@ -9,8 +9,9 @@ function smarty_function_news($params, &$smarty) {
             ? intval($_GET['id'])
             : 0;
   $lang     = getLangInitial();
+  $langId   = getLangId();  
 
-  if ($req==0) {
+  if ( $req == 0) {
     // -------------------------------- NEWS LIST ----------------------------- //
     $maxitems = 10;
     $pager    = null;
@@ -18,14 +19,15 @@ function smarty_function_news($params, &$smarty) {
 
     $qry = <<<EOQ
 
-    SELECT n.id, n.date, n.image,
-           t1.{$lang} AS title, t2.{$lang} AS text
+    SELECT  n.id, n.date, n.image,
+            t1.{$lang} AS title, t2.{$lang} AS text
 
-      FROM news n
- LEFT JOIN aa_translation t1 ON n.title = t1.id
- LEFT JOIN aa_translation t2 ON n.text  = t2.id
+      FROM  news n
+ LEFT JOIN  aa_translation t1 ON n.title = t1.id
+ LEFT JOIN  aa_translation t2 ON n.text  = t2.id
 
-  ORDER BY n.`date` DESC
+     WHERE  CONCAT('|',a.visible,'|') LIKE '%{$langId}%'
+  ORDER BY  n.`date` DESC
 
 EOQ;
 
@@ -43,7 +45,7 @@ EOQ;
         extract($arr);
         unset($src);
 
-        $url = $newsPath.sanitizePath($title)."~{$id}.html";
+        $url = $newsPath.createItemPath( $title, $id );
         $alt = htmlspecialchars(trim(strip_tags($titolo)));
         $fdate = htmlentities(sql2human($date, '%d %B %Y'));
         $abstract = troncaTesto( strip_tags($text), 150 );
@@ -56,7 +58,7 @@ EOQ;
         if ($image) {
           $src = "{$synPublicPath}/mat/news_image_id{$id}.{$image}";
         } else {
-          $src = $synPublicPath.'/mat/default.jpg';
+          $src = $synPublicPath.'/mat/default.png';
         }
 
         $list[] = array(
@@ -84,10 +86,8 @@ EOQ;
 
   } else {
     // ---------------------------- NEWS DETAIL ------------------------------ //
-
-
     $qry = <<<EOQ
-    SELECT n.id, n.image, n.date,
+    SELECT n.id, n.image, n.date, n.visible, n.title AS title_id,
            t1.{$lang} AS title, t2.{$lang} AS text
 
       FROM news n
@@ -101,22 +101,21 @@ EOQ;
     if ( $arr = $res->FetchRow() ) {
       extract( $arr );
 
-      $permalink    = $server.$newsPath.sanitizePath( $title ).'~'.$id.'.html';
-      $safeurl      = rawurlencode($permalink);
-      $safettl      = rawurlencode($title);
-      $social_share = social_share( $safeurl, $safettl );
-      $fdate        = sql2human($date, '%d %B %Y');
+      $permalink    = $server.$newsPath.createItemPath( $title, $id );
+      $safeurl      = rawurlencode( $permalink );
+      $safettl      = rawurlencode( $title );
+      $fdate        = sql2human( $date, '%d %B %Y' ); // TODO: formato localizzato
       $src          = null;
 
       if ($image) {
         $src = "{$synPublicPath}/mat/news_image_id{$id}.{$image}";
 
       } else {
-        $src = $synPublicPath.'/mat/default.jpg';
+        $src = $synPublicPath.'/mat/default.png';
       }
-
+      
+      $social_share = social_share( $safeurl, $safettl );
       $navlinks = getPrevNextLinks( $db, $date, $newsPath, $lang );
-      $ogmeta = getOpenGraph( $title, $text, $src, $permalink, 'article', $date );
 
       $output = array(
         'id' => $id,
@@ -130,11 +129,15 @@ EOQ;
         'social_share' => $social_share
       );
 
-      $smarty->assign('item', $output);
-      $smarty->assign('title', $title);
-      $smarty->assign('ogmeta', $ogmeta);
-      $smarty->assign('canonical', $permalink);
+      $visible_arr = explode( '|', $visible );
+      $locales = getLocaleCodes( $visible_arr );
+      $alt_links = getAlternateLinks( $newsPage, $title_id, $id, $visible_arr );
+      $ogmeta = getOpenGraph( $title, $text, $src, $permalink, 'article', $date, $locales );
 
+      $smarty->assign( 'item', $output );
+      $smarty->assign( 'ogmeta', $ogmeta );
+      $smarty->assign( 'canonical', $permalink );
+      $smarty->assign( 'alternate', $alt_links );
 
     } else {
       header('HTTP/1.0 404 Not Found');
@@ -173,12 +176,12 @@ EOSQL;
   $res = $db->Execute($sql);
   while($arr = $res->fetchRow()){
     extract($arr);
-    $url = $page.sanitizePath($title).'~'.$id.'.html';
+    $url = $page.createItemPath( $title, $id );
 
     $ret[] = array(
       'url' => $url,
       'type' => $type,
-      'title' => troncaTesto($title, 40)
+      'title' => troncaTesto( $title, 40 )
     );
   }
   return $ret;
