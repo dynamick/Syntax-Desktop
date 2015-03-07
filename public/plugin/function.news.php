@@ -26,7 +26,7 @@ function smarty_function_news($params, &$smarty) {
  LEFT JOIN  aa_translation t1 ON n.title = t1.id
  LEFT JOIN  aa_translation t2 ON n.text  = t2.id
 
-     WHERE  CONCAT('|',a.visible,'|') LIKE '%{$langId}%'
+     WHERE  CONCAT('|', n.visible, '|') LIKE '%{$langId}%'
   ORDER BY  n.`date` DESC
 
 EOQ;

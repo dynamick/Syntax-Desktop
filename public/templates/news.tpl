@@ -4,21 +4,19 @@
 <body>
   {include file="partial/_header.tpl"}
 
-  <!-- Page Content -->
-  <div class="container">
-
-    <!-- Intro Content -->
+  <div class="section">
+    <!-- Page Content -->
+    <div class="container">
     {if isset($item)}
       {include file="partial/_news_detail.tpl"}
     {else}
       {include file="partial/_news_list.tpl"}
     {/if}
-    <!-- /.row -->
-
-    {include file="partial/_footer.tpl"}
+    </div>
+    <!-- /.container -->
   </div>
-  <!-- /.container -->
-
+  {include file="partial/_cta.tpl"}
+  {include file="partial/_footer.tpl"}
   {include file="partial/_scripts.tpl"}
 </body>
 </html>

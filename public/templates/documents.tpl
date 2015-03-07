@@ -62,11 +62,11 @@
       </div>
     </div>
     <!-- /.row -->
-
-    {include file="partial/_footer.tpl"}
   </div>
   <!-- /.container -->
-
+  
+  {include file="partial/_cta.tpl"}
+  {include file="partial/_footer.tpl"}
   {include file="partial/_scripts.tpl"}
 </body>
 </html>
