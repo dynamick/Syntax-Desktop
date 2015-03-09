@@ -51,21 +51,21 @@ function createItemPath( $title, $id, $leaf = true ) {
 function getAlternateLinks( $page_id, $title_id, $item_id, $filter = array()) {
   global $db, $languages;
   $db->setFetchMode( ADODB_FETCH_ASSOC );
-  
+
   if (empty($filter))
-    $filter = array_keys( $languages );
-  $server = 'http://'.$_SERVER['SERVER_NAME'];  
+    $filter = array_keys( $languages['list'] );
+  $server = 'http://'.$_SERVER['SERVER_NAME'];
   $active_lang_id = getLangId();
   $titles = array();
   $urls = array();
-  
+
   $qry = "SELECT * FROM aa_translation WHERE id = '{$title_id}'";
   $res = $db->execute( $qry );
   if ($arr = $res->fetchRow())
     $titles = $arr;
 
   foreach( $languages['list'] as $lang_id => $lang ) {
-    if ( $active_lang_id != $lang_id 
+    if ( $active_lang_id != $lang_id
       && in_array( $lang_id, $filter )
       ){
       $urls[$lang] = $server

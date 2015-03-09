@@ -37,8 +37,14 @@
       {submenu startPage=22 includeParent=true expand=true}
       {call render_main_menu items=$submenu}
 
-      {lang}{if $langlist neq ''}
+
       <ul class="nav navbar-nav navbar-right">
+      {userMenu}{if $user_button neq ''}
+        <li class="dropdown">
+        {$user_button}
+        </li>
+      {/if}
+      {lang}{if $langlist neq ''}
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown">
             <i class="fa fa-globe"></i> {$active_lang.initial|upper} <i class="fa fa-angle-down"></i>
@@ -53,7 +59,8 @@
           {/foreach}
           </ul>
         </li>
-      </ul>{/if}
+      {/if}
+      </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container -->
 </nav>
