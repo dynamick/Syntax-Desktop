@@ -1,70 +1,69 @@
 <?php
-global $db,$synRootPasswordSalt,$synVersion;
-$err = $alertBox = null;
+global $db, $synRootPasswordSalt, $synVersion;
+$alertBox = null;
 
-if (isset($_POST["login"]) and isset($_POST["password"])) {
-  $login=addslashes(strip_tags($_POST["login"]));
-  $password=md5($_POST["password"].$synRootPasswordSalt);
-  $res=$db->Execute("select * from aa_users where login='$login' and passwd='$password'");
-  $q=$res->RecordCount();
-  if ($q==0) $err="<div style=' background: #FAFAFA;color: darkred; font-weight: bold; font-size: xx-small'>Login Error</div>";
-  if ($q>0) {
-    $arr=$res->FetchRow();
+if (isset($_POST['login']) and isset($_POST['password'])) {
+  $login = addslashes(strip_tags($_POST['login']));
+  $password = md5($_POST["password"].$synRootPasswordSalt);
+  $res = $db->Execute("SELECT * FROM aa_users WHERE login='{$login}' AND passwd = '{$password}'");
+  $q = $res->RecordCount();
+  if ($q == 0)
+    $alertBox = <<<EOALERT
+    <div class="alert alert-danger alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      Login Error
+    </div>
+EOALERT;
+  elseif ($q>0) {
+    $arr = $res->FetchRow();
 
-    if(!isset($_SESSION)) session_start();
-    
-    $tree=array();
-    $_SESSION["synUser"]=$arr["id"];
-    $_SESSION["synGroup"]=$arr["id_group"];
-    $_SESSION["synCustomLang"]=$_POST["synCustomLang"];
-    $_SESSION["synGroupTree"]=getGroupTree($arr["id_group"],$tree);
-    $_SESSION["synGroupChild"]=array_reverse(getGroupChild($arr["id_group"],$tree));
-    $_SESSION["synUsersInGroup"]=getUsersInGroup();
-    header("location: ./");
-    die;
+    if (!isset($_SESSION))
+      session_start();
+
+    $tree = array();
+    $_SESSION['synUser'] = $arr['id'];
+    $_SESSION['synGroup'] = $arr['id_group'];
+    $_SESSION['synCustomLang'] = $_POST['synCustomLang'];
+    $_SESSION['synGroupTree'] = getGroupTree($arr['id_group'],$tree);
+    $_SESSION['synGroupChild'] = array_reverse(getGroupChild($arr['id_group'],$tree));
+    $_SESSION['synUsersInGroup'] = getUsersInGroup();
+    header('location: ./');
+
+    die();
   }
 }
-/*
-  if (is_connected()) {
-    include($synAbsolutePath.$synAdminPath."/includes/php/IXR_Library.inc.php");
-    $client = new IXR_Client('http://www.syntaxdesktop.com/admin/public/server/notify.php');
-
-    // Run a query for PHP
-    if (!$client->query('syntax.notifyServer', getenv("HTTP_HOST"), $synVersion)) {
-      die('Something went wrong - '.$client->getErrorCode().' : '.$client->getErrorMessage());
-    }
-
-    // Display the result
-    $alert=$client->getResponse();
-    if ($alert!="") $alertBox="<div class=\"alert\">$alert</div>\n";
-  }
-*/
-?>
-<html>
+?><!DOCTYPE html>
+<html lang="en">
 <head>
-<link rel="stylesheet" type="text/css" href="<?=$synAdminPath?>/modules/login/login.css" />
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Syntax Desktop - Ver. <?php echo htmlentities($synVersion)?></title>
+  <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.min.css" />
+  <link rel="stylesheet" type="text/css" href="assets/css/syntax.css" />
 </head>
-<body style="overflow-y: hidden">
-<div id="login">
-  <h1>Website Backoffice</h1>
-  <fieldset>
-    <form action="" method="post" autocomplete="off">
-      <table cellspacing="5">
-        <tr><td><span class="label">Login </span></td><td><input type="text" name="login" value="" tabindex="1" id="start" /></td></tr>
-        <tr><td><span class="label">Password </span></td><td><input type="password" name="password" value="" tabindex="2"/></td></tr>
-        <tr><td><span class="label">Lang </span></td><td><select name="synCustomLang" tabindex="3"><option value="user">User Default</option><option value="2">English</option><option value="1">Italian</option></select></td></tr>
-        <tr><td></td><td style="text-align: left"><div><input type="submit" tabindex="4" value="Start"/></td></tr>
-        <tr><td colspan="2" style="text-align: center;"><?=$err;?></td></tr>
-      </table>
-    </form>
-  </fieldset>
-  <?=$alertBox?>
-</div>
-<div id="credits">
-  <a href="http://www.syntaxdesktop.com"><img src="<?=$synAdminPath?>/modules/login/images/syntax-desktop.gif" alt="syntax desktop" /></a>
-  <span>Syntax Desktop, the <strong>open source CMS</strong> made in Italy.</span>
-  <span>For more informations, visit <a href="http://www.syntaxdesktop.com">www.syntaxdesktop.com</a>.</span>
-</div>
-<script type="text/javascript">document.getElementById("start").focus();</script>
+<body class="login">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-6 col-md-4 col-md-offset-4">
+        <h1 class="text-center login-title">Website Backoffice</h1>
+        <div class="account-wall">
+          <img class="profile-img" src="assets/images/user.jpg" alt="">
+          <form class="form-signin" action="" method="post" autocomplete="off">
+            <?= $alertBox ?>
+            <input type="text" class="form-control" name="login" placeholder="Username" required autofocus tabindex="1">
+            <input type="password" class="form-control" name="password" placeholder="Password" required tabindex="2">
+            <input type="hidden" name="synCustomLang" value="user">
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="assets/js/jquery.js"></script>
+  <script src="assets/js/bootstrap.min.js"></script>
 </body>
 </html>

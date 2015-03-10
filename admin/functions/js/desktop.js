@@ -8,31 +8,34 @@ var ieBox = ie && (document.compatMode == null || document.compatMode != "CSS1Co
 var moz = !opera && /gecko/i.test(ua);
 var nn6 = !opera && /netscape.*6\./i.test(ua);
 
+var contentarea = null;
+var topBarHeight = 51;
+var bottomBarHeight = 30;
 
 /********************************
 *  INIZIALIZZAZIONE DEL DESKTOP *
 *********************************/
 function desktopInit() {
 
-  changeWallpaper(3);
-  
+  //changeWallpaper(3);
+
   // set default css file to use
   //Menu.prototype.cssFile = "styles/"+title+"/desktop.css";
 
   //show the clock
-  show_clock();
-  
+  //show_clock();
+
   //the default status Message
-  window.status="SyntaxDesktop - Content Management System";
-  
+  //window.status="SyntaxDesktop - Content Management System";
+
   //inizializzo il menu
-  if (TransMenu.isSupported()) {TransMenu.initialize();}
-  
+  //if (TransMenu.isSupported()) {TransMenu.initialize();}
+
   //Catch di Eventi:
   //ONRESIZE
   window.onresize=function (){
-      var w=winSize('W');
-      var h=winSize('H')
+      var w = winSize('W');
+      var h = winSize('H');
       if (contentarea!=null) setSize(contentarea,w,h-(topBarHeight+bottomBarHeight));
   }
 }
@@ -43,9 +46,9 @@ function desktopInit() {
 * SWITCH WALLPAPER DEL DESKTOP  *
 *********************************/
 function changeWallpaper(theme) {
-  if((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) >=4)){ 
+  if((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) >=4)){
     windowwidth = window.innerWidth;  windowheight = window.innerHeight;
-  } else if((navigator.appName == "Microsoft Internet Explorer") && (parseInt(navigator.appVersion) >=4)){ 
+  } else if((navigator.appName == "Microsoft Internet Explorer") && (parseInt(navigator.appVersion) >=4)){
     windowwidth = document.body.clientWidth;  windowheight = document.body.clientHeight;
   }else{ windowwidth = 800;  windowheight = 600; }
 
@@ -58,7 +61,7 @@ function changeWallpaper(theme) {
     case '5': img="images/wallpaper/deleterix.jpg";break;
     default: img="images/wallpaper/desktop_bg.gif";break;
   }
-  //document.body.style.backgroundImage="url("+img+")"; 
+  //document.body.style.backgroundImage="url("+img+")";
   document.body.style.backgroundImage="url(includes/php/wallpaper.php?img="+img+"&width="+windowwidth+"&height="+windowheight+")";
   document.body.style.backgroundPosition="top left";
   //document.body.style.backgroundRepeat="no-repeat";
@@ -74,7 +77,7 @@ function winSize(what){
  //if(what=='H')return document.body.clientHeight
  //if(what=='W')return document.body.clientWidth
 
- var docRect = getDocumentRect(); 
+ var docRect = getDocumentRect();
  if(what=='H')return docRect.height;
  if(what=='W')return docRect.width;
 }
@@ -120,13 +123,13 @@ function createWindow(titolo,file) {
   var w=winSize('W');
   var h=winSize('H')
   //if the first time, instance a new contentarea
-  if (contentarea==null) 
+  if (contentarea==null)
     contentarea=createElement(0,topBarHeight,w,h-(topBarHeight+bottomBarHeight));
   else {
     removeWindow();
     contentarea=createElement(0,topBarHeight,w,h-(topBarHeight+bottomBarHeight));
   }
-  
+
   contentarea.style.border=0;
   contentarea.src=file;
   setDocTitle(titolo);
@@ -136,7 +139,9 @@ function createWindow(titolo,file) {
 function setWindowButtons() {
   var doc=window.top.document;
   var newElm=doc.createElement("div");
-  newElm.innerHTML="<div id=\"close\" onclick=\"removeWindow(); this.parentNode.removeChild(this);\"><img src=\"modules/aa/images/synClose.gif\" onmouseover=\"this.src='modules/aa/images/synClose_over.gif'\" onmouseout=\"this.src='modules/aa/images/synClose.gif'\" /></div>";
+  //newElm.innerHTML="<div id=\"close\" onclick=\"removeWindow(); this.parentNode.removeChild(this);\"><img src=\"modules/aa/images/synClose.gif\" onmouseover=\"this.src='modules/aa/images/synClose_over.gif'\" onmouseout=\"this.src='modules/aa/images/synClose.gif'\" /></div>";
+  newElm.innerHTML= '<a class="btn btn-default btn-xs" href="#" onclick="removeWindow(); this.parentNode.removeChild(this);"><i class="fa fa-times"></i></a>';
+  //newElm.onClick = function(){ removeWindow(); this.parentNode.removeChild(this); };
   newElm.id="closeBtn";
   newElm.style.zindex="255";
   newElm.style.position="absolute";
@@ -157,7 +162,7 @@ function removeWindow() {
     var closebtn=window.top.document.getElementById("closeBtn");
 
     if (closebtn!=null) closebtn.parentNode.removeChild(closebtn);
-    if (ca.parentNode!=null) ca.parentNode.removeChild(ca); 
+    if (ca.parentNode!=null) ca.parentNode.removeChild(ca);
 }
 
 /*************************************************
@@ -172,7 +177,7 @@ function fadeIn(obj) {
 /*************************************************
 * Fade out                                       *
 *************************************************/
-function fadeOut(obj) { 
+function fadeOut(obj) {
   //to level, type, steps, speed
   obj.alphaTo(0,1,10,1);
 }

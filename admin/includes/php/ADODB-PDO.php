@@ -750,7 +750,7 @@ class synPager {
 
     for($i=$start; $i<=$end; $i++) {
       if ($this->rs->AbsolutePage() == $i) {
-        $numbers[] = "<strong>$i</strong>";
+        $numbers[] = "<span>$i</span>";
       } else {
         $url = sprintf($targetfile, $i);
         $numbers[] = "<a{$targetframe} href=\"{$url}{$parameters}\">{$i}</a>";

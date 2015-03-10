@@ -9,60 +9,124 @@
   }
 
   if (getSynUser()):
-  # user logged in:
+  // user logged in:
     //load language strings
     $jsLang = lang(getSynUser(), $str);
-?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="it" lang="it">
-  <head profile="http://www.w3.org/2005/10/profile">
 
-  <title>Syntax Desktop - Ver. <?php echo htmlentities($synVersion)?></title>
-  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<!-- INCLUDO LO STYLE SHEET PER IL DESKTOP -->
-  <link rel="stylesheet" type="text/css" href="styles/xp-blue/desktop.css" title="xp-blue" />
-  <link rel="alternate stylesheet" type="text/css" href="styles/orange/desktop.css" title="orange" />
+    $aa_service = filter_input(INPUT_GET, 'aa_service', FILTER_SANITIZE_NUMBER_INT);
+    $aa_group_services = filter_input(INPUT_GET, 'aa_group_services', FILTER_SANITIZE_NUMBER_INT);
+
+    include ('includes/php/menu.php');
+
+?><!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Syntax Desktop - Ver. <?php echo htmlentities($synVersion)?></title>
+    <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="assets/css/syntax.css" />
 
 <!-- INCLUDO IL FILE DI CONFIGURAZIONE -->
-  <script type="text/javascript" src="config/config.js"></script>
+  <!--script type="text/javascript" src="config/config.js"></script-->
 
 <!-- INCLUDO LE STRINGHE PER LE LINGUE -->
   <script type="text/javascript"><?php echo $jsLang ?></script>
 
 <!-- INCLUDO LO SCRIPT PER L'OROLOGIO IN ALTO A DX -->
-  <script type="text/javascript" src="includes/js/liveclock/clock.js"></script>
+  <!--script type="text/javascript" src="includes/js/liveclock/clock.js"></script-->
 
 <!-- INCLUDO LE FUNZIONI PER GESTIRE IL DESKTOP -->
   <script type="text/javascript" src="functions/js/desktop.js"></script>
 
 <!-- INCLUDO LO GLI SCRIPT NECESSARI PER IL MENU Transmenus -->
-  <link rel="stylesheet" type="text/css" href="includes/js/transmenus/transmenu.css" />
+  <!--link rel="stylesheet" type="text/css" href="includes/js/transmenus/transmenu.css" />
   <script type="text/javascript" src="includes/js/transmenus/transmenu.js"></script>
-  <script type="text/javascript" src="functions/js/launchmenu.php"></script>
+  <script type="text/javascript" src="functions/js/launchmenu.php"></script-->
+
 </head>
 <body class="desktop" onload="desktopInit();">
-    <div id="topbar">
-      <div id="synMenu">
-        <script type="text/javascript">
-          createSynMenu();
-        </script>
+  <nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="fa fa-bars"></span>
+        </button>
+        <span class="navbar-brand syn-brand">Syntax</span>
       </div>
-      <div id="desktopbar_clock">
-        <a href="/index.php" onclick="window.open(this.href); return false;" title="Site preview"><img src="images/preview.gif" id="preview" alt="website preview" /></a>
-      </div>
-    </div>
+      <div id="navbar" class="collapse navbar-collapse">
+        <!--div id="synMenu">
+          <script type="text/javascript">
+            createSynMenu();
+          </script>
+        </div-->
 
-    <div id="desktopbar_bottom">
-      <span id="userinfo"><img src="images/user.gif" alt="utente" />: <strong><?php echo username(getSynUser());?></strong> - <img src="images/group.gif" alt="gruppo" />: <strong><?php echo groupname($_SESSION["synUser"]);?></strong></span>
-      <span id="userbutton"><a href="modules/login/logoff.php"><img src="images/exit.gif" alt="<?php echo $str["logoff"]?>" /></a></span>
+        <?php echo createMenu2( $aa_service ) ?>
+        <ul class="nav navbar-nav navbar-right">
+          <li>
+            <a href="/index.php" target="_blank">Visit Site</a>
+          </li>
+          <li class="dropdown ">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+              Account
+              <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" role="menu">
+              <li class="dropdown-header">SETTINGS</li>
+              <li class="divider"></li>
+              <li>
+                <a href="modules/login/logoff.php">
+                  <i class="fa fa-power-off"></i>
+                  <?php echo $str["logoff"]?>
+                </a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div><!--/.nav-collapse -->
     </div>
+  </nav>
+
+  <footer class="footer" id="desktopbar_bottom">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-10">
+          <span class="label label-primary">
+            <i class="fa fa-user"></i>
+            <small><?php echo username( getSynUser() );?></small>
+          </span>&nbsp;
+          <span class="label label-default">
+            <i class="fa fa-group"></i>
+            <small><?php echo groupname( $_SESSION['synUser'] ); ?></small>
+          </span>
+        </div>
+        <div class="col-md-2 text-right">
+          <a href="modules/login/logoff.php" class="btn btn-danger btn-xs" title="<?php echo $str["logoff"]?>">
+            <i class="fa fa-power-off"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+
+  <script src="assets/js/jquery.js"></script>
+  <script src="assets/js/bootstrap.min.js"></script>
+  <script src="assets/js/ie10-viewport-bug-workaround.js"></script>
+  <script>
+  $(document).ready(function(){
+  });
+  </script>
 </body>
 </html>
 <?php
 
   else:
-  # unauthenticated user or session timeout, request login:
+  // unauthenticated user or session timeout, request login:
     include ($synAbsolutePath.$synAdminPath."/modules/login/index.php");
 
   endif; //if getSynUser()

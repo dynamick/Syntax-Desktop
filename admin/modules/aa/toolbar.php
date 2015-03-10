@@ -1,5 +1,15 @@
 <?php
-session_start();
+
+// HTTP headers for no cache etc
+header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+header("Cache-Control: no-store, no-cache, must-revalidate");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+
+if (!isset($_SESSION))
+  session_start();
+
 include_once ("../../config/cfg.php");
 include_once ("classes/synContainer.php");
 include_once ("classes/synElement.php");
@@ -22,7 +32,7 @@ if (isset($_SESSION["aa_group_services"])) {
   $res=$db->Execute("SELECT name FROM `aa_group_services` WHERE id=".$_SESSION["aa_group_services"]);
   list($nameGroupService)=$res->FetchRow(ANYDB_RES_NUM);
   $name=$icon.htmlentities(translateDesktop($nameGroupService));
-} else 
+} else
   $name=$icon.htmlentities(translateDesktop($nameService));
 
 
@@ -41,7 +51,7 @@ if (isset($_SESSION["aa_fromservice"])) {
 */
 
 $link = "index.php?aa_group_services=".$_SESSION["aa_group_services"];
-if ( isset($_SESSION["aa_joinStack"]) 
+if ( isset($_SESSION["aa_joinStack"])
   && is_array($_SESSION["aa_joinStack"])
   ){
   //$join=new synJoin($_SESSION["aa_joinStack"][0]["idjoin"]);
@@ -51,7 +61,7 @@ if ( isset($_SESSION["aa_joinStack"])
     $value = $v["value"];
     $join = new synJoin($joinId);
     $path .= "<a href=\"$link\" target=\"_parent\">".$join->getServiceName($join->fromService)."</a> (<strong>".$join->getCaptionValue($value)."</strong>) &gt ";
-    $link = "index.php?aa_value=".$value."&aa_idjoin=".$joinId;        
+    $link = "index.php?aa_value=".$value."&aa_idjoin=".$joinId;
   }
 }
 
@@ -76,10 +86,10 @@ $description = translateDesktop($description);
 </head>
 <body>
   <div >
-  <div style="text-align: left; float: left;"> 
+  <div style="text-align: left; float: left;">
     <img src="images/sep.gif" />
   </div>
-  <div style="text-align: left; float: left; margin-left: 10px; margin-top: 3px;margin-bottom: 5px;"> 
+  <div style="text-align: left; float: left; margin-left: 10px; margin-top: 3px;margin-bottom: 5px;">
     <span id="servicename"><?= $path;?></span>
     <span style="padding-left: 5px; font-size: xx-small; color: gray" id="servicedescription"><?= $description; ?></span>
   </div>

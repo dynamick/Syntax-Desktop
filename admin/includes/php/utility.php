@@ -116,10 +116,10 @@ function decode($str) {
 
 function lang($id,&$str) {
   global $db;
-  
+
   if(!isset($_SESSION))
     session_start();
-  
+
   $file = $ret = null;
 
   $a = $db->MetaTables();
@@ -176,12 +176,12 @@ function lang($id,&$str) {
   // set the current language
   function setLang($id) {
     global $db;
-    
+
     if(!isset($_SESSION))
       session_start();
-      
+
     $lang = intval($id);
-    if ($lang=='') 
+    if ($lang=='')
       return false;
 
     //get the current lang
@@ -193,19 +193,19 @@ function lang($id,&$str) {
 
       $_SESSION['aa_CurrentLang'] = $lang;
       $_SESSION['aa_CurrentLangInitial'] = $currlang;
-      
+
       setlocale(LC_ALL, strtolower($currlang)."_".strtoupper($currlang));
       return true;
-      
+
     } else {
       return false;
     }
   }
 
-  
+
   function getLangProperties($lang){
     global $db;
-    
+
     $qry = "SELECT * FROM aa_lang WHERE id='{$lang}'";
     $res = $db->Execute($qry);
     if($arr = $res->fetchRow()){
@@ -214,7 +214,7 @@ function lang($id,&$str) {
     return false;
   }
 
-  
+
   //translate an element. If err==true display the error message
   function translate($id,$err=false) {
     global $db;
@@ -222,7 +222,7 @@ function lang($id,&$str) {
 
     if(!isset($_SESSION))
       session_start();
-      
+
     //if ($this->multilang==1 and $id!="") {
       $qry="SELECT * FROM aa_translation WHERE id='".addslashes($id)."'";
       $res=$db->Execute($qry);
@@ -233,8 +233,8 @@ function lang($id,&$str) {
         //$ret=$arr[$_SESSION["synSiteLangInitial"]];
         $ret = $arr[$_SESSION['aa_CurrentLangInitial']];
         if ($ret=="" and $err===true) {
-          foreach ($arr as $mylang=>$mytrans) 
-            if (!is_numeric($mylang) and $mylang!="id" and $mytrans!="") 
+          foreach ($arr as $mylang=>$mytrans)
+            if (!is_numeric($mylang) and $mylang!="id" and $mytrans!="")
               $alt .= "\n$mylang: ".substr(strip_tags($mytrans),0,10);
           $ret="<span style='color: gray' title=\"".htmlentities("Other Translations:".$alt)."\">[no translation]</span>";
         }
@@ -246,10 +246,10 @@ function lang($id,&$str) {
   //translate an element for the desktop. If err==true display the error message
   function translateDesktop($id, $err=false) {
     global $db;
-    
+
     if(!isset($_SESSION))
       session_start();
-      
+
     //if ($this->multilang==1 and $id!="") {
       $qry="SELECT * FROM aa_translation WHERE id='".addslashes($id)."'";
       $res=$db->Execute($qry);
@@ -259,12 +259,12 @@ function lang($id,&$str) {
         $arr = $res->FetchRow();
         $ret = $arr[getUserLang()];
         if ($ret=="" && $err===true) {
-          foreach ($arr AS $mylang => $mytrans) 
-            if ( !is_numeric($mylang) 
-              && $mylang != 'id' 
+          foreach ($arr AS $mylang => $mytrans)
+            if ( !is_numeric($mylang)
+              && $mylang != 'id'
               && $mytrans != ''
               ) $alt .= "\n{$mylang}: ".substr(strip_tags($mytrans),0,10);
-            
+
           $ret = "<span style='color: gray' title=\"".htmlentities("Other Translations:".$alt)."\">[no translation]</span>";
         }
       }
@@ -359,8 +359,8 @@ function lang($id,&$str) {
     $ret=$db->Insert_ID();
     return $ret;
   }
-  
-  
+
+
   //insert a row in the translation table and return the id of the new row
   function insertTranslation($value) {
     global $db;
@@ -382,31 +382,31 @@ function lang($id,&$str) {
     $res = $db->Execute($qry);
 
     return $db->Insert_ID();
-  }  
-  
+  }
+
 
   //update the translation table by changing a the $id row with $value
   function updateTranslation(&$id, $value) {
     global $db;
 
     $lang = $_SESSION['aa_CurrentLangInitial'];
-    
+
     $qry = "SELECT * FROM aa_translation WHERE id='".addslashes($id)."'";
     $res = $db->Execute($qry);
     if ($res->RecordCount()==0) {
       $id = insertTranslation($value);
     } else {
-    
+
       if(is_array($value)){
         //get the list of languages
         $languages = getLangList();
         $values = array();
         foreach($value as $k => $v){
           $values[] = "`{$languages[$k]}` = '".addslashes($v)."'";
-        }        
+        }
         $sqlvalues = implode(', ', $values);
         $qry = "UPDATE aa_translation SET {$sqlvalues} WHERE id='{$id}'";
-        
+
       } else {
         $qry = "UPDATE aa_translation SET {$lang} = '".addslashes($value)."' WHERE id='{$id}'";
       }
@@ -426,10 +426,10 @@ function lang($id,&$str) {
     while($arr = $res->FetchRow()) {
       $languages[] = $arr['initial'];
     }
-    
+
     return $languages;
   }
-  
+
 
 /******************************************************************************
 ***                                  PAGE FUNCTIONS
@@ -461,7 +461,7 @@ function sanitizePath($txt) {
   $enlow =  array("a", "a", "b", "b", "v", "v", "g", "g", "d", "d", "je", "je", "jo", "jo", "zh", "zh", "z", "z", "i", "i", "j", "j", "k", "k", "l", "l", "m", "m", "n", "n", "o", "o", "p", "p", "r", "r", "s", "s", "t", "t", "u", "u", "f", "f", "h", "h", "ts", "ts", "ch", "ch", "sh", "sh", "shch", "shch", "", "", "y", "y", "", "", "e", "e", "ju", "ju", "ja", "ja");
   $ru = array("А", "а", "Б", "б", "В", "в", "Г", "г", "Д", "д", "Е", "е", "Ё", "ё", "Ж", "ж", "З", "з", "И", "и", "Й", "й", "К", "к", "Л", "л", "М", "м", "Н", "н", "О", "о", "П", "п", "Р", "р", "С", "с", "Т", "т", "У", "у", "Ф", "ф", "Х", "х", "Ц", "ц", "Ч", "ч", "Ш", "ш", "Щ", "щ", "Ъ", "ъ", "Ы", "ы", "Ь", "ь", "Э", "э", "Ю", "ю", "Я", "я");
   $uni = array("А" => "А","а" => "а","Б" => "Б","б" => "б","В" => "В","в" => "в","Г" => "Г","г" => "г","Д" => "Д","д" => "д","Е" => "Е","е" => "е","Ж" => "Ж","ж" => "ж","З" => "З","з" => "з","И" => "И","и" => "и","Й" => "Й","й" => "й","К" => "К","к" => "к","Л" => "Л","л" => "л","М" => "М","м" => "м","Н" => "Н","н" => "н","О" => "О","о" => "о","П" => "П","п" => "п","Р" => "Р","р" => "р","С" => "С","с" => "с","Т" => "Т","т" => "т","У" => "У","у" => "у","Ф" => "Ф","ф" => "ф","Х" => "Х","х" => "х","Ц" => "Ц","ц" => "ц","Ч" => "Ч","ч" => "ч","Ш" => "Ш","ш" => "ш","Щ" => "Щ","щ" => "щ","Ъ" => "Ъ","ъ" => "ъ","Ы" => "Ы","ы" => "ы","Ь" => "Ь","ь" => "ь","Э" => "Э","э" => "э","Ю" => "Ю","ю" => "ю","Я" => "Я","я" => "я");
-  
+
   $txt =  stripslashes(str_replace($ru, $enlow, strtr($txt, $uni)));
   $txt =  arabic_transliteration($txt);
 
@@ -516,7 +516,7 @@ function createSlugs($parent_id = '', $parent_slug = ''){
   while ($arr = $res->FetchRow()) {
     extract($arr);
 
-    
+
     if(empty($parent_id)){
       $lang = getLangProperties($aa_CurrentLang);
       if($lang['default']==''){
@@ -531,21 +531,21 @@ function createSlugs($parent_id = '', $parent_slug = ''){
 
       //$qry = "UPDATE aa_page SET slug = '{$myslug}' WHERE id='{$id}'";
       //$db->execute($qry);
-    
+
     createSlugs($id, $myslug);
   }
-  
+
 }
 
 
 function createSlug($parent, $str, $idtrans){
   global $db, $aa_CurrentLang;
   // insert into aa_translation
-  
+
   $slug = $parent.sanitizePath($str).'/';
-  
+
   updateTranslation($idtrans, $slug);
-  
+
   return $slug;
 }
 */
@@ -557,8 +557,8 @@ function updateSlug($id){
   $qry = "SELECT `title`, `parent`, `slug` FROM `aa_page` WHERE `id` = '{$id}'";
   $res = $db->Execute($qry);
   if ($arr = $res->FetchRow()) {
-    extract($arr);  
-    
+    extract($arr);
+
     if(empty($parent)){
       $title = '';
     } else {
@@ -577,7 +577,7 @@ function updateSlug($id){
 function insertSlug($id){
   global $db;
   $languages = getLangList();
-  
+
   $qry = "SELECT p.title, p.parent, p.slug, t.* FROM `aa_page` p LEFT JOIN aa_translation t ON p.title = t.id WHERE p.id = '{$id}'";
   $res = $db->Execute($qry);
   if ($arr = $res->FetchRow()) {
@@ -590,7 +590,7 @@ function insertSlug($id){
       }
       $slug_array[] = createUniqueSlug($title);
     }
-    
+
     updateTranslation($arr['slug'], $slug_array);
     return true;
   }
@@ -603,13 +603,13 @@ function insertSlug($id){
 function createUniqueSlug($slug){
   global $db;
   // verifica univocità
-  
+
   if(!isset($_SESSION))
     session_start();
   $aa_CurrentLangInitial = $_SESSION['aa_CurrentLangInitial'];
-    
+
   $slug = sanitizePath($slug);
-  
+
   $existing = array();
   $qry = "SELECT t.{$aa_CurrentLangInitial} AS existing FROM `aa_page` p LEFT JOIN `aa_translation` t ON p.slug = t.id";
 
@@ -802,7 +802,7 @@ $arabic_transliteration_constants = array(
   'ha' => 0x0647,
   'waw' => 0x0648,
   'ya' => 0x064A,
-  
+
   // other letters
   'alef_with_wasla' => 0x0671,
   'alef_with_sup_hamza' => 0x0623,
@@ -819,15 +819,15 @@ $arabic_transliteration_constants = array(
   'damma' => 0x064F,
   'kasra' => 0x0650,
   'sukun' => 0x0652, // (not a haraka! rather, a non-haraka!)
-  
+
   // tanween
   'fathatan' => 0x064B,
   'dammatan' => 0x064C,
   'kasratan' => 0x064D,
-  
+
   // other tashkil
   'shadda' => 0x0651,
-  
+
   // other
   'dagger_alef' => 0x0670,
   'tatwil' => 0x0640,
@@ -837,7 +837,7 @@ foreach($arabic_transliteration_constants as $name => $value){
   $arabic_transliteration_constants[$name] = arabic_transliteration_convert_to_utf8($value);
 }
 
-$arabic_transliteration_constants['hamzas'] = 
+$arabic_transliteration_constants['hamzas'] =
   $arabic_transliteration_constants['alef_with_sup_hamza'] .
   $arabic_transliteration_constants['alef_with_sub_hamza'] .
   $arabic_transliteration_constants['alef_with_madda'] .
@@ -845,7 +845,7 @@ $arabic_transliteration_constants['hamzas'] =
   $arabic_transliteration_constants['ya_with_hamza'] .
   $arabic_transliteration_constants['hamza'];
 
-$arabic_transliteration_constants['sun_letters'] = 
+$arabic_transliteration_constants['sun_letters'] =
   $arabic_transliteration_constants['ta'] .
   $arabic_transliteration_constants['tha'] .
   $arabic_transliteration_constants['dal'] .
@@ -860,8 +860,8 @@ $arabic_transliteration_constants['sun_letters'] =
   $arabic_transliteration_constants['zza'] .
   $arabic_transliteration_constants['lam'] .
   $arabic_transliteration_constants['nun'];
-  
-$arabic_transliteration_constants['moon_letters'] = 
+
+$arabic_transliteration_constants['moon_letters'] =
   $arabic_transliteration_constants['hamzas'] .
   $arabic_transliteration_constants['ba'] .
   $arabic_transliteration_constants['jim'] .
@@ -877,7 +877,7 @@ $arabic_transliteration_constants['moon_letters'] =
   $arabic_transliteration_constants['waw'] .
   $arabic_transliteration_constants['ya'];
 
-$arabic_transliteration_constants['standard_letters'] = 
+$arabic_transliteration_constants['standard_letters'] =
   $arabic_transliteration_constants['hamzas'] .
   $arabic_transliteration_constants['ba'] .
   $arabic_transliteration_constants['ta'] .
@@ -907,7 +907,7 @@ $arabic_transliteration_constants['standard_letters'] =
   $arabic_transliteration_constants['waw'] .
   $arabic_transliteration_constants['ya'];
 
-$arabic_transliteration_constants['standard_letters_without_lam'] = 
+$arabic_transliteration_constants['standard_letters_without_lam'] =
   $arabic_transliteration_constants['hamzas'] .
   $arabic_transliteration_constants['ba'] .
   $arabic_transliteration_constants['ta'] .
@@ -936,8 +936,8 @@ $arabic_transliteration_constants['standard_letters_without_lam'] =
   $arabic_transliteration_constants['ha'] .
   $arabic_transliteration_constants['waw'] .
   $arabic_transliteration_constants['ya'];
-  
-$arabic_transliteration_constants['extraneous_letters'] = 
+
+$arabic_transliteration_constants['extraneous_letters'] =
   $arabic_transliteration_constants['alef_with_wasla'] .
   $arabic_transliteration_constants['alef_with_sup_hamza'] .
   $arabic_transliteration_constants['alef_with_sub_hamza'] .
@@ -947,36 +947,36 @@ $arabic_transliteration_constants['extraneous_letters'] =
   $arabic_transliteration_constants['waw_with_hamza'] .
   $arabic_transliteration_constants['ya_with_hamza'] .
   $arabic_transliteration_constants['hamza'];
-  
-$arabic_transliteration_constants['standard_harakat'] = 
+
+$arabic_transliteration_constants['standard_harakat'] =
   $arabic_transliteration_constants['fatha'] .
   $arabic_transliteration_constants['damma'] .
   $arabic_transliteration_constants['kasra'];
-  
-$arabic_transliteration_constants['tanween'] = 
+
+$arabic_transliteration_constants['tanween'] =
   $arabic_transliteration_constants['fathatan'] .
   $arabic_transliteration_constants['dammatan'] .
   $arabic_transliteration_constants['kasratan'];
-  
-$arabic_transliteration_constants['tashkil'] = 
+
+$arabic_transliteration_constants['tashkil'] =
   $arabic_transliteration_constants['standard_harakat'] .
   $arabic_transliteration_constants['sukun'] .
   $arabic_transliteration_constants['tanween'] .
   $arabic_transliteration_constants['shadda'];
 
-$arabic_transliteration_constants['non_transforming_prefixed_particles'] = 
+$arabic_transliteration_constants['non_transforming_prefixed_particles'] =
   $arabic_transliteration_constants['ba'] . $arabic_transliteration_constants['kasra'] . '|' .
   $arabic_transliteration_constants['waw'] . $arabic_transliteration_constants['fatha'] . $arabic_transliteration_constants['ba'] . $arabic_transliteration_constants['kasra'] . '|' .
   $arabic_transliteration_constants['fa'] . $arabic_transliteration_constants['fatha'] . $arabic_transliteration_constants['ba'] . $arabic_transliteration_constants['kasra'] . '|' .
-  
+
   $arabic_transliteration_constants['kaf'] . $arabic_transliteration_constants['fatha'] . '|' .
   $arabic_transliteration_constants['waw'] . $arabic_transliteration_constants['fatha'] . $arabic_transliteration_constants['kaf'] . $arabic_transliteration_constants['fatha'] . '|' .
   $arabic_transliteration_constants['fa'] . $arabic_transliteration_constants['fatha'] . $arabic_transliteration_constants['kaf'] . $arabic_transliteration_constants['fatha'] . '|' .
-  
+
   $arabic_transliteration_constants['ta'] . $arabic_transliteration_constants['fatha'] . '|' .
   $arabic_transliteration_constants['waw'] . $arabic_transliteration_constants['fatha'] . $arabic_transliteration_constants['ta'] . $arabic_transliteration_constants['fatha'] . '|' .
   $arabic_transliteration_constants['fa'] . $arabic_transliteration_constants['fatha'] . $arabic_transliteration_constants['ta'] . $arabic_transliteration_constants['fatha'] . '|' .
-  
+
   $arabic_transliteration_constants['waw'] . $arabic_transliteration_constants['fatha'] . '|' .
   $arabic_transliteration_constants['fa'] . $arabic_transliteration_constants['fatha'];
 
@@ -989,13 +989,13 @@ function arabic_transliteration($content, $options = array()) {
     'stop-on-sukun' => 1,
     'ta-marbuta-becomes-ha' => 0,
   );
-  
+
   foreach($default_options as $key => $default_value){
     if(!array_key_exists($key, $options)){
       $options[$key] = $default_value;
     }
   }
-  
+
   // tags
   $content = strip_tags($content);
 
@@ -1004,10 +1004,10 @@ function arabic_transliteration($content, $options = array()) {
 
   $content = arabic_transliteration_transform($content, $options);
   $content = arabic_transliteration_translate($content, $options);
-  
+
   // cleanup
   $content = preg_replace("/[\x{0590}-\x{06FF}]/u", "", $content);
-  
+
   return $content;
 }
 
@@ -1033,14 +1033,14 @@ function arabic_transliteration_transform($content, $options){
   /* ALEF WITH WASLA */
   $content = arabic_transliteration_replace("(^| )($non_transforming_prefixed_particles)?$alef_with_wasla([$standard_letters])$sukun([$standard_letters][$fatha$kasra$tanween])", "\\1\\2$alef_with_wasla$kasra\\3$sukun\\4", $content);
   $content = arabic_transliteration_replace("(^| )($non_transforming_prefixed_particles)?$alef_with_wasla([$standard_letters])$sukun([$standard_letters][$damma])", "\\1\\2$alef_with_wasla$damma\\3$sukun\\4", $content);
-  
+
   // unmarked alef with wasla indicated by sukun on next letter
   $content = arabic_transliteration_replace("(^| )($non_transforming_prefixed_particles)?$alef([$standard_letters_without_lam])$sukun([$standard_letters_without_lam][$fatha$kasra])", "\\1\\2$alef_with_wasla$kasra\\3$sukun\\4", $content);
   $content = arabic_transliteration_replace("(^| )($non_transforming_prefixed_particles)?$alef([$standard_letters_without_lam])$sukun([$standard_letters_without_lam][$damma])", "\\1\\2$alef_with_wasla$damma\\3$sukun\\4", $content);
   $content = arabic_transliteration_replace("(^| )($non_transforming_prefixed_particles)?$alef([$standard_letters])$sukun", "\\1\\2$alef_with_wasla\\3$sukun", $content);
-  
+
   // TODO: fi`l amr with lam
-  
+
   // unmarked alef with wasla indicated by no sign on next letter, shadda on 2nd next letter
   $content = arabic_transliteration_replace("$alef([$standard_letters][$standard_letters])$shadda", "$alef_with_wasla\\1$shadda", $content);
 
@@ -1063,39 +1063,39 @@ function arabic_transliteration_transform($content, $options){
   $content = arabic_transliteration_replace("(^| )($fa$fatha|$waw$fatha)?$lam$kasra?$lam(?:$shadda|$shadda$fatha)?$ha$kasra?($| )", "\\1\\2$lam$kasra$lam$shadda$fatha$dagger_alef$ha$kasra\\3", $content);
   // dhalika should have dagger alef
   $content = arabic_transliteration_replace("(^| )($non_transforming_prefixed_particles)?$dhal$fatha?$lam$kasra?$kaf$fatha?($| )", "\\1\\2$dhal$fatha$dagger_alef$lam$kasra$kaf$fatha\\3", $content);
-  
+
   // dagger alef
   $content = arabic_transliteration_replace($dagger_alef, $alef, $content);
 
 
 
   /* SUN/MOON LETTERS */
-  
+
   // sun letters
   $content = arabic_transliteration_replace("(^| )$alef_with_wasla$lam([$sun_letters])$shadda", "\\1$alef_with_wasla\\2-\\2", $content);
-  
+
   // moon letters
   $content = arabic_transliteration_replace("(^| )$alef_with_wasla$lam$sukun?([$moon_letters])", "\\1$alef_with_wasla$lam-\\2", $content);
 
-  // 
-  
+  //
+
   /*
   // prevent lam becoming "-" if succeeded by tanween
   $content = arabic_transliteration_replace("لاً", "لْاً", $content);
   // allah (common spelling: defective tashkil)
   $content = arabic_transliteration_replace("الله", "ٱلْلَاه", $content);
   $content = arabic_transliteration_replace("اللَّه", "ٱلْلَاه", $content);
-  
+
   // ta marbutah without preceding fathah
   $content = arabic_transliteration_replace("([^$fatha])$ta_marbuta", "\$1$fatha$ta_marbuta", $content);
-  
+
   // ana
   $content = arabic_transliteration_replace("$alef_with_sup_hamza$fatha?$nun$fatha?$alef$", "أَنَ$sukun", $content);
   $content = arabic_transliteration_replace("$alef_with_sup_hamza$fatha?$nun$fatha?$alef ", "أَنَ$sukun ", $content);
   // anti
   $content = arabic_transliteration_replace("أَنْتِ$", "أَنْتِ$sukun", $content);
   */
-  
+
 
 
   /* SPECIAL LETTERS */
@@ -1119,10 +1119,10 @@ function arabic_transliteration_transform($content, $options){
   // hamza inside words
   $content = arabic_transliteration_replace("([^-])[$alef_with_sup_hamza$alef_with_sub_hamza$hamza$waw_with_hamza$ya_with_hamza]", "\$1'", $content);
   $content = arabic_transliteration_replace("[$alef_with_sup_hamza$alef_with_sub_hamza$hamza$waw_with_hamza$ya_with_hamza]", "", $content);
-  
+
   // alif with wasla preceded by haraka
   $content = arabic_transliteration_replace("([$standard_harakat])( )?$alef_with_wasla([$standard_harakat])?", "\\1\\2", $content);
-  
+
   // alif with wasla preceded by long a
   $content = arabic_transliteration_replace("([$standard_letters])$fatha?$alef $alef_with_wasla([$standard_harakat])?", "\\1$fatha ", $content);
   // alif with wasla preceded by long u
@@ -1131,7 +1131,7 @@ function arabic_transliteration_transform($content, $options){
   $content = arabic_transliteration_replace("$kasra$ya $alef_with_wasla([$standard_harakat])?", "$kasra ", $content);
   // alif with wasla preceded by sukun
   $content = arabic_transliteration_replace("([$standard_letters])$sukun $alef_with_wasla([$standard_harakat])?", "\\1$kasra ", $content);
-  
+
   // alif with wasla
   //$content = arabic_transliteration_replace("$alef_with_wasla", "a", $content);
   // alif with madda
@@ -1143,33 +1143,33 @@ function arabic_transliteration_transform($content, $options){
   } else {
     $content = arabic_transliteration_replace("$ta_marbuta([$tashkil]*)$", "\\1", $content);
   }
-  
+
   // question mark
   $content = arabic_transliteration_replace("؟", "?", $content);
-  
+
 
 
   /* SPECIAL CASES */
 
   // i - mi'ah
   $content = arabic_transliteration_replace("$kasra$alef", "$kasra", $content);
-  
+
   /* SHADDA */
 
   // vowels
   $content = arabic_transliteration_replace("$damma$waw$shadda", "$damma$waw$sukun$waw", $content);
   $content = arabic_transliteration_replace("$kasra$ya$shadda", "$kasra$ya$sukun$ya", $content);
-  
+
   // regular
   $content = arabic_transliteration_replace("(.)$shadda", "\$1$sukun\$1", $content);
-  
+
   //shadda of two-letter transliterated letters
   $content = arabic_transliteration_replace("($tha|$kha|$dhal|$shin|$ghayn)$sukun\\1", "\\1$sukun-\\1", $content);
 
 
 
   /* STOP ON SUKUN */
-  
+
   if($options['stop-on-sukun']){
     // tanween
     $content = arabic_transliteration_replace("$fathatan$alef$", "$fatha$alef", $content);
@@ -1225,7 +1225,7 @@ function arabic_transliteration_translate($content, $options){
     $mim => 'm',
     $nun => 'n',
     $ha => 'h',
-  
+
     $hamza => '\'',
     $ta_marbuta => 't',
 
@@ -1248,7 +1248,7 @@ function arabic_transliteration_translate($content, $options){
     // vowels
     "$fatha$alef" => 'ā',
     $alef => 'ā',
-    
+
     "$alef_with_wasla$fatha" => 'a',
     "$alef_with_wasla$kasra" => 'i',
     "$alef_with_wasla$damma" => 'u',

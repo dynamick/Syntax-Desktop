@@ -14,7 +14,7 @@ if (isset($_GET["aa_idjoin"])) {
     "idjoin"=>$_GET["aa_idjoin"],
     "value"=>$_GET["aa_value"]
   );
-  
+
   $toRemove=false;
   if (isset($_SESSION["aa_joinStack"]) and is_array($_SESSION["aa_joinStack"])){
     foreach ($_SESSION["aa_joinStack"] as $k=>$s) {
@@ -22,20 +22,20 @@ if (isset($_GET["aa_idjoin"])) {
       if ($toRemove) unset($_SESSION["aa_joinStack"][$k]);
     }
   }
-    
+
   $_SESSION["aa_joinStack"][]=$stack;
 
   $join=new synJoin($_GET["aa_idjoin"]);
   $_SESSION["aa_service"]=$join->toService;
-  
+
   //rimuovo le variabili di sessione che regolano il meccanismo dell'ordinamento
-  unset($_SESSION["aa_order"]);  
-  unset($_SESSION["aa_order_direction"]);  
+  unset($_SESSION["aa_order"]);
+  unset($_SESSION["aa_order_direction"]);
   //rimuovo le variabili di sessione che regolano le ricerche
   unset($_SESSION["aa_qry"]);
   //rimuovo le variabili di sessione della paginazione
   unset($_SESSION["syntax_curr_page"]);
-  
+
 }
 
 
@@ -54,24 +54,24 @@ if (isset($_GET["aa_group_services"])) {
 
   } else {
     //rimuovo le variabili di sessione che regolano il meccanismo di join
-    unset($_SESSION["aa_join"]); unset($_SESSION["aa_value"]); 
+    unset($_SESSION["aa_join"]); unset($_SESSION["aa_value"]);
     unset($_SESSION["aa_jointable"]); unset($_SESSION["aa_fromservice"]);
     //rimuovo le variabili di sessione che regolano il meccanismo dell'ordinamento
-    unset($_SESSION["aa_order"]);  
-    unset($_SESSION["aa_order_direction"]);  
+    unset($_SESSION["aa_order"]);
+    unset($_SESSION["aa_order_direction"]);
     //rimuovo le variabili di sessione che regolano le ricerche
     unset($_SESSION["aa_qry"]);
     //rimuovo le variabili di sessione della paginazione
     unset($_SESSION["syntax_curr_page"]);
-    
+
   }
 */
-  $_SESSION["aa_service"] = extractService($_GET["aa_group_services"]);
+  $_SESSION["aa_service"] = extractService( $_GET["aa_group_services"] );
   $_SESSION["aa_group_services"] = $_GET["aa_group_services"];
   unset($_SESSION["aa_joinStack"]);
   //rimuovo le variabili di sessione che regolano il meccanismo dell'ordinamento
-  unset($_SESSION["aa_order"]);  
-  unset($_SESSION["aa_order_direction"]);  
+  unset($_SESSION["aa_order"]);
+  unset($_SESSION["aa_order_direction"]);
   //rimuovo le variabili di sessione che regolano le ricerche
   unset($_SESSION["aa_qry"]);
   //rimuovo le variabili di sessione della paginazione
@@ -82,7 +82,7 @@ if (isset($_GET["aa_group_services"])) {
 <html>
 <head>
     <script>
-      
+
       var fixedWidth=230;     //left frame width
       var treeFrameWidth=230; //tree frame width
     //  var treeFramePosition=0;//actually tree frame width
@@ -90,18 +90,18 @@ if (isset($_GET["aa_group_services"])) {
       var firstTime=true;
       var step=10;
       var time=(Math.PI);
-      
+
       function optionFrame() {
         document.getElementById("option").src="option.php?<?=getenv("QUERY_STRING")?>";
         sxLoaded=true;
       }
-    
+
       function contentFrame() {
         if (sxLoaded==true) {
           document.getElementById("content").src="content.php?<?=getenv("QUERY_STRING")?>";
         }
       }
-    
+
       function treeFrame() {
         if (firstTime==true && sxLoaded==true) {
           document.getElementById("tree").src="tree.php?<?=getenv("QUERY_STRING")?>";
@@ -111,7 +111,7 @@ if (isset($_GET["aa_group_services"])) {
       function refreshTreeFrame() {
         window.tree.location.reload();
       }
-      
+
       function openTreeFrame() {
       	if (time>=0) {
       		treeFramePosition=treeFrameWidth*Math.pow((Math.cos(time)+1)/2,3);
@@ -125,7 +125,7 @@ if (isset($_GET["aa_group_services"])) {
       		clearTimeout(timer);
       	}
       }
-    
+
       function closeTreeFrame() {
       	if (time<=Math.PI) {
       		treeFramePosition=treeFrameWidth*Math.pow((Math.cos(time)+1)/2,3);
@@ -139,7 +139,7 @@ if (isset($_GET["aa_group_services"])) {
       		clearTimeout(timer);
       	}
       }
-    
+
     </script>
     <title></title>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
@@ -148,8 +148,8 @@ if (isset($_GET["aa_group_services"])) {
 <frameset name='framesetTop' id='framesetTop' rows="28,*" frameborder="0" framespacing="0" style="width: 100%; height: 100%" >
   <frame name="frameToolbar" scrolling="no" src="toolbar.php?<?=getenv("QUERY_STRING")?>" onload="optionFrame();">
   <frameset id='framesetBottom' cols="0,*,230" rows="*" >
-    <frame name="tree" id="tree">    
-    <frame name="content" id="content" onload="treeFrame();">    
+    <frame name="tree" id="tree">
+    <frame name="content" id="content" onload="treeFrame();">
     <frame name="option"  id="option"  onload="contentFrame();">
   </frameset>
 </frameset>
