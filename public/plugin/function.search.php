@@ -63,7 +63,6 @@ ENDOFQUERY;
     $pgr->current_template = '<li class="active"><a>%s <span class="sr-only">(current)</span></a></li>';
     $pgr->link_template = '<li><a href="%s">%s</a></li>';
 
-    $res = $pgr->Execute($qry, $maxitems);
     $res = $pgr->Execute($qry, $maxitems, "q={$needle}");
     $tot = $pgr->rs->maxRecordCount();
 
