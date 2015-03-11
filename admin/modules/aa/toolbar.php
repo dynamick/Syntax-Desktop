@@ -72,29 +72,22 @@ list($name, $description, $table) = $res->FetchRow();
 $path .= "<a href=\"".$link."\" target=\"_parent\">".translateDesktop($name)."</a>";
 $description = translateDesktop($description);
 
-?>
-<html>
+?><!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>Toolbar</title>
-  <style type="text/css">
-    body{font:10pt sans-serif; margin: 0px;border: 2px solid #BABABA;color: black;
-      background: #E5E5E5 url(./images/toolbar-bg.gif) repeat-x top left;}
-    a {color: #1C8CD1; text-decoration: none;}
-    #close {position: absolute;top: 3px;right: 27px; display:none;}
-  </style>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Toolbar Frame</title>
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:700,300,600,400&subset=latin,cyrillic">  
+  <link rel="stylesheet" type="text/css" href="../../assets/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="../../assets/css/font-awesome.min.css" />
+  <link rel="stylesheet" type="text/css" href="../../assets/css/syntax.css" />
 </head>
 <body>
-  <div >
-  <div style="text-align: left; float: left;">
-    <img src="images/sep.gif" />
-  </div>
-  <div style="text-align: left; float: left; margin-left: 10px; margin-top: 3px;margin-bottom: 5px;">
-    <span id="servicename"><?= $path;?></span>
-    <span style="padding-left: 5px; font-size: xx-small; color: gray" id="servicedescription"><?= $description; ?></span>
-  </div>
-  <div style="clear: both"></div>
-  </div>
+  <ol class="breadcrumb">
+    <li><?= $path; ?></li>
+    <li class="active"><?= $description; ?></li>
+  </ol>
 </body>
 </html>
-

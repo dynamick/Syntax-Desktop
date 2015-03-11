@@ -245,7 +245,7 @@ function __autoload($class) {
       echo "<script>initToolbar (false,true,false,true,true,true);</script>\n";
 
       //echo the multilang option
-      echo $contenitore->getMultilangBox(2);
+      echo $contenitore->getMultilangBoxNew(2);
 
       break;
 
@@ -373,7 +373,7 @@ function __autoload($class) {
       echo $script;
 
       //echo the multilang option
-      echo $contenitore->getMultilangBox(2);
+      echo $contenitore->getMultilangBoxNew(2);
 
       break;
 
@@ -559,17 +559,19 @@ function __autoload($class) {
       # EDIT button
       if ($synLoggedUser->canModify==1) {
         $label  = $str['modify'];
-        $button = "<a href=\"%s&amp;synPrimaryKey=%s\" class=\"button\" title=\"{$label}\">";
-        $button.= "<img src=\"img/container_edit.png\" alt=\"{$label}\" /></a>";
+        $button = "<a href=\"%s&amp;synPrimaryKey=%s\" class=\"btn btn-xs btn-success\" title=\"{$label}\">";
+        //$button.= "<img src=\"img/container_edit.png\" alt=\"{$label}\" /></a>";
+        $button.= "<i class=\"fa fa-edit\"></i></a>";
         $contenitore->buttons[$button] = "?cmd=".MODIFY;
       }
 
       # DELETE button
       if ($synLoggedUser->canDelete==1) {
         $label  = $str['delete'];
-        $button = "<a href=\"%s&amp;synPrimaryKey=%s\" class=\"button\" title=\"{$label}\" ";
+        $button = "<a href=\"%s&amp;synPrimaryKey=%s\" class=\"btn btn-xs btn-danger\" title=\"{$label}\" ";
         $button.= "onclick=\"return (confirm('{$str["sure_delete"]}'));\">";
-        $button.= "<img src=\"img/container_delete.png\" alt=\"{$label}\" /></a>";
+        //$button.= "<img src=\"img/container_delete.png\" alt=\"{$label}\" /></a>";
+        $button.= "<i class=\"fa fa-trash\"></i></a>";
         $contenitore->buttons[$button] = "?cmd=".DELETE;
       }
 
@@ -590,7 +592,7 @@ function __autoload($class) {
              . "</script>\n";
         }
         echo "<form action=\"?cmd=".MULTIPLEDELETE."\" method=\"post\" style=\"margin: 0px;\">\n"
-           . "  <table id=\"mainTable\" cellpadding=\"0\" cellspacing=\"0\">\n"
+           . "  <table id=\"mainTable\" class=\"table table-striped table-condensed\">\n"
            . "    <thead>\n"
            . "      <tr>\n".$contenitore->getHeader()."      </tr>\n"
            . "    </thead>\n"
@@ -603,9 +605,14 @@ function __autoload($class) {
            . "  </table>\n</form>\n";
 
         if ($synLoggedUser->canDelete==1) {
-          echo "  <p class=\"selezione\">\n"
-             . "    <a href=\"javascript:void(0)\" onfocus=\"markAllRows('mainTable'); return false;\" accesskey=\"s\"><img alt=\"freccia\" src=\"img/container_arrow.png\" /> ".$str["selectdeselect"]." [s]</a>\n"
-             . "  </p>\n";
+          echo <<<EOSCRIPT
+          <script src="../../assets/js/jquery.selectable-list.js"></script>
+          <script>
+          $(function(){
+            $("table").selectableList();
+          });
+          </script>
+EOSCRIPT;
         }
 
         echo "<script type=\"text/javascript\">\n" // start page scripts
@@ -619,7 +626,7 @@ function __autoload($class) {
         echo $contenitore->getColumnSearch();
 
         //echo the multilang option
-        echo $contenitore->getMultilangBox(1);
+        echo $contenitore->getMultilangBoxNew(1);
       }
 
       break;
@@ -632,12 +639,10 @@ function __autoload($class) {
 
   function aaHeader($title, $title2='') {
     $header = <<<EOHEADER
-    <div id="formHeader">
-      <h4>{$title}</h4>
-      <div>{$title2}</div>
+    <div id="formHeader" class="page-header">
+      <h2>{$title} <small>{$title2}</small></h2>
     </div>
 EOHEADER;
-
     echo $header;
   }
 

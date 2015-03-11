@@ -145,7 +145,7 @@ if (isset($_GET["aa_group_services"])) {
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta http-equiv="imagetoolbar" content="no" />
 </head>
-<frameset name='framesetTop' id='framesetTop' rows="28,*" frameborder="0" framespacing="0" style="width: 100%; height: 100%" >
+<frameset name='framesetTop' id='framesetTop' rows="37,*" frameborder="0" framespacing="0" style="width: 100%; height: 100%" >
   <frame name="frameToolbar" scrolling="no" src="toolbar.php?<?=getenv("QUERY_STRING")?>" onload="optionFrame();">
   <frameset id='framesetBottom' cols="0,*,230" rows="*" >
     <frame name="tree" id="tree">

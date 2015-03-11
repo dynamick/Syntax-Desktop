@@ -272,7 +272,7 @@ class synContainer {
     
     if ($this->multidelete==true) {
       $ret .= $this->_col($even, $flg, $key, "", false);
-      $ret .= "<input type=\"checkbox\" name=\"checkrow[]\" value=\"".$key."\" onmouseup=\"selectRow(this)\" onkeyup=\"selectRow(this)\" />";
+      $ret .= "<input type=\"checkbox\" name=\"checkrow[]\" value=\"".$key."\"/>";// onmouseup=\"selectRow(this)\" onkeyup=\"selectRow(this)\" />";
       $ret .= $this->_col_c(false);
       $flg=0;
     }
@@ -327,7 +327,7 @@ class synContainer {
       $toElmName=$join->toElmName;
     } else $toElmName="";
     
-    if ($this->multidelete==true) $ret .= "        <th><span>&nbsp;</span></th>\n";
+    if ($this->multidelete==true) $ret .= "        <th><input type=\"checkbox\" id=\"checkall\" title=\"Select all\"/></th>\n";
 
     foreach($this->element as $k=>$v) {
       if ($this->element[$k]->list==true && $toElmName!=$this->element[$k]->name) {
@@ -560,6 +560,48 @@ class synContainer {
     return $ret;
   }
 
+  function getMultilangBoxNew($act=1) {
+    global $db, $str;
+ 		$aa_CurrentLang = $_SESSION["aa_CurrentLang"];
+    $ret = '';
+    if ($this->isMultilang()===true) {
+      $qry = "SELECT * FROM aa_lang";
+      $res = $db->Execute($qry);
+      $flags = '';
+      while ( $arr = $res->FetchRow() ) {
+        $id = $arr["id"];
+        if ($act==1) {
+          if ($aa_CurrentLang == $id) {
+            $flags .= "<li>".$this->getLangFlag($id, ' class="currentFlag"')."</li>";
+          } else {
+            $flags .= "<li><a href=\"content.php?synSetLang=$id\" target=\"content\">".$this->getLangFlag($id,"")."</a></li>";
+          }
+          $txt = $str['switchto'];
+          
+        } elseif ($act==2) {
+          if ($aa_CurrentLang == $id) {
+            $flags .= "<li>".$this->getLangFlag($id," class=\"currentFlag\"")."</li> ";
+          }else{
+            $flags .= "<li><a href=\"javascript:void(0)\" onclick=\"window.parent.content.document.forms[0].changeto.value='$id'; window.parent.content.document.forms[0].submit();\">".$this->getLangFlag($id,"")."</a></li>";
+          }
+          $txt = 'Save and change to:';
+        }
+      }
+
+      $html = "<div class=\"panel-heading\"><h3 class=\"panel-title\">{$txt}</h3></div><div class=\"panel-body\"><ul class=\"list-inline\">{$flags}</ul></div>";
+      $safehtml = addslashes($html);
+
+      $ret = <<<EORETURN
+      <script type="text/javascript">
+        var txt="{$safehtml}";
+        window.parent.content.addBox('multilang', txt);
+      </script>
+EORETURN;
+    }
+    return $ret;
+  }  
+  
+  
   //return the image of the flag id. If id is null return the session language flag
   function getLangFlag($id="", $attr="") {
     global $db,$synPublicPath;

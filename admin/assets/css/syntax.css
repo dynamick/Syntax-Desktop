@@ -16,6 +16,7 @@ html {
 body {
   /* Margin bottom by footer height */
   margin-bottom: 60px;
+  font-family: 'Open Sans', sans-serif;
 }
 .footer {
   position: absolute;
@@ -36,11 +37,12 @@ body {
   top: 58px;
   z-index:1000;
 }
-
-.navbar-brand.syn-brand,
+.navbar-brand.syn-brand, 
 .navbar-brand.syn-brand:hover {
   color: rgba(0, 0, 0, 0.1);
-  text-shadow: 1px 1px rgba(255, 255, 255, 0.4);
+  font-family: "square721";
+  font-size: 20px;
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.2);
 }
 .dropdown-submenu {
   position: relative;
@@ -96,7 +98,10 @@ body {
 .dropdown-menu.multi-level.l2 a {
   padding: 6px 30px 6px 12px;
 }
-
+.table-striped tr.selected td {
+    background:#FFFFEE;
+}
+#optionPane .pagination {margin:5px 0;}
 /* LOGIN FORM */
 body.desktop,
 body.login {
@@ -110,6 +115,9 @@ body.desktop1 {
   background-repeat:no-repeat;
   background-position: center;
   background-size: cover;
+}
+body.right-bar {
+  background-color:#f5f5f5;
 }
 .form-signin {
   max-width: 330px;

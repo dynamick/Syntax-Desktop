@@ -26,12 +26,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>Syntax Desktop - Ver. <?php echo htmlentities($synVersion)?></title>
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:700,300,600,400&subset=latin,cyrillic">
     <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.min.css" />
     <link rel="stylesheet" type="text/css" href="assets/css/syntax.css" />
 
-<!-- INCLUDO IL FILE DI CONFIGURAZIONE -->
-  <!--script type="text/javascript" src="config/config.js"></script-->
 
 <!-- INCLUDO LE STRINGHE PER LE LINGUE -->
   <script type="text/javascript"><?php echo $jsLang ?></script>
@@ -41,12 +40,6 @@
 
 <!-- INCLUDO LE FUNZIONI PER GESTIRE IL DESKTOP -->
   <script type="text/javascript" src="functions/js/desktop.js"></script>
-
-<!-- INCLUDO LO GLI SCRIPT NECESSARI PER IL MENU Transmenus -->
-  <!--link rel="stylesheet" type="text/css" href="includes/js/transmenus/transmenu.css" />
-  <script type="text/javascript" src="includes/js/transmenus/transmenu.js"></script>
-  <script type="text/javascript" src="functions/js/launchmenu.php"></script-->
-
 </head>
 <body class="desktop" onload="desktopInit();">
   <nav class="navbar navbar-default navbar-fixed-top">
@@ -56,15 +49,9 @@
           <span class="sr-only">Toggle navigation</span>
           <span class="fa fa-bars"></span>
         </button>
-        <span class="navbar-brand syn-brand">Syntax</span>
+        <span class="navbar-brand syn-brand">sd</span>
       </div>
       <div id="navbar" class="collapse navbar-collapse">
-        <!--div id="synMenu">
-          <script type="text/javascript">
-            createSynMenu();
-          </script>
-        </div-->
-
         <?php echo createMenu2( $aa_service ) ?>
         <ul class="nav navbar-nav navbar-right">
           <li>
@@ -87,7 +74,7 @@
             </ul>
           </li>
         </ul>
-      </div><!--/.nav-collapse -->
+      </div>
     </div>
   </nav>
 

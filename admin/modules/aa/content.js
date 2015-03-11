@@ -13,37 +13,25 @@
       if (txtBtn=="removeBtn") f.actionArray[2]=act;
       //if (txtBtn=="switchBtn") f.actionArray[3]=act;
       if (txtBtn=="refreshBtn") f.actionArray[3]=act;
-      if (txtBtn=="homeBtn") f.actionArray[4]=act;
-      if (txtBtn=="backBtn") f.actionArray[5]=act;
+      //if (txtBtn=="homeBtn") f.actionArray[4]=act;
+      if (txtBtn=="backBtn") f.actionArray[4]=act;
     }
 
     function getButton(n) {
       return f.document.getElementById("button_"+n);
     }
     //init toolbar
-    //function initToolbar (newBtn,saveBtn,removeBtn,switchBtn,refreshBtn,homeBtn,backBtn) {
     function initToolbar (newBtn,saveBtn,removeBtn,refreshBtn,homeBtn,backBtn) {
       f.innerHTML="";
       //window.parent.option.document.getElementById("button_0").style.display="none";
-      /*
-      if (!newBtn) getButton(0).className="disabled"; else getButton(0).className="flat";
-      if (!saveBtn) getButton(1).className="disabled"; else getButton(1).className="flat";
-      if (!removeBtn) getButton(2).className="disabled"; else getButton(2).className="flat";
-      if (!switchBtn) getButton(3).className="disabled"; else getButton(3).className="flat";
-      if (!refreshBtn) getButton(4).className="disabled"; else getButton(4).className="flat";
-      if (!homeBtn) getButton(5).className="disabled"; else getButton(5).className="flat";
-      if (!backBtn) getButton(6).className="disabled"; else getButton(6).className="flat";
-      */
       
-      //alert(saveBtn);//.style.visibility="hidden";
-      
-      if (!newBtn) getButton(0).style.visibility="hidden"; else getButton(0).style.visibility="visible";
-      if (!saveBtn) getButton(1).style.visibility="hidden"; else getButton(1).style.visibility="visible";
-      if (!removeBtn) getButton(2).style.visibility="hidden"; else getButton(2).style.visibility="visible";
-      //if (!switchBtn) getButton(3).style.visibility="hidden"; else getButton(3).style.visibility="visible";
-      if (!refreshBtn) getButton(3).style.visibility="hidden"; else getButton(3).style.visibility="visible";
-      if (!homeBtn) getButton(4).style.visibility="hidden"; else getButton(4).style.visibility="visible";
-      if (!backBtn) getButton(5).style.visibility="hidden"; else getButton(5).style.visibility="visible";
+      if (!newBtn) getButton(0).disabled="disabled"; else getButton(0).disabled=false;
+      if (!saveBtn) getButton(1).disabled="disabled"; else getButton(1).disabled=false;
+      if (!removeBtn) getButton(2).disabled="disabled"; else getButton(2).disabled=false;
+      //if (!switchBtn) getButton(3).disabled="disabled"; else getButton(3).disabled=false;
+      if (!refreshBtn) getButton(3).disabled="disabled"; else getButton(3).disabled=false;
+      //if (!homeBtn) getButton(5).disabled="disabled"; else getButton(5).disabled=false;
+      if (!backBtn) getButton(4).disabled="disabled"; else getButton(4).disabled=false;
     }
     
     //change the class name of the cell
@@ -97,8 +85,12 @@
       enable('last',  end,   end.indexOf('?syntax_next_page'));
       
       var list='';
-      for(i=0; i<pages.length; i++){ //genera la lista delle pagine
-        list += "  <li>"+pages[i]+"</li>\n";
+      for( i = 0; i < pages.length; i++){ //genera la lista delle pagine
+        var lclass = '';
+        if (parseInt( status ) == pages[i].match(/\d/ig)) {
+          lclass = ' class="active"';
+        }
+        list += "  <li"+lclass+">"+pages[i]+"</li>\n";
       }
       window.parent.option.document.getElementById("pages").innerHTML=list;
       window.parent.option.document.getElementById("status").innerHTML=status;
@@ -106,10 +98,13 @@
 
     function enable(button, link, status) {//abilita i bottoni della paginazione
       var el = window.parent.option.document.getElementById(button);
-      el.className = (status>0 ? 'enabled' : 'disabled');
+      el.parentNode.className = (status>0 ? 'enabled' : 'disabled');
       el.target = (status>0 ? 'content' : '');
       //el.href = (status>0 ? link : el.href.remove);
-      if (status>0) el.href=link; else el.removeAttribute('href');
+      if (status>0) 
+        el.href=link; 
+      else 
+        el.removeAttribute('href');
     }
 
 
@@ -161,11 +156,11 @@
       }
 
       el.innerHTML = txt;
-      if(txt==''){
+      /*if(txt==''){
         el.className = '';
       } else if(el.className!='box'){
         el.className = 'box';
-      }
+      }*/
     }
 
     //*****************************FUNCTION FOR IMAGE VIEW LAYER*****************************

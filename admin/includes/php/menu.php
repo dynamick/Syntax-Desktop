@@ -83,7 +83,7 @@ EOQRY;
 
       if ( !empty($arr['service']) ){
         //$link = "index.php?aa_service={$arr["service"]}&amp;aa_group_services={$arr["group"]}";
-        $link = "javascript:createWindow('{$thisref['name']}','modules/aa/index.php?aa_service={$arr["service"]}&aa_group_services={$arr["id"]}')";
+        $link = "javascript:createWindow('{$thisref['name']}','modules/aa/index.php?aa_service={$arr["service"]}&amp;aa_group_services={$arr["id"]}')";
       } elseif ($arr['link']){
         //$link = $arr['link'];
         $link = "javascript:createWindow('','{$arr['link']}')";

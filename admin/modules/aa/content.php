@@ -42,20 +42,25 @@
   ***************************************************************************/
   //if (isset($_GET["synSetLang"])) $_SESSION["aa_CurrentLang"]=$_GET["synSetLang"];
   //elseif ($_SESSION["aa_CurrentLang"]=="") $_SESSION["aa_CurrentLang"]=1;
-?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="it" lang="it">
-  <head profile="http://www.w3.org/2005/10/profile">
-    <title>Syntax Desktop content frame</title>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <meta http-equiv="imagetoolbar" content="no" />
-    <meta http-equiv="msthemecompatible" content="yes" />
-    <meta http-equiv="content-script-type" content="text/javascript" />
-    <link rel="stylesheet" type="text/css" href="content.css" />
+?><!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Content Frame</title>
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:700,300,600,400&subset=latin,cyrillic">  
+    <link rel="stylesheet" type="text/css" href="../../assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../assets/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../assets/css/syntax.css" />  
+  
+    <!--link rel="stylesheet" type="text/css" href="content.css" /-->
+    <link rel="stylesheet" type="text/css" href="../../assets/css/bootstrap.min.css" />
+
     <script type="text/javascript" src="<?=$synAdminPath?>/includes/js/DateTimePicker/datetimepicker.js"></script>
 
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="../../assets/js/jquery.js"></script>
     <script type="text/javascript" src="<?=$synAdminPath?>/includes/js/ckeditor/ckeditor.js"></script>
     <script type="text/javascript" src="<?=$synAdminPath?>/includes/js/ckeditor/adapters/jquery.js"></script>
     <script type="text/javascript" src="content.js?rand=<?=rand(0,1000)?>"></script>
@@ -85,7 +90,7 @@
       action('saveBtn',   'window.parent.content.document.forms[0].submit()');
       action('removeBtn', 'if (confirm(top.str["aa_confirmSelDel"])) window.parent.content.document.forms[0].submit();');
       action("homeBtn",   'window.parent.content.location.href="<?=$PHP_SELF?>"');
-
+/*
       var marked_row = new Array;
       var toggle = false;
       function markAllRows(container_id) {//funzione adattata da phpMyAdmin
@@ -117,6 +122,7 @@
         var tr = el.parentNode.parentNode;
         if ( el.checked != false ) tr.className = ''; else tr.className = 'marked';
       }
+*/      
     //]]>
     </script>
   </head>
