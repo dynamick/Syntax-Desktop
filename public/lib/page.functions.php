@@ -398,21 +398,34 @@ function createSubmenu( $id = 0, $expand = false, $includeParent = false, $first
   $menu     = array();
 
   if ($includeParent === true) {
-    $qry = "SELECT * FROM `aa_page` WHERE CONCAT('|', `visible`, '|') LIKE '%|{$lang}|%' AND `id` = $id";
+    $qry = <<<EOQRY
+
+  SELECT *
+    FROM `aa_page`
+   WHERE CONCAT('|', `visible`, '|') LIKE '%|{$lang}|%'
+     AND `id` = '{$id}'
+ORDER BY `order`
+
+EOQRY;
     $res = $db->Execute($qry);
     if ($arr = $res->FetchRow()) {
-      $title = translateSite($arr[$field]);
+      $title = translateSite( $arr[$field] );
 
-      if (trim($arr['url'])=='') {
-        $link = createPath($arr["id"]);
+      if (empty($arr['url'])) {
+        $link = createPath( $arr['id'] );
         $is_url = FALSE;
       } else {
-        $link = $arr["url"];
+        $link = $arr['url'];
         $is_url = TRUE;
       }
 
-      $active = $arr["id"] == $currPage ? TRUE : FALSE;
-      $menu[] = array("title" => $title, "link" => $link, "active" => $active, "is_url" => $is_url);
+      $active = ($arr['id'] == $currPage);
+      $menu[] = array(
+        'title' => $title,
+        'link' => $link,
+        'active' => $active,
+        'is_url' => $is_url
+      );
     }
   }
 
@@ -421,44 +434,63 @@ function createSubmenu( $id = 0, $expand = false, $includeParent = false, $first
 
 
 //create the entire tree
-function createSubmenuPrivate($id=0, $expand=false, $first_child=false, $field="title") {
+function createSubmenuPrivate( $id = 0, $expand = false, $first_child = false, $field = 'title' ) {
   global $db,$smarty,$synPublicPath;
 
-  $lang     = $_SESSION["synSiteLang"];
+  $lang     = getLangId();
   $currPage = $smarty->getTemplateVars('synPageId');
   $nodeArr  = $smarty->synPageNode;
   $menu     = array();
 
-  foreach($nodeArr as $node) $idArr[] = $node["id"];
+  foreach($nodeArr as $node)
+    $idArr[] = $node['id'];
 
-  $qry = "SELECT * FROM `aa_page` WHERE CONCAT('|', `visible`, '|') LIKE '%|{$lang}|%' AND `parent`=$id ORDER BY `order`";
+  $qry = <<<EOQRY
+
+  SELECT *
+    FROM `aa_page`
+   WHERE CONCAT('|', `visible`, '|') LIKE '%|{$lang}|%'
+     AND `parent` = '{$id}'
+ORDER BY `order`
+
+EOQRY;
   $res = $db->Execute($qry);
-  while($arr = $res->FetchRow()) {
-    $title = translateSite($arr[$field]);
-    $active = ($arr["id"] == $currPage) || (is_array($idArr) && in_array($arr["id"],$idArr)) ? TRUE : FALSE;
+  while( $arr = $res->FetchRow() ) {
+    $title  = translateSite( $arr[$field] );
+    $active = ($arr['id'] == $currPage) || (is_array($idArr) && in_array($arr['id'], $idArr))
+            ? TRUE
+            : FALSE;
 
-    $child = array();
-    if($expand || $first_child || $active) $child = createSubmenuPrivate($arr["id"], $expand, false, $field);
+    $children = array();
+    if ($expand || $first_child || $active)
+      $children = createSubmenuPrivate( $arr['id'], $expand, false, $field );
 
-
-    if($first_child && count($child) > 0) {
+    if ($first_child && count($child) > 0) {
       $item   = reset($child);
-      $link   = $item["link"];
+      $link   = $item['link'];
       $is_url = FALSE;
     } else {
-      if (trim($arr['url']) == '') {
-        $link   = createPath($arr["id"]);
+      if (empty($arr['url'])) {
+        $link   = createPath( $arr['id'] );
         $is_url = FALSE;
       } else {
-        $link   = $arr["url"];
+        $link   = $arr['url'];
         $is_url = TRUE;
       }
     }
 
-    if(!$active && !$expand) $child = array();
+    if (!$active && !$expand)
+      $children = array();
 
-    $ret[] = array("title" => $title, "link" => $link, "active" => $active, "is_url" => $is_url, "child" => $child);
+    $ret[] = array(
+      'title' => $title,
+      'link' => $link,
+      'active' => $active,
+      'is_url' => $is_url,
+      'child' => $children
+    );
   }
   return $ret;
 }
+
 ?>
