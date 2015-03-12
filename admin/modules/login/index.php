@@ -60,6 +60,7 @@ EOALERT;
             <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
           </form>
         </div>
+        <p class="backtowebsite"><a href="../index.php"><i class="fa fa-arrow-left"></i> Back to website</a></p>
       </div>
     </div>
   </div>

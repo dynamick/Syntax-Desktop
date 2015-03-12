@@ -4,7 +4,7 @@
       <div class="row">
         <div class="col-md-12">
           <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestias, expedita, saepe, vero rerum deleniti beatae veniam harum neque nemo praesentium cum alias asperiores commodi.</p>
-          <a class="btn btn-lg btn-primary" href="#">Call to Action</a>
+          <a class="btn btn-lg btn-primary" href="/admin/">go to Admin</a>
         </div>
       </div>
     </div>
