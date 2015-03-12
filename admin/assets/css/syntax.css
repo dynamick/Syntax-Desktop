@@ -37,7 +37,7 @@ body {
   top: 58px;
   z-index:1000;
 }
-.navbar-brand.syn-brand, 
+.navbar-brand.syn-brand,
 .navbar-brand.syn-brand:hover {
   color: rgba(0, 0, 0, 0.1);
   font-family: "square721";
@@ -195,5 +195,18 @@ body.right-bar {
   -webkit-border-radius: 50%;
   border-radius: 50%;
 }
-
 /* END LOGIN FORM */
+
+
+/* Tree view */
+#tree-box {}
+ul.nav-tree {margin-left:0; font-size:13px;}
+ul.nav-tree ul.nav-tree {margin-left:17px;}
+ul.nav-tree li a {padding:4px 20px 4px 17px;}
+ul.nav-tree li a.delete-btn {position:absolute; top:0; right:0; margin:0; padding:4px; z-index:1; text-indent:0;}
+ul.nav-tree li span.opener {position:absolute; top:4px; left:0px; color:#444; z-index:1; cursor:pointer;}
+ul.nav-tree li span.opener.opened span.tree-icon-closed,
+ul.nav-tree li span.opener.closed span.tree-icon-opened {display:none}
+ul.nav-tree li span.opener.closed span.tree-icon-closed,
+ul.nav-tree li span.opener.opened span.tree-icon-open {display:block}
+/* END Tree view */

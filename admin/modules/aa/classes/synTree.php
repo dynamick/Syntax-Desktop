@@ -254,16 +254,96 @@ class synTree extends synElement {
     return $ret;
   }
 
+  var $openbranch = null;
+
+  function createBsTree($qry, $id=0, $startingQry='', $recursion=0) {
+    global $db, $contenitore, $synLoggedUser;
+    $ret      = '';
+    $tmpCount = 0;
+    $newRec   = $recursion+2;
+
+    // calculate indentation based on recursion
+    $_   = $this->indent(0, $newRec);
+    $__  = $this->indent(1, $newRec);
+
+    if ($this->chkTargetMultilang())
+      $this->multilang = 1;
+    if (strpos(strtolower($qry), "where"))
+      $and = " AND ";
+    else
+      $and = " WHERE ";
+    if (strpos(strtolower($qry), "order"))
+      $q = str_replace("ORDER", $and.$this->name." = '{$id}' ORDER", $qry);
+    else
+      $q = $qry.$and.$this->name." = '{$id}'";
+    if (!empty($startingQry))
+      $q = $startingQry;
+
+    $res = $db->Execute($q);
+    $totalNodes = $res->RecordCount();
+
+    while ($arr = $res->FetchRow()) {
+      $child = '';
+      $tmpCount ++;
+
+      // build 'Delete' button
+      $delete = "<a class=\"delete-btn text-danger\" href=\"content.php?cmd=delrow&amp;synPrimaryKey=`id`=".$arr["id"]."\" ";
+      $delete.= "target=\"content\" onclick=\"if (confirm('Are you sure to delete?')) return true; else return false;\"><i class=\"fa fa-times-circle\"></i></a>";
+
+      // build link label
+      $label = strip_tags($this->translate($arr[$this->caption]));
+
+      // get possible children
+      $childret = $this->createBsTree($qry, $arr["id"], '', $newRec);
+      if ($childret!="") {
+        $wrapper = array('', '');
+        $child  .= $__."<ul class=\"nav nav--pills nav-stacked nav-tree\">\n";
+        $child  .= $childret;
+        $child  .= $__."</ul>\n";
+      } else {
+        $wrapper = array('', '');
+      }
+
+      //$active = ($tmpCount == 1 && $recursion == 2) ? ' class="active"' : '';
+
+      // apro il primo elemento
+      if ($this->openbranch == null)
+        $this->openbranch = $arr['id'];
+
+      $active = ($arr['id'] == $this->openbranch) ? ' class="active"' : '';
+
+      $ret .= $_."<li{$active}>\n";
+      if ( (!isset($contenitore->ownerField) || $contenitore->ownerField=="" || in_array($arr[$contenitore->ownerField], $_SESSION["synGroupChild"])) && ($synLoggedUser->canModify==1) ) {
+        $ret .= $__.$wrapper[0]."<a target=\"content\" href=\"content.php?cmd=modifyrow&amp;synPrimaryKey=`id`=".$arr["id"]."\">".$label."</a> ";
+        $ret .= ($synLoggedUser->canDelete==1 ? $delete : "");
+        $ret .= $wrapper[1]."\n";
+      } else {
+        $ret .= $__.$wrapper[0].$label.$wrapper[1];
+      }
+      $ret .= $child;
+      $ret .= $_."</li>\n";
+    }
+    return $ret;
+  }
+
   function getTree($qry,$startingQry) {
     global $db, $str;
+/*
+  <h2><span>Site map</span></h2>
 
+    <h4 class="root"><?php echo $_SERVER['SERVER_NAME']?> <a href="javascript:void(0)" id="trigger"></a></h4>
+    <ul id="tree" >
+
+*/
 ?>
 
-  <h2><span>Site map</span></h2>
   <div id="tree-box">
-    <h4 class="root"><?php echo $_SERVER['SERVER_NAME']?> <a href="javascript:void(0)" id="trigger"></a></h4>
-    <ul id="tree">
-<?php echo $this->createTree($qry, 0, $startingQry); ?>
+    <ul id="myTree"
+      class="nav nav--pills nav-stacked nav-tree"
+      data-toggle="nav-tree"
+      data-nav-tree-expanded="fa fa-folder-open-o"
+      data-nav-tree-collapsed="fa fa-folder-o">
+<?php echo $this->createBsTree($qry, 0, $startingQry); ?>
     </ul>
   </div>
 
