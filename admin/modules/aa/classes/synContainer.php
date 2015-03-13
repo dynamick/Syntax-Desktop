@@ -261,7 +261,7 @@ EOHTML;
     $qry="SELECT ".$this->ownerField." FROM `".$this->table."` WHERE id=".$tree->getValue();
     $res=$db->Execute($qry);
     $arr=$res->FetchRow();
-    if (in_array($arr[$this->ownerField],$_SESSION["synGroupChild"]))
+    if (in_array($arr[$this->ownerField], $_SESSION["synGroupChild"]))
       return true;
     else
       return $str["cant_delete"];
@@ -269,18 +269,19 @@ EOHTML;
 
   //return the Row (i.e.: <tr><td>michele</td><td>gobbi</td></tr> )
   function getRow() {
-    $ret="";
-    $flg=0;
-    $even=$this->_getEven();
-    $key=$this->getKey();
+    $ret = '';
+    $flg = 0;
+    $even = $this->_getEven();
+    $key = $this->getKey();
 
     //get the current join from the join stack
     if (isset($_SESSION["aa_joinStack"]) && is_array($_SESSION["aa_joinStack"])) {
-      $stackKeys=array_keys($_SESSION["aa_joinStack"]);
-      $stackLastKey=$stackKeys[count($stackKeys)-1];
-      $join=new synJoin($_SESSION["aa_joinStack"][$stackLastKey]["idjoin"]);
-      $toElmName=$join->toElmName;
-    } else $toElmName="";
+      $stackKeys = array_keys($_SESSION["aa_joinStack"]);
+      $stackLastKey = $stackKeys[count($stackKeys)-1];
+      $join = new synJoin($_SESSION["aa_joinStack"][$stackLastKey]["idjoin"]);
+      $toElmName = $join->toElmName;
+    } else
+      $toElmName = "";
 
 
     if ($this->multidelete==true) {
@@ -290,21 +291,28 @@ EOHTML;
       $flg=0;
     }
     //elements
-    foreach($this->element as $k=>$v) {
-      if ($this->element[$k]->list==true) {
+    foreach($this->element as $k => $v) {
+      if ($this->element[$k]->list == true) {
         $field = $this->element[$k]->name;
-        if ($toElmName==$field) continue;
-        if ($flg==0) $flg=1; else $flg=0;
-        $ret  .= $this->_col($even, $flg, $key, $field, $this->element[$k]->editable );
-        $ret  .= $this->element[$k]->getCell();
-        $ret  .= $this->_col_c($this->element[$k]->editable);
+        if ($toElmName == $field)
+          continue;
+        if ($flg==0)
+          $flg = 1;
+        else
+          $flg = 0;
+        $ret  .= $this->_col( $even, $flg, $key, $field, $this->element[$k]->editable );
+        $ret  .= $this->element[ $k ]->getCell();
+        $ret  .= $this->_col_c( $this->element[$k]->editable );
       }
     }
 
     //joins
-    foreach($this->joins as $k=>$v) {
-      $elm=$this->getElement($v->fromElmName);
-      if ($flg==0) $flg=1; else $flg=0;
+    foreach($this->joins as $k => $v) {
+      $elm = $this->getElement($v->fromElmName);
+      if ($flg == 0)
+        $flg = 1;
+      else
+        $flg = 0;
       $ret .= $this->_col($even, $flg, null, null, false);
       //$ret .= "<a href=\"index.php?aa_service=".$v->service."&aa_join=".$v->id2."&aa_value=".$elm->getValue()."&aa_idjoin=".$v->id."\"  target='_parent'><img src=\"".$v->icon."\" alt=\"".$v->name."\"/></a>";
 
@@ -317,7 +325,10 @@ EOHTML;
 
     //buttons
     foreach($this->buttons as $k=>$v) {
-      if ($flg==0) $flg=1; else $flg=0;
+      if ($flg==0)
+        $flg = 1;
+      else
+        $flg = 0;
       $ret .= $this->_col($even, $flg, null, null, false);
       if ($v!="") {
         $ret .= sprintf($k, $v, $this->getKey());

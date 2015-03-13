@@ -7,7 +7,7 @@
 class synIcon extends synElement {
 
   //constructor(name, value, label, size, help)
-  function synIcon( $n = '', $v = null , $l = null, $s = 30, $h = '') {
+  function synIcon( $n = '', $v = null , $l = null, $s = 30, $h = '' ) {
     if ($n == '')
       $n = 'text'.date('his');
     if ($l == '')
@@ -15,26 +15,22 @@ class synIcon extends synElement {
 
     $this->type  = 'text';
     $this->name  = $n;
-    if ($v == null) {
-      global $$n;
-      $this->value = (isset($_REQUEST[$n])) ? $_REQUEST[$n] : '';
-    } else {
-      $this->value = $v;
-    }
+    $this->value = $v;
     $this->label = $l;
     $this->size  = $s;
     $this->help  = $h;
-    $this->db    = " VARCHAR(30) DEFAULT NULL";
+      // 13/3/2015 provata questa impostazione. Quando una riga non ha valore
+      // sul getRow() prende il valore della prededente. Percheeeè?????!!!
+      //$this->db    = " VARCHAR(30) DEFAULT NULL";
+    $this->db    = " VARCHAR("{$this->size}") NOT NULL";
 
     $this->configuration();
   }
 
 
-
   //private function
   function _html() {
-    //$icon = $this->getCell();
-    //if (empty($addon))       $icon = '<i class="fa fa-fw"></i>';
+    // relies on https://github.com/mjolnic/fontawesome-iconpicker
     $input = <<<EOINPUT
     <div class="input-group col-md-3">
       <input type="text"
@@ -55,9 +51,9 @@ EOINPUT;
   function getCell() {
     $value = $this->getValue();
     if (!empty($value))
-      $ret = "<i class\"fa fa-fw {$this->getValue()}\"></i>";
+      $ret = "<i class=\"fa fa-fw {$value}\"></i>";
     else
-      $ret = null;
+      $ret = '';
     return $ret;
   }
 
@@ -68,14 +64,14 @@ EOINPUT;
 
     if (!isset($synElmSize[$i]) or empty($synElmSize[$i]))
       $synElmSize[$i] = $this->size;
-    //$this->configuration[4] ="Dimensione: ".$synHtml->text(" name=\"synElmSize[$i]\" value=\"$synElmSize[$i]\"");
+    $this->configuration[4] = $synHtml->hidden(" name=\"synElmSize[{$i}]\" value=\"{$this->size}\"");
 
     //enable or disable the 3 check at the last configuration step
     global $synChkKey, $synChkVisible, $synChkEditable,$synChkMultilang;
-    $_SESSION['synChkKey'][$i] = 0;
-    $_SESSION['synChkVisible'][$i] = 1;
-    $_SESSION['synChkEditable'][$i] = 0;
-    $_SESSION['synChkMultilang'][$i] = 0;
+    $_SESSION['synChkKey'][$i]        = 0;
+    $_SESSION['synChkVisible'][$i]    = 1;
+    $_SESSION['synChkEditable'][$i]   = 0;
+    $_SESSION['synChkMultilang'][$i]  = 0;
 
     if ($k==99)
       return $this->configuration;
