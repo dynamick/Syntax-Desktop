@@ -39,9 +39,18 @@ class synDate extends synElement {
         $this->value = date('Y-m-d');
     endif;
     // relies on https://github.com/Eonasdan/bootstrap-datetimepicker
+    // IMPORTANT: date-format sets the datepicker behaviour.
+    // uses moment's formats - see http://momentjs.com/docs/#/displaying/format/
+    $dateFormat = 'DD-MM-YYYY';
     $input = <<<EOINPUT
     <div class="date input-group col-md-3">
-      <input type="text" size="25" id="{$this->name}" name="{$this->name}" data-date-format="DD-MM-YYYY" value="{$this->dateHumanFormat( $this->value )}" class="form-control"/>
+      <input type="text"
+        name="{$this->name}"
+        value="{$this->dateHumanFormat( $this->value )}"
+        size="25"
+        id="{$this->name}"
+        class="form-control"
+        data-date-format="{$dateFormat}">
       <span class="input-group-addon">
         <i class="fa fa-calendar"></i>
       </span>

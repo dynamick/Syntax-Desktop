@@ -37,7 +37,7 @@ class synElement {
     'application/vnd.ms-excel',
     'application/vnd.ms-powerpoint',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',    
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     'application/png',
     'application/jpg',
     'application/x-png',
@@ -69,18 +69,18 @@ class synElement {
   function synElement() {
     $this->configuration();
   }
-  
+
   //get the htmlElement with a particular value
   function getHtml() {
     return $this->_html();
   }
 
-  //get the htmlElement with a particular value for the multilang 
+  //get the htmlElement with a particular value for the multilang
   function getHtmlMultilang() {
     $ret = "<input type=\"hidden\" name=\"".$this->name."_synmultilang\" value=\"".htmlentities($this->getValue())."\" />";
     return $ret;
   }
-  
+
 
   //get the label of the element
   function getLabel() {
@@ -97,29 +97,30 @@ class synElement {
   function getValue() {
     if (isset($_REQUEST[$this->name]))$ret=$_REQUEST[$this->name];
     else $ret=$this->value;
-    return $ret;                       
+    return $ret;
   }
 
 
   //return the sql values (i.e. 'gigi')
   function getSQLValue() {
-    $ret=$this->getValue();
+    $ret = $this->getValue();
     if (!get_magic_quotes_gpc()) {
-      $ret=str_replace("\\","\\\\",$ret);
-      $ret=str_replace("\\'","'",$ret);
-      $ret=str_replace("'","\'",$ret);
-    }
-    return "'".($ret)."'";
-  } 
+      //echo '<br>-magic quotes ok-<br>';
+      $ret = str_replace("\\", "\\\\", $ret);
+      $ret = str_replace("\\'", "'", $ret);
+      $ret = str_replace("'", "\'", $ret);
+    } // else {      addslashes($ret);    }
+    return "'".($ret)."'"; // must be on single quotes due to javascript navigation :(
+  }
 
   //return the sql field name (i.e. `name`). Overload this method to return a null value.
   function getSQLName() {
     return "`".$this->name."`";
   }
-  
+
   //return the sql statement (i.e. `name`='gigi')
   function getSQL() {
-    if ($this->getSQLname()!="") 
+    if ($this->getSQLname()!="")
       $ret=$this->getSQLname()."=".fixEncoding($this->getSQLValue());
     else $ret="";  //getSQLName returns a null value when the element isn't to be stored in the db. I.e.: a preview button
     return $ret;
@@ -127,25 +128,25 @@ class synElement {
 
   //return the URL statement (i.e. name=gigi)
   function getURL() {
-    if ($this->getSQLname()!="") 
+    if ($this->getSQLname()!="")
       $ret=$this->name."=".$this->getValue();
     else $ret="";  //getSQLName returns a null value when the element isn't to be stored in the db. I.e.: a preview button
     return $ret;
   }
-  
-  
- 
-  
+
+
+
+
   //get the label of the element
   function getCell() {
     return ($this->translate($this->getValue(),true));
   }
-  
-  
+
+
   //sets the value of the element
   function setValue($v) {
     $this->value = $v;
-  }  
+  }
 
   //function parse to parse some piece of text
   function synParse($txt) {
@@ -154,68 +155,68 @@ class synElement {
     if ($pos!==false) $txt=str_replace("�SiteURL�",$synWebsite,$txt);
     return $txt;
   }
-  
+
   //sets if the obj is to see in the list, and his column header name
   function isListable($v=false, $cn=null, $editable=false) {
     $this->list = $v;
     $this->editable = $editable;
     if ($cn==null) $this->colname = $this->getLabel();
     else $this->colname = $cn;
-  }  
+  }
 
   //sets the value of the element
   function checkValue($v) {
     if (!isset($v)) $v="";
-  }  
+  }
 
   //sets if it is a primary key
   function setKey($value) {
     $this->is_key=$value;
-  }  
+  }
 
   //check if it is a primary key
   function isKey() {
     return $this->is_key;
-  }  
+  }
 
   //sets if it is a join
   function setJoin($value) {
     $this->is_join=$value;
-  }  
+  }
 
   //check if it is a primary key
   function isJoin() {
     return $this->is_join;
-  }  
+  }
 
   //sets if it is a multilanguage element
   function setMultilang($value) {
     $this->multilang=$value;
-  }  
+  }
   //check if it is a multilanguage element
   function isMultilang() {
     if ($this->multilang=="1") return true;
     else return false;
-  }  
-  
+  }
+
   //function setContainer($container) {
-  function setContainer() {  
+  function setContainer() {
     $this->container = synContainer::getInstance();
   }
 
-   
+
   function insert() {
     return true;
   }
-  
+
   function delete() {
     return true;
   }
-  
+
   function update() {
     return true;
   }
-  
+
 
   //normally an element hasn't a document to upload (only synInputfile)
   function uploadDocument() {
@@ -228,40 +229,40 @@ class synElement {
   //translate an element. If err==true display the error message
   function translate($id,$err=false) {
     global $db;
-    
-    if ( $this->multilang == 1 
-      && $id != "" 
+
+    if ( $this->multilang == 1
+      && $id != ""
       ){
       //if a service field will be transformed in a multilanguage field,
       //uncomment this two lines, navigate all the rows with syntax, then
       //re-comment
-      if ( !is_int(trim($id)) ) { 
+      if ( !is_int(trim($id)) ) {
          //$this->container->updateMultilangValue($this);
          //return $id;
       }
       $qry = "SELECT * FROM aa_translation WHERE id='".addslashes($id)."'";
       $res = $db->Execute($qry);
-      if ($res->RecordCount()==0) {  //umm... the field is multilang but there isn't a row in the translation table... 
+      if ($res->RecordCount()==0) {  //umm... the field is multilang but there isn't a row in the translation table...
         $ret = $id;
       } else {
         $arr = $res->FetchRow();
         $ret = $arr[$this->getLang($_SESSION["aa_CurrentLang"])];
-        if ( $ret == "" 
+        if ( $ret == ""
           && $err === true
           ){
           $alt = '';
-          foreach ($arr as $mylang => $mytrans) 
-            if ( !is_numeric($mylang) 
-              && $mylang != "id" 
+          foreach ($arr as $mylang => $mytrans)
+            if ( !is_numeric($mylang)
+              && $mylang != "id"
               && $mytrans != ""
               ) $alt .= "\n{$mylang}: ".substr(strip_tags($mytrans), 0, 10);
-          if ($alt != "") 
+          if ($alt != "")
             $ret="<span style='color: gray' title=\"".htmlentities("Other Translations:".$alt)."\">[no translation]</span>";
         }
       }
-    } else 
+    } else
       $ret = $id;
-      
+
     return $ret;
   }
 
@@ -272,13 +273,13 @@ class synElement {
     if(!isset($_SESSION))
       session_start();
     $aa_CurrentLang = $_SESSION['aa_CurrentLang'];
-    
+
     $qry = "SELECT * FROM aa_lang WHERE id='{$aa_CurrentLang}'";
     $res = $db->Execute($qry);
     $arr = $res->FetchRow();
     return $arr["initial"];
   }
-  
+
   // check if selected field is multilang.
   // Since 2.9.2.1
   function chkTargetMultilang($qry='') {
@@ -314,7 +315,7 @@ class synElement {
     #echo $name, ' is multilang: ', intval($ismultilang), '<br><br>';
     return intval($ismultilang);
   }
-  
+
   // replace some markers in the query with live values
   function compileQry($qry) {
     $hash = Array();
@@ -333,7 +334,7 @@ class synElement {
     $qry = interpolate($qry, $hash);
     return $qry;
   }
-  
+
   //function for the auto-configuration
   function configuration($i=0, $k=99) {
     global $db, $synElmName, $synElmType, $synElmLabel, $synElmLabelLang, $synElmSize, $synElmHelp, $synElmHelpLang, $synElmJoinsItem, $synElmOrder, $synElmFilter, $synInitOrder;

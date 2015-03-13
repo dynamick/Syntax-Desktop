@@ -11,16 +11,16 @@ class synSelectMultiCheck extends synElement {
   var $path;
 
   //constructor(name, value, label, size, help)
-  function synSelectMultiCheck($n="", $v="", $l="", $s=255, $h="") {
+  function synSelectMultiCheck( $n = '', $v = '', $l = '', $s = 255, $h = '' ) {
     global $$n;
-    
+
     if ($n=='')
-      $n = "text".date("his");
+      $n = 'text'.date('his');
     if ($l=='')
       $l = ucfirst($n);
     $this->type  = 'text';
     $this->name  = $n;
-    if(isset($$n) and $$n){
+    if (isset($$n) and $$n){
       $this->selected = $$n;
     } else {
       $this->value = $v;
@@ -33,56 +33,56 @@ class synSelectMultiCheck extends synElement {
 
   //private function
   function _html() {
-    $txt = "";
-    if ($this->chkTargetMultilang($this->qry)==1)
+    // relies on http://davidstutz.github.io/bootstrap-multiselect/
+    $input = "<select id=\"{$this->name}\" name=\"{$this->name}[]\" multiple=\"multiple\" class=\"multi-select\">";
+    if ($this->chkTargetMultilang($this->qry) == 1)
       $this->multilang = 1;
-    $this->value = $this->createArray2($this->qry, $this->path);
-    $selArr      = explode("|",$this->selected);
+
+    $this->value = $this->createArray2( $this->qry, $this->path );
+    $selArr      = explode("|", $this->selected);
+
     if (is_array($this->value)) {
       $current_group = '';
-      foreach($this->value as $v) {
-        $id       = isset($v['id']) ? $v['id'] : "";
-        $value    = isset($v["value"]) ? $v['value'] : "";
-        $group    = isset($v['group']) ? trim($v['group']) : "";
-        $eol      = "\n";
-        $selected = (in_array($id, $selArr)) ? ' checked="checked"' : '';
+      foreach( $this->value as $v ) {
+        $id       = isset($v['id'])    ? $v['id'] : '';
+        $value    = isset($v['value']) ? $v['value'] : '';
+        $group    = isset($v['group']) ? trim($v['group']) : '';
+        $selected = (in_array($id, $selArr)) ? ' selected="selected"' : '';
 
-        if(trim($group)!=''){
+        if (!empty($group)) {
           if ($group != $current_group) {
-            if($current_group!='') $txt .= "</fieldset>\n";
-            $txt .= "<fieldset><legend>{$group}</legend>\n";
+            if (!empty($current_group))
+              $input .= "</optgroup>\n";
+            $input .= "<optgroup label=\"{$group}\">\n";
             $current_group = $group;
           }
-          $eol = ' ';
         }
-/*<div class="checkbox">
-  <label>
-    <input type="checkbox" value="">
-    Option one is this and that&mdash;be sure to include why it's great
-  </label>
-</div>*/
-        $txt .= "<div class=\"checkbox\"><label><input type=\"checkbox\" name=\"{$this->name}[]\" value=\"{$id}\"{$selected}/> {$this->translate($value, true)}</label></div>".$eol;
+        //$txt .= "<div class=\"checkbox\"><label><input type=\"checkbox\" name=\"{$this->name}[]\" value=\"{$id}\"{$selected}/> {$this->translate($value, true)}</label></div>".$eol;
+        $input .= "<option value=\"{$id}\"{$selected}/>{$this->translate($value, true)}</option>\n";
       }
-      if($current_group!='') $txt .= "</fieldset>\n";
+      if (!empty($current_group))
+        $input .= "</optgroup>\n";
     }
-    return $txt;
+    $input .= '</select>';
+
+    return $input;
   }
-  
+
   //sets the value of the element
   function setValue($v) {
     #global $$n;
-    #if (!isset($_REQUEST[$$n])) 
+    #if (!isset($_REQUEST[$$n]))
     $this->value = $this->createArray($this->qry,$this->path);
     $this->selected = $v;
     return;
-  }  
+  }
 
   //sets the value of the element
   function getValue() {
-    if (is_array($this->selected)) 
+    if (is_array($this->selected))
       return implode("|",$this->selected);
     else return;
-  }  
+  }
 
   //get the label of the element
   function getCell() {
@@ -94,10 +94,10 @@ class synSelectMultiCheck extends synElement {
       foreach($this->value as $v)
         if (in_array($v["id"],$selArr)) $ret .= $this->translate($v["value"]).", ";
       $ret=substr($ret,0,-2);
-      return $ret;      
-    } 
+      return $ret;
+    }
   }
-  
+
   function setPath($path) {$this->path=$path;}
   function setQry($qry) {
     $this->qry=$qry;
@@ -117,7 +117,7 @@ class synSelectMultiCheck extends synElement {
     $qry=$this->compileQry($qry);
     $res=$db->Execute($qry);
     if ($null==true) $ret['NULL']="";
-    while ($arr=$res->FetchRow()) {  
+    while ($arr=$res->FetchRow()) {
       $r["id"]=$arr[0];
       $r["value"]=$arr[1];
       if (isset($arr[2]) and $arr[2]!="") $r["group"]=$arr[2];
@@ -125,7 +125,7 @@ class synSelectMultiCheck extends synElement {
     }
     return $ret;
   }
-  
+
   // enhanced & moved to synElement
 /*
   //check if the target service is multilang
@@ -141,7 +141,7 @@ class synSelectMultiCheck extends synElement {
     return $ret;
   }
 */
-  
+
   //function for the auto-configuration
   function configuration($i="",$k=99) {
     global $synElmName,$synElmType,$synElmLabel,$synElmSize,$synElmHelp,$synElmPath;
@@ -167,7 +167,7 @@ class synSelectMultiCheck extends synElement {
     if ($k==99) return $this->configuration;
     else return $this->configuration[$k];
   }
-  
+
 } //end of class inputfile
 
 ?>

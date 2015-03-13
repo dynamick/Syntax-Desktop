@@ -31,13 +31,22 @@ class synDateTime extends synElement {
 
   //private function
   function _html() {
-    if ($this->value == '0000-00-00 00:00:00' || $this->value == '00-00-0000 00:00:00' || $this->value == '')
+    if ($this->value == '0000-00-00 00:00:00' || $this->value == '00-00-0000 00:00:00' || $this->value == '') {
       $this->value = date('Y-m-d H:i:s');
-    //$datepicker="<a href=\"javascript:NewCal('".$this->name."','ddmmyyyy',true)\"><img src=\"images/cal.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"Scegli una data\"></a>";
-    //return "<input type='text' size='25' id='".$this->name."' name='".$this->name."' value='".$this->dateHumanFormat($this->value)."'/> (gg-mm-aaaa) $datepicker";
+    }
+    // relies on https://github.com/Eonasdan/bootstrap-datetimepicker
+    // IMPORTANT: date-format sets the datepicker behaviour.
+    // uses moment's formats - see http://momentjs.com/docs/#/displaying/format/
+    $dateFormat = 'DD-MM-YYYY HH:mm:ss';
     $input = <<<EOINPUT
     <div class="date input-group col-md-3">
-      <input type="text" size="25" id="{$this->name}" name="{$this->name}" data-date-format="DD-MM-YYYY HH:mm:ss" value="{$this->dateHumanFormat( $this->value )}" class="form-control"/>
+      <input type="text"
+        name="{$this->name}"
+        value="{$this->dateHumanFormat( $this->value )}"
+        size="25"
+        id="{$this->name}"
+        class="form-control"
+        data-date-format="{$dateFormat}">
       <span class="input-group-addon">
         <i class="fa fa-calendar"></i>
       </span>

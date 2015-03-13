@@ -324,7 +324,7 @@ function __autoload($class) {
     case MODIFY:
       aaHeader($str["modifyrow"], $str["modifyrow_bis"]);
       $synPrimaryKey = stripslashes(urldecode(trim($_REQUEST["synPrimaryKey"])));
-      
+
       echo $synHtml->form("action=\"{$PHP_SELF}\" method=\"post\" enctype=\"multipart/form-data\" autocomplete=\"off\"");
       $res = $db->Execute("SELECT * FROM `{$synTable}` WHERE {$synPrimaryKey}");
       $contenitore->updateValues($res->FetchRow());
@@ -347,7 +347,7 @@ function __autoload($class) {
       $del_button = ($synLoggedUser->canDelete == 1)
                   ? $synHtml->button("name='cmd' value='".DELETE."' class='btn btn-danger' onclick=\"return (confirm('{$str["sure_delete"]}'));\"", '<i class="fa fa-times"></i> '.$str['delete'])
                   : null;
-      
+
       $bottom = <<<EOBOTTOMBAR
         <nav class="navbar form-toolbar navbar-fixed-bottom">
           <div class="container-fluid">
@@ -371,7 +371,7 @@ EOBOTTOMBAR;
       echo $bottom;
       echo $synHtml->form_c();
 
-      
+
       //initToolbar ( newBtn, saveBtn, removeBtn, switchBtn, refreshBtn, homeBtn, backBtn)
       $script = "<script type=\"text/javascript\">\n";
       $script.= "  initToolbar (false, true, true, true, true, true);\n";
@@ -406,7 +406,8 @@ EOBOTTOMBAR;
         $ok = $ok && $contenitore->execute_callbacks('update');
       }
 
-      #die('done');
+      //echo "<a href=\"{$PHP_SELF}?cmd=".MODIFY."&synPrimaryKey={$synPrimaryKey}\">avanti</a>"; die();
+
       //controllo errori
       if (!$ok)
         echo "<script>alert(\"{$ok}\"); history.go(-1);</script>";

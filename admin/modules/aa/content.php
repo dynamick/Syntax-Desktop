@@ -54,6 +54,7 @@
     <link rel="stylesheet" type="text/css" href="../../assets/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="../../assets/css/bootstrap-switch.min.css" />
     <link rel="stylesheet" type="text/css" href="../../assets/css/bootstrap-datetimepicker.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../assets/css/bootstrap-multiselect.css" />
     <link rel="stylesheet" type="text/css" href="../../assets/css/font-awesome.min.css" />
     <link rel="stylesheet" type="text/css" href="../../assets/css/syntax.css" />
 
@@ -140,8 +141,10 @@
     <!--this is a div for the floating img viewer-->
     <div id="popupbox" style="position:absolute"></div>
     <script type="text/javascript" src="../../assets/js/moment-with-locales.min.js"></script>
+    <script type="text/javascript" src="../../assets/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../assets/js/bootstrap-switch.min.js"></script>
     <script type="text/javascript" src="../../assets/js/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript" src="../../assets/js/bootstrap-multiselect.js"></script>
     <script type="text/javascript">
     $(document).ready(function(){
       // init checkbox switches
@@ -160,6 +163,15 @@
           today: 'fa fa-crosshairs',
           clear: 'fa fa-trash'
         }
+      });
+
+      // init multi-select
+      $('.multi-select').multiselect({
+        enableClickableOptGroups: true,
+        disableIfEmpty: true,
+        selectedClass: 'multiselect-selected',
+        includeSelectAllOption: true,
+        numberDisplayed: 5
       });
     });
     </script>

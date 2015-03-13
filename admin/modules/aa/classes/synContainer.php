@@ -15,7 +15,7 @@ class synContainer {
   var $joins=array();
   var $multilang;
   var $ownerField;
-  var $hooks = array(); 
+  var $hooks = array();
 
   //private var
   var $even;
@@ -41,7 +41,7 @@ class synContainer {
     }
     return $instance;
   }
-  
+
   //getter for table name
   function getTable() {return $this->table;}
 
@@ -83,7 +83,7 @@ class synContainer {
         $stackLastKey = $stackKeys[count($stackKeys)-1];
         $join = new synJoin($_SESSION["aa_joinStack"][$stackLastKey]["idjoin"]);
         $toElmName = $join->toElmName;
-      } else 
+      } else
         $toElmName = '';
 
       if ($toElmName == $this->element[$k]->name) {
@@ -93,11 +93,11 @@ class synContainer {
         $bc = ($bc=='#F6F6F6') ? '#FAFAFA' : '#F6F6F6';
         $multilang = ($v->multilang==1) ? $v->getHtmlMultilang() : '';
         $flag = ($v->multilang==1) ? ' '.$this->getLangFlag('', '') : ''; //"height='12' style='float: right'"
-       
+
         $label_elm = $v->getLabel();
         $input_elm = $v->getHtml();
         $help_elm = (!empty($help)) ? "<span class=\"help-block\"><i class=\"fa fa-info-circle\"></i> {$help}</span>\n" : null;
-        
+
         $html .= <<<EOHTML
         <div class="form-group">
           <label class="col-sm-2 control-label">{$label_elm}{$flag}</label>
@@ -281,8 +281,8 @@ EOHTML;
       $join=new synJoin($_SESSION["aa_joinStack"][$stackLastKey]["idjoin"]);
       $toElmName=$join->toElmName;
     } else $toElmName="";
-    
-    
+
+
     if ($this->multidelete==true) {
       $ret .= $this->_col($even, $flg, $key, "", false);
       $ret .= "<input type=\"checkbox\" name=\"checkrow[]\" value=\"".$key."\"/>";// onmouseup=\"selectRow(this)\" onkeyup=\"selectRow(this)\" />";
@@ -331,7 +331,7 @@ EOHTML;
   //return the Header row (i.e.: <tr><td>Name</td><td>Surname</td></tr> )
   function getHeader() {
     $ret="";
-    
+
     //get the current join from the join stack
     if (isset($_SESSION["aa_joinStack"]) && is_array($_SESSION["aa_joinStack"])) {
       $stackKeys=array_keys($_SESSION["aa_joinStack"]);
@@ -339,7 +339,7 @@ EOHTML;
       $join=new synJoin($_SESSION["aa_joinStack"][$stackLastKey]["idjoin"]);
       $toElmName=$join->toElmName;
     } else $toElmName="";
-    
+
     if ($this->multidelete==true) $ret .= "        <th><input type=\"checkbox\" id=\"checkall\" title=\"Select all\"/></th>\n";
 
     foreach($this->element as $k=>$v) {
@@ -347,7 +347,7 @@ EOHTML;
         $ret .= "        <th scope='col'>\n";
         //$ret .= "          <a href=\"".$_SERVER["PHP_SELF"]."?aa_order=".$this->element[$k]->name."\" title=\"".translateDesktop($this->element[$k]->help)."\">";
         $ret .= "          <a href=\"".$_SERVER["PHP_SELF"]."?aa_order=".$this->element[$k]->name."\" title=\"".strip_tags($this->element[$k]->help)."\">"; // perchè lo traduce 2 volte?????
-        if ($v->multilang==1) 
+        if ($v->multilang==1)
           $ret.= $this->getLangFlag("","")."&nbsp;";
         $ret .= translateDesktop($this->element[$k]->colname);
         if (isset($_SESSION["aa_order"]) and $_SESSION["aa_order"]==$this->element[$k]->name)
@@ -366,7 +366,7 @@ EOHTML;
 
     return $ret;
   }
- 
+
   //update the col field search (i.e.: addSearchField('name', 'Nome'), ...)
   function getColumnSearch() {
     $ret="";
@@ -393,13 +393,13 @@ EOHTML;
 
     return "<script type=\"text/javascript\">\n".$ret."</script>\n";
   }
-  
+
   //insert the translation of a specific field of a service in the translation table
   //and return the key of translation
   function insertMultilangValue(&$el) {
     global $db, $synInsertValueInAllLang;
 
-    $key=fixEncoding($el->getSQLValue());    
+    $key=fixEncoding($el->getSQLValue());
     //insert in all the language the same value?
     if ($synInsertValueInAllLang==true) {
       //get the list of languages
@@ -447,7 +447,8 @@ EOHTML;
     $currlang=$arr[0];
 
     //this is the value of element
-    $value=fixEncoding($el->getSQLValue());
+    $value = fixEncoding( $el->getSQLValue() );
+    //die($value.'##')
     //check if already exist a translation for this key
     $key=$_REQUEST[$el->name."_synmultilang"];
     if ($key=="") {
@@ -458,7 +459,7 @@ EOHTML;
     $qry="SELECT * FROM aa_translation WHERE id='".addslashes($key)."'";
     $res=$db->Execute($qry);
     if ($res->RecordCount()>0 and is_numeric($key)) {
-      $res=$db->Execute("UPDATE aa_translation set $currlang=$value where id='$key'");
+      $res=$db->Execute("UPDATE aa_translation set {$currlang}={$value} where id='{$key}'");
       $ret=$el->getSQLName()."='$key'";
       return $ret;
     } else {
@@ -532,7 +533,7 @@ EOHTML;
     }
     return $ret;
   }
-  
+
   //return the html for the multilanguage box
   //act=1  --> list of rows
   //act=2  --> insert/modify: submit and change lang
@@ -592,7 +593,7 @@ EOHTML;
             $flags .= "<li><a href=\"content.php?synSetLang=$id\" target=\"content\">".$this->getLangFlag($id,"")."</a></li>";
           }
           $txt = $str['switchto'];
-          
+
         } elseif ($act==2) {
           if ($aa_CurrentLang == $id) {
             $flags .= "<li>".$this->getLangFlag($id," class=\"currentFlag\"")."</li> ";
@@ -614,9 +615,9 @@ EOHTML;
 EORETURN;
     }
     return $ret;
-  }  
-  
-  
+  }
+
+
   //return the image of the flag id. If id is null return the session language flag
   function getLangFlag($id="", $attr="") {
     global $db,$synPublicPath;
@@ -656,7 +657,7 @@ EORETURN;
     return $ret;
   }
 
-  
+
   function setKeyValue($id) {
     foreach($this->element as $k=>$v) {
       if ($this->element[$k]->isKey()) {
@@ -664,7 +665,7 @@ EORETURN;
       }
     }
   }
-  
+
   //return the list of keys for SQL queries (i.e.: id=34&key=house )
   function getKeyURLString() {
     $ret="";
@@ -688,7 +689,7 @@ EORETURN;
     return urlencode(substr($ret, 0, strlen($ret)-4));
   }
 
-  
+
   function dbSynchronize() {
     global $db;
     $primaryKeys = $resetKey = null;
@@ -706,8 +707,8 @@ EORETURN;
         $fieldSpecificType = explode(' ', $fieldType);
         $fieldSpecificType = explode('\(', $fieldSpecificType[1]);
         $fieldSpecificType = strtolower($fieldSpecificType[0]);
-        
-        if ( !isset($columns[strtoupper($name)]) 
+
+        if ( !isset($columns[strtoupper($name)])
           || $columns[strtoupper($name)]->name!=$name
           ){
           if (!$v->isJoin()) {
@@ -718,7 +719,7 @@ EORETURN;
           }
         }
       }
-      
+
       //Modify fields
       $colSize = 0;
       $colType = 0;
@@ -729,42 +730,42 @@ EORETURN;
 
         if($colType=='varchar') // tacon?
           $colSize = $colSize/3;
-          
+
         $colTypeSize = ($colType == 'text') ? $colType : "{$colType}({$colSize})";
       }
-      if ($colSize==-1) 
+      if ($colSize==-1)
         $colSize = $colType;
 
-      if ( $fieldSpecificType !== $colTypeSize 
+      if ( $fieldSpecificType !== $colTypeSize
         && !empty($fieldType)
         ){
             //if ($v->isKey()) $dboption=" PRIMARY KEY"; else $dboption="";
             //$db->Execute("ALTER TABLE `".$this->table."` CHANGE `".$name."` `".$name."` ".$fieldType);
-            
+
         if ($v->isJoin()) {
           $table2 = $v->table_join;
           $qry = <<<ENDOFQUERY
-          
+
           CREATE TABLE IF NOT EXISTS `{$this->table}-{$table2}` (
-            `id_{$this->table}` int(11) NOT NULL, 
-            `id_{$table2}` int(11) NOT NULL, 
-            `{$name}` varchar(255), 
+            `id_{$this->table}` int(11) NOT NULL,
+            `id_{$table2}` int(11) NOT NULL,
+            `{$name}` varchar(255),
             PRIMARY KEY (`id_{$this->table}`, `id_{$table2}`)
           ) DEFAULT CHARSET=utf8 ENGINE=INNODB
-          
+
 ENDOFQUERY;
 
         } else {
           $qry = "ALTER TABLE `{$this->table}` CHANGE `{$name}` `{$name}` {$fieldType}";
         }
-        $db->Execute($qry);    
+        $db->Execute($qry);
       }
 
       //check the primary keys
-      if ( isset($columns[strtoupper($name)]) 
+      if ( isset($columns[strtoupper($name)])
         && $v->isKey()!=$columns[strtoupper($name)]->primary_key
         ) $resetKey=1;
-      if ($v->isKey() === true) 
+      if ($v->isKey() === true)
         $primaryKeys .= $this->element[$k]->getSQLName().",";
 
      //echo $v->isKey()." - ".$columns[strtoupper($name)]->primary_key."<br>";
@@ -772,9 +773,9 @@ ENDOFQUERY;
     reset($this->element);
 
     //index regeneration if something changed
-    if (strlen($primaryKeys)>0) 
+    if (strlen($primaryKeys)>0)
       $primaryKeys = substr($primaryKeys,0,-1);
-      
+
     if ($resetKey==1) {
       $qry="ALTER TABLE `".$this->table."` DROP PRIMARY KEY , ADD PRIMARY KEY ( {$primaryKeys} )";
       //echo "$primaryKeys - Da resettare - $qry";
@@ -786,7 +787,7 @@ ENDOFQUERY;
       $colName = $v->name;
       $ret = false;
       foreach($this->element as $ke=>$ve) {
-        if ($ve->name == $colName) 
+        if ($ve->name == $colName)
           $ret = true;
       }
       if ($ret == false) {
@@ -802,30 +803,30 @@ ENDOFQUERY;
     foreach($this->element as $ke=>$ve) {
       $f = $ve->prepare_update();
       $ret = $ret && $f;
-    }  
+    }
     return $ret;
   }
- */ 
+ */
   function prepare_update() {
     foreach($this->element as $ke=>$ve) {
       $this->add_callback('prepare_update_element', array($ve, 'prepare_update'));
-    }  
+    }
     return $this->execute_callbacks('prepare_update_element');
   }
-  
-  /* add_filter functionality */  
+
+  /* add_filter functionality */
   function add_callback($hook, $func=array()) {//array($obj, $function)
-    if(!isset($this->hooks[$hook]) or !is_array($this->hooks[$hook])) $this->hooks[$hook]=array();  
+    if(!isset($this->hooks[$hook]) or !is_array($this->hooks[$hook])) $this->hooks[$hook]=array();
     array_push($this->hooks[$hook], $func);
     return true;
-  }  
+  }
 
 /*
   function add_callback($hook, $func) {//array($obj, $function)
-    if(!is_array($this->hooks[$hook])) $this->hooks[$hook]=array();  
+    if(!is_array($this->hooks[$hook])) $this->hooks[$hook]=array();
     array_push($this->hooks[$hook], $func);
     return true;
-  }  
+  }
 */
 
   function execute_callbacks($hook) {
@@ -835,7 +836,7 @@ ENDOFQUERY;
       if (is_array($set)) {
         foreach($set as $h) {
           $f = call_user_func_array($h, array());
-          $ret = $ret && $f;  
+          $ret = $ret && $f;
         }
         unset($this->hooks[$hook]);
       }
@@ -846,19 +847,19 @@ ENDOFQUERY;
 /*
   function execute_callbacks($hook) {
     $ret = true;
-echo '1. <pre>', print_r($this->hooks[$hook]), '</pre>#<br>';    
+echo '1. <pre>', print_r($this->hooks[$hook]), '</pre>#<br>';
     if (is_array($this->hooks[$hook])) {
       echo '<ol>';
       foreach($this->hooks[$hook] as $h) {
         $cnt ++;
-        echo '<li><pre>', print_r($h), '</pre></li>';      
+        echo '<li><pre>', print_r($h), '</pre></li>';
         $f = call_user_func($h);
-        $ret = $ret && $f;  
+        $ret = $ret && $f;
       }
-      echo '</ol>';      
+      echo '</ol>';
       unset($this->hooks[$hook]);
     }
-echo '2. <pre>', print_r($this->hooks[$hook]), '</pre>#<br>';  
+echo '2. <pre>', print_r($this->hooks[$hook]), '</pre>#<br>';
     return $ret;
   }
 */
