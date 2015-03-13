@@ -1,4 +1,5 @@
 <?php
+
 /*************************************
 * class DATE                         *
 * Create a input type "Date" obj     *
@@ -8,47 +9,63 @@ class synDate extends synElement {
   var $path;
 
   //constructor(name, value, label, size, help)
-  function synDate($n="", $v=null , $l=null, $s=null, $h="") {
-    if ($n=="") $n =  "text".date("his");
-    if ($l=="") $l =  ucfirst($n);
+  function synDate($n='', $v=null , $l=null, $s=null, $h="") {
+    if ($n=='') $n =  'text'.date('his');
+    if ($l=='') $l =  ucfirst($n);
 
-    $this->type = "text";
-    $this->name  = str_replace(" ","_",$n);
-    if ($v==null) { global $$n; $this->value = $$n; } else $this->value = $v;
+    $this->type = 'text';
+    $this->name  = str_replace(' ', '_', $n);
+    if ($v == null) {
+      global $$n;
+      $this->value = $$n;
+    } else {
+      $this->value = $v;
+    }
     $this->label = $l;
     $this->size  = $s;
     $this->help  = $h;
-    $default     = ($this->path ? " DEFAULT '$this->path'" : '');
-    $this->db    = " DATE NOT NULL".$default;
+    $default     = ($this->path ? " DEFAULT '{$this->path}'" : '');
+    $this->db    = ' DATE NOT NULL'.$default;
 
     $this->configuration();
   }
 
   //private function
   function _html() {
-    if($this->path!=''):
-      $this->value=$this->path;
-    else:
-      if ($this->value=="0000-00-00" or $this->value=="00-00-0000" or $this->value=="") $this->value=date("Y-m-d");
+    if ($this->path != '') :
+      $this->value = $this->path;
+    else :
+      if ($this->value == '0000-00-00' || $this->value == '00-00-0000' || $this->value == '')
+        $this->value = date('Y-m-d');
     endif;
-    $datepicker="<a href=\"javascript:NewCal('".$this->name."','ddmmyyyy')\"><img src=\"images/cal.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"Scegli una data\"></a>";
-    return "<input type='text' size='25' id='".$this->name."' name='".$this->name."' value='".$this->dateHumanFormat($this->value)."'/> (gg-mm-aaaa) $datepicker";
+    // relies on https://github.com/Eonasdan/bootstrap-datetimepicker
+    $input = <<<EOINPUT
+    <div class="date input-group col-md-3">
+      <input type="text" size="25" id="{$this->name}" name="{$this->name}" data-date-format="DD-MM-YYYY" value="{$this->dateHumanFormat( $this->value )}" class="form-control"/>
+      <span class="input-group-addon">
+        <i class="fa fa-calendar"></i>
+      </span>
+    </div>
+EOINPUT;
+    return $input;
   }
 
   //get the selected/typed value
   function getValue() {
     global ${$this->name};
-    if (${$this->name}=="") return $this->value;
-    else return $this->dateIsoFormat(${$this->name});
+    if (empty(${$this->name}))
+      return $this->value;
+    else
+      return $this->dateIsoFormat(${$this->name});
   }
 
   function setPath($value) {
-    $this->path=$value;
+    $this->path = $value;
   }
 
   //get the label of the element
   function getCell() {
-    return $this->dateHumanFormat($this->getValue());
+    return $this->dateHumanFormat( $this->getValue() );
   }
 
   //sets the value of the element
@@ -61,7 +78,7 @@ class synDate extends synElement {
     global $synElmName, $synElmType, $synElmLabel, $synElmSize, $synElmHelp, $synElmPath;
     $synHtml = new synHtml();
     $tmp_val = isset($synElmPath[$i]) ? $synElmPath[$i] : "";
-    $this->configuration[4]="Default (empty=today's date): ".$synHtml->text(" name=\"synElmPath[$i]\" value=\"".$tmp_val."\"");
+    $this->configuration[4] = "Default (empty=today's date): ".$synHtml->text(" name=\"synElmPath[$i]\" value=\"".$tmp_val."\"");
 
     //enable or disable the 3 check at the last configuration step
     global $synChkKey, $synChkVisible, $synChkEditable, $synChkMultilang;
@@ -70,27 +87,29 @@ class synDate extends synElement {
     $_SESSION["synChkEditable"][$i]=0;
     $_SESSION["synChkMultilang"][$i]=0;
 
-    if ($k==99) return $this->configuration;
-    else return $this->configuration[$k];
+    if ($k==99)
+      return $this->configuration;
+    else
+      return $this->configuration[$k];
   }
 
   //private: formats the date in a dd-mm-yyyy format
   function dateIsoFormat($value) {
-    if(preg_match('/^\d{2}-\d{2}-\d{4}$/', $value)){
-      $splitted=explode("-",$value);
-      $value=$splitted[2]."-".$splitted[1]."-".$splitted[0];
+    if (preg_match('/^\d{2}-\d{2}-\d{4}$/', $value)){
+      $splitted = explode("-",$value);
+      $value = $splitted[2]."-".$splitted[1]."-".$splitted[0];
     }
     return $value;
   }
 
   function dateHumanFormat($value) {
     if(preg_match('/^\d{4}-\d{2}-\d{2}$/', $value)){
-      $splitted=explode("-",$value);
-      $value=$splitted[2]."-".$splitted[1]."-".$splitted[0];
+      $splitted = explode("-",$value);
+      $value = $splitted[2]."-".$splitted[1]."-".$splitted[0];
     }
     return $value;
   }
 
-} //end of class text
+} //end of class date
 
 ?>

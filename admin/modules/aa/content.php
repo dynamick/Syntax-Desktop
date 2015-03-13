@@ -53,6 +53,7 @@
     <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:700,300,600,400&subset=latin,cyrillic">
     <link rel="stylesheet" type="text/css" href="../../assets/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="../../assets/css/bootstrap-switch.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../assets/css/bootstrap-datetimepicker.min.css" />
     <link rel="stylesheet" type="text/css" href="../../assets/css/font-awesome.min.css" />
     <link rel="stylesheet" type="text/css" href="../../assets/css/syntax.css" />
 
@@ -138,11 +139,28 @@
 
     <!--this is a div for the floating img viewer-->
     <div id="popupbox" style="position:absolute"></div>
+    <script type="text/javascript" src="../../assets/js/moment-with-locales.min.js"></script>
     <script type="text/javascript" src="../../assets/js/bootstrap-switch.min.js"></script>
+    <script type="text/javascript" src="../../assets/js/bootstrap-datetimepicker.min.js"></script>
     <script type="text/javascript">
     $(document).ready(function(){
       // init checkbox switches
-      $(".syn-check").bootstrapSwitch();
+      $('.syn-check').bootstrapSwitch();
+
+      // init date/time picker
+      $('.date').datetimepicker({
+        locale: '<?= getLang(true); ?>',
+        icons: {
+          time: 'fa fa-clock-o',
+          date: 'fa fa-calendar',
+          up: 'fa fa-chevron-up',
+          down: 'fa fa-chevron-down',
+          previous: 'fa fa-chevron-left',
+          next: 'fa fa-chevron-right',
+          today: 'fa fa-crosshairs',
+          clear: 'fa fa-trash'
+        }
+      });
     });
     </script>
   </body>
