@@ -199,7 +199,7 @@ function __autoload($class) {
 
     case ADD:
       #echo "<script src=\"../../includes/js/tooltip/tooltip.js\"></script>";
-      aaHeader($str["insertrow"], $str["insertrow_bis"]);
+      aaHeader( $str["insertrow"], $str["insertrow_bis"] );
 
       if(isset($_SESSION[$synTable.'_clone']) and trim($_SESSION[$synTable.'_clone'])!=""){
         $data = unserialize($_SESSION[$synTable.'_clone']);
@@ -215,6 +215,7 @@ function __autoload($class) {
 
       echo $synHtml->form("action='$PHP_SELF' method='POST' enctype='multipart/form-data' onsubmit='javascript: true || loading();' autocomplete=\"off\"");
       $contenitore->getHtml();
+      /*
       $after_options = array(
         'exit' => $str['saveandexit'],
         'stay' => $str['save'],
@@ -240,6 +241,45 @@ function __autoload($class) {
 
       echo $bottom;
       echo $synHtml->form_c();
+      */
+
+      $hiddens  = $synHtml->hidden("name='changeto' value=''");
+      $hiddens .= $synHtml->hidden("name='default-cmd' value='".INSERT."'");
+
+      $after_options = array(
+        'exit' => $str['saveandexit'],
+        'stay' => $str['save'],
+       'clone' => $str['saveandclone'],
+         'new' => $str['saveandadd']
+      );
+      $actions    = $synHtml->select('name="after" class="form-control"', $after_options);
+      $ok_button  = $synHtml->button("name='cmd' value='".INSERT."' class='btn btn-success'", '<i class="fa fa-check"></i> OK');
+      $del_button = null;
+
+      $bottom = <<<EOBOTTOMBAR
+        <nav class="navbar form-toolbar navbar-fixed-bottom">
+          <div class="container-fluid">
+            <a href="{$PHP_SELF}" class="btn btn-primary navbar-btn">
+              <i class="fa fa-mail-reply"></i> {$str["cancel"]}
+            </a>
+            <div class="navbar-form navbar-right">
+              <div class="input-group">
+                {$actions}
+                <span class="input-group-btn">{$ok_button}</span>
+              </div>
+            </div>
+            <div class="navbar-form navbar-right">
+              {$del_button}
+            </div>
+          </div>
+        </nav>
+EOBOTTOMBAR;
+
+      echo $hiddens;
+      echo $bottom;
+      echo $synHtml->form_c();
+
+
 
       //initToolbar ( newBtn, saveBtn, removeBtn, switchBtn, refreshBtn, homeBtn, backBtn)
       echo "<script>initToolbar (false,true,false,true,true,true);</script>\n";

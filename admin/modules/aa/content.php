@@ -50,16 +50,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>Content Frame</title>
-    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:700,300,600,400&subset=latin,cyrillic">
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:700,300,400,600&amp;subset=latin,cyrillic">
     <link rel="stylesheet" type="text/css" href="../../assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../assets/css/font-awesome.min.css" />
     <link rel="stylesheet" type="text/css" href="../../assets/css/bootstrap-switch.min.css" />
     <link rel="stylesheet" type="text/css" href="../../assets/css/bootstrap-datetimepicker.min.css" />
     <link rel="stylesheet" type="text/css" href="../../assets/css/bootstrap-multiselect.css" />
-    <link rel="stylesheet" type="text/css" href="../../assets/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../assets/css/fontawesome-iconpicker.min.css" />
     <link rel="stylesheet" type="text/css" href="../../assets/css/syntax.css" />
-
-
-    <script type="text/javascript" src="<?=$synAdminPath?>/includes/js/DateTimePicker/datetimepicker.js"></script>
 
     <script type="text/javascript" src="../../assets/js/jquery.js"></script>
     <script type="text/javascript" src="<?=$synAdminPath?>/includes/js/ckeditor/ckeditor.js"></script>
@@ -130,12 +128,12 @@
   </head>
   <body>
     <div id="content" class="container-fluid">
-<?php
-  if (is_file($targetFileName))
-    include($targetFileName);
-  else
-    echo '<p>Function not yet implemented...</p>';
-?>
+    <?php
+      if (is_file($targetFileName))
+        include($targetFileName);
+      else
+        echo '<p>Function not yet implemented...</p>';
+    ?>
     </div>
 
     <!--this is a div for the floating img viewer-->
@@ -144,6 +142,7 @@
     <script type="text/javascript" src="../../assets/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../assets/js/bootstrap-switch.min.js"></script>
     <script type="text/javascript" src="../../assets/js/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript" src="../../assets/js/fontawesome-iconpicker.min.js"></script>
     <script type="text/javascript" src="../../assets/js/bootstrap-multiselect.js"></script>
     <script type="text/javascript">
     $(document).ready(function(){
@@ -170,9 +169,11 @@
         enableClickableOptGroups: true,
         disableIfEmpty: true,
         selectedClass: 'multiselect-selected',
-        includeSelectAllOption: true,
-        numberDisplayed: 5
+        includeSelectAllOption: true
       });
+
+      // init icon-picker
+      $('.icp').iconpicker();
     });
     </script>
   </body>
