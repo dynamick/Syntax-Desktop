@@ -44,7 +44,7 @@ class synSelectMultiCheck extends synElement {
         $id       = isset($v['id']) ? $v['id'] : "";
         $value    = isset($v["value"]) ? $v['value'] : "";
         $group    = isset($v['group']) ? trim($v['group']) : "";
-        $eol      = "<br/>\n";
+        $eol      = "\n";
         $selected = (in_array($id, $selArr)) ? ' checked="checked"' : '';
 
         if(trim($group)!=''){
@@ -55,8 +55,13 @@ class synSelectMultiCheck extends synElement {
           }
           $eol = ' ';
         }
-
-        $txt .= "<label><input type=\"checkbox\" name=\"".$this->name."[]\" value=\"{$id}\"{$selected}/> ".$this->translate($value, true).'</label>'.$eol;
+/*<div class="checkbox">
+  <label>
+    <input type="checkbox" value="">
+    Option one is this and that&mdash;be sure to include why it's great
+  </label>
+</div>*/
+        $txt .= "<div class=\"checkbox\"><label><input type=\"checkbox\" name=\"{$this->name}[]\" value=\"{$id}\"{$selected}/> {$this->translate($value, true)}</label></div>".$eol;
       }
       if($current_group!='') $txt .= "</fieldset>\n";
     }

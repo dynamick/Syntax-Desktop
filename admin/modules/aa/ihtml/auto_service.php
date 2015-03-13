@@ -324,11 +324,16 @@ function __autoload($class) {
     case MODIFY:
       aaHeader($str["modifyrow"], $str["modifyrow_bis"]);
       $synPrimaryKey = stripslashes(urldecode(trim($_REQUEST["synPrimaryKey"])));
-
+      
       echo $synHtml->form("action=\"{$PHP_SELF}\" method=\"post\" enctype=\"multipart/form-data\" autocomplete=\"off\"");
       $res = $db->Execute("SELECT * FROM `{$synTable}` WHERE {$synPrimaryKey}");
       $contenitore->updateValues($res->FetchRow());
       $contenitore->getHtml();
+
+      $hiddens  = $synHtml->hidden("name='synPrimaryKey' value='".urlencode($synPrimaryKey)."'");
+      $hiddens .= $synHtml->hidden("name='changeto' value=''");
+      $hiddens .= $synHtml->hidden("name='default-cmd' value='".CHANGE."'");
+      //$hiddens .= $synHtml->button("name='off' value='' class='cancel_button' onclick='document.location=\"{$PHP_SELF}\"; return false;'", $ico_off.$str["cancel"], 'reset');
 
       $after_options = array(
         'exit' => $str['saveandexit'],
@@ -337,33 +342,36 @@ function __autoload($class) {
         'next' => $str['saveandnext'],
          'new' => $str['saveandadd']
       );
-      $label  = $str["modify"];
-      $bottom  = "<table id=\"actions\">\n";
-      $bottom .= "  <tr>\n";
-      $bottom .= "    <td>";
-      $ico_off = "<img src=\"img/tool_undo.png\" alt=\"{$str["cancel"]}\" /> ";
-      $bottom .= $synHtml->hidden("name='synPrimaryKey' value='".urlencode($synPrimaryKey)."'");
-      $bottom .= $synHtml->hidden("name='changeto' value=''");
-      $bottom .= $synHtml->hidden("name='default-cmd' value='".CHANGE."'");
-      $bottom .= $synHtml->button("name='off' value='' class='cancel_button' onclick='document.location=\"{$PHP_SELF}\"; return false;'", $ico_off.$str["cancel"], 'reset');
-      $bottom .= "    </td>\n";
-      if ($synLoggedUser->canDelete==1) {
-        $ico_del = "<img src=\"img/container_delete.png\" alt=\"{$str['delete']}\" /> ";
-        $bottom .= "    <td align=\"right\" width=\"80%\"><div class=\"button-wrapper\">";
-        $bottom .= $synHtml->button("name='cmd' value='".DELETE."' class='delete_button' onclick=\"return (confirm('{$str["sure_delete"]}'));\"", $ico_del.$str['delete']);
-        $bottom .= "    </div></td>\n";
-      }
-      $bottom .= "    <td align=\"right\">";
-      $ico_ok  = "<img src=\"img/accept.png\" alt=\"{$str['save']}\" /> ";
-      $bottom .= $synHtml->select('name="after" class="submit-actions"', $after_options);
-      $bottom .= $synHtml->button("name='cmd' value='".CHANGE."' class='action_button'", $ico_ok.'OK');
-      $bottom .= "    </td>\n";
-      $bottom .= "  </tr>\n";
-      $bottom .= "</table>\n";
+      $actions    = $synHtml->select('name="after" class="form-control"', $after_options);
+      $ok_button  = $synHtml->button("name='cmd' value='".CHANGE."' class='btn btn-success'", '<i class="fa fa-check"></i> OK');
+      $del_button = ($synLoggedUser->canDelete == 1)
+                  ? $synHtml->button("name='cmd' value='".DELETE."' class='btn btn-danger' onclick=\"return (confirm('{$str["sure_delete"]}'));\"", '<i class="fa fa-times"></i> '.$str['delete'])
+                  : null;
+      
+      $bottom = <<<EOBOTTOMBAR
+        <nav class="navbar form-toolbar navbar-fixed-bottom">
+          <div class="container-fluid">
+            <a href="{$PHP_SELF}" class="btn btn-primary navbar-btn">
+              <i class="fa fa-mail-reply"></i> {$str["cancel"]}
+            </a>
+            <div class="navbar-form navbar-right">
+              <div class="input-group">
+                {$actions}
+                <span class="input-group-btn">{$ok_button}</span>
+              </div>
+            </div>
+            <div class="navbar-form navbar-right">
+              {$del_button}
+            </div>
+          </div>
+        </nav>
+EOBOTTOMBAR;
 
+      echo $hiddens;
       echo $bottom;
       echo $synHtml->form_c();
 
+      
       //initToolbar ( newBtn, saveBtn, removeBtn, switchBtn, refreshBtn, homeBtn, backBtn)
       $script = "<script type=\"text/javascript\">\n";
       $script.= "  initToolbar (false, true, true, true, true, true);\n";
@@ -640,7 +648,10 @@ EOSCRIPT;
   function aaHeader($title, $title2='') {
     $header = <<<EOHEADER
     <div id="formHeader" class="page-header">
-      <h2>{$title} <small>{$title2}</small></h2>
+      <h2>
+        {$title}<br>
+        <small><i class="fa fa-info-circle"></i> {$title2}</small>
+      </h2>
     </div>
 EOHEADER;
     echo $header;

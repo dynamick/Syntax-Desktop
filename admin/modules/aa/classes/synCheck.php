@@ -35,8 +35,8 @@ class synCheck extends synElement {
 
   //private function
   function _html() {
-    if ($this->selected==true) $selected="checked=\"checked\""; else $selected="";
-    return "<input type='checkbox' name='".$this->name."' maxsize='".$this->size."' value='".$this->value."' $selected />"; 
+    $selected = ($this->selected == true) ? ' checked="checked"' : null; 
+    return "<div class=\"checkbox\"><label><input type=\"checkbox\" name=\"{$this->name}\" maxsize=\"{$this->size}\" value=\"{$this->value}\"{$selected} /></label></div>"; 
   }
 
   //set the value of the element

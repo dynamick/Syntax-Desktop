@@ -71,34 +71,47 @@ class synContainer {
   //write out the insert/modify mask
   function getHtml() {
     $bc = '#F6F6F6';
-    echo "<table style='margin: 20px 0 0 20px;width: 95%'>\n";
+    $html = '';
+    //echo "<table style='margin: 20px 0 0 20px;width: 95%'>\n";
     //while (list ($k, $v) = each ($this->element)) {
-    foreach($this->element as $k=>$v) {
+    foreach( $this->element as $k => $v ) {
       $help = $this->element[$k]->getHelp();
 
       //join case (get the current join from the join stack)
       if (isset($_SESSION['aa_joinStack']) && is_array($_SESSION['aa_joinStack'])) {
-        $stackKeys=array_keys($_SESSION["aa_joinStack"]);
-        $stackLastKey=$stackKeys[count($stackKeys)-1];
-        $join=new synJoin($_SESSION["aa_joinStack"][$stackLastKey]["idjoin"]);
-        $toElmName=$join->toElmName;
-      } else $toElmName="";
+        $stackKeys = array_keys($_SESSION["aa_joinStack"]);
+        $stackLastKey = $stackKeys[count($stackKeys)-1];
+        $join = new synJoin($_SESSION["aa_joinStack"][$stackLastKey]["idjoin"]);
+        $toElmName = $join->toElmName;
+      } else 
+        $toElmName = '';
 
-      if ($toElmName==$this->element[$k]->name) {
-        echo "<input type=\"hidden\" name=\"".$this->element[$k]->name."\" value=\"".$_SESSION["aa_joinStack"][$stackLastKey]["value"]."\" />";
+      if ($toElmName == $this->element[$k]->name) {
+        echo "<input type=\"hidden\" name=\"{$this->element[$k]->name}\" value=\"{$_SESSION["aa_joinStack"][$stackLastKey]["value"]}\" />";
       } else {
       //normal case
         $bc = ($bc=='#F6F6F6') ? '#FAFAFA' : '#F6F6F6';
         $multilang = ($v->multilang==1) ? $v->getHtmlMultilang() : '';
-        $flag = ($v->multilang==1) ? $this->getLangFlag("","height='12' style='float: right'") : '';
-        echo "      <tr style=\"background-color: $bc\">\n";
-        echo "        <td style='width: 20%;font: menu; border-bottom: 1px solid #DDD; padding-left: 5px;vertical-align: top;'>".$flag.$v->getLabel().$help."</td>\n";
-        echo "        <td style='font: menu;border-bottom: 1px solid #DDD;'>".$v->getHtml().$multilang."</td>\n";
-        //echo "        <td style='width: 1px'>".$flag."</td>\n";
-        echo "      </tr>\n";
+        $flag = ($v->multilang==1) ? ' '.$this->getLangFlag('', '') : ''; //"height='12' style='float: right'"
+       
+        $label_elm = $v->getLabel();
+        $input_elm = $v->getHtml();
+        $help_elm = (!empty($help)) ? "<span class=\"help-block\"><i class=\"fa fa-info-circle\"></i> {$help}</span>\n" : null;
+        
+        $html .= <<<EOHTML
+        <div class="form-group">
+          <label class="col-sm-2 control-label">{$label_elm}{$flag}</label>
+          <div class="col-sm-10">
+            {$input_elm}{$multilang}
+            {$help_elm}
+          </div>
+        </div>
+        <hr>
+EOHTML;
       }
     }
-    echo "</table>\n";
+    //echo "</table>\n";
+    echo $html;
   }
 
   //update the values of each element, given an associative array
@@ -330,10 +343,12 @@ class synContainer {
     if ($this->multidelete==true) $ret .= "        <th><input type=\"checkbox\" id=\"checkall\" title=\"Select all\"/></th>\n";
 
     foreach($this->element as $k=>$v) {
-      if ($this->element[$k]->list==true && $toElmName!=$this->element[$k]->name) {
+      if ($this->element[$k]->list == true && $toElmName != $this->element[$k]->name) {
         $ret .= "        <th scope='col'>\n";
-        $ret .= "          <a href=\"".$_SERVER["PHP_SELF"]."?aa_order=".$this->element[$k]->name."\" title=\"".translateDesktop($this->element[$k]->help)."\">";
-        if ($v->multilang==1) $ret.= $this->getLangFlag("","")."&nbsp;";
+        //$ret .= "          <a href=\"".$_SERVER["PHP_SELF"]."?aa_order=".$this->element[$k]->name."\" title=\"".translateDesktop($this->element[$k]->help)."\">";
+        $ret .= "          <a href=\"".$_SERVER["PHP_SELF"]."?aa_order=".$this->element[$k]->name."\" title=\"".strip_tags($this->element[$k]->help)."\">"; // perchè lo traduce 2 volte?????
+        if ($v->multilang==1) 
+          $ret.= $this->getLangFlag("","")."&nbsp;";
         $ret .= translateDesktop($this->element[$k]->colname);
         if (isset($_SESSION["aa_order"]) and $_SESSION["aa_order"]==$this->element[$k]->name)
           $_SESSION["aa_order_direction"]==" ASC" ? $ret.=" <img src=\"images/up.gif\" />" : $ret.=" <img src=\"images/down.gif\" />";

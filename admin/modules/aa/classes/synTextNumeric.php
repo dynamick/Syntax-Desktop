@@ -24,7 +24,7 @@ class synTextNumeric extends synElement {
 
   //private function
   function _html() {
-    return "<input type='text' name='".$this->name."' maxsize='".$this->size."' value='".$this->value."'/>"; 
+    return "<input type=\"text\" name=\"{$this->name}\" maxsize=\"{$this->size}\" value=\"{$this->value}\" class=\"form-control\"/>"; 
   }
   
   //function for the auto-configuration

@@ -127,9 +127,12 @@
     </script>
   </head>
   <body>
-    <div id="content"><?php
-    if (file_exists($targetFileName)) include($targetFileName);
-    else echo "<p>Function not yet implemented...</p>";
+    <div id="content" class="container-fluid">
+<?php
+  if (is_file($targetFileName)) 
+    include($targetFileName);
+  else 
+    echo '<p>Function not yet implemented...</p>';
 ?>
     </div>
 

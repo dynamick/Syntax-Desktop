@@ -125,100 +125,143 @@ EOQRY;
   // converte le icone di Syntax in classi di font-awesome
   function translateIcon($icon) {
     $icon = str_replace('modules/aa/images/service_icon/', '', $icon);
-    switch($icon){
-      case 'accept.png':
-        $class = 'fa-check-circle';
-        break;
-      case 'application_double.png':
-        $class = 'fa-files-o';
-        break;
-      case 'application_form_edit.png':
-        $class = 'fa-pencil-square-o';
-        break;
-      case 'book_open.png':
-        $class = 'fa-book';
-        break;
-      case 'bricks.png':
-        $class = 'fa-hdd-o';
-        break;
-      case 'chart_organisation.png':
-        $class = 'fa-sitemap';
-        break;
-      case 'cog.png':
-        $class = 'fa-cog';
-        break;
-      case 'database_save.png':
-        $class = 'fa-download';
-        break;
-      case 'folder_page.png':
-        $class = 'fa-folder-o';
-        break;
-      case 'group.png':
-        $class = 'fa-users';
-        break;
-      case 'help.png':
-        $class = 'fa-question-circle';
-        break;
-      case 'image.png':
-        $class = 'fa-camera';
-        break;
-      case 'images.png':
-        $class = 'fa-picture-o';
-        break;
-      case 'layout.png':
-        $class = 'fa-columns';
-        break;
-      case 'lightning.png':
-        $class = 'fa-bolt';
-        break;
-      case 'newspaper.png':
-        $class = 'fa-bullhorn';
-        break;
-      case 'page_white_edit.png':
-        $class = 'fa-file-text-o';
-        break;
-      case 'page_white_stack.png':
-        $class = 'fa-file-text-o';
-        break;
-      case 'plugin.png':
-        $class = 'fa-puzzle-piece';
-        break;
-      case 'report.png':
-        $class = 'fa-list-alt';
-        break;
-      case 'seasons.png':
-        $class = 'fa-th-large';
-        break;
-      case 'star.png':
-        $class = 'fa-star';
-        break;
-      case 'table.png':
-        $class = 'fa-table';
-        break;
-      case 'tag_blue.png':
-        $class = 'fa-tag';
-        break;
-      case 'user.png':
-        $class = 'fa-user';
-        break;
-      case 'user_gray.png':
-        $class = 'fa-user-md';
-        break;
-      case 'vcard.png':
-        $class = 'fa-credit-card';
-        break;
-      case 'wand.png':
-        $class = 'fa-magic';
-        break;
-      case 'wrench_orange.png':
-        $class = 'fa-wrench';
-        break;
-      default:
-        $class = 'fa-folder-o';
-        break;
-    }
+    $fa_icons = array(
+      'accept.png' => 'check-circle',
+      'add.png' => 'plus-circle',
+      'anchor.png' => 'anchor',
+      'application_double.png' => 'columns',
+      'application_form_edit.png' => 'columns',
+      'application_view_tile.png' => 'columns',
+      'arrow_redo.png' => 'repeat',
+      'arrow_rotate_anticlockwise.png' => 'rotate-left',
+      'arrow_undo.png' => 'undo',
+      'asterisk_orange.png' => 'asterisk',
+      'attach.png' => 'paperclip',
+      'award_star_gold_2.png' => 'star-o',
+      'basket.png' => 'shopping-cart',
+      'bell.png' => 'bell',
+      'bin.png' => 'trash',
+      'bomb.png' => 'bomb',
+      'book.png' => 'book',
+      'book_open.png' => 'book',
+      'brick.png' => 'cube',
+      'bricks.png' => 'cubes',
+      'briefcase.png' => 'briefcase',
+      'bug.png' => 'bug',
+      'building.png' => 'building-o',
+      'cake.png' => 'birthday-cake',
+      'calculator.png' => 'calculator',
+      'calendar.png' => 'calendar',
+      'calendar_view_day.png' => 'calendar-o',
+      'camera.png' => 'camera',
+      'cancel.png' => 'times-circle',
+      'car.png' => 'car',
+      'cart.png' => 'chopping-cart',
+      'cd.png' => 'circle',
+      'chart_bar.png' => 'bar-chart',
+      'chart_curve.png' => 'line-chart',
+      'chart_organisation.png' => 'sitemap',
+      'chart_pie.png' => 'pie-chart',
+      'clock_red.png' => 'clock',
+      'cog.png' => 'cog',
+      'coins.png' => 'tint',
+      'color.png' => 'paint-brush',
+      'color_swatch.png' => 'th',
+      'comment.png' => 'comment-o',
+      'comments.png' => 'comments-o',
+      'compress.png' => 'hdd-o',
+      'computer.png' => 'desktop',
+      'control_power_blue.png' => 'power-off',
+      'controller.png' => 'gamepad',
+      'creditcards.png' => 'credit-card',
+      'cross.png' => 'times',
+      'cut.png' => 'cut',
+      'database.png' => 'database',
+      'database_gear.png' => 'database',
+      'database_save.png' => 'database',
+      'date.png' => 'calednar-o',
+      'delete.png' => 'minus-circle',
+      'disk_black.png' => 'floppy-o',
+      'door_in.png' => 'sign-in',
+      'drink.png' => 'glass',
+      'email.png' => 'envelope',
+      'email_open.png' => 'envelope-o',
+      'emoticon_smile.png' => 'smile-o',
+      'error.png' => 'warning',
+      'exclamation.png' => 'exclamation-circle',
+      'feed.png' => 'rss',
+      'film.png' => 'film',
+      'find.png' => 'search',
+      'flag_blue.png' => 'flag',
+      'flag_orange.png' => 'flag-o',
+      'folder.png' => 'folder',
+      'folder_image.png' => 'folder-o',
+      'folder_page.png' => 'folder-open',
+      'group.png' => 'users',
+      'heart.png' => 'heart',
+      'help.png' => 'question-circle',
+      'hourglass.png' => 'paper-plane',
+      'house.png' => 'home',
+      'image.png' => 'picture',
+      'images.png' => 'picture',
+      'information.png' => 'info-circle',
+      'key.png' => 'key',
+      'layout.png' => 'columns',
+      'lightbulb.png' => 'lightbulb-o',
+      'lightning.png' => 'flash',
+      'link.png' => 'link',
+      'lock.png' => 'lock',
+      'lorry.png' => 'truck',
+      'male.png' => 'male',
+      'medal_gold_1.png' => 'trophy',
+      'money.png' => 'money',
+      'money_euro.png' => 'euro',
+      'newspaper.png' => 'newspaper-o',
+      'note.png' => 'file-text-o',
+      'package.png' => 'dropbox',
+      'package_green.png' => 'inbox',
+      'page_white.png' => 'file-o',
+      'page_white_copy.png' => 'copy',
+      'page_white_edit.png' => 'edit',
+      'page_white_stack.png' => 'copy',
+      'page_white_word.png' => 'file-word-o',
+      'pencil.png' => 'pencil',
+      'phone.png' => 'mobile-phone',
+      'photo.png' => 'photo',
+      'picture.png' => 'picture-o',
+      'pill.png' => 'medkit',
+      'plugin.png' => 'puzzle-piece',
+      'printer.png' => 'print',
+      'reload.png' => 'refresh',
+      'report.png' => 'book',
+      'rosette.png' => 'dribbble',
+      'ruby.png' => 'diamond',
+      'seasons.png' => 'th-large',
+      'share.png' => 'share-al',
+      'shield.png' => 'shield',
+      'sound.png' => 'volume-up',
+      'star.png' => 'star',
+      'table.png' => 'table',
+      'table_multiple.png' => 'table',
+      'table_relationship.png' => 'caret-square-o-down ',
+      'tag_blue.png' => 'tag',
+      'telephone.png' => 'phone',
+      'thumb_up.png' => 'thumbs-up',
+      'tick.png' => 'check',
+      'time.png' => 'clock-o',
+      'user.png' => 'user',
+      'user_gray.png' => 'user-secret',
+      'vcard.png' => 'archive',
+      'wand.png' => 'magic',
+      'world.png' => 'globe',
+      'wrench_orange.png' => 'wrench',
+      'zoom.png' => 'search-plus',
+    );
+    $class = isset($fa_icons[$icon])
+           ? 'fa-'.$fa_icons[$icon]
+           : 'fa-folder-o';
 
-    return $class;
+   return $class;
   }
 
 // EOF

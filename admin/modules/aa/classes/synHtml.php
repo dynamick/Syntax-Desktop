@@ -11,7 +11,7 @@ class synHtml {
   
   //add a form tag
   function form($attribute) {
-    return "<form style='margin: 0px;' $attribute >\n";
+    return "<form class=\"form-horizontal has-toolbar\" $attribute >\n";
   }
   
   //add a form tag
@@ -21,7 +21,7 @@ class synHtml {
 
   //add a form tag
   function text($attribute) {
-    return "<input type='text' $attribute />\n";
+    return "<input type='text' class=\"form-control\" $attribute />\n";
   }
   
   //add a form tag
@@ -31,7 +31,7 @@ class synHtml {
   
   //add a form tag
   function button($attribute, $label, $type='submit') {
-    return "<button type='{$type}' $attribute>{$label}</button>\n";
+    return "<button type='{$type}' {$attribute}>{$label}</button>\n";
   }
 
   //add a form tag
@@ -47,7 +47,7 @@ class synHtml {
   function select($attribute, $qry, $value="",$blank=false) {
     global $db;
     //$db->debug=true;
-    $ret="<select $attribute>\n";
+    $ret="<select class=\"form-control\" $attribute>\n";
     if ($blank) $ret.="<option value=\"\"></option>";
     //qry based select
     if (!is_array($qry)) {

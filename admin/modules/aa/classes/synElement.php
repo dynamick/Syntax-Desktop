@@ -77,19 +77,20 @@ class synElement {
 
   //get the htmlElement with a particular value for the multilang 
   function getHtmlMultilang() {
-    $ret="<input type=\"hidden\" name=\"".$this->name."_synmultilang\" value=\"".htmlentities($this->getValue())."\" />";
+    $ret = "<input type=\"hidden\" name=\"".$this->name."_synmultilang\" value=\"".htmlentities($this->getValue())."\" />";
     return $ret;
   }
   
 
   //get the label of the element
   function getLabel() {
-    return "<div class=\"label\" tooltip=\"".$this->help."\">".$this->label."</div>";
+    //return "<div class=\"label\" tooltip=\"".$this->help."\">".$this->label."</div>";
+    return $this->label;
   }
 
   //get the label help of the element
   function getHelp() {
-    return "<span class=\"help\">".$this->help."</span>\n";
+    return trim( $this->help );
   }
 
   //get the selected/typed value

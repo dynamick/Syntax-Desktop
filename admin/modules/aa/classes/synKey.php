@@ -23,7 +23,9 @@ class synKey extends synElement {
 
   //private function
   function _html() {
-    return $this->value."<input type='hidden' name='".$this->name."' maxsize='".$this->size."' value='".$this->value."'/>"; 
+    $html = "<div class=\"form-control-static\">{$this->value}</div>"
+          . "<input type=\"hidden\" name=\"{$this->name}\" maxsize=\"{$this->size}\" value=\"{$this->value}\">";
+    return $html;
   }
 
   //get the selected/typed value

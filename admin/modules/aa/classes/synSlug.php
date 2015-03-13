@@ -31,7 +31,7 @@ class synSlug extends synElement {
   //private function
   function _html() {
     $value = str_replace("\"", "&quot;", ($this->translate($this->getValue()))); 
-    return "<input disabled='disabled' type='text' name='".$this->name."' maxsize='".$this->size."' value=\"".$value."\" style='width: 100%'/>"; 
+    return "<input disabled='disabled' type='text' name='".$this->name."' maxsize='".$this->size."' value=\"".$value."\" class=\"form-control\"/>"; 
   }
   
   

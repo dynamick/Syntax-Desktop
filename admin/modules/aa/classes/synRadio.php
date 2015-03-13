@@ -36,7 +36,8 @@ class synRadio extends synElement {
         $id      = isset($v["id"]) ? $v["id"] : "";
         $value   = isset($v["value"]) ? $v["value"] : "";
         $checked = (($id==$selected || !$selected && $count==0) ? ' checked="checked"' : '');
-        $txt    .= " <input type=\"radio\" name=\"".$this->name."\" VALUE=\"".$id."\"".$checked."/> ".$value;
+        //$txt    .= " <input type=\"radio\" name=\"".$this->name."\" VALUE=\"".$id."\"".$checked."/> ".$value;
+        $txt    .= "<div class=\"radio\"><label><input type=\"radio\" name=\"{$this->name}\" value=\"{$id}\" {$checked}> {$value}</label></div>";
         $count ++;
       }
     }

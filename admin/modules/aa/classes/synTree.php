@@ -39,7 +39,7 @@ class synTree extends synElement {
 
     echo "<script type=\"text/javascript\">parent.closeTreeFrame();</script>\n";
 
-    $txt  = "<select name=\"{$this->name}\" class=\"tree-select\">\n";
+    $txt  = "<select name=\"{$this->name}\" class=\"form-control tree-select\">\n";
     $txt .= "  <option value=\"0\">[No parent]</option>\n";
     $txt .= $this->createOptionsArray();
     $txt .= "</select>\n";

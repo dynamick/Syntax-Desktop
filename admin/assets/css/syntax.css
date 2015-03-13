@@ -102,6 +102,26 @@ body {
     background:#FFFFEE;
 }
 #optionPane .pagination {margin:5px 0;}
+
+form.has-toolbar {
+  margin-bottom:98px;
+}
+.navbar.form-toolbar {
+  background-color: #fafafa;
+  background-image: none;
+  border-color: #dfdfdf;
+  padding: 8px 0;
+}
+form .tree-select {
+  font-family:monospace;
+}
+form.has-toolbar hr {
+  margin:15px 0;
+}
+form.has-toolbar .help-block {
+  margin-bottom:0;
+}
+
 /* LOGIN FORM */
 body.desktop,
 body.login {

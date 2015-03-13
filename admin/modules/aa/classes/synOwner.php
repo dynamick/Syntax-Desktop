@@ -29,7 +29,7 @@ class synOwner extends synElement {
   function _html() {
     $disable = "";
     $selected="";
-    $txt="<select name='".$this->name."' $disable >";
+    $txt="<select name='".$this->name."' {$disable} class=\"form-control\">";
     //if (is_array($this->value)) {
     if (is_array($_SESSION["synGroupChild"])) {
       foreach ($_SESSION["synGroupChild"] as $v=>$k) {

@@ -38,7 +38,7 @@ class synSelect extends synElement {
     $this->value = $this->createArray($this->qry,$this->path);
     if ($this->chkTargetMultilang()==1) 
       $this->multilang=1;
-    $txt = "<select name=\"{$this->name}\" {$disable}>";
+    $txt = "<select name=\"{$this->name}\" {$disable} class=\"form-control\">";
     if (is_array($this->value)) {
       foreach ($this->value as $k=>$v) {
         $selected = ($this->selected == $k) ? 'selected="selected"' : NULL;

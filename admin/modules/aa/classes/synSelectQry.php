@@ -30,7 +30,7 @@ class synSelectQry extends synElement {
     $disable = '';
     if ($this->chkTargetMultilang($this->qry)==1) $this->multilang=1;
     $this->value = $this->createArray($this->qry,$this->path);
-    $txt = "<select name='".$this->name."' $disable >\n";
+    $txt = "<select name='".$this->name."' {$disable} class=\"form-control\">\n";
     if (is_array($this->value)) { 
       #while (list($k, $v) = each($this->value)) {
       foreach($this->value AS $k=>$v){
