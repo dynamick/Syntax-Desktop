@@ -28,30 +28,33 @@ class synSelectFile extends synElement {
   //private function
   function _html() {
     $this->value = $this->createArray($this->translatePath(),$this->path);
-    $txt="<select name='".$this->name."' onchange=\"document.getElementById('select".$this->name."').src='".$this->translatePath()."'+this.value;\">";
+    $txt = "<select name='{$this->name}' class='form-control'>";
     if (is_array($this->value)) {
       while (list ($k, $v) = each ($this->value)) {
-        if ($this->translate($this->getValue())==$k) $selected="selected=\"selected\""; else $selected="";
-        if(
-          stripos($k, '.gif')>0 ||
-          stripos($k, '.jpg')>0 ||
-          stripos($k, '.png')>0
-        ){// se � una immagine la uso come sfondo (solo Firefox)
+        if ($this->translate($this->getValue())==$k)
+          $selected = 'selected="selected"';
+        else
+          $selected = null;
+        if ( stripos($k, '.gif')>0
+          || stripos($k, '.jpg')>0
+          || stripos($k, '.png')>0
+          ){ // se è una immagine la uso come sfondo (solo Firefox)
           $icon = $this->translatePath().'/'.$k;
-          $style =" style=\"padding:2px 0 2px 20px; background:url('$icon') no-repeat 0 50%;\"";
-        } else $style = '';
-        $txt.="<option value=\"".$k."\"{$selected}{$style}>".$v."</option>\n";
+          $style =" style=\"padding:2px 0 2px 20px; background:url('{$icon}') no-repeat 0 50%;\"";
+        } else {
+          $style = null;
+        }
+        $txt .= "<option value=\"{$k}\"{$selected}{$style}>{$v}</option>\n";
       }
       reset($this->value);
     }
-    $txt.="</select> <img id=\"select".$this->name."\" height=\"20\" src=\"".$this->translatePath().$this->translate($this->getValue())."\" onerror=\"this.src='images/blank.gif' \"  />\n";
+    $txt .= "</select>\n";
+
     return $txt;
   }
 
   //sets the value of the element
   function setValue($v) {
-    #global $$n;
-    #if (!isset($_REQUEST[$$n])) 
     $this->value = $this->createArray($this->translatePath(),$this->path);
     $this->selected = $v;
   }
@@ -89,7 +92,7 @@ class synSelectFile extends synElement {
     if ($dir = @opendir($synAbsolutePath.$path)) {
       while (false !== ($file = readdir($dir))) {
         // for Syntax Elements ... waiting for a better solution!
-        $file = str_replace('.php', '', $file); 
+        $file = str_replace('.php', '', $file);
         if (
           $file!="." &&
           $file!=".." &&

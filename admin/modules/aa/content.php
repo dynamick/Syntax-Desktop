@@ -10,10 +10,10 @@
   ***************************************************************************/
   if (isset($_GET["synSetLang"]))
     setLang($_GET["synSetLang"]);
-  elseif ($_SESSION["aa_CurrentLang"]=="") 
+  elseif ($_SESSION["aa_CurrentLang"]=="")
     setLang(1);
-  
-  
+
+
   define ('MODIFY',         'modifyrow');
   define ('CHANGE',         'changerow');
   define ('ADD',            'addrow');
@@ -28,13 +28,13 @@
   //load the lang settings
   lang(getSynUser(), $str);
 
-  if (isset($_REQUEST["aa_service"])) 
+  if (isset($_REQUEST["aa_service"]))
     $_SESSION["aa_service"] = $_REQUEST["aa_service"];
 
   $res = $db->Execute("SELECT path FROM aa_services WHERE id=".$_SESSION["aa_service"]);
   list($targetFileName)=$res->FetchRow();
-  
-  if ($targetFileName=="") 
+
+  if ($targetFileName=="")
     $targetFileName = "ihtml/auto_service.php";
 
  /***************************************************************************
@@ -50,19 +50,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>Content Frame</title>
-    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:700,300,600,400&subset=latin,cyrillic">  
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:700,300,600,400&subset=latin,cyrillic">
     <link rel="stylesheet" type="text/css" href="../../assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../assets/css/bootstrap-switch.min.css" />
     <link rel="stylesheet" type="text/css" href="../../assets/css/font-awesome.min.css" />
-    <link rel="stylesheet" type="text/css" href="../../assets/css/syntax.css" />  
-  
-    <!--link rel="stylesheet" type="text/css" href="content.css" /-->
-    <link rel="stylesheet" type="text/css" href="../../assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../assets/css/syntax.css" />
+
 
     <script type="text/javascript" src="<?=$synAdminPath?>/includes/js/DateTimePicker/datetimepicker.js"></script>
 
     <script type="text/javascript" src="../../assets/js/jquery.js"></script>
     <script type="text/javascript" src="<?=$synAdminPath?>/includes/js/ckeditor/ckeditor.js"></script>
     <script type="text/javascript" src="<?=$synAdminPath?>/includes/js/ckeditor/adapters/jquery.js"></script>
+
     <script type="text/javascript" src="content.js?rand=<?=rand(0,1000)?>"></script>
     <script type="text/javascript">
     //<![CDATA[
@@ -122,21 +122,28 @@
         var tr = el.parentNode.parentNode;
         if ( el.checked != false ) tr.className = ''; else tr.className = 'marked';
       }
-*/      
+*/
     //]]>
     </script>
   </head>
   <body>
     <div id="content" class="container-fluid">
 <?php
-  if (is_file($targetFileName)) 
+  if (is_file($targetFileName))
     include($targetFileName);
-  else 
+  else
     echo '<p>Function not yet implemented...</p>';
 ?>
     </div>
 
     <!--this is a div for the floating img viewer-->
     <div id="popupbox" style="position:absolute"></div>
+    <script type="text/javascript" src="../../assets/js/bootstrap-switch.min.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function(){
+      // init checkbox switches
+      $(".syn-check").bootstrapSwitch();
+    });
+    </script>
   </body>
 </html>

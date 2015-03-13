@@ -35,26 +35,31 @@ class synCheck extends synElement {
 
   //private function
   function _html() {
-    $selected = ($this->selected == true) ? ' checked="checked"' : null; 
-    return "<div class=\"checkbox\"><label><input type=\"checkbox\" name=\"{$this->name}\" maxsize=\"{$this->size}\" value=\"{$this->value}\"{$selected} /></label></div>"; 
+    $selected = ($this->selected == true)
+              ? ' checked="checked"' : null;
+    // regular checkbox
+    //$input = "<div class=\"checkbox\"><label><input type=\"checkbox\" name=\"{$this->name}\" maxsize=\"{$this->size}\" value=\"{$this->value}\"{$selected} /></label></div>";
+    // bootstrap switch
+    $input = "<input type=\"checkbox\" name=\"{$this->name}\" maxsize=\"{$this->size}\" value=\"{$this->value}\"{$selected} class=\"syn-check\" />";
+    return $input;
   }
 
   //set the value of the element
   function setValue($v) {
     if ($v=="") $this->selected=false; else $this->selected=true;
-  }  
+  }
 
   //get the value of the element
   function getValue() {
     if ($this->selected==true) return $this->value;
     else return "";
-  }  
-  
+  }
+
   //get the value for listing of the element
   function getCell() {
     global $key;
     if ($this->selected==true) $selected="checked=\"checked\""; else $selected="";
-    return "<input type='checkbox' name='".$this->name."' maxsize='".$this->size."' value='".$this->value."' $selected onclick=\"callServer('".$this->container->getKey()."', '".$this->name."', this.checked==false?'':'".$this->value."');\" />"; 
+    return "<input type='checkbox' name='".$this->name."' maxsize='".$this->size."' value='".$this->value."' $selected onclick=\"callServer('".$this->container->getKey()."', '".$this->name."', this.checked==false?'':'".$this->value."');\" />";
   }
 
   //function for the auto-configuration
@@ -77,8 +82,8 @@ class synCheck extends synElement {
     if ($k==99) return $this->configuration;
     else return $this->configuration[$k];
   }
-  
-  
+
+
 } //end of class check
 
 ?>
