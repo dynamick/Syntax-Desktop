@@ -86,21 +86,27 @@ class synSelectMultiCheck extends synElement {
 
   //get the label of the element
   function getCell() {
-    $ret = "";
-    if ($this->chkTargetMultilang($this->qry)==1) $this->multilang=1;
-    $this->value = $this->createArray2($this->qry,$this->path);
-    $selArr=explode("|",$this->selected);
+    $ret = '';
+    if ($this->chkTargetMultilang($this->qry) == 1)
+      $this->multilang = 1;
+    $this->value = $this->createArray2($this->qry, $this->path);
+    $selArr = explode('|', $this->selected);
     if (is_array($this->value)) {
+      $ret = array();
       foreach($this->value as $v)
-        if (in_array($v["id"],$selArr)) $ret .= $this->translate($v["value"]).", ";
-      $ret=substr($ret,0,-2);
-      return $ret;
+        if (in_array($v['id'], $selArr))
+          $ret[] = $this->translate( $v['value']);
+      $ret = implode(', ', $ret);
     }
+    return $ret;
   }
 
-  function setPath($path) {$this->path=$path;}
+  function setPath($path) {
+    $this->path = $path;
+  }
+
   function setQry($qry) {
-    $this->qry=$qry;
+    $this->qry = $qry;
   }
 
   function createArray($qry,$null=false) {

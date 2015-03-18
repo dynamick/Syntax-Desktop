@@ -67,7 +67,7 @@ class synInputfile extends synElement {
     if(!isset($_SESSION))
       session_start();
     $aa_CurrentLang = $_SESSION['aa_CurrentLang'];
-    
+
     $container=$this->container;
     $key=$container->getKey();
     $table=$container->table;
@@ -125,7 +125,7 @@ class synInputfile extends synElement {
   function getValue() {
       if (isset($_FILES[$this->name]))
         $value = $_FILES[$this->name];
-      else 
+      else
         $value = $this->value;
       $ext = '';
       if (is_array($value)) {
@@ -139,7 +139,7 @@ class synInputfile extends synElement {
 
   //get the label of the element
   function getCell() {
-  	global $synAbsolutePath;
+    global $synAbsolutePath;
     $ret = "";
     $show = "";
     $ext = $this->translate($this->value);
@@ -147,14 +147,23 @@ class synInputfile extends synElement {
     $filename = $mat.$this->createFilename().".".$ext;
     $file_exists = file_exists($synAbsolutePath.$filename);
     $isImg = $this->isImage($filename);
-    if ($ext and $file_exists and $isImg) {
+    if ( $ext
+      && $file_exists
+      && $isImg
+      ){
       $size = filesize($synAbsolutePath.$filename);
       list($w,$h) = @getimagesize($synAbsolutePath.$filename);
       if ($size<100000) $show = "style=\"background-image:url('".$filename."');\"";
-      $ret .= "<a class=\"preview\" ".$show." onMouseOver=\"openbox('$filename')\" onMouseOut=\"closebox()\"><span>".$ext." - <strong>".byteConvert($size)."</strong><br/>".$w."&#215;".$h."px</span></a>";
-    } elseif ($ext and $file_exists and !$isImg) {
+      $ret .= "<a class=\"preview\" {$show} href=\"{$filename}\" title=\"{$w}&#215;{$h}px\">{$ext} - <strong>".byteConvert($size)."</strong><br/>{$w}&#215;{$h}px</a>";
+
+    } elseif ( $ext
+      && $file_exists
+      && !$isImg
+      ){
       $ret = "<span style='color: gray'><a href=\"$filename\" target=\"_blank\" title=\"Download\">Document $ext</a></span>";
-    } elseif ($ext and !$file_exists) {
+    } elseif ( $ext
+      && !$file_exists
+      ){
       $ret = "<span style='color: gray'>Error $ext</span>";
     } else {
       $ret="<span style='color: gray'>Empty</span>";
@@ -164,12 +173,12 @@ class synInputfile extends synElement {
 
   //check if it is an image or a document
   function isImage($filename) {
-  	global $synAbsolutePath;
-  	$ret = false;
+    global $synAbsolutePath;
+    $ret = false;
     if (file_exists($synAbsolutePath.$filename)) {
       if (getimagesize($synAbsolutePath.$filename)!==false)
         $ret = true;
-    } 
+    }
     return $ret;
   }
 
@@ -190,7 +199,7 @@ class synInputfile extends synElement {
 
   //function for the auto-configuration
   function configuration($i="",$k=99) {
-	global $synAbsolutePath;
+  global $synAbsolutePath;
     global $synElmName,$synElmType,$synElmLabel,$synElmSize,$synElmHelp;
     global $synElmPath;
     $synHtml = new synHtml();

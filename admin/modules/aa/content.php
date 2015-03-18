@@ -144,6 +144,7 @@
     <script type="text/javascript" src="../../assets/js/bootstrap-datetimepicker.min.js"></script>
     <script type="text/javascript" src="../../assets/js/fontawesome-iconpicker.min.js"></script>
     <script type="text/javascript" src="../../assets/js/bootstrap-multiselect.js"></script>
+    <script type="text/javascript" src="../../assets/js/jquery.quickPreview.js"></script>
     <script type="text/javascript">
     $(document).ready(function(){
       // init checkbox switches
@@ -174,6 +175,9 @@
 
       // init icon-picker
       $('.icp').iconpicker();
+
+      // init image preview
+      $('.preview').quickPreview();
     });
     </script>
   </body>

@@ -99,9 +99,7 @@ body {
 .dropdown-menu.multi-level.l2 a {
   padding: 6px 30px 6px 12px;
 }
-.table-striped tr.selected td {
-    background:#FFFFEE;
-}
+
 #optionPane .pagination {margin:5px 0;}
 
 form.has-toolbar {
@@ -233,3 +231,35 @@ ul.nav-tree li span.opener.closed span.tree-icon-opened {display:none}
 ul.nav-tree li span.opener.closed span.tree-icon-closed,
 ul.nav-tree li span.opener.opened span.tree-icon-open {display:block}
 /* END Tree view */
+
+/* table */
+.table-striped tr.selected td {
+    background:#FFFFEE;
+}
+.table .preview {
+  display:block;
+  padding:2px 0;
+  text-align:center;
+  background-color:#333;
+  background-repeat:no-repeat;
+  background-position:center;
+  background-size:cover;
+  color:#fff;
+  font-size:10px;
+  line-height:12px;
+  text-shadow:1px 1px 0 rgba(0,0,0,0.3);
+}
+.table .preview:hover {
+  text-decoration:none;
+  opacity:0.5;
+}
+#preview {
+  position:absolute;
+  display:none;
+  background-color:#fff;
+}
+#preview img {
+  max-width:300px;
+  max-height:300px;
+}
+/* END table */
