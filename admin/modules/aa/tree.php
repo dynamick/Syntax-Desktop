@@ -12,6 +12,7 @@
   define('DELETE',         'delrow');
   define('MULTIPLEDELETE', 'delmultrow');
   define('RPC',            'rpcfunction');
+  define('JSON',           'getjson');
 
   //check the authorization
   auth();

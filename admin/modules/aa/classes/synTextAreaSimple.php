@@ -25,7 +25,7 @@ class synTextAreaSimple extends synElement {
   function setPath($value) {
     $this->type=$value;
   }
-  
+
   //private function
   function _html() {
     $value=($this->translate($this->value));
@@ -42,9 +42,22 @@ class synTextAreaSimple extends synElement {
 
   //get the label of the element
   function getCell() {
-    return $this->translate(substr(strip_tags($this->getValue()),0,200),true);
-  }    
-  
+    //return $this->translate(substr(strip_tags($this->getValue()),0,200),true);
+    $max = 80;
+    $str = strip_tags( $this->translate( $this->getValue(), true ) );
+    if (strlen($str) > $max)
+      $str = substr($str, 0, 80).'&hellip;';
+    return $str;
+  }
+
+  //get the label of the element
+  function getCell1() {
+    //return $this->translate(substr(strip_tags($this->getValue()),0,200),true);
+    $text = strip_tags( $this->translate($this->getValue()) );
+    $text = str_replace( array("\r", "\r\n", "\n"), '', $text );
+    return "<div class=\"text-holder\">{$text}</div>"; //substr($text, 0, 80);
+  }
+
   //function for the auto-configuration
   function configuration($i="",$k=99) {
     global $synElmName,$synElmType,$synElmLabel,$synElmSize,$synElmHelp, $synElmPath;
@@ -63,11 +76,11 @@ class synTextAreaSimple extends synElement {
     $_SESSION["synChkVisible"][$i]=1;
     $_SESSION["synChkEditable"][$i]=1;
     $_SESSION["synChkMultilang"][$i]=1;
-    
+
     if ($k==99) return $this->configuration;
     else return $this->configuration[$k];
   }
-  
+
 
 } //end of class text
 

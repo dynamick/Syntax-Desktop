@@ -7,40 +7,43 @@
   jQuery.fn.quickPreview = function() {
     var xOffset = 30, yOffset = 10;
 
-    $(this).hover(function(e){
-      var $this = $(this), caption = new Array(), size = new Array(), el;
+    $(document).on({
+      mouseenter: function (e) {
+        var $this = $(this), caption = new Array(), size = new Array(), el;
 
-      if ($this.data('ext'))
-        caption.push( '<span class="label label-success">'+$this.data('ext')+'</span>' );
-      if ($this.data('size'))
-        caption.push( '<span class="label label-warning">'+$this.data('size')+'</span>' );
-      if ($this.data('width'))
-        size.push( $this.data('width') );
-      if ($this.data('height'))
-        size.push( $this.data('height') );
-      if (size.length > 0)
-        caption.push( '<span class="label label-info ">'+size.join('&times')+'</span>');
+        if ($this.data('ext'))
+          caption.push( '<span class="label label-success">'+$this.data('ext')+'</span>' );
+        if ($this.data('size'))
+          caption.push( '<span class="label label-warning">'+$this.data('size')+'</span>' );
+        if ($this.data('width'))
+          size.push( $this.data('width') );
+        if ($this.data('height'))
+          size.push( $this.data('height') );
+        if (size.length > 0)
+          caption.push( '<span class="label label-info ">'+size.join('&times')+'</span>');
 
-      el = [
-        '<div id="preview" class="thumbnail">',
-        '<img src="'+ this.href +'">',
-        caption.join(' '),
-        '</div>'
-      ];
+        el = [
+          '<div id="preview" class="thumbnail">',
+          '<img src="'+ this.href +'">',
+          caption.join(' '),
+          '</div>'
+        ];
 
-      $("body").append( el.join('') );
-      $("#preview").css({
-        'top': e.pageY+yOffset+'px',
-        'left': e.pageX+xOffset+'px'
-        }).fadeIn('fast');
-    }, function(){
-      $("#preview").remove();
-    });
-    $(this).mousemove(function(e){
-      $("#preview").css({
-        'top': e.pageY+yOffset+'px',
-        'left': e.pageX+xOffset+'px'
-      });
-    });
+        $('body').append( el.join('') );
+        $('#preview').css({
+          'top': e.pageY+yOffset+'px',
+          'left': e.pageX+xOffset+'px'
+          }).fadeIn('fast');
+      },
+      mouseleave: function () {
+        $('#preview').remove();
+      },
+      mousemove: function(e) {
+        $('#preview').css({
+          'top': e.pageY+yOffset+'px',
+          'left': e.pageX+xOffset+'px'
+        });
+      }
+    }, '.preview');
   };
 })(jQuery);

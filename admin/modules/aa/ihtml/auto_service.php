@@ -34,9 +34,12 @@ function __autoload($class) {
     $obj[$count]->isListable($arr["isvisible"], $arr["label"], $arr["iseditable"]);
   //$obj[$count]->setContainer($contenitore);
 
-    if ($arr["path"]!="") $obj[$count]->setPath($arr["path"]);
-    if ($arr["iskey"]==1) $obj[$count]->setKey(true);
-    if ($arr["ismultilang"]==1) $obj[$count]->setMultilang(true);
+    if ($arr["path"] != "")
+      $obj[$count]->setPath($arr["path"]);
+    if ($arr["iskey"] == 1)
+      $obj[$count]->setKey(true);
+    if ($arr["ismultilang"] == 1)
+      $obj[$count]->setMultilang(true);
 
     if ( $arr["qry"]!=''
       && ( !isset($_REQUEST[$arr['name']]) || $_REQUEST[$arr["name"]] == '' )
@@ -58,13 +61,21 @@ function __autoload($class) {
   //                               INIZIALIZZAZIONE
   //----------------------------------------------------------------------------
   //variabili globali
-  $PHP_SELF=$_SERVER['PHP_SELF'];
+  $PHP_SELF = $_SERVER['PHP_SELF'];
 
   $cmd = '';
-  if (isset($_REQUEST['cmd'])) $cmd = $_REQUEST['cmd'];
-  if (isset($_POST['default-cmd']) && $cmd=='') $cmd = $_POST['default-cmd']; // FckEditor/toolbar save button
-  if (isset($_POST['after'])) $after = $_POST['after']; else $after="stay";
-  if (!defined("RPC")) define("RPC", "rpcfunction");
+  if (isset($_REQUEST['cmd']))
+    $cmd = $_REQUEST['cmd'];
+  if (isset($_POST['default-cmd']) && $cmd=='')
+    $cmd = $_POST['default-cmd']; // FckEditor/toolbar save button
+
+  if (isset($_POST['after']))
+    $after = $_POST['after'];
+  else
+    $after="stay";
+
+  if (!defined("RPC"))
+    define("RPC", "rpcfunction");
 
   //----------------------------------------------------------------------------
   //                                   FUNZIONI
@@ -169,6 +180,90 @@ function __autoload($class) {
 
 
 
+
+  // new queryBuilder
+  function buildQuery($contenitore, $db) {
+    global $treeFrame;
+
+    if (isset($_GET['aa_search_clean']))
+      unset($_SESSION['aa_qry']);
+
+    $query = new queryBuilder( 'select' );
+    $table = $query->addTable( $contenitore->getTable() );
+
+    foreach( $contenitore->element AS $e ){
+      if ($e->list || $e->is_key) {
+        if ($e->multilang == 1) {
+          $translation = $query->addJoin( 'aa_translation' );
+          $translation->setOn( $table->setField($e->name), $translation->setField('id') );
+          $translation->setMode( 'LEFT' );
+          $translation->addField( $_SESSION['aa_CurrentLangInitial'], $e->name.'aatrans' );
+        }
+        if (isset($e->table_join)) {
+          $tjoin = $query->addJoin( $table->getName() . '-' . $e->table_join );
+          $tjoin->setOn( $tjoin->setField( 'id_' . $table->getName()), $table->setField('id') );
+          $tjoin->addField( 'id_' . $e->table_join );
+          $query->addWhereClause( $tjoin->setField( $e->name ), 1 );
+
+        } else {
+          $table ->addField( $e->name );
+        }
+      }
+    }
+
+    if ( !isset($_SESSION['aa_joinStack']) ) {
+      $user = getSynUser();
+      $sql = <<<EOQ
+      SELECT gs.filter
+        FROM aa_group_services gs
+  INNER JOIN aa_groups g ON gs.group = g.id, aa_users u
+       WHERE u.id_group = g.id
+         AND u.id = '{$user}'
+         AND gs.id = '{$_SESSION['aa_group_services']}'
+EOQ;
+      $res = $db->Execute($sql);
+      $arr = $res->FetchRow();
+      if ( !empty($arr['filter']) ){
+        $query->addWhere( $arr['filter'] );
+      }
+    } else {
+      $stackKeys    = array_keys( $_SESSION['aa_joinStack'] );
+      $stackLastKey = array_pop( $stackKeys );
+      $join         = new synJoin( $_SESSION['aa_joinStack'][$stackLastKey]['idjoin'] );
+      $toElmName    = $join->toElmName;
+      $value        = $_SESSION['aa_joinStack'][$stackLastKey]['value'];
+
+      $query->addWhereClause( $table->setField($toElmName), $value );
+    }
+
+    //add tree permission
+    $treeQry = $contenitore->getTreePermission();
+    if (!empty($treeQry))
+      $query->addWhere( $treeQry );
+
+    //check owner field...
+    $owner = ( isset($contenitore->ownerField) )
+           ? $contenitore->ownerField
+           : null;
+    if (!empty($owner) && $treeFrame != 'true') { // ...unless it's a tree
+      $field = $table->setField($owner);
+      $clause = array(
+        "{$field} IN (".implode(',', $_SESSION['synGroupChild']).')',
+        "{$field} IS NULL",
+        "{$field} = ''"
+      );
+      // add owner clause in a single stack
+      $query->addWhere( '(' . implode(' OR ', $clause) . ')');
+    }
+
+    //$query->debug();
+    //echo 'POST: <pre>', print_r($_POST), '</pre>';
+    return $query; //->getQuery();
+  }
+
+
+
+
 //******************************************************************************
 //***........................................................................***
 //***............................... ACTIONS ................................***
@@ -181,9 +276,13 @@ function __autoload($class) {
   $synTitle = $contenitore->getTitle();
   $synDescription = $contenitore->getDescription();
 
-  if (!getSynUser()) {echo "<script>alert('Sessione scaduta. Prego riconnettersi.'); top.location.href='../../';</script>"; die("sessione scaduta");}
+  if (!getSynUser()) {
+    echo "<script>alert('Sessione scaduta. Prego riconnettersi.'); top.location.href='../../';</script>";
+    die("sessione scaduta");
+  }
 
   //include custom function. The naming convention is: path/to/modules/aa/custom/$synTable.php
+  //if ($cmd != JSON && file_exists($synAbsolutePath.$synAdminPath."/modules/aa/custom/".$synTable.".php")===true) {
   if (file_exists($synAbsolutePath.$synAdminPath."/modules/aa/custom/".$synTable.".php")===true) {
     include ($synAbsolutePath.$synAdminPath."/modules/aa/custom/".$synTable.".php");
   }
@@ -215,33 +314,6 @@ function __autoload($class) {
 
       echo $synHtml->form("action='$PHP_SELF' method='POST' enctype='multipart/form-data' onsubmit='javascript: true || loading();' autocomplete=\"off\"");
       $contenitore->getHtml();
-      /*
-      $after_options = array(
-        'exit' => $str['saveandexit'],
-        'stay' => $str['save'],
-       'clone' => $str['saveandclone'],
-         'new' => $str['saveandadd']
-      );
-      $label  = $str["new"];
-      $bottom  = "<table id=\"actions\">\n";
-      $bottom .= "  <tr>\n";
-      $bottom .= "    <td>";
-      $ico_off = "<img src=\"img/tool_undo.png\" alt=\"{$str['cancel']}\" /> ";
-      $bottom .= $synHtml->hidden("name='changeto' value=''");
-      $bottom .= $synHtml->hidden("name='default-cmd' value='".INSERT."'");
-      $bottom .= $synHtml->button("name='off' value='' class='cancel_button' onclick='document.location=\"{$PHP_SELF}\"; return false;'", $ico_off.$str["cancel"], 'reset');
-      $bottom .= "    </td>\n";
-      $bottom .= "    <td align=\"right\">";
-      $ico_ok  = "<img src=\"img/accept.png\" alt=\"{$str['save']}\" /> ";
-      $bottom .= $synHtml->select('name="after" class="submit-actions"', $after_options);
-      $bottom .= $synHtml->button("name='cmd' value='".INSERT."' class='action_button'", $ico_ok.'OK');
-      $bottom .= "    </td>\n";
-      $bottom .= "  </tr>\n";
-      $bottom .= "</table>\n";
-
-      echo $bottom;
-      echo $synHtml->form_c();
-      */
 
       $hiddens  = $synHtml->hidden("name='changeto' value=''");
       $hiddens .= $synHtml->hidden("name='default-cmd' value='".INSERT."'");
@@ -592,11 +664,114 @@ EOBOTTOMBAR;
 
         ////////////////////////////////////////////////////////////////////////
        //                                                                    //
+      //                                                                    //
+     //                                                                    //
+    ////////////////////////////////////////////////////////////////////////
+
+    case JSON:
+      if ($synLoggedUser->canModify==1) {
+        $label  = $str['modify'];
+        $button = "<a href=\"%s&amp;synPrimaryKey=%s\" class=\"btn btn-xs btn-success\" title=\"{$label}\">";
+        $button.= "<i class=\"fa fa-edit\"></i></a>";
+        $contenitore->buttons[$button] = "?cmd=".MODIFY;
+      }
+
+      # DELETE button
+      if ($synLoggedUser->canDelete==1) {
+        $label  = $str['delete'];
+        $button = "<a href=\"%s&amp;synPrimaryKey=%s\" class=\"btn btn-xs btn-danger\" title=\"{$label}\" ";
+        $button.= "onclick=\"return (confirm('{$str["sure_delete"]}'));\">";
+        $button.= "<i class=\"fa fa-trash\"></i></a>";
+        $contenitore->buttons[$button] = "?cmd=".DELETE;
+      }
+
+      if (isset($_GET['limit'])) {
+        $limit = $_GET['limit'];
+        unset( $_REQUEST['limit'] ); // TODO: synElement prende i valori in request. fixare
+      } else {
+        $limit = 10;
+      }
+
+      if (isset($_GET['offset'])) {
+        $offset = $_GET['offset'];
+        unset( $_REQUEST['offset'] ); // TODO: synElement prende i valori in request. fixare
+      } else {
+        $offset = 0;
+      }
+
+      if (isset($_GET['sort'])) {
+        $sort = $_GET['sort'];
+        unset( $_REQUEST['sort'] ); // TODO: synElement prende i valori in request. fixare
+      } else {
+        $sort = '';
+      }
+
+      if (isset($_GET['order'])) {
+        $order_dir = $_GET['order'];
+        unset( $_REQUEST['order'] ); // TODO: synElement prende i valori in request. fixare
+      } else {
+        $order_dir = 'asc';
+      }
+
+      if (isset($_GET['search'])) {
+        $search = $_GET['search'];
+        unset( $_REQUEST['search'] ); // TODO: synElement prende i valori in request. fixare
+      } else {
+        $search = '';
+      }
+
+      // instance query
+      $qry = buildQuery( $contenitore, $db );
+      if (empty($search))
+        $qry->setLimit( $limit, $offset );
+      if (!empty($sort))
+        $qry->addOrderBy( $sort, $order_dir );
+      //if (!empty($search))
+        //$qry->addSearchClause( $search );
+
+      // get row total
+      $tot = $db->Execute( $qry->getCountQuery() );
+      list($count) = $tot->fetchRow();
+
+      // get subset results
+      $res = $db->execute( $qry->getQuery() );
+      $data = array();
+      while ($row = $res->FetchRow()) {
+        $contenitore->updateValues( $row );
+        $hash = $contenitore->getJsonRow();
+        if (empty($search))
+          $data[] = $hash;
+        else {
+          $str_values = implode(' ', $hash);
+          if (stripos($str_values, $search ))
+            $data[] = $hash;
+        }
+      }
+      if (!empty($search)) {
+        $count = count($data);
+        if ($offset>0)
+          $data = array_slice( $data, $offset, $limit );
+      }
+
+      //echo '<pre>', print_r($data), '</pre>';
+      //$qry->debug();
+      // populate results json
+      $json = array(
+        'total' => $count,
+        'rows' => $data
+        );
+
+      echo json_encode( $json );
+    break;
+
+
+        ////////////////////////////////////////////////////////////////////////
+       //                                                                    //
       //                          LIST ALL ROWS                             //
      //                                                                    //
     ////////////////////////////////////////////////////////////////////////
 
-    case '':
+    case 'OLD':
       global $treeFrame;
       echo "<!-- *** inclusione di schema.php *** -->\n";
 
@@ -679,6 +854,89 @@ EOSCRIPT;
       }
 
       break;
+
+        ////////////////////////////////////////////////////////////////////////
+       //                                                                    //
+      //                          LIST ALL ROWS                             //
+     //                                                                    //
+    ////////////////////////////////////////////////////////////////////////
+
+    case '':
+      global $treeFrame;
+
+      resetClone($synTable);
+      // TO DO: questo sbianca la ricerca. trovare una soluzione!!!
+      //unset($_POST); //in caso di edit abortito
+
+      if ($synLoggedUser->canModify==1) {
+        $label  = $str['modify'];
+        $contenitore->buttons[$label] = MODIFY;
+      }
+
+      # DELETE button
+      if ($synLoggedUser->canDelete==1) {
+        $label  = $str['delete'];
+        $contenitore->buttons[$label] = DELETE;
+      }
+
+      //perform the qry
+      $qry = addQueryWhere("SELECT `{$synTable}`.* FROM `{$synTable}`");
+      $res = $db->Execute( $qry );
+      //echo 'qry: '.$qry.'<br>';
+
+      /*
+      $qry = buildQuery( $contenitore, $db );
+      $res = $db->execute( $qry->getQuery() );
+      echo 'qry: '.$qry->getQuery().'<br>';
+      */
+
+      if ($treeFrame == "true") {
+        //$contenitore->getTree2( $qry );
+        $contenitore->getTree( $qry );
+
+      } else {
+        if ($contenitore->treeExists()===true) {
+          echo "<script type=\"text/javascript\">\n"
+             . "  parent.refreshTreeFrame();\n"
+             . "  parent.openTreeFrame();\n"
+             . "</script>\n";
+        }
+        $dir = (isset($_SESSION['aa_order_direction']) && strpos($_SESSION['aa_order_direction'], 'DESC'))
+             ? 'desc'
+             : 'asc' ;
+        $header = $contenitore->getJsonHeader();
+        $table = <<<EOTABLE
+        <div id="filter-bar"></div>
+        <table id="mainTable"
+          class="table table-striped table-condensed"
+          data-url="getData.php?cmd=getjson"
+          data-click-to-select="false"
+          data-select-item-name="checkrow"
+          data-show-filter="true"
+          data-show-refresh="true"
+          data-show-toggle="true"
+          data-show-columns="true"
+          data-search="true"
+          data-sort-name="{$_SESSION['aa_order']}"
+          data-sort-order="{$dir}"
+          data-side-pagination="server"
+          data-pagination="true"
+          data-page-list="[10, 20, 50, 100]"
+          data-icons-prefix="fa">
+          <thead>
+            <tr>{$header}</tr>
+          </thead>
+        </table>
+EOTABLE;
+
+        echo aaHeader( translateDesktop($contenitore->title), translateDesktop($contenitore->description) );
+        echo $table;
+
+        //echo the multilang option
+        echo $contenitore->getMultilangBoxNew(1);
+      }
+      break;
+
   }
 
   //jump to the next page
@@ -690,8 +948,7 @@ EOSCRIPT;
     $header = <<<EOHEADER
     <div id="formHeader" class="page-header">
       <h2>
-        {$title}<br>
-        <small><i class="fa fa-info-circle"></i> {$title2}</small>
+        <span data-placement="right" data-toggle="tooltip" data-original-title="{$title2}">{$title}</span>
       </h2>
     </div>
 EOHEADER;

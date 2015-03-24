@@ -21,6 +21,7 @@
   define ('DELETE',         'delrow');
   define ('MULTIPLEDELETE', 'delmultrow');
   define ('RPC',            'rpcfunction');
+  define ('JSON',           'getjson');
 
   //check the authorization
   auth();
@@ -56,6 +57,7 @@
     <link rel="stylesheet" type="text/css" href="../../assets/css/bootstrap-switch.min.css" />
     <link rel="stylesheet" type="text/css" href="../../assets/css/bootstrap-datetimepicker.min.css" />
     <link rel="stylesheet" type="text/css" href="../../assets/css/bootstrap-multiselect.css" />
+    <link rel="stylesheet" type="text/css" href="../../assets/css/bootstrap-table.min.css" />
     <link rel="stylesheet" type="text/css" href="../../assets/css/fontawesome-iconpicker.min.css" />
     <link rel="stylesheet" type="text/css" href="../../assets/css/syntax.css" />
 
@@ -89,40 +91,8 @@
       action('refreshBtn','window.parent.content.location.reload();');
       action('saveBtn',   'window.parent.content.document.forms[0].submit()');
       action('removeBtn', 'if (confirm(top.str["aa_confirmSelDel"])) window.parent.content.document.forms[0].submit();');
-      action("homeBtn",   'window.parent.content.location.href="<?=$PHP_SELF?>"');
-/*
-      var marked_row = new Array;
-      var toggle = false;
-      function markAllRows(container_id) {//funzione adattata da phpMyAdmin
-        var rows = document.getElementById(container_id).getElementsByTagName('tr');
-        var unique_id;
-        var checkbox;
-        for ( var i = 0; i < rows.length; i++ ) {
-          checkbox = rows[i].getElementsByTagName( 'input' )[0];
-          if ( checkbox && checkbox.type == 'checkbox' ) {
-            unique_id = checkbox.name + checkbox.value;
-            if (toggle==false) {
-              checkbox.checked = true;
-              if ( typeof(marked_row[unique_id]) == 'undefined' || !marked_row[unique_id] ) {
-                rows[i].className = 'marked';
-                marked_row[unique_id] = true;
-              }
-            } else {
-              checkbox.checked = false;
-              rows[i].className = '';
-              marked_row[unique_id] = false;
-            }
-          }
-        }
-        toggle = (toggle==false ? true : false);
-        return true;
-      }
+      action('homeBtn',   'window.parent.content.location.href="<?=$PHP_SELF?>"');
 
-      function selectRow(el) {
-        var tr = el.parentNode.parentNode;
-        if ( el.checked != false ) tr.className = ''; else tr.className = 'marked';
-      }
-*/
     //]]>
     </script>
   </head>
@@ -138,6 +108,9 @@
 
     <script type="text/javascript" src="../../assets/js/moment-with-locales.min.js"></script>
     <script type="text/javascript" src="../../assets/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../assets/js/bootstrap-table.min.js"></script>
+    <script type="text/javascript" src="../../assets/js/bootstrap-table-it-IT.min.js"></script>
+
     <script type="text/javascript" src="../../assets/js/bootstrap-switch.min.js"></script>
     <script type="text/javascript" src="../../assets/js/bootstrap-datetimepicker.min.js"></script>
     <script type="text/javascript" src="../../assets/js/fontawesome-iconpicker.min.js"></script>
@@ -171,11 +144,24 @@
         includeSelectAllOption: true
       });
 
+      $('#mainTable').bootstrapTable({
+        icons: {
+          refresh: 'fa fa-refresh',
+          toggle: 'fa fa-th-list',
+          columns: 'fa fa-columns'
+        }
+      });
+
       // init icon-picker
       $('.icp').iconpicker();
 
       // init image preview
       $('.preview').quickPreview();
+
+      // init tooltip
+      $('[data-toggle="tooltip"]').tooltip({
+        container: 'body'
+      })
     });
     </script>
   </body>

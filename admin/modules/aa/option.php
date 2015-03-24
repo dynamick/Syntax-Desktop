@@ -2,7 +2,7 @@
   session_start();
   require_once ('../../includes/php/utility.php');
   lang( getSynUser(), $str);
-  
+
 ?><!DOCTYPE html>
 <html lang="en">
   <head>
@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>Options Frame</title>
-    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:700,300,600,400&subset=latin,cyrillic">  
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:700,300,600,400&subset=latin,cyrillic">
     <link rel="stylesheet" type="text/css" href="../../assets/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="../../assets/css/font-awesome.min.css" />
     <link rel="stylesheet" type="text/css" href="../../assets/css/syntax.css" />
@@ -29,12 +29,12 @@
       ['refresh',       'refreshBtn', '<?=$str["refresh"]?>', 'btn-info'],
       ['reply',         'backBtn',    '<?=$str["back"]?>',    'btn-info']
     ];
-    
+
     function makeToolBar(where){//crea i pulsanti
       var str='';
       var index = 0;
       for( i = 0; i < toolArray.length; i++){
-        var 
+        var
           ico       = '<i class="fa fa-md fa-' + toolArray[i][0] +'"></i>',
           ls_class  = null,
           tt        = null;
@@ -58,6 +58,7 @@
         <div class="box pagination">
           <div id="menu1" class="btn-group btn-group-justified" role="group"></div>
         </div>
+        <!--
         <nav>
           <ul class="pagination">
             <li class="disabled"><a id="first" aria-label="<?= $str['first'] ?>"><i class="fa fa-angle-double-left" aria-hidden="true"></i></a></li>
@@ -68,14 +69,13 @@
         </nav>
         <ul class="pagination pagination-sm" id="pages"></ul>
         <p id="status"></p>
+        -->
       </div>
 
-        <div id="custom"></div>
+      <div id="multilang" class="panel panel-default"></div>
+      <div id="custom"></div>
 
-        <div id="multilang" class="panel panel-default"></div>
-
-       
-        
+        <!--
         <div class="panel panel-default">
           <div class="panel-heading">
             <h3 class="panel-title">Filtra risultati</h3>
@@ -116,7 +116,7 @@
                   </button>
                 </div>
                 <div class="btn-group">
-                  <button type="reset" class="btn btn-default btn-sm" 
+                  <button type="reset" class="btn btn-default btn-sm"
                     onclick="window.parent.content.document.location.href='content.php?aa_search_clean=1'">
                     <i class="fa fa-times-circle"></i><br>
                     <?= $str['cancel'] ?>
@@ -126,7 +126,7 @@
             </form>
           </div>
         </div>
-        
+        -->
       </div>
     </div>
 
@@ -140,6 +140,6 @@
         container: 'body'
       })
     });
-    </script>    
+    </script>
   </body>
 </html>

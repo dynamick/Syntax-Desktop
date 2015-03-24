@@ -176,13 +176,90 @@ EOHTML;
       }
     } else $startQry="";
     ///////////////////////
-
+//echo 'qry: '.$qry.'<br>';
+//echo 'startQry: '.$startQry.'<br>';
     //elements
     foreach($this->element as $k=>$v) {
       if (strtolower(get_class($this->element[$k]))=="syntree")
-        $this->element[$k]->getTree($qry,$startQry);
+        $this->element[$k]->getTree($qry, $startQry);
     }
   }
+
+// TODO
+/*
+  function getTree2($qry) {
+    global $db;
+
+    if (!is_a($qry, 'queryBuilder')) {
+      throw new Exception('Query is not a queryBuilder object!');
+    }
+    $ret = null;
+    $startQry = null;
+
+    if ($this->table == 'aa_page')
+      $qry->addOrderBy('order');
+    foreach( $this->element as $k => $v ){
+      if (strtolower(get_class( $this->element[$k]) ) == 'syntreegroup')
+        $groupField = $this->element[$k]->name;
+
+      if (strtolower(get_class( $this->element[$k]) ) == 'syntree')
+        $treeField = $this->element[$k]->name;
+
+      if (strtolower(get_class( $this->element[$k]) ) == 'synkey')
+        $keyField = $this->element[$k]->name;
+    }
+    if (isset($groupField) && !empty($groupField)) {
+      $res = $db->Execute( $qry->getQuery() );
+      //-----
+      while ($arr = $res->FetchRow()) {
+        $id = $arr['id'];
+        $parent = $arr[$treeField];
+        if ( empty($qry->_getWhere()) ) {
+
+        } else {
+
+        }
+
+        if (strpos($qry,"WHERE")==false)
+          $myqry = str_replace("ORDER BY", " WHERE `$keyField` ='$parent' ORDER BY", $qry);
+        else
+          $myqry = str_replace("ORDER BY", " AND `$keyField` ='$parent' ORDER BY", $qry);
+
+        $res2=$db->Execute($myqry);
+        if ($res2->RecordCount()==0) $ret.="OR `$keyField`='$id' ";
+      }
+      if (strlen($ret)>0) {
+        $startQry=str_replace("ORDER BY "," AND (".substr($ret,3).") ORDER BY ",$qry);
+      }
+      //----
+      while ( $arr = $res->FetchRow() ) {
+        $id = $arr['id'];
+        $parent = $arr[$treeField];
+        if (strpos($qry,"WHERE")==false)
+          $myqry = str_replace("ORDER BY", " WHERE `$keyField` ='$parent' ORDER BY",$qry);
+        else
+          $myqry = str_replace("ORDER BY", " AND `$keyField` ='$parent' ORDER BY",$qry);
+        $res2 = $db->Execute( $myqry );
+        if ($res2->RecordCount()==0)
+          $ret .= "OR `$keyField`='$id' ";
+      }
+      if (strlen($ret)>0) {
+        $startQry = str_replace("ORDER BY "," AND (".substr($ret,3).") ORDER BY ", $qry);
+      }
+
+
+      $qry2 = clone $qry;
+      $qry2->addWhereClause( $keyField, $parent );
+      $qry2->addOrClause( $keyField, $id );
+      $startQry = $qry2->getQuery();
+    }
+
+    foreach( $this->element as $k => $v ) {
+      if (strtolower(get_class($this->element[$k])) == 'syntree')
+        $this->element[$k]->getTree( $qry->getQuery(), $startQry->getQuery() );
+    }
+  }
+*/
 
   //return a sql string like AND id='22' AND id='8' AND id='10' AND id='11' AND id='23'
   //manage the group access point in a data tree structure
@@ -339,6 +416,66 @@ EOHTML;
     return $ret;
   }
 
+  //return the Row (i.e.: <tr><td>michele</td><td>gobbi</td></tr> )
+  function getJsonRow() {
+    $ret  = array();
+    $flg  = 0;
+    $even = $this->_getEven();
+    $key  = $this->getKey();
+
+    //get the current join from the join stack
+    if ( isset($_SESSION["aa_joinStack"])
+      && is_array($_SESSION["aa_joinStack"])
+      ){
+      $stackKeys    = array_keys($_SESSION["aa_joinStack"]);
+      $stackLastKey = $stackKeys[count($stackKeys)-1];
+      $join         = new synJoin($_SESSION["aa_joinStack"][$stackLastKey]["idjoin"]);
+      $toElmName    = $join->toElmName;
+    } else {
+      $toElmName    = '';
+    }
+
+    //elements
+    foreach( $this->element as $k => $v ) {
+      //if ($this->element[$k]->list == true) {
+      $field = $this->element[$k]->name;
+      if ($toElmName == $field)
+        continue;
+      if ($flg==0)
+        $flg = 1;
+      else
+        $flg = 0;
+      //$ret  .= $this->_col( $even, $flg, $key, $field, $this->element[$k]->editable );
+      $ret[$field]   = $this->element[ $k ]->getCell();
+    }
+
+    //joins
+    foreach($this->joins as $k => $v) {
+      $elm = $this->getElement( $v->fromElmName );
+      $key = md5($v->name);
+      $url = 'index.php?aa_value='.$elm->getValue().'&aa_idjoin='.$v->id;
+
+      $j  = "<a class=\"btn btn-link btn-xs btn-block\" href=\"{$url}\" target=\"_parent\">";
+      $j .= "<img src=\"".$v->icon."\" alt=\"".$v->name."\" style=\"vertical-align:bottom\"/> "; //</a>";
+      $j .= "<small class=\"badge\">".$v->getCount( $this->getKeyValue() )."</small></a>";
+
+      //$ret[$v->toElmName] = $j;
+      $ret[$key] = $j;
+    }
+
+    //buttons
+    foreach($this->buttons as $k => $v) {
+      if (!empty($v)) {
+        $key = str_replace('?cmd=', '', $v);
+        $ret[$key] = sprintf($k, $v, $this->getKey());
+      }
+    }
+    //echo '<pre>', print_r($ret), '</pre>'; die('111');
+    return $ret;
+  }
+
+
+
   //return the Header row (i.e.: <tr><td>Name</td><td>Surname</td></tr> )
   function getHeader() {
     $ret="";
@@ -377,6 +514,67 @@ EOHTML;
 
     return $ret;
   }
+
+
+  //return the Header row (i.e.: <tr><td>Name</td><td>Surname</td></tr> )
+  function getJsonHeader() {
+
+    $headers = array();
+
+    //get the current join from the join stack
+    if ( isset($_SESSION['aa_joinStack'])
+      && is_array($_SESSION['aa_joinStack'])
+      ){
+      $stackKeys    = array_keys($_SESSION['aa_joinStack']);
+      $stackLastKey = $stackKeys[count($stackKeys)-1];
+      $join         = new synJoin( $_SESSION['aa_joinStack'][$stackLastKey]['idjoin'] );
+      $toElmName    = $join->toElmName;
+    } else {
+      $toElmName    = '';
+    }
+
+    if ($this->multidelete==true)
+      $headers[] = '<th data-field="state" data-checkbox="true" data-switchable="false"></th>';
+
+    foreach( $this->element as $k => $v ) {
+      //$headers[] = "<th>{$v->colname}</th>";
+      $header_attr = array();
+      $header_attr['field'] = $v->name;
+      $header_attr['sortable'] = true;
+      if ($v->list == false)
+        $header_attr['visible'] = 'false';
+      //$header_attr['formatter'] = 'priceFormatter';
+
+      $attr = '';
+      foreach( $header_attr as $hk => $hv)
+        $attr .= " data-{$hk}=\"{$hv}\"";
+
+      $flag   = ($v->multilang == 1)
+              ? $this->getLangFlag('', '').'&nbsp;'
+              : null;
+      $label  = translateDesktop( $v->colname );
+
+      if ($toElmName != $v->name)
+        $headers[] = "<th{$attr}>{$flag}{$label}</th>";
+
+      //if (isset($_SESSION['aa_order']) && $_SESSION['aa_order'] == $this->element[$k]->name)
+      //  $_SESSION["aa_order_direction"]==" ASC" ? $ret.=" <img src=\"images/up.gif\" />" : $ret.=" <img src=\"images/down.gif\" />";
+    }
+
+    foreach( $this->joins as $k => $v) {
+      //echo $k.':<pre>', print_r($v), '</pre>';
+      $key = md5($v->name);
+      $headers[] = "<th data-field=\"{$key}\" data-sortable=\"false\">{$v->name}</th>";
+    }
+
+    foreach( $this->buttons as $k => $v)
+      $headers[] = "<th data-field=\"{$v}\" data-switchable=\"false\"></th>";
+
+    //echo '<pre>', print_r($this->joins), '</pre>'; die('111');
+    //echo '<pre>', print_r($headers), '</pre>'; die('111');
+    return implode($headers, "\n");
+  }
+
 
   //update the col field search (i.e.: addSearchField('name', 'Nome'), ...)
   function getColumnSearch() {
@@ -550,7 +748,7 @@ EOHTML;
   //act=2  --> insert/modify: submit and change lang
   function getMultilangBox($act=1) {
     global $db,$str;
- 		$aa_CurrentLang=$_SESSION["aa_CurrentLang"];
+    $aa_CurrentLang=$_SESSION["aa_CurrentLang"];
     $ret = '';
     if ($this->isMultilang()===true) {
       $qry = "SELECT * FROM aa_lang";
@@ -589,7 +787,7 @@ EOHTML;
 
   function getMultilangBoxNew($act=1) {
     global $db, $str;
- 		$aa_CurrentLang = $_SESSION["aa_CurrentLang"];
+    $aa_CurrentLang = $_SESSION["aa_CurrentLang"];
     $ret = '';
     if ($this->isMultilang()===true) {
       $qry = "SELECT * FROM aa_lang";
@@ -808,16 +1006,6 @@ ENDOFQUERY;
     reset($this->element);
   }
 
-/*
-  function prepare_update() {
-    $ret = true;
-    foreach($this->element as $ke=>$ve) {
-      $f = $ve->prepare_update();
-      $ret = $ret && $f;
-    }
-    return $ret;
-  }
- */
   function prepare_update() {
     foreach($this->element as $ke=>$ve) {
       $this->add_callback('prepare_update_element', array($ve, 'prepare_update'));
@@ -831,14 +1019,6 @@ ENDOFQUERY;
     array_push($this->hooks[$hook], $func);
     return true;
   }
-
-/*
-  function add_callback($hook, $func) {//array($obj, $function)
-    if(!is_array($this->hooks[$hook])) $this->hooks[$hook]=array();
-    array_push($this->hooks[$hook], $func);
-    return true;
-  }
-*/
 
   function execute_callbacks($hook) {
     $ret = true;
@@ -855,25 +1035,6 @@ ENDOFQUERY;
     return $ret;
   }
 
-/*
-  function execute_callbacks($hook) {
-    $ret = true;
-echo '1. <pre>', print_r($this->hooks[$hook]), '</pre>#<br>';
-    if (is_array($this->hooks[$hook])) {
-      echo '<ol>';
-      foreach($this->hooks[$hook] as $h) {
-        $cnt ++;
-        echo '<li><pre>', print_r($h), '</pre></li>';
-        $f = call_user_func($h);
-        $ret = $ret && $f;
-      }
-      echo '</ol>';
-      unset($this->hooks[$hook]);
-    }
-echo '2. <pre>', print_r($this->hooks[$hook]), '</pre>#<br>';
-    return $ret;
-  }
-*/
 
   //*****************************JOIN METHODS**********************************
   function checkJoins($fromid) {
