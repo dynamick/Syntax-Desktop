@@ -111,10 +111,10 @@ class synInputfile extends synElement {
     $ext = $this->translate($this->getValue());
     $mat = $this->compileQry($this->translatePath($this->mat));
     $filename = $this->createFilename(false);
-    if($this->multilang==1) {
-      $fileToBeRemoved=$synAbsolutePath.$mat."/".$filename."_*";
+    if ($this->multilang==1) {
+      $fileToBeRemoved = $synAbsolutePath.$mat."/".$filename."_*";
     } else {
-      $fileToBeRemoved=$synAbsolutePath.$mat."/".$filename.".*";
+      $fileToBeRemoved = $synAbsolutePath.$mat."/".$filename.".*";
     }
     foreach (glob($fileToBeRemoved) as $filename) {
       unlink($filename);
@@ -129,10 +129,12 @@ class synInputfile extends synElement {
         $value = $this->value;
       $ext = '';
       if (is_array($value)) {
-        $ext = end(explode(".", $value["name"]));
+        $ext = end(explode('.', $value['name']));
       } else {
-        if ($ext=="" && isset($_REQUEST[$this->name."_old"])) $ext = $_REQUEST[$this->name."_old"];
-        if ($ext=="") $ext = $value;
+        if ($ext == '' && isset($_REQUEST[ $this->name.'_old' ]))
+          $ext = $_REQUEST[ $this->name.'_old' ];
+        if ($ext == '')
+          $ext = $value;
       }
       return strtolower($ext);
   }
@@ -140,33 +142,38 @@ class synInputfile extends synElement {
   //get the label of the element
   function getCell() {
     global $synAbsolutePath;
-    $ret = "";
-    $show = "";
-    $ext = $this->translate($this->value);
-    $mat = $this->compileQry($this->translatePath($this->mat));
-    $filename = $mat.$this->createFilename().".".$ext;
-    $file_exists = file_exists($synAbsolutePath.$filename);
-    $isImg = $this->isImage($filename);
+    $ret          = '';
+    $show         = null;
+    $ext          = $this->translate( $this->value );
+    $mat          = $this->compileQry( $this->translatePath($this->mat) );
+    $filename     = $mat.$this->createFilename().'.'.$ext;
+    $file_exists  = is_file( $synAbsolutePath.$filename );
+    $is_image     = $this->isImage( $filename );
+
     if ( $ext
       && $file_exists
-      && $isImg
+      && $is_image
       ){
       $size = filesize($synAbsolutePath.$filename);
-      list($w,$h) = @getimagesize($synAbsolutePath.$filename);
-      if ($size<100000) $show = "style=\"background-image:url('".$filename."');\"";
-      $ret .= "<a class=\"preview\" {$show} href=\"{$filename}\" title=\"{$w}&#215;{$h}px\">{$ext} - <strong>".byteConvert($size)."</strong><br/>{$w}&#215;{$h}px</a>";
+      $fsize = byteConvert($size);
+      list($w, $h) = @getimagesize($synAbsolutePath.$filename);
+      if ($size < 100000)
+        $show = "style=\"background-image:url('{$filename}');\"";
+      $ret .= "<a class=\"preview\" {$show} href=\"{$filename}\" data-ext=\"{$ext}\" data-size=\"{$fsize}\" data-width=\"{$w}\" data-height=\"{$h}px\">&nbsp;</a>";
 
     } elseif ( $ext
-      && $file_exists
-      && !$isImg
-      ){
-      $ret = "<span style='color: gray'><a href=\"$filename\" target=\"_blank\" title=\"Download\">Document $ext</a></span>";
+        && $file_exists
+        && !$is_image
+        ){
+      $ret = "<span class=\"text-muted\"><a href=\"{$filename}\" target=\"_blank\" title=\"Download\">Document {$ext}</a></span>";
+
     } elseif ( $ext
-      && !$file_exists
-      ){
-      $ret = "<span style='color: gray'>Error $ext</span>";
+        && !$file_exists
+        ){
+      $ret = "<span class=\"text-muted\">Error {$ext}</span>";
+
     } else {
-      $ret="<span style='color: gray'>Empty</span>";
+      $ret = '<span class="text-muted">Empty</span>';
     }
     return $ret;
   }
@@ -193,7 +200,8 @@ class synInputfile extends synElement {
   //translate path and insert dynamic content
   function translatePath($path) {
     global $synAdminPath;
-    if (strpos($path,"�syntaxRelativePath�")!==false) $path=str_replace("�syntaxRelativePath�",$synAdminPath,$path);
+    if (strpos($path, '§syntaxRelativePath§') !== false)
+      $path = str_replace('§syntaxRelativePath§', $synAdminPath, $path);
     return $path;
   }
 

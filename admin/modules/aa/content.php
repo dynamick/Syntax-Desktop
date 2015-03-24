@@ -136,8 +136,6 @@
     ?>
     </div>
 
-    <!--this is a div for the floating img viewer-->
-    <div id="popupbox" style="position:absolute"></div>
     <script type="text/javascript" src="../../assets/js/moment-with-locales.min.js"></script>
     <script type="text/javascript" src="../../assets/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../assets/js/bootstrap-switch.min.js"></script>

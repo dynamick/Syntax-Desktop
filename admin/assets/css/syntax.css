@@ -245,8 +245,10 @@ ul.nav-tree li span.opener.opened span.tree-icon-open {display:block}
   background-position:center;
   background-size:cover;
   color:#fff;
+  /*
   font-size:10px;
   line-height:12px;
+  */
   text-shadow:1px 1px 0 rgba(0,0,0,0.3);
 }
 .table .preview:hover {
