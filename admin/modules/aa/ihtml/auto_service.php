@@ -742,8 +742,8 @@ EOBOTTOMBAR;
         if (empty($search))
           $data[] = $hash;
         else {
-          $str_values = implode(' ', $hash);
-          if (stripos($str_values, $search ))
+          $str_values = strip_tags( implode(' ', $hash) );
+          if ( stripos( $str_values, $search ) !== false)
             $data[] = $hash;
         }
       }
