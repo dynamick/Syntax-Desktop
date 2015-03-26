@@ -95,6 +95,8 @@ EOINPUT;
 
   //private: formats the date in a dd-mm-yyyy (Hours:Min:sec)format
   function dateIsoFormat($value) {
+    if (is_array($value) && isset($value[0][ $this->name ]))
+      $value = $value[0][ $this->name ];
     if (preg_match('/^\d{2}-\d{2}-\d{4} \d{2}:\d{2}:\d{2}$/', $value)) {
       $dateHour = explode(' ',$value);
       $splitted = explode('-',$dateHour[0]);
