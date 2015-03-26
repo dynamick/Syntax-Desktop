@@ -1,5 +1,5 @@
 # MySQL dump of database 'syntax' on host 'localhost'
-# backup date and time: 03/07/15 16:50:25
+# backup date and time: 03/26/15 14:16:32
 # built by phpMyBackupPro v.2.1
 # http://www.phpMyBackupPro.net
 
@@ -16,7 +16,7 @@ CREATE TABLE `aa_element` (
   `order` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `id` (`classname`)
-) ENGINE=MyISAM AUTO_INCREMENT=31 DEFAULT CHARSET=utf8 COMMENT='Elementi che compongono un contenitore' AUTO_INCREMENT=31;
+) ENGINE=MyISAM AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 COMMENT='Elementi che compongono un contenitore' AUTO_INCREMENT=32;
 
 
 ### data of table `aa_element` ###
@@ -50,6 +50,7 @@ insert into `aa_element` values ('27', 'TextField Numeric Decimal', 'synTextDeci
 insert into `aa_element` values ('28', 'Text Multiple Join', 'synTextJoin', '160');
 insert into `aa_element` values ('29', 'Page Slug', 'synSlug', '170');
 insert into `aa_element` values ('30', 'Date and Time (read-only)', 'synDateTimeReadonly', '91');
+insert into `aa_element` values ('31', 'Icon picker', 'synIcon', '140');
 
 
 ### structure of table `aa_group_services` ###
@@ -69,6 +70,7 @@ CREATE TABLE `aa_group_services` (
   `delete` varchar(255) NOT NULL,
   `link` varchar(255) NOT NULL,
   `icon` varchar(255) NOT NULL,
+  `ip` varchar(30) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `group` (`group`)
 ) ENGINE=MyISAM AUTO_INCREMENT=235 DEFAULT CHARSET=utf8 AUTO_INCREMENT=235;
@@ -76,67 +78,66 @@ CREATE TABLE `aa_group_services` (
 
 ### data of table `aa_group_services` ###
 
-insert into `aa_group_services` values ('9', '3010', '18', '10', '1', '2', '', '1', '1', '1', '', 'user.png');
-insert into `aa_group_services` values ('15', '3020', '18', '11', '1', '3', '', '1', '1', '1', '', 'accept.png');
-insert into `aa_group_services` values ('18', '30', '0', '9', '1', '0', '', '1', '1', '1', '', 'star.png');
-insert into `aa_group_services` values ('54', '1010', '152', '7', '1', '116', '', '1', '1', '1', '', 'application_double.png');
-insert into `aa_group_services` values ('64', '3030', '18', '8', '1', '124', '', '1', '1', '1', '', 'image.png');
-insert into `aa_group_services` values ('76', '1020', '152', '740', '1', '127', '', '1', '1', '1', '', 'email.png');
-insert into `aa_group_services` values ('125', '10', '128', '603', '2', '2', '', '', '', '', '', '.svn');
-insert into `aa_group_services` values ('128', '40', '0', '555', '2', '0', '', '', '', '', '', 'accept.png');
-insert into `aa_group_services` values ('129', '10', '131', '741', '2', '116', '', '', '', '', '', '');
-insert into `aa_group_services` values ('130', '20', '131', '742', '2', '124', '', '', '', '', '', '');
-insert into `aa_group_services` values ('131', '10', '0', '743', '2', '0', '', '', '', '', '', '');
-insert into `aa_group_services` values ('135', '3040', '18', '12', '1', '5', '', '1', '1', '1', '', 'pencil.png');
-insert into `aa_group_services` values ('151', '3050', '18', '13', '1', '136', '', '1', '1', '1', '', 'bricks.png');
-insert into `aa_group_services` values ('152', '10', '0', '6', '1', '0', '', '', '', '', '', 'page_white_edit.png');
-insert into `aa_group_services` values ('153', '40', '0', '15', '1', '0', '', '', '', '', '', 'wrench_orange.png');
-insert into `aa_group_services` values ('159', '4020', '153', '16', '1', '0', '', '', '', '', 'modules/phpMyBackupPro/', 'database_save.png');
-insert into `aa_group_services` values ('169', '50', '0', '17', '1', '0', '', '', '', '', '', 'help.png');
-insert into `aa_group_services` values ('170', '5010', '169', '18', '1', '0', '', '', '', '', 'modules/help/doc.html', 'help.png');
-insert into `aa_group_services` values ('171', '5020', '169', '19', '1', '0', '', '', '', '', 'modules/credits/index.php', 'bricks.png');
-insert into `aa_group_services` values ('172', '3060', '18', '14', '1', '137', '', '1', '1', '1', '', 'world.png');
-insert into `aa_group_services` values ('175', '5030', '169', '196', '1', '0', '', '', '', '', '', 'star.png');
-insert into `aa_group_services` values ('176', '503010', '175', '197', '1', '0', '', '', '', '', 'http://www.dynamick.it/syntax-desktop/UI_dsl.html', 'image.png');
-insert into `aa_group_services` values ('177', '503020', '175', '198', '1', '0', '', '', '', '', 'http://www.dynamick.it/syntax-desktop/serviceomatic_dsl.html', 'cog.png');
-insert into `aa_group_services` values ('184', '1030', '152', '251', '1', '142', '', '1', '1', '1', '', '');
-insert into `aa_group_services` values ('186', '3070', '18', '276', '1', '0', '', '', '', '', '/admin/modules/aa/plugins', 'plugin.png');
-insert into `aa_group_services` values ('187', '20', '0', '279', '1', '0', '', '1', '1', '1', '', 'seasons.png');
-insert into `aa_group_services` values ('188', '30', '0', '280', '2', '0', '', '1', '1', '1', '/admin/modules/aa/custom/media_upload.php', 'seasons.png');
-insert into `aa_group_services` values ('189', '5010', '187', '297', '1', '144', '', '1', '1', '1', '', 'images.png');
-insert into `aa_group_services` values ('190', '20', '188', '298', '2', '144', '', '1', '1', '1', '', '');
-insert into `aa_group_services` values ('191', '5020', '187', '299', '1', '0', '', '1', '1', '1', '/admin/modules/aa/custom/media_upload.php', 'folder_page.png');
-insert into `aa_group_services` values ('192', '10', '188', '300', '2', '0', '', '1', '1', '1', '/admin/modules/aa/custom/media_upload.php', 'folder_page.png');
-insert into `aa_group_services` values ('193', '5030', '187', '307', '1', '145', '', '1', '1', '1', '', '');
-insert into `aa_group_services` values ('194', '30', '188', '308', '2', '145', '', '1', '1', '1', '', '');
-insert into `aa_group_services` values ('195', '5040', '187', '317', '1', '146', '', '1', '1', '1', '', '.svn');
-insert into `aa_group_services` values ('196', '40', '188', '318', '2', '146', '', '1', '1', '1', '', '');
-insert into `aa_group_services` values ('197', '104020', '205', '325', '1', '147', '', '1', '1', '1', '', 'accept.png');
-insert into `aa_group_services` values ('198', '20', '207', '326', '2', '147', '', '1', '1', '1', '', 'accept.png');
-insert into `aa_group_services` values ('199', '104010', '205', '359', '1', '148', '', '1', '1', '1', '', 'accept.png');
-insert into `aa_group_services` values ('200', '10', '207', '360', '2', '148', '', '1', '1', '1', '', 'accept.png');
-insert into `aa_group_services` values ('201', '105010', '206', '377', '1', '149', '', '1', '1', '1', '', '.svn');
-insert into `aa_group_services` values ('202', '0', '208', '378', '2', '149', '', '1', '1', '1', '', '.svn');
-insert into `aa_group_services` values ('203', '105020', '206', '387', '1', '150', '', '1', '1', '1', '', '.svn');
-insert into `aa_group_services` values ('204', '20', '208', '388', '2', '150', '', '1', '1', '1', '', '.svn');
-insert into `aa_group_services` values ('205', '1040', '152', '389', '1', '0', '', '1', '1', '1', '', 'group.png');
-insert into `aa_group_services` values ('206', '1050', '152', '390', '1', '0', '', '1', '1', '1', '', 'application_double.png');
-insert into `aa_group_services` values ('207', '20', '0', '391', '2', '0', '', '1', '1', '1', '', 'group.png');
-insert into `aa_group_services` values ('208', '15', '0', '393', '2', '0', '', '1', '1', '1', '', 'arrow_rotate_anticlockwise.png');
-insert into `aa_group_services` values ('209', '10', '210', '392', '3', '2', '', '', '1', '', '', '.svn');
-insert into `aa_group_services` values ('210', '40', '0', '557', '3', '0', '', '', '', '', '', 'accept.png');
-insert into `aa_group_services` values ('211', '10', '213', '556', '3', '116', '', '', '', '', '', 'accept.png');
-insert into `aa_group_services` values ('213', '10', '0', '744', '3', '0', '', '', '', '', '', '');
-insert into `aa_group_services` values ('225', '1070', '152', '408', '1', '151', '', '1', '1', '1', '', '');
-insert into `aa_group_services` values ('226', '0', '213', '409', '3', '151', '', '1', '1', '1', '', '');
-insert into `aa_group_services` values ('227', '0', '131', '410', '2', '151', '', '1', '1', '1', '', '');
-insert into `aa_group_services` values ('228', '4030', '153', '413', '1', '0', '', '', '', '', '/admin/modules/sitemap/sitemap.php', 'chart_organisation.png');
-insert into `aa_group_services` values ('229', '1060', '152', '437', '1', '152', '', '1', '1', '1', '', '');
-insert into `aa_group_services` values ('230', '4030', '153', '500', '1', '0', '', '1', '1', '1', '/admin/modules/export/export_xml.php', 'accept.png');
-insert into `aa_group_services` values ('231', '4040', '153', '501', '1', '0', '', '', '', '', '/admin/modules/import/import_xml.php', 'wand.png');
-insert into `aa_group_services` values ('232', '3080', '18', '627', '1', '156', '', '1', '1', '1', '', '');
-insert into `aa_group_services` values ('233', '3060', '18', '728', '1', '157', '', '1', '1', '1', '', 'accept.png');
-insert into `aa_group_services` values ('234', '3095', '18', '739', '1', '158', '', '', '1', '1', '', 'accept.png');
+insert into `aa_group_services` values ('9', '3010', '18', '10', '1', '2', '', '1', '1', '1', '', 'user.png', '');
+insert into `aa_group_services` values ('15', '3020', '18', '11', '1', '3', '', '1', '1', '1', '', 'accept.png', '');
+insert into `aa_group_services` values ('18', '30', '0', '9', '1', '0', '', '1', '1', '1', '', 'star.png', '');
+insert into `aa_group_services` values ('54', '1010', '152', '7', '1', '116', '', '1', '1', '1', '', 'application_double.png', '');
+insert into `aa_group_services` values ('64', '3030', '18', '8', '1', '124', '', '1', '1', '1', '', 'image.png', '');
+insert into `aa_group_services` values ('76', '1020', '152', '740', '1', '127', '', '1', '1', '1', '', 'email.png', '');
+insert into `aa_group_services` values ('125', '10', '128', '603', '2', '2', '', '', '', '', '', '.svn', '');
+insert into `aa_group_services` values ('128', '40', '0', '555', '2', '0', '', '', '', '', '', 'accept.png', '');
+insert into `aa_group_services` values ('129', '10', '131', '741', '2', '116', '', '', '', '', '', '', '');
+insert into `aa_group_services` values ('130', '20', '131', '742', '2', '124', '', '', '', '', '', '', '');
+insert into `aa_group_services` values ('131', '10', '0', '743', '2', '0', '', '', '', '', '', '', '');
+insert into `aa_group_services` values ('135', '3040', '18', '12', '1', '5', '', '1', '1', '1', '', 'pencil.png', '');
+insert into `aa_group_services` values ('151', '3050', '18', '13', '1', '136', '', '1', '1', '1', '', 'bricks.png', '');
+insert into `aa_group_services` values ('152', '10', '0', '6', '1', '0', '', '', '', '', '', 'page_white_edit.png', '');
+insert into `aa_group_services` values ('153', '40', '0', '15', '1', '0', '', '', '', '', '', 'wrench_orange.png', '');
+insert into `aa_group_services` values ('159', '4020', '153', '16', '1', '0', '', '', '', '', 'modules/phpMyBackupPro/', 'database_save.png', 'fa-database');
+insert into `aa_group_services` values ('169', '50', '0', '17', '1', '0', '', '', '', '', '', 'help.png', '');
+insert into `aa_group_services` values ('170', '5010', '169', '18', '1', '0', '', '', '', '', 'modules/help/doc.html', 'help.png', '');
+insert into `aa_group_services` values ('171', '5020', '169', '19', '1', '0', '', '', '', '', 'modules/credits/index.php', 'bricks.png', '');
+insert into `aa_group_services` values ('172', '3060', '18', '14', '1', '137', '', '1', '1', '1', '', 'world.png', '');
+insert into `aa_group_services` values ('175', '5030', '169', '196', '1', '0', '', '', '', '', '', 'star.png', '');
+insert into `aa_group_services` values ('176', '503010', '175', '197', '1', '0', '', '', '', '', 'http://www.dynamick.it/syntax-desktop/UI_dsl.html', 'image.png', '');
+insert into `aa_group_services` values ('177', '503020', '175', '198', '1', '0', '', '', '', '', 'http://www.dynamick.it/syntax-desktop/serviceomatic_dsl.html', 'cog.png', '');
+insert into `aa_group_services` values ('184', '1030', '152', '251', '1', '142', '', '1', '1', '1', '', '', '');
+insert into `aa_group_services` values ('187', '20', '0', '279', '1', '0', '', '1', '1', '1', '', 'seasons.png', '');
+insert into `aa_group_services` values ('188', '30', '0', '280', '2', '0', '', '1', '1', '1', '/admin/modules/aa/custom/media_upload.php', 'seasons.png', '');
+insert into `aa_group_services` values ('189', '5010', '187', '297', '1', '144', '', '1', '1', '1', '', 'images.png', 'fa-file-picture-o');
+insert into `aa_group_services` values ('190', '20', '188', '298', '2', '144', '', '1', '1', '1', '', '', '');
+insert into `aa_group_services` values ('191', '5020', '187', '299', '1', '0', '', '1', '1', '1', '/admin/modules/aa/custom/media_upload.php', 'folder_page.png', '');
+insert into `aa_group_services` values ('192', '10', '188', '300', '2', '0', '', '1', '1', '1', '/admin/modules/aa/custom/media_upload.php', 'folder_page.png', '');
+insert into `aa_group_services` values ('193', '5030', '187', '307', '1', '145', '', '1', '1', '1', '', '', '');
+insert into `aa_group_services` values ('194', '30', '188', '308', '2', '145', '', '1', '1', '1', '', '', '');
+insert into `aa_group_services` values ('195', '5040', '187', '317', '1', '146', '', '1', '1', '1', '', '.svn', '');
+insert into `aa_group_services` values ('196', '40', '188', '318', '2', '146', '', '1', '1', '1', '', '', '');
+insert into `aa_group_services` values ('197', '104020', '205', '325', '1', '147', '', '1', '1', '1', '', 'accept.png', '');
+insert into `aa_group_services` values ('198', '20', '207', '326', '2', '147', '', '1', '1', '1', '', 'accept.png', '');
+insert into `aa_group_services` values ('199', '104010', '205', '359', '1', '148', '', '1', '1', '1', '', 'accept.png', '');
+insert into `aa_group_services` values ('200', '10', '207', '360', '2', '148', '', '1', '1', '1', '', 'accept.png', '');
+insert into `aa_group_services` values ('201', '105010', '206', '377', '1', '149', '', '1', '1', '1', '', '.svn', '');
+insert into `aa_group_services` values ('202', '0', '208', '378', '2', '149', '', '1', '1', '1', '', '.svn', '');
+insert into `aa_group_services` values ('203', '105020', '206', '387', '1', '150', '', '1', '1', '1', '', '.svn', '');
+insert into `aa_group_services` values ('204', '20', '208', '388', '2', '150', '', '1', '1', '1', '', '.svn', '');
+insert into `aa_group_services` values ('205', '1040', '152', '389', '1', '0', '', '1', '1', '1', '', 'group.png', '');
+insert into `aa_group_services` values ('206', '1050', '152', '390', '1', '0', '', '1', '1', '1', '', 'application_double.png', '');
+insert into `aa_group_services` values ('207', '20', '0', '391', '2', '0', '', '1', '1', '1', '', 'group.png', '');
+insert into `aa_group_services` values ('208', '15', '0', '393', '2', '0', '', '1', '1', '1', '', 'arrow_rotate_anticlockwise.png', '');
+insert into `aa_group_services` values ('209', '10', '210', '392', '3', '2', '', '', '1', '', '', '.svn', '');
+insert into `aa_group_services` values ('210', '40', '0', '557', '3', '0', '', '', '', '', '', 'accept.png', '');
+insert into `aa_group_services` values ('211', '10', '213', '556', '3', '116', '', '', '', '', '', 'accept.png', '');
+insert into `aa_group_services` values ('213', '10', '0', '744', '3', '0', '', '', '', '', '', '', '');
+insert into `aa_group_services` values ('225', '1070', '152', '408', '1', '151', '', '1', '1', '1', '', '', '');
+insert into `aa_group_services` values ('226', '0', '213', '409', '3', '151', '', '1', '1', '1', '', '', '');
+insert into `aa_group_services` values ('227', '0', '131', '410', '2', '151', '', '1', '1', '1', '', '', '');
+insert into `aa_group_services` values ('228', '4030', '153', '413', '1', '0', '', '', '', '', '/admin/modules/sitemap/sitemap.php', 'chart_organisation.png', '');
+insert into `aa_group_services` values ('229', '1060', '152', '437', '1', '152', '', '1', '1', '1', '', '', '');
+insert into `aa_group_services` values ('230', '4030', '153', '500', '1', '0', '', '1', '1', '1', '/admin/modules/export/export_xml.php', 'accept.png', '');
+insert into `aa_group_services` values ('231', '4040', '153', '501', '1', '0', '', '', '', '', '/admin/modules/import/import_xml.php', 'wand.png', '');
+insert into `aa_group_services` values ('232', '3080', '18', '627', '1', '156', '', '1', '1', '1', '', '', '');
+insert into `aa_group_services` values ('233', '3060', '18', '728', '1', '157', '', '1', '1', '1', '', 'accept.png', '');
+insert into `aa_group_services` values ('234', '3095', '18', '739', '1', '158', '', '', '1', '1', '', 'accept.png', '');
 
 
 ### structure of table `aa_groups` ###
@@ -215,7 +216,7 @@ insert into `aa_page` values ('45', '219', '220', '41', '4', '1|2', '20', '1', '
 insert into `aa_page` values ('46', '221', '222', '41', '4', '1|2', '15', '1', '', '612', '613', '614', '658');
 insert into `aa_page` values ('50', '274', '275', '57', '8', '', '1010', '1', '', '642', '643', '644', '641');
 insert into `aa_page` values ('51', '277', '278', '57', '4', '', '1020', '1', '', '646', '647', '648', '645');
-insert into `aa_page` values ('52', '394', '395', '22', '9', '1|2', '90', '1', '', '650', '651', '652', '649');
+insert into `aa_page` values ('52', '394', '395', '57', '9', '', '90', '1', '', '650', '651', '652', '649');
 insert into `aa_page` values ('53', '396', '397', '22', '10', '1|2', '70', '1', '', '597', '598', '599', '653');
 insert into `aa_page` values ('54', '398', '399', '22', '11', '1|2', '80', '1', '', '600', '601', '602', '654');
 insert into `aa_page` values ('55', '489', '490', '22', '12', '1|2', '45', '1', '', '603', '604', '605', '655');
@@ -277,7 +278,7 @@ CREATE TABLE `aa_services` (
 
 insert into `aa_services` values ('2', '26', '', 'images/service_icon/user.png', '27', '2', 'aa_users', '10', '1', '39', '');
 insert into `aa_services` values ('3', '28', '', 'images/service_icon/group.png', '29', '2', 'aa_groups', '20', '1', '477', '');
-insert into `aa_services` values ('4', '34', '', 'images/service_icon/chart_organisation.png', '35', '2', 'aa_group_services', '60', '1', '74', '1');
+insert into `aa_services` values ('4', '34', '', 'images/service_icon/chart_organisation.png', '35', '2', 'aa_group_services', '60', '1', '74', '');
 insert into `aa_services` values ('5', '20', '', 'images/service_icon/lightning.png', '21', '2', 'aa_services', '30', '1', '52', '1');
 insert into `aa_services` values ('116', '36', '', 'images/service_icon/page_white_stack.png', '37', '2', 'aa_page', '70', '1', '350', '1');
 insert into `aa_services` values ('124', '38', '', 'images/service_icon/layout.png', '39', '2', 'aa_template', '80', '1', '378', '');
@@ -329,7 +330,7 @@ CREATE TABLE `aa_services_element` (
   `ismultilang` varchar(1) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `container` (`container`)
-) ENGINE=MyISAM AUTO_INCREMENT=594 DEFAULT CHARSET=utf8 COMMENT='Containers' AUTO_INCREMENT=594;
+) ENGINE=MyISAM AUTO_INCREMENT=596 DEFAULT CHARSET=utf8 COMMENT='Containers' AUTO_INCREMENT=596;
 
 
 ### data of table `aa_services_element` ###
@@ -485,7 +486,7 @@ insert into `aa_services_element` values ('538', '153', 'id', '1', '1', '', '', 
 insert into `aa_services_element` values ('539', '153', 'id_form', '3', '', '', '', '442', '11', '443', '', '', '', '', '10', '', '');
 insert into `aa_services_element` values ('540', '153', 'titolo', '2', '', '1', '', '444', '255', '445', '', '', '', '', '20', '', '');
 insert into `aa_services_element` values ('541', '153', 'label', '2', '', '1', '', '446', '255', '447', '', '', '', '', '30', '', '1');
-insert into `aa_services_element` values ('542', '153', 'tipo', '23', '', '1', '', '448', '0', '449', '', 'text|textarea|checkbox|radio|select|file|password', '', '', '40', '', '');
+insert into `aa_services_element` values ('542', '153', 'tipo', '23', '', '1', '', '448', '0', '449', '', 'text|textarea|checkbox|radio|select|file|password|hidden', '', '', '40', '', '');
 insert into `aa_services_element` values ('543', '153', 'value', '2', '', '', '', '450', '255', '451', '', '', '', '', '50', '', '');
 insert into `aa_services_element` values ('544', '153', 'formato', '23', '', '', '', '452', '255', '453', '', 'text|date|digits|email', '', '', '60', '', '');
 insert into `aa_services_element` values ('545', '153', 'obbligatorio', '9', '', '1', '', '454', '255', '455', '', '', '1', '', '70', '', '');
@@ -536,6 +537,7 @@ insert into `aa_services_element` values ('590', '143', 'date', '30', '', '', ''
 insert into `aa_services_element` values ('591', '143', 'autore', '21', '', '', '', '755', '255', '756', '', '', '', '', '60', '', '');
 insert into `aa_services_element` values ('592', '143', 'format', '23', '', '', '', '757', '0', '758', '', 'portrait|landscape', '', '', '70', '', '');
 insert into `aa_services_element` values ('593', '142', 'visible', '24', '', '1', '', '760', '0', '761', '', 'SELECT id, lang FROM `aa_lang`', '', '', '25', '', '');
+insert into `aa_services_element` values ('595', '4', 'ip', '31', '', '1', '', '764', '30', '765', '', '', '', '', '120', '', '');
 
 
 ### structure of table `aa_template` ###
@@ -573,7 +575,7 @@ CREATE TABLE `aa_translation` (
   `it` text NOT NULL,
   `en` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=762 DEFAULT CHARSET=utf8 AUTO_INCREMENT=762;
+) ENGINE=MyISAM AUTO_INCREMENT=766 DEFAULT CHARSET=utf8 AUTO_INCREMENT=766;
 
 
 ### data of table `aa_translation` ###
@@ -801,7 +803,7 @@ insert into `aa_translation` values ('220', '<p><strong>Generazione delle Pagine
 insert into `aa_translation` values ('221', 'Tag Predefiniti', 'Predefined tags');
 insert into `aa_translation` values ('222', '<p><strong>Tag Predefiniti</strong></p>\r\n\r\n<p>Elenchiamo di seguito i tag pronti all\'uso definiti da SyntaxDesktop.</p>\r\n\r\n<p><strong>Variabili</strong></p>\r\n\r\n<p>{$synPageTitle}</p>\r\n\r\n<ul>\r\n	<li><strong><font color=\"#009900\">{$synPageTitle}</font></strong>: restituisce il nome della pagina. Utile nell\'\'head della pagina quando si deve specificare il titolo. Per esempio:</li>\r\n	<li><strong><font color=\"#009900\">{$synPageId}</font></strong>: restituisce l\'\'id della pagina</li>\r\n	<li><font color=\"#009900\"><strong>{$synPath}</strong></font>: restituisce il path di installazione di syntax desktop. Normalmente è \"syntax desktop\" ma il path di installazione è lasciato a discrezione dell\'\'utente. Questo tag è utile quando si devono puntare le immagini. Le immagini infatti, per pulizia della document root, è meglio riporle nella cartella /public/img/ . Per esempio, nei tag img, usiamo:</li>\r\n	<li><strong><font color=\"#009900\">{$synAbsPath}</font></strong>: contiene il path assoluto della cartella di installazione di syntax sul file system del web server.</li>\r\n</ul>\r\n\r\n<p><strong>Plugins</strong></p>\r\n\r\n<div><font color=\"#0099ff\">{page}</font></div>\r\n\r\n<ul>\r\n	<li><font color=\"#009900\"><strong>{page}</strong></font>: funzione fondamentale, da porre in ogni template, che ha il compito di restituire il&nbsp;testo della pagina. Per esempio:<br />\r\n	In questo caso abbiamo definito un template banale in cui tutto il testo verrà racchiuso all\'interno di un.</li>\r\n</ul>\r\n', '<p>\r\n	<strong>Predefined tags</strong></p>\r\n<p>\r\n	We list&nbsp;the predefined&nbsp;tag you can use in your templates.</p>\r\n<p>\r\n	<strong>Variables</strong></p>\r\n<ul>\r\n	<li>\r\n		<strong><font color=\"#009900\">{$synPageTitle}</font></strong>: it returns the page name. Useful when used in the title tag in the head of the page. I.e.:</li>\r\n	<li>\r\n		<strong><font color=\"#009900\">{$synPageId}</font></strong>: it returns the page id</li>\r\n	<li>\r\n		<font color=\"#009900\"><strong>{$synPath}</strong></font>: it returns the installation path of Syntax Desktop. Usually this variable contains&nbsp;\"syntax desktop\", but the installation path can be changed. This tag is very usefull when you use images or scripts. Images, in fact, have to be saved in the /syntax desktop/public/img/ directory, so you don\'t waste the site root. I.e.:<br />\r\n		<font color=\"#0099ff\"><img alt=\"example image\" src=\"{$synPath}/public/img/esempio.jpg\" /></font></li>\r\n	<li>\r\n		<strong><font color=\"#009900\">{$synAbsPath}</font></strong>: it returns the absolute installation path of Syntax Desktop.</li>\r\n</ul>\r\n<p>\r\n	<strong>Plugins</strong></p>\r\n<ul>\r\n	<li>\r\n		<font color=\"#009900\"><strong>{page}</strong></font>: it returns the page contents. You must&nbsp;put this predefined plugin where you want the page text to be displayed. I.e.:<br />\r\n		In this example, we\'ve created a simple template where the page text is displayed inside a div tag.</li>\r\n</ul>\r\n<p>\r\n	&nbsp;</p>\r\n<p>\r\n	<font color=\"#ff0000\">HELP ME!<br />\r\n	If you want to help me, send the right english translation of this page at </font><a href=\"mailto:info@dynamick.it\"><font color=\"#ff0000\">info@dynamick.it</font></a><font color=\"#ff0000\"> .<br />\r\n	Thank you!</font></p>\r\n');
 insert into `aa_translation` values ('223', 'Tentativi di login', 'Login_attempts');
-insert into `aa_translation` values ('224', 'ogin falliti consecutivamente. Un numero alto indica un tentativo di violazione dell\\\'account.', '');
+insert into `aa_translation` values ('224', 'Login falliti consecutivamente. Un numero alto indica un tentativo di violazione dell\'account.', '');
 insert into `aa_translation` values ('225', 'Conteggio login', 'Conteggio login');
 insert into `aa_translation` values ('226', 'Numero di login riusciti dalla creazione dell\\\'account.', 'Numero di login riusciti dalla creazione dell\\\'account.');
 insert into `aa_translation` values ('227', 'Id', 'Id');
@@ -1339,6 +1341,10 @@ insert into `aa_translation` values ('758', '', '');
 insert into `aa_translation` values ('759', 'Album dimostrativo', 'Demo Album');
 insert into `aa_translation` values ('760', 'Visible', 'Visible');
 insert into `aa_translation` values ('761', '', '');
+insert into `aa_translation` values ('762', 'Faicon', 'Faicon');
+insert into `aa_translation` values ('763', '', '');
+insert into `aa_translation` values ('764', 'Ip', 'Ip');
+insert into `aa_translation` values ('765', '', '');
 
 
 ### structure of table `aa_users` ###
@@ -1358,7 +1364,7 @@ CREATE TABLE `aa_users` (
 
 ### data of table `aa_users` ###
 
-insert into `aa_users` values ('8685', 'root', '531e0254167bbe2fc0acbaee8d2b3e93', '1', '1', '1');
+insert into `aa_users` values ('8685', 'root', '2e51c0895c310b11347dc020caffa0ab', '1', '1', '1');
 
 
 ### structure of table `album` ###
@@ -1589,7 +1595,7 @@ CREATE TABLE `documents` (
 
 ### data of table `documents` ###
 
-insert into `documents` values ('1', '415', '416', '2010-03-24', 'zip', '1', '1|2', 'private');
+insert into `documents` values ('1', '415', '416', '2010-03-20', 'zip', '1', '1|2', 'private');
 
 
 ### structure of table `field_options` ###
@@ -1620,7 +1626,7 @@ CREATE TABLE `form_fields` (
   `id_form` int(11) NOT NULL DEFAULT '0',
   `titolo` varchar(255) NOT NULL,
   `label` varchar(255) NOT NULL,
-  `tipo` enum('text','textarea','checkbox','radio','select','file','password') NOT NULL DEFAULT 'text',
+  `tipo` enum('text','textarea','checkbox','radio','select','file','password','hidden') NOT NULL DEFAULT 'text',
   `value` varchar(255) NOT NULL,
   `formato` enum('text','date','digits','email') NOT NULL DEFAULT 'text',
   `obbligatorio` varchar(255) NOT NULL DEFAULT '',
@@ -1742,7 +1748,7 @@ CREATE TABLE `news` (
 insert into `news` values ('1', '192', '193', '', '2004-11-19 00:00:00', '1|2');
 insert into `news` values ('2', '199', '200', '', '2004-12-27 12:00:00', '1|2');
 insert into `news` values ('3', '201', '202', '', '2004-12-27 00:00:00', '1|2');
-insert into `news` values ('4', '237', '238', '', '2005-04-19 00:00:00', '1|2');
+insert into `news` values ('4', '237', '238', '', '2005-04-19 08:30:00', '1|2');
 
 
 ### structure of table `photos` ###
@@ -1857,4 +1863,4 @@ CREATE TABLE `users` (
 
 ### data of table `users` ###
 
-insert into `users` values ('4', 'Dummy', 'Dummy', 'SyntaxDesktop', 'info@syntaxdesktop.com', 'via Garibaldi', 'Villafranca', '37069', 'Verona', '', '2', '2ae96aa0273507ab41936958fb4dfd4a', '1', '2010-01-01 00:00:00', '2015-03-02 15:30:41', '2015-03-05 17:59:33', '127.0.0.1', null, null, '', '', '', '1', '0', '4');
+insert into `users` values ('4', 'Dummy', 'Dummy', 'SyntaxDesktop', 'info@syntaxdesktop.com', 'via Garibaldi', 'Villafranca', '37069', 'Verona', '', '2', '2ae96aa0273507ab41936958fb4dfd4a', '1', '2010-01-01 00:00:00', '2015-03-02 15:30:41', '2015-03-09 11:18:40', '127.0.0.1', null, null, '', '', '', '1', '0', '6');

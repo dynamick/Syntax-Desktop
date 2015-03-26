@@ -4,9 +4,11 @@ global $cmd;
   //if the tree frame is loaded, tree frame must die
   if (isset($treeFrame) and $treeFrame=="true") die();
 
-  echo "<script>";
-  echo "window.parent.content.action('homeBtn','window.parent.document.location.href=\"index.php?aa_service=5\";');";
-  echo "</script>\n";
+  if (isset($_REQUEST['cmd']) && $_REQUEST['cmd'] != JSON) {
+    echo "<script>";
+    echo "window.parent.content.action('homeBtn','window.parent.document.location.href=\"index.php?aa_service=5\";');";
+    echo "</script>\n";
+  }
 
   switch($_REQUEST["cmd"]) {
     case ADD:             break;
@@ -16,6 +18,7 @@ global $cmd;
     case DELETE:          break;
     case MULTIPLEDELETE:  break;
     case RPC:             break;
+    case JSON:            break;
 
     /**************************************************************************
     *                             STEP 0
