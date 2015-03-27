@@ -30,7 +30,7 @@ function smarty_function_account($params, &$smarty) {
   }
 
   $pageurl = createPath($smarty->getTemplateVars('synPageId'));
-  $l       = multiTranslateDictionary($labels, true);
+  $l       = multiTranslateDictionary($labels, false);
   $sidebar = '';
   $html    = '';
 

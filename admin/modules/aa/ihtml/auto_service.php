@@ -911,7 +911,6 @@ EOSCRIPT;
           class="table table-striped table-condensed"
           data-url="getData.php?cmd=getjson"
           data-click-to-select="false"
-          data-select-item-name="checkrow"
           data-show-filter="true"
           data-show-refresh="true"
           data-show-toggle="true"

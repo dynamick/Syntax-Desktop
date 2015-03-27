@@ -24,7 +24,7 @@ function smarty_function_flashMessage($params, &$smarty){
     unset($_SESSION[ACCOUNT_KEY]['message']);
   }
 
-  if (!empty($flash)) {
+  if (!empty($message)) {
     $smarty->assign('msg', $message);
     $smarty->assign('type', $type);
     $smarty->display('partial/_alert.tpl');
