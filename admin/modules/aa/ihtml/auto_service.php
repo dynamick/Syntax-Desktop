@@ -192,22 +192,20 @@ function __autoload($class) {
     $table = $query->addTable( $contenitore->getTable() );
 
     foreach( $contenitore->element AS $e ){
-      if ($e->list || $e->is_key) {
-        if ($e->multilang == 1) {
-          $translation = $query->addJoin( 'aa_translation' );
-          $translation->setOn( $table->setField($e->name), $translation->setField('id') );
-          $translation->setMode( 'LEFT' );
-          $translation->addField( $_SESSION['aa_CurrentLangInitial'], $e->name.'aatrans' );
-        }
-        if (isset($e->table_join)) {
-          $tjoin = $query->addJoin( $table->getName() . '-' . $e->table_join );
-          $tjoin->setOn( $tjoin->setField( 'id_' . $table->getName()), $table->setField('id') );
-          $tjoin->addField( 'id_' . $e->table_join );
-          $query->addWhereClause( $tjoin->setField( $e->name ), 1 );
+      if ($e->multilang == 1) {
+        $translation = $query->addJoin( 'aa_translation' );
+        $translation->setOn( $table->setField($e->name), $translation->setField('id') );
+        $translation->setMode( 'LEFT' );
+        $translation->addField( $_SESSION['aa_CurrentLangInitial'], $e->name.'aatrans' );
+      }
+      if (isset($e->table_join)) {
+        $tjoin = $query->addJoin( $table->getName() . '-' . $e->table_join );
+        $tjoin->setOn( $tjoin->setField( 'id_' . $table->getName()), $table->setField('id') );
+        $tjoin->addField( 'id_' . $e->table_join );
+        $query->addWhereClause( $tjoin->setField( $e->name ), 1 );
 
-        } else {
-          $table ->addField( $e->name );
-        }
+      } else {
+        $table ->addField( $e->name );
       }
     }
 
@@ -931,6 +929,10 @@ EOTABLE;
         echo aaHeader( translateDesktop($contenitore->title), translateDesktop($contenitore->description) );
         echo $table;
 
+        echo "<script type=\"text/javascript\">\n" // start page scripts
+           . "  initToolbar (".$synLoggedUser->canInsert.", 0, ".$synLoggedUser->canDelete.", 1, 1, 0);\n"
+           . "</script>\n"; // end page scripts        
+        
         //echo the multilang option
         echo $contenitore->getMultilangBoxNew(1);
       }
