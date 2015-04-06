@@ -20,8 +20,8 @@ class synHtml {
   }
 
   //add a form tag
-  function text($attribute) {
-    return "<input type='text' class=\"form-control\" $attribute />\n";
+  function text($attribute, $class='') {
+    return "<input type='text' class=\"form-control {$class}\" $attribute />\n";
   }
   
   //add a form tag

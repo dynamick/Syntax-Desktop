@@ -58,76 +58,10 @@
         <div class="box pagination">
           <div id="menu1" class="btn-group btn-group-justified" role="group"></div>
         </div>
-        <!--
-        <nav>
-          <ul class="pagination">
-            <li class="disabled"><a id="first" aria-label="<?= $str['first'] ?>"><i class="fa fa-angle-double-left" aria-hidden="true"></i></a></li>
-            <li class="disabled"><a id="prev" aria-label="<?= $str['prev'] ?>"><i class="fa fa-angle-left" aria-hidden="true"></i></a></li>
-            <li class="disabled"><a id="next" aria-label="<?= $str['next'] ?>"><i class="fa fa-angle-right" aria-hidden="true"></i></a></li>
-            <li class="disabled"><a id="last" aria-label="<?= $str['last'] ?>"><i class="fa fa-angle-double-right" aria-hidden="true"></i></a></li>
-          </ul>
-        </nav>
-        <ul class="pagination pagination-sm" id="pages"></ul>
-        <p id="status"></p>
-        -->
       </div>
 
       <div id="multilang" class="panel panel-default"></div>
-      <div id="custom"></div>
-
-        <!--
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h3 class="panel-title">Filtra risultati</h3>
-          </div>
-          <div class="panel-body">
-            <form action="content.php" target="content" method="post" id="synSearch" class="form-horizontal">
-              <div class="form-group">
-                <label for="colsearch" accesskey="c" class="col-sm-2 control-label"><?=$str["column"]?> [c]</label>
-                <div class="col-sm-10">
-                  <select name="field" class="form-control input-sm" id="colsearch" tabindex="1"></select>
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="type" accesskey="b" class="col-sm-2 control-label"><?=$str["searchby"]?> [b]</label>
-                <div class="col-sm-10">
-                  <select name="type" id="type" tabindex="2" class="form-control input-sm">
-                    <option value="like"><?=$str["like"]?></option>
-                    <option value="="><?=$str["equal"]?></option>
-                    <option value=">"><?=$str["gt"]?></option>
-                    <option value="<"><?=$str["lt"]?></option>
-                    <option value="acceso">checked</option>
-                    <option value="spento">not checked</option>
-                  </select>
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="keyword" accesskey="t" class="col-sm-2 control-label"><?=$str["searchtext"]?> [t]</label>
-                <div class="col-sm-10">
-                  <input type="text" class="form-control input-sm" name="keyword" id="keyword" size="10" tabindex="3" />
-                </div>
-              </div>
-              <input type="hidden" name="aa_search" value="1" />
-              <div class="btn-group btn-group-justified">
-                <div class="btn-group">
-                  <button type="submit" class="btn btn-default btn-sm">
-                    <i class="fa fa-search"></i><br>
-                    <?= $str['search'] ?>
-                  </button>
-                </div>
-                <div class="btn-group">
-                  <button type="reset" class="btn btn-default btn-sm"
-                    onclick="window.parent.content.document.location.href='content.php?aa_search_clean=1'">
-                    <i class="fa fa-times-circle"></i><br>
-                    <?= $str['cancel'] ?>
-                  </button>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-        -->
-      </div>
+      <div id="custom" class="panel panel-default"></div>
     </div>
 
     <script src="../../assets/js/jquery.js"></script>
