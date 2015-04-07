@@ -69,7 +69,7 @@
     <script type="text/javascript">
     //<![CDATA[
       //RPC FUNCTION CALLER
-      var g_remoteServer = '<?=$targetFileName?>';
+      var g_remoteServer = '<?=$targetFileName?>'; //'ihtml/auto_service.php'
       var g_intervalID;
       function callServer(synPrimaryKey, field, value) {
       	var head = document.getElementsByTagName('head').item(0);
@@ -90,7 +90,8 @@
       action('backBtn',   'window.parent.content.history.back();');
       action('refreshBtn','window.parent.content.location.reload();');
       action('saveBtn',   'window.parent.content.document.forms[0].submit()');
-      action('removeBtn', 'if (confirm(top.str["aa_confirmSelDel"])) window.parent.content.document.forms[0].submit();');
+      //action('removeBtn', 'if (confirm(top.str["aa_confirmSelDel"])) window.parent.content.document.forms[0].submit();');
+      action('removeBtn', 'if (confirm(top.str["aa_confirmSelDel"])) window.parent.content.deleteSelectedRows();');
       action('homeBtn',   'window.parent.content.location.href="<?=$PHP_SELF?>"');
 
     //]]>
@@ -117,52 +118,103 @@
     <script type="text/javascript" src="../../assets/js/bootstrap-multiselect.js"></script>
     <script type="text/javascript" src="../../assets/js/jquery.quickPreview.js"></script>
     <script type="text/javascript">
-    $(document).ready(function(){
-      // init checkbox switches
-      $('.syn-check').bootstrapSwitch();
+      var $table = $('#mainTable');
 
-      // init date/time picker
-      $('.date').datetimepicker({
-        locale: '<?= getLang(true); ?>',
-        icons: {
-          time: 'fa fa-clock-o',
-          date: 'fa fa-calendar',
-          up: 'fa fa-chevron-up',
-          down: 'fa fa-chevron-down',
-          previous: 'fa fa-chevron-left',
-          next: 'fa fa-chevron-right',
-          today: 'fa fa-crosshairs',
-          clear: 'fa fa-trash'
-        }
+      function deleteSelectedRows() {
+        $ids = new Array();
+        $rows = $table.bootstrapTable('getSelections');
+        for (i in $rows)
+          $ids.push( "`id`='" + $rows[i].id + "'" );
+
+        $.ajax({
+          method    : 'POST',
+          url       : 'getData.php?cmd=<?= MULTIPLEDELETE ?>',
+          data      : { 'checkrow[]' : $ids },
+          dataType  : 'json'
+
+        }).done(function( responseText ) {
+          if ( typeof responseText.unauthorized != 'undefined' )
+            alert( responseText.unauthorized );
+          $table.bootstrapTable('refresh');
+
+        }).fail(function( jqXHR, textStatus, errorThrown ) {
+          var res = jqXHR.responseJSON;
+          if ( typeof res.error != 'undefined' )
+            alert('ERROR: '+ res.error);
+          console.error( errorThrown );
+
+        }).always(function( responseText ) {
+          var res = responseText;
+          if ( typeof res.responseJSON != 'undefined' ) // if the request fails
+            res = responseText.responseJSON;
+          if ( typeof res.status != 'undefined' )
+            alert( res.status );
+        });
+      }
+
+      $(document).ready(function(){
+        // init checkbox switches
+        $('.syn-check').bootstrapSwitch();
+
+        // init date/time picker
+        $('.date').datetimepicker({
+          locale: '<?= getLang(true); ?>',
+          icons: {
+            time: 'fa fa-clock-o',
+            date: 'fa fa-calendar',
+            up: 'fa fa-chevron-up',
+            down: 'fa fa-chevron-down',
+            previous: 'fa fa-chevron-left',
+            next: 'fa fa-chevron-right',
+            today: 'fa fa-crosshairs',
+            clear: 'fa fa-trash'
+          }
+        });
+
+        // init multi-select
+        $('.multi-select').multiselect({
+          enableClickableOptGroups: true,
+          disableIfEmpty: true,
+          selectedClass: 'multiselect-selected',
+          includeSelectAllOption: true
+        });
+
+        $table.bootstrapTable({
+          icons: {
+            refresh: 'fa fa-refresh',
+            toggle: 'fa fa-th-list',
+            columns: 'fa fa-columns'
+          }
+        });
+
+        // init icon-picker
+        $('.icp').iconpicker();
+
+        // init image preview
+        $('.preview').quickPreview();
+
+        // init tooltip
+        $('[data-toggle="tooltip"]').tooltip({
+          container: 'body'
+        })
+
+        /*
+        // rpc
+        $('input.rpc').change(function(){
+          var $this = $(this);
+          var params = {
+              aa_service: '<?= $synContainer ?>',
+              cmd:'<?= RPC ?>',
+              field: $this.attr('name'),
+              value: $this.is(':checked') ? '1' : '',
+              synPrimaryKey: $this.attr('rel')
+          }
+          $.getJSON('<?= $synAdminPath ?>/modules/aa/_content.php', params, function(ret){
+            $('.page-header').after('<div class="alert '+ ret.type +'"><button data-dismiss="alert" class="close">×</button>'+ ret.message +'</div>');
+          });
+        });
+        */
       });
-
-      // init multi-select
-      $('.multi-select').multiselect({
-        enableClickableOptGroups: true,
-        disableIfEmpty: true,
-        selectedClass: 'multiselect-selected',
-        includeSelectAllOption: true
-      });
-
-      $('#mainTable').bootstrapTable({
-        icons: {
-          refresh: 'fa fa-refresh',
-          toggle: 'fa fa-th-list',
-          columns: 'fa fa-columns'
-        }
-      });
-
-      // init icon-picker
-      $('.icp').iconpicker();
-
-      // init image preview
-      $('.preview').quickPreview();
-
-      // init tooltip
-      $('[data-toggle="tooltip"]').tooltip({
-        container: 'body'
-      })
-    });
     </script>
   </body>
 </html>

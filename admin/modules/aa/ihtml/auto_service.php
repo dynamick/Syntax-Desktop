@@ -613,26 +613,45 @@ EOBOTTOMBAR;
     case MULTIPLEDELETE:
       //TODO: attenzione alle chiavi. Prende solamente l'id!!!!!!!!!
       $i = 0;
-      if (isset($checkrow)) {
-        foreach ($checkrow as $id) {
+      $msg = array();
+      $code = 200;
+
+      //http://php.net/manual/en/function.http-response-code.php
+      if (isset($_POST['checkrow'])) {
+        foreach ($_POST['checkrow'] as $id) {
           $key = urldecode($id);
           $res = $db->Execute("SELECT * FROM `{$synTable}` WHERE {$key}");
-          $contenitore->updateValues($res->FetchRow());
+          if ($res->recordCount() > 0) {
+            $contenitore->updateValues($res->FetchRow());
 
-          $canDelete = $contenitore->isDeletable();
-          if ($canDelete===true) {
-            @$contenitore->deleteDocument();
-            $res = $db->Execute("DELETE FROM `{$synTable}` WHERE {$key}" );
-            $i++;
+            $canDelete = $contenitore->isDeletable();
+            if ($canDelete===true) {
+              @$contenitore->deleteDocument();
+              $res = $db->Execute("DELETE FROM `{$synTable}` WHERE {$key}" );
+              $i ++;
+
+            } else {
+              $code = 401;
+              $msg['unauthorized'] = "Row {$key}: {$canDelete}";
+            }
           } else {
-            echo "<script>alert(\"Row {$key}: {$canDelete}\");</script>";
+            $code = 404;
+            $msg['error'] = "{$key} non trovata in {$synTable}";
           }
         }
-        echo "<script>alert(\"{$i} {$str['row_deleted']}\");</script>";
+        $msg['status'] = "{$i} {$str['row_deleted']}";
       }
 
-      //set the next page
-      $jumpTo = $PHP_SELF;
+      if ($xhr) {
+        //http_response_code( $code ); // php 5.4
+        header( 'HTTP/1.0 '.$code ); // this tells jQuery the operation's outcome
+        echo json_encode( $msg );
+
+      } else {
+        echo '<script>alert("'. implode(', ', $msg) .'");</script>';
+        //set the next page
+        $jumpTo = $PHP_SELF;
+      }
 
       break;
 
@@ -657,12 +676,31 @@ EOBOTTOMBAR;
       //controllo errori
       if (!$err)
         echo "<script>alert(\"".htmlentities($err)."\");</script>";
+
+/*
+      $synPrimaryKey = stripslashes(urldecode($_GET["synPrimaryKey"]));
+      $field = $_GET['field'];
+      $value = $_GET['value'];
+      $synTable = $contenitore->getTable();
+
+      $qry = "UPDATE {$synTable} SET `{$field}`='{$value}' WHERE {$synPrimaryKey}";
+      $ret = $db->Execute($qry);
+      //echo $qry;
+
+      //controllo errori
+      if ($ret == false) {
+        echo json_encode(array('message'=>'Aggiornamento fallito', 'type'=>'alert-error'));
+
+      } else {
+        echo json_encode(array('message'=>'Record aggiornato correttamente', 'type'=>'alert-success'));
+      }
+*/
     break;
 
 
         ////////////////////////////////////////////////////////////////////////
        //                                                                    //
-      //                                                                    //
+      //                          JSON Table Data                           //
      //                                                                    //
     ////////////////////////////////////////////////////////////////////////
 
@@ -931,8 +969,8 @@ EOTABLE;
 
         echo "<script type=\"text/javascript\">\n" // start page scripts
            . "  initToolbar (".$synLoggedUser->canInsert.", 0, ".$synLoggedUser->canDelete.", 1, 1, 0);\n"
-           . "</script>\n"; // end page scripts        
-        
+           . "</script>\n"; // end page scripts
+
         //echo the multilang option
         echo $contenitore->getMultilangBoxNew(1);
       }
