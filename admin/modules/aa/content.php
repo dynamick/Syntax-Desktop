@@ -1,5 +1,6 @@
 <?php
-  session_start();
+  if(!isset($_SESSION))
+    session_start();
   include_once ("../../config/cfg.php");
   include_once ("../../includes/php/jslib.inc");
   include_once ("classes/synContainer.php");
@@ -9,13 +10,14 @@
   *                             MULTILANG SECTION
   ***************************************************************************/
 
-  $lang_notice = null;
-  if(isset($_GET['synSetLang'])){
-    $_SESSION['aa_CurrentLang'] = $_GET['synSetLang'];
-    $lang = getLangInfo($_GET['synSetLang'], 'lang');
-    $lang_notice = '$'.".notify({ icon: 'fa fa-language', message: 'Lingua attiva: <b>{$lang}</b>' });";
+  if ( isset($_GET['synSetLang']) ) {
+    $langid = intval($_GET['synSetLang']);
+    if ( isset($_SESSION['aa_CurrentLang']) && $_SESSION['aa_CurrentLang'] != $langid ) {
+      setAlert( sprintf('Lingua attiva: <b>%s</b>', getLangInfo($langid, 'lang') ) ) ;
+    }
+    $_SESSION['aa_CurrentLang'] = $langid;
 
-  } elseif($_SESSION['aa_CurrentLang'] == '') {
+  } elseif( !isset($_SESSION['aa_CurrentLang']) || empty($_SESSION['aa_CurrentLang']) ) {
     setLang(1);
   }
 
@@ -132,6 +134,9 @@
         offset: {
           x: 15,
           y: 20
+        },
+        animate: {
+          exit: 'animated lightSpeedOut'
         }
       });
 
@@ -167,7 +172,7 @@
         });
       }
 
-      $(document).ready(function(){
+      $(function() {
         // init checkbox switches
         $('.syn-check').bootstrapSwitch();
 
@@ -213,13 +218,58 @@
           container: 'body'
         })
 
-        <?= $lang_notice ?>
+        // button confirmation
+        /*$('body').confirmation({
+          selector: '[data-toggle="confirmation"]',
+          placement: 'left',
+          title: 'aaa',
+          btnOkIcon: 'fa fa-check',
+          btnCancelIcon : 'fa fa-times',
+          delay: 500,
+          onConfirm: function(){ alert('ok') },
+          onCancel: function(){ alert('cancel') }
+        });*/
+
+        $('body').on('click', '[data-toggle="confirmation"]', function(e){
+          var $this = $(this);
+          e.preventDefault();
+          bootbox.confirm( '<?= $str["sure_delete"] ?>', function(result) {
+            if (result == true) {
+              $.ajax({
+                method    : 'POST',
+                url       : $this.attr('href'),
+                dataType  : 'json'
+
+              }).done(function( responseText ) {
+                console.log(responseText);
+                if ( typeof responseText.unauthorized != 'undefined' )
+                  $.notify({ icon: 'fa fa-exclamation-triangle', message: responseText.unauthorized },{ type: 'warning' });
+                $table.bootstrapTable('refresh');
+
+              }).fail(function( jqXHR, textStatus, errorThrown ) {
+                var res = jqXHR.responseJSON;
+                if ( typeof res.error != 'undefined' )
+                  $.notify({ icon: 'fa fa-exclamation-triangle', message: res.error },{ type: 'danger' });
+                console.error( errorThrown );
+
+              }).always(function( responseText ) {
+                var res = responseText;
+                if ( typeof res.responseJSON != 'undefined' ) // if the request fails
+                  res = responseText.responseJSON;
+                if ( typeof res.status != 'undefined' )
+                  $.notify({ icon: 'fa fa-info-circle', message: res.status });
+              });
+            }
+          });
+        });
+
+        <?php echo getAlert(); ?>
+
         /*
         bootbox.alert("Hello world!", function() {
           console.log('alert closed');
         });
         */
-
         /*
         // rpc
         $('input.rpc').change(function(){

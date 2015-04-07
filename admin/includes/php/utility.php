@@ -1277,4 +1277,51 @@ function arabic_transliteration_replace($pattern, $replace, $subject){
   return preg_replace("/$pattern/u", $replace, $subject);
 }
 
+
+/*
+ * Notify Functions
+ */
+
+function setAlert($message, $type='info'){
+  if (!isset($_SESSION))
+    session_start();
+
+  if (!isset($_SESSION['synAlert']))
+    $_SESSION['synAlert'] = array();
+
+  if (!empty($msg)) {
+    $_SESSION['synAlert'][] = array(
+      'message' => $message,
+      'type' => $type
+    );
+  }
+}
+
+function getAlert(){
+  if(!isset($_SESSION))
+    session_start();
+
+  $ret = null;
+
+  if (isset($_SESSION['synAlert'])){
+    foreach ($_SESSION['synAlert'] as $key => $alert) {
+      extract ($alert);
+      switch ($type) {
+        case 'success'  : $icon = 'fa-check-square'; break;
+        case 'warning'  : $icon = 'fa-exclamation-circle'; break;
+        case 'danger'   : $icon = 'fa-exclamation-triangle'; break;
+        default         : $icon = 'fa-info-circle'; break;
+      }
+      $ret .= <<<ENDOFRET
+      $.notify(
+        { icon: 'fa {$icon}', message: '{$message}' },
+        { type: '{$type}' }
+      );
+ENDOFRET;
+
+      unset( $_SESSION['synAlert'][$key] );
+    }
+  }
+  return $ret;
+}
 ?>

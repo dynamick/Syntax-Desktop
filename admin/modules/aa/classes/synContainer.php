@@ -659,35 +659,35 @@ EOHTML;
     $value = fixEncoding( $el->getSQLValue() );
     //die($value.'##')
     //check if already exist a translation for this key
-    $key=$_REQUEST[$el->name."_synmultilang"];
-    if ($key=="") {
-      $res=$db->Execute("INSERT INTO aa_translation ($currlang) VALUES ($value)");
-      $key=$db->Insert_ID();
+    $key = $_REQUEST[$el->name."_synmultilang"];
+    if ($key == "") {
+      $res = $db->Execute("INSERT INTO aa_translation ($currlang) VALUES ($value)");
+      $key = $db->Insert_ID();
     }
 
-    $qry="SELECT * FROM aa_translation WHERE id='".addslashes($key)."'";
-    $res=$db->Execute($qry);
+    $qry = "SELECT * FROM aa_translation WHERE id='".addslashes($key)."'";
+    $res = $db->Execute($qry);
     if ($res->RecordCount()>0 and is_numeric($key)) {
-      $res=$db->Execute("UPDATE aa_translation set {$currlang}={$value} where id='{$key}'");
-      $ret=$el->getSQLName()."='$key'";
+      $res = $db->Execute("UPDATE aa_translation set {$currlang}={$value} where id='{$key}'");
+      $ret = $el->getSQLName()."='$key'";
       return $ret;
     } else {
-
+      $languagelist = $valuelist = '';
       //get the list of languages
       $res=$db->Execute("SELECT initial FROM aa_lang");
       while (list($lang)=$res->FetchRow()) {
-        $languagelist.="`$lang`, ";
-        $valuelist.="'".addslashes(translate($key))."', ";
+        $languagelist .= "`{$lang}`, ";
+        $valuelist .= "'".addslashes(translate($key))."', ";
       }
-      $languagelist=substr($languagelist,0,-2);
-      $valuelist=substr($valuelist,0,-2);
-      $res=$db->Execute("INSERT INTO aa_translation ($languagelist) VALUES ($valuelist)"); //in this case the key contains the real string
+      $languagelist = substr($languagelist,0,-2);
+      $valuelist = substr($valuelist,0,-2);
+      $res = $db->Execute("INSERT INTO aa_translation ($languagelist) VALUES ($valuelist)"); //in this case the key contains the real string
 
       //$res=$db->Execute("INSERT INTO aa_translation ($currlang) VALUES ('$key')"); //in this case the key contains the real string
-      $key=$db->Insert_ID();
-      $res=$db->Execute("UPDATE `".$this->table."` set ".$el->getSQLName()."='$key' WHERE ".urldecode($this->getKey()) );
-      $res=$db->Execute("UPDATE aa_translation set $currlang=$value where id='$key'");
-      $ret=$el->getSQLName()."='$key'";
+      $key = $db->Insert_ID();
+      $res = $db->Execute("UPDATE `".$this->table."` set ".$el->getSQLName()."='$key' WHERE ".urldecode($this->getKey()) );
+      $res = $db->Execute("UPDATE aa_translation set $currlang=$value where id='$key'");
+      $ret = $el->getSQLName()."='$key'";
     }
 
   }

@@ -385,43 +385,46 @@ EOBOTTOMBAR;
       //error check
       if (!$err) {
         //echo "<script>alert(\"$err\"); history.go(-1);</script>";
-        echo "<script>alert(\"{$err}\");</script>";
+        //echo "<script>alert(\"{$err}\");</script>";
+        setAlert( '<b>Errore</b>: elemento non creato', 'danger' );
+        $jumpTo = $PHP_SELF.'?cmd='.MODIFY.'&synPrimaryKey='.urlencode($synPrimaryKey);
+
+      } else {
+        //set the next page
+        if ($_REQUEST["changeto"]!='') {
+          $after = 'changelang';
+        }
+
+        setAlert( 'Elemento creato correttamente.', 'success' );
+        switch ($after) {
+          case 'changelang': // salva & cambia lingua
+            resetClone($synTable);
+            $jumpTo = $PHP_SELF."?cmd=".MODIFY."&synPrimaryKey={$synPrimaryKey}&synSetLang=".$_REQUEST["changeto"];
+            break;
+
+          case 'exit': // salva & torna alla lista
+            resetClone($synTable);
+            $jumpTo = $PHP_SELF;
+            break;
+
+          case 'clone': // salva & duplica
+            unset($_POST['id']); //altrimenti continua a lavorare sullo stesso record
+            $_SESSION[$synTable.'_clone'] = serialize($_POST);
+            $jumpTo = $PHP_SELF."?cmd=".ADD;
+            break;
+
+          case 'new': // salva & nuovo
+            resetClone($synTable);
+            $jumpTo = $PHP_SELF."?cmd=".ADD;
+            break;
+
+          case 'stay': // salva & continua
+          default:
+            resetClone($synTable);
+            $jumpTo = $PHP_SELF."?cmd=".MODIFY."&synPrimaryKey={$synPrimaryKey}";
+            break;
+        }
       }
-
-      //set the next page
-      if ($_REQUEST["changeto"]!='') {
-        $after = 'changelang';
-      }
-
-      switch ($after) {
-        case 'changelang': // salva & cambia lingua
-          resetClone($synTable);
-          $jumpTo = $PHP_SELF."?cmd=".MODIFY."&synPrimaryKey={$synPrimaryKey}&synSetLang=".$_REQUEST["changeto"];
-          break;
-
-        case 'exit': // salva & torna alla lista
-          resetClone($synTable);
-          $jumpTo = $PHP_SELF;
-          break;
-
-        case 'clone': // salva & duplica
-          unset($_POST['id']); //altrimenti continua a lavorare sullo stesso record
-          $_SESSION[$synTable.'_clone'] = serialize($_POST);
-          $jumpTo = $PHP_SELF."?cmd=".ADD;
-          break;
-
-        case 'new': // salva & nuovo
-          resetClone($synTable);
-          $jumpTo = $PHP_SELF."?cmd=".ADD;
-          break;
-
-        case 'stay': // salva & continua
-        default:
-          resetClone($synTable);
-          $jumpTo = $PHP_SELF."?cmd=".MODIFY."&synPrimaryKey={$synPrimaryKey}";
-          break;
-      }
-
       break;
 
 
@@ -455,9 +458,9 @@ EOBOTTOMBAR;
       $actions    = $synHtml->select('name="after" class="form-control"', $after_options);
       $ok_button  = $synHtml->button("name='cmd' value='".CHANGE."' class='btn btn-success'", '<i class="fa fa-check"></i> OK');
       $del_button = ($synLoggedUser->canDelete == 1)
-                  ? $synHtml->button("name='cmd' value='".DELETE."' class='btn btn-danger' onclick=\"return (confirm('{$str["sure_delete"]}'));\"", '<i class="fa fa-times"></i> '.$str['delete'])
+                  ? $synHtml->button("name='cmd' value='".DELETE."' class='btn btn-danger' data-toggle=\"confirmation\"", '<i class="fa fa-times"></i> '.$str['delete'])
                   : null;
-
+//? $synHtml->button("name='cmd' value='".DELETE."' class='btn btn-danger' onclick=\"return (confirm('{$str["sure_delete"]}'));\"", '<i class="fa fa-times"></i> '.$str['delete'])
       $bottom = <<<EOBOTTOMBAR
         <nav class="navbar form-toolbar navbar-fixed-bottom">
           <div class="container-fluid">
@@ -485,6 +488,7 @@ EOBOTTOMBAR;
       //initToolbar ( newBtn, saveBtn, removeBtn, switchBtn, refreshBtn, homeBtn, backBtn)
       $script = "<script type=\"text/javascript\">\n";
       $script.= "  initToolbar (false, true, true, true, true, true);\n";
+      //$script.= "  action('removeBtn', 'if (confirm(top.str[\"aa_confirmDel\"])) window.parent.content.document.location=\"content.php?cmd=delrow&synPrimaryKey=".urlencode($synPrimaryKey)."\";');\n";
       $script.= "  action('removeBtn', 'if (confirm(top.str[\"aa_confirmDel\"])) window.parent.content.document.location=\"content.php?cmd=delrow&synPrimaryKey=".urlencode($synPrimaryKey)."\";');\n";
       $script.= "</script>\n";
 
@@ -504,23 +508,27 @@ EOBOTTOMBAR;
 
     case CHANGE:
 
-      $synPrimaryKey = urldecode(trim($_POST["synPrimaryKey"]));
+      $synPrimaryKey = urldecode(trim($_POST['synPrimaryKey']));
 
       $contenitore->uploadDocument();
       $upd = $contenitore->getUpdateString();
       $ok = true;
 
-      if ($upd!="") {
+      if (!empty($upd)) {
         $qry = "UPDATE `{$synTable}` SET {$upd} WHERE {$synPrimaryKey}";
         $ok = $db->Execute($qry);
         $ok = $ok && $contenitore->execute_callbacks('update');
       }
-
       //echo "<a href=\"{$PHP_SELF}?cmd=".MODIFY."&synPrimaryKey={$synPrimaryKey}\">avanti</a>"; die();
 
       //controllo errori
-      if (!$ok)
-        echo "<script>alert(\"{$ok}\"); history.go(-1);</script>";
+      //if (!$ok)        echo "<script>alert(\"{$ok}\"); history.go(-1);</script>";
+      if (!$ok) {
+        setAlert('<b>Errore</b>: elemento non aggiornato', 'error');
+        $jumpTo = $PHP_SELF."?cmd=".MODIFY."&synPrimaryKey=".urlencode($synPrimaryKey);
+
+      }
+
       //else echo 'ok';
 
       //set the next page
@@ -531,17 +539,20 @@ EOBOTTOMBAR;
       switch ($after) {
         case 'changelang': // salva & cambia lingua
           resetClone($synTable);
+          setAlert( 'Modifiche salvate correttamente.', 'success' );
           $jumpTo = $PHP_SELF."?cmd=".MODIFY."&synPrimaryKey={$synPrimaryKey}&synSetLang=".$_REQUEST["changeto"];
           break;
 
         case 'exit': // salva & torna alla lista
           resetClone($synTable);
+          setAlert( 'Modifiche salvate correttamente.', 'success' );
           $jumpTo = $PHP_SELF;
           break;
 
         case 'clone': // salva & duplica
           unset($_POST['id']); //altrimenti continua a lavorare sullo stesso record
           $_SESSION[$synTable.'_clone'] = serialize($_POST);
+          setAlert( 'Elemento originale salvato correttamente.', 'success' );
           $jumpTo = $PHP_SELF."?cmd=".ADD;
           break;
 
@@ -549,24 +560,33 @@ EOBOTTOMBAR;
           resetClone($synTable);
           $nextqry = "SELECT `{$synTable}`.id FROM `{$synTable}` WHERE id>".intval($_POST['id'])." ORDER BY id LIMIT 0,1";
           $res = $db->Execute($nextqry);
-          if($arr = $res->FetchRow()){
+          if ( $arr = $res->FetchRow() ) {
+            setAlert( 'Modifiche salvate correttamente.', 'success' );
             $jumpTo = $PHP_SELF."?cmd=".MODIFY."&synPrimaryKey=".urlencode("`id`=\"{$arr['id']}\"");
           } else {
+            setAlert( 'Non sono presenti altri record.', 'warning' );
             $jumpTo = $PHP_SELF; //non esiste un record successivo, torno alla lista
           }
           break;
 
         case 'new': // salva & nuovo
           resetClone($synTable);
+          setAlert( 'Modifiche salvate correttamente.', 'success' );
           $jumpTo = $PHP_SELF."?cmd=".ADD;
           break;
 
         case 'stay': // salva & continua
         default:
           resetClone($synTable);
+          setAlert( 'Modifiche salvate correttamente.', 'success' );
           $jumpTo = $PHP_SELF."?cmd=".MODIFY."&synPrimaryKey={$synPrimaryKey}";
+
+          //echo '<pre>', print_r($_SESSION['synAlert']), '</pre>';
+          //die('--');
           break;
       }
+
+
       break;
 
 
@@ -579,6 +599,8 @@ EOBOTTOMBAR;
 
 
     case DELETE:
+      $msg = array();
+      $code = 200;
 
       $synPrimaryKey = stripslashes(urldecode($_REQUEST["synPrimaryKey"]));
       $res = $db->Execute("SELECT * FROM {$synTable} WHERE {$synPrimaryKey}");
@@ -592,15 +614,35 @@ EOBOTTOMBAR;
         $contenitore->deleteDocument();
         $contenitore->execute_callbacks('delete');
 
-        $res = $db->Execute("DELETE FROM {$synTable} WHERE {$synPrimaryKey}" );
-
+        $res = $db->Execute( "DELETE FROM {$synTable} WHERE {$synPrimaryKey}" );
+        if ($res) {
+          $msg['status'] = 'Elemento eliminato correttamente.';
+        } else {
+          $code = 500;
+          $msg['error'] = 'Impossibile eliminare l\'elemento.';
+        }
       } else {
-        echo "<script>alert(\"{$canDelete}\");</script>";
+        $msg['unauthorized'] = 'Non sei autorizzato ad eliminare questo elemento.';
       }
 
-      //set the next page
-      $jumpTo = $PHP_SELF;
+      if ($xhr) {
+        //http_response_code( $code ); // php 5.4
+        header( 'HTTP/1.0 '.$code ); // this tells jQuery the operation's outcome
+        echo json_encode( $msg );
 
+      } else {
+        if ( isset($msg['unauthorized']) )
+          setAlert( $msg['unauthorized'], 'warning' );
+
+        if ( isset($msg['error']) )
+          setAlert( $msg['error'], 'danger' );
+
+        if ( isset( $msg['status']) )
+          setAlert( $msg['status'] );
+
+        //set the next page
+        $jumpTo = $PHP_SELF;
+      }
       break;
 
 
@@ -648,7 +690,14 @@ EOBOTTOMBAR;
         echo json_encode( $msg );
 
       } else {
-        echo '<script>alert("'. implode(', ', $msg) .'");</script>';
+        //echo '<script>alert("'. implode(', ', $msg) .'");</script>';
+        foreach( $msg['unauthorized'] as $u )
+          setAlert( $u, 'warning' );
+        foreach( $msg['error'] as $e )
+          setAlert( $e, 'danger' );
+        foreach( $msg['status'] as $s )
+          setAlert( $s );
+
         //set the next page
         $jumpTo = $PHP_SELF;
       }
@@ -715,8 +764,8 @@ EOBOTTOMBAR;
       # DELETE button
       if ($synLoggedUser->canDelete==1) {
         $label  = $str['delete'];
-        $button = "<a href=\"%s&amp;synPrimaryKey=%s\" class=\"btn btn-xs btn-danger\" title=\"{$label}\" ";
-        $button.= "onclick=\"return (confirm('{$str["sure_delete"]}'));\">";
+        $button = "<a href=\"getData.php%s&amp;synPrimaryKey=%s\" class=\"btn btn-xs btn-danger\" title=\"{$label}\" ";
+        $button.= "data-toggle=\"confirmation\">";
         $button.= "<i class=\"fa fa-trash\"></i></a>";
         $contenitore->buttons[$button] = "?cmd=".DELETE;
       }
@@ -803,10 +852,10 @@ EOBOTTOMBAR;
 
         ////////////////////////////////////////////////////////////////////////
        //                                                                    //
-      //                          LIST ALL ROWS                             //
+      //                   LIST ALL ROWS - DEPRECATED                       //
      //                                                                    //
     ////////////////////////////////////////////////////////////////////////
-
+/*
     case 'OLD':
       global $treeFrame;
       echo "<!-- *** inclusione di schema.php *** -->\n";
@@ -890,7 +939,7 @@ EOSCRIPT;
       }
 
       break;
-
+*/
         ////////////////////////////////////////////////////////////////////////
        //                                                                    //
       //                          LIST ALL ROWS                             //
@@ -980,7 +1029,7 @@ EOTABLE;
 
   //jump to the next page
   if (isset($jumpTo)) {
-    js_location($jumpTo);
+    js_location($jumpTo); die();
   }
 
   function aaHeader($title, $title2='') {
