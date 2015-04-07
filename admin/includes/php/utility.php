@@ -172,6 +172,14 @@ function lang($id,&$str) {
     return $ret;
   }
 
+  function getLangInfo($id, $data='lang') {
+    global $db;
+    $res = $db->Execute("SELECT `{$data}` FROM aa_lang WHERE id='{$id}'");
+    list($ret) = $res->FetchRow();
+
+    return $ret;
+  }
+
 
   // set the current language
   function setLang($id) {

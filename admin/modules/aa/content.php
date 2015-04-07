@@ -8,11 +8,16 @@
  /***************************************************************************
   *                             MULTILANG SECTION
   ***************************************************************************/
-  if (isset($_GET["synSetLang"]))
-    setLang($_GET["synSetLang"]);
-  elseif ($_SESSION["aa_CurrentLang"]=="")
-    setLang(1);
 
+  $lang_notice = null;
+  if(isset($_GET['synSetLang'])){
+    $_SESSION['aa_CurrentLang'] = $_GET['synSetLang'];
+    $lang = getLangInfo($_GET['synSetLang'], 'lang');
+    $lang_notice = '$'.".notify({ icon: 'fa fa-language', message: 'Lingua attiva: <b>{$lang}</b>' });";
+
+  } elseif($_SESSION['aa_CurrentLang'] == '') {
+    setLang(1);
+  }
 
   define ('MODIFY',         'modifyrow');
   define ('CHANGE',         'changerow');
@@ -59,6 +64,7 @@
     <link rel="stylesheet" type="text/css" href="../../assets/css/bootstrap-multiselect.css" />
     <link rel="stylesheet" type="text/css" href="../../assets/css/bootstrap-table.min.css" />
     <link rel="stylesheet" type="text/css" href="../../assets/css/fontawesome-iconpicker.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../assets/css/animate.css" />
     <link rel="stylesheet" type="text/css" href="../../assets/css/syntax.css" />
 
     <script type="text/javascript" src="../../assets/js/jquery.js"></script>
@@ -116,9 +122,18 @@
     <script type="text/javascript" src="../../assets/js/bootstrap-datetimepicker.min.js"></script>
     <script type="text/javascript" src="../../assets/js/fontawesome-iconpicker.min.js"></script>
     <script type="text/javascript" src="../../assets/js/bootstrap-multiselect.js"></script>
+    <script type="text/javascript" src="../../assets/js/bootbox.min.js"></script>
+    <script type="text/javascript" src="../../assets/js/bootstrap-notify.min.js"></script>
     <script type="text/javascript" src="../../assets/js/jquery.quickPreview.js"></script>
     <script type="text/javascript">
       var $table = $('#mainTable');
+
+      $.notifyDefaults({
+        offset: {
+          x: 15,
+          y: 20
+        }
+      });
 
       function deleteSelectedRows() {
         $ids = new Array();
@@ -134,13 +149,13 @@
 
         }).done(function( responseText ) {
           if ( typeof responseText.unauthorized != 'undefined' )
-            alert( responseText.unauthorized );
+            $.notify({ icon: 'fa fa-exclamation-triangle', message: responseText.unauthorized },{ type: 'warning' });
           $table.bootstrapTable('refresh');
 
         }).fail(function( jqXHR, textStatus, errorThrown ) {
           var res = jqXHR.responseJSON;
           if ( typeof res.error != 'undefined' )
-            alert('ERROR: '+ res.error);
+            $.notify({ icon: 'fa fa-exclamation-triangle', message: res.error },{ type: 'danger' });
           console.error( errorThrown );
 
         }).always(function( responseText ) {
@@ -148,7 +163,7 @@
           if ( typeof res.responseJSON != 'undefined' ) // if the request fails
             res = responseText.responseJSON;
           if ( typeof res.status != 'undefined' )
-            alert( res.status );
+            $.notify({ icon: 'fa fa-info-circle', message: res.status });
         });
       }
 
@@ -197,6 +212,13 @@
         $('[data-toggle="tooltip"]').tooltip({
           container: 'body'
         })
+
+        <?= $lang_notice ?>
+        /*
+        bootbox.alert("Hello world!", function() {
+          console.log('alert closed');
+        });
+        */
 
         /*
         // rpc
