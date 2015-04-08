@@ -13,7 +13,7 @@ function __autoload($class) {
 
   //definizione variabili globali
   $synContainer = isset($_REQUEST["aa_service"]) ? $_REQUEST["aa_service"] : $_SESSION["aa_service"];
-  $buttons=array();
+  $buttons = array();
 
   //creo il contenitore
   if(!isset($db))
@@ -21,16 +21,16 @@ function __autoload($class) {
 
   $res = $db->Execute("SELECT * FROM aa_services WHERE id='{$synContainer}'");
   $arr = $res->FetchRow();
-  $synDb=str_replace(" ","_",strToLower($arr["syntable"]));
+  $synDb = str_replace(" ", "_", strToLower($arr["syntable"]) );
   $contenitore = synContainer::getInstance($synDb, $buttons, true, $arr["name"], $arr["description"],$arr["multilang"]);
 
-  $dbSync=$arr["dbsync"];
+  $dbSync = $arr["dbsync"];
 
   //ci aggiungo gli elementi
-  $res=$db->Execute("SELECT se.*, e.classname as classname FROM aa_services_element se INNER JOIN aa_element e ON se.type=e.id WHERE container='{$synContainer}' order by `order`, `id`");
+  $res = $db->Execute("SELECT se.*, e.classname as classname FROM aa_services_element se INNER JOIN aa_element e ON se.type=e.id WHERE container='{$synContainer}' order by `order`, `id`");
   $count = 0;
-  while ($arr=$res->FetchRow()) {
-    $obj[$count] = new $arr["classname"]($arr["name"], $arr["value"], translateDesktop($arr["label"]), $arr["size"], translateDesktop($arr["help"]));
+  while ($arr = $res->FetchRow()) {
+    $obj[$count] = new $arr["classname"]( $arr["name"], $arr["value"], translateDesktop($arr["label"]), $arr["size"], translateDesktop($arr["help"]) );
     $obj[$count]->isListable($arr["isvisible"], $arr["label"], $arr["iseditable"]);
   //$obj[$count]->setContainer($contenitore);
 
@@ -72,10 +72,10 @@ function __autoload($class) {
   if (isset($_POST['after']))
     $after = $_POST['after'];
   else
-    $after="stay";
+    $after = 'stay';
 
-  if (!defined("RPC"))
-    define("RPC", "rpcfunction");
+  if (!defined('RPC'))
+    define('RPC', 'rpcfunction');
 
   //----------------------------------------------------------------------------
   //                                   FUNZIONI
@@ -281,9 +281,9 @@ EOQ;
 
   //include custom function. The naming convention is: path/to/modules/aa/custom/$synTable.php
   //if ($cmd != JSON && file_exists($synAbsolutePath.$synAdminPath."/modules/aa/custom/".$synTable.".php")===true) {
-  if (file_exists($synAbsolutePath.$synAdminPath."/modules/aa/custom/".$synTable.".php")===true) {
-    include ($synAbsolutePath.$synAdminPath."/modules/aa/custom/".$synTable.".php");
-  }
+  $custom_file = $synAbsolutePath.$synAdminPath."/modules/aa/custom/".$synTable.".php";
+  if (is_file($custom_file))
+    include ($custom_file);
 
 
   switch($cmd) {
@@ -456,9 +456,9 @@ EOBOTTOMBAR;
          'new' => $str['saveandadd']
       );
       $actions    = $synHtml->select('name="after" class="form-control"', $after_options);
-      $ok_button  = $synHtml->button("name='cmd' value='".CHANGE."' class='btn btn-success'", '<i class="fa fa-check"></i> OK');
+      $ok_button  = $synHtml->button("name='cmd' value='".CHANGE."' class=\"btn btn-success\"", '<i class="fa fa-check"></i> OK');
       $del_button = ($synLoggedUser->canDelete == 1)
-                  ? $synHtml->button("name='cmd' value='".DELETE."' class='btn btn-danger' data-toggle=\"confirmation\"", '<i class="fa fa-times"></i> '.$str['delete'])
+                  ? $synHtml->button("name='cmd' value='".DELETE."' class=\"btn btn-danger btn-delete\"", '<i class="fa fa-times"></i> '.$str['delete'])
                   : null;
 //? $synHtml->button("name='cmd' value='".DELETE."' class='btn btn-danger' onclick=\"return (confirm('{$str["sure_delete"]}'));\"", '<i class="fa fa-times"></i> '.$str['delete'])
       $bottom = <<<EOBOTTOMBAR
@@ -625,7 +625,7 @@ EOBOTTOMBAR;
         $msg['unauthorized'] = 'Non sei autorizzato ad eliminare questo elemento.';
       }
 
-      if ($xhr) {
+      if (isset($xhr) && $xhr) {
         //http_response_code( $code ); // php 5.4
         header( 'HTTP/1.0 '.$code ); // this tells jQuery the operation's outcome
         echo json_encode( $msg );
@@ -764,8 +764,7 @@ EOBOTTOMBAR;
       # DELETE button
       if ($synLoggedUser->canDelete==1) {
         $label  = $str['delete'];
-        $button = "<a href=\"getData.php%s&amp;synPrimaryKey=%s\" class=\"btn btn-xs btn-danger\" title=\"{$label}\" ";
-        $button.= "data-toggle=\"confirmation\">";
+        $button = "<a href=\"getData.php%s&amp;synPrimaryKey=%s\" class=\"btn btn-xs btn-danger ajax-delete\" title=\"{$label}\">";
         $button.= "<i class=\"fa fa-trash\"></i></a>";
         $contenitore->buttons[$button] = "?cmd=".DELETE;
       }

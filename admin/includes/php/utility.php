@@ -1289,7 +1289,7 @@ function setAlert($message, $type='info'){
   if (!isset($_SESSION['synAlert']))
     $_SESSION['synAlert'] = array();
 
-  if (!empty($msg)) {
+  if (!empty($message)) {
     $_SESSION['synAlert'][] = array(
       'message' => $message,
       'type' => $type

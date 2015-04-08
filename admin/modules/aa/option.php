@@ -67,12 +67,26 @@
     <script src="../../assets/js/jquery.js"></script>
     <script src="../../assets/js/bootstrap.min.js"></script>
     <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+    <script src="../../assets/js/bootbox.min.js"></script>
     <script>
     $(document).ready(function(){
       makeToolBar('menu1');
       $('[data-toggle="tooltip"]').tooltip({
         container: 'body'
-      })
+      });
+
+      // syncronous delete
+      $('.btn-delete').click(function(e){
+        e.preventDefault();
+        bootbox.confirm( '<?= $str["sure_delete"] ?>', function(result) {
+          if (result == true) {
+            //$(e.currentTarget).unbind( 'click' ).trigger( 'click' );
+            alert('ok');
+          } else {
+            return true;
+          }
+        });
+      });
     });
     </script>
   </body>

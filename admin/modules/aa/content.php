@@ -98,8 +98,7 @@
       action('backBtn',   'window.parent.content.history.back();');
       action('refreshBtn','window.parent.content.location.reload();');
       action('saveBtn',   'window.parent.content.document.forms[0].submit()');
-      //action('removeBtn', 'if (confirm(top.str["aa_confirmSelDel"])) window.parent.content.document.forms[0].submit();');
-      action('removeBtn', 'if (confirm(top.str["aa_confirmSelDel"])) window.parent.content.deleteSelectedRows();');
+      action('removeBtn', 'window.parent.content.confirmDeletion()');
       action('homeBtn',   'window.parent.content.location.href="<?=$PHP_SELF?>"');
 
     //]]>
@@ -172,6 +171,17 @@
         });
       }
 
+      //multidelete confirm
+      function confirmDeletion(){
+        bootbox.confirm( top.str['aa_confirmSelDel'], function(result) {
+          if (result == true) {
+            deleteSelectedRows();
+          } else {
+            return true;
+          }
+        });
+      }
+
       $(function() {
         // init checkbox switches
         $('.syn-check').bootstrapSwitch();
@@ -218,19 +228,8 @@
           container: 'body'
         })
 
-        // button confirmation
-        /*$('body').confirmation({
-          selector: '[data-toggle="confirmation"]',
-          placement: 'left',
-          title: 'aaa',
-          btnOkIcon: 'fa fa-check',
-          btnCancelIcon : 'fa fa-times',
-          delay: 500,
-          onConfirm: function(){ alert('ok') },
-          onCancel: function(){ alert('cancel') }
-        });*/
-
-        $('body').on('click', '[data-toggle="confirmation"]', function(e){
+        // ajax delete
+        $('body').on('click', '.ajax-delete', function(e){
           var $this = $(this);
           e.preventDefault();
           bootbox.confirm( '<?= $str["sure_delete"] ?>', function(result) {
@@ -241,27 +240,32 @@
                 dataType  : 'json'
 
               }).done(function( responseText ) {
-                console.log(responseText);
-                if ( typeof responseText.unauthorized != 'undefined' )
-                  $.notify({ icon: 'fa fa-exclamation-triangle', message: responseText.unauthorized },{ type: 'warning' });
                 $table.bootstrapTable('refresh');
 
               }).fail(function( jqXHR, textStatus, errorThrown ) {
-                var res = jqXHR.responseJSON;
-                if ( typeof res.error != 'undefined' )
-                  $.notify({ icon: 'fa fa-exclamation-triangle', message: res.error },{ type: 'danger' });
                 console.error( errorThrown );
 
               }).always(function( responseText ) {
-                var res = responseText;
-                if ( typeof res.responseJSON != 'undefined' ) // if the request fails
-                  res = responseText.responseJSON;
-                if ( typeof res.status != 'undefined' )
-                  $.notify({ icon: 'fa fa-info-circle', message: res.status });
+                if ( typeof responseText.status != 'undefined' )
+                  $.notify({ icon: 'fa fa-info-circle', message: responseText.status });
               });
             }
           });
         });
+
+        // syncronous delete
+        $('.btn-delete').click(function(e){
+          e.preventDefault();
+          bootbox.confirm( '<?= $str["sure_delete"] ?>', function(result) {
+            if (result == true) {
+              $(e.currentTarget).unbind( 'click' ).trigger( 'click' );
+            } else {
+              return true;
+            }
+          });
+        });
+
+
 
         <?php echo getAlert(); ?>
 
