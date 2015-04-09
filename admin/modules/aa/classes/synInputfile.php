@@ -23,14 +23,54 @@ class synInputfile extends synElement {
     $this->mat   = $mat;
   }
 
-  //private function
+
   function _html() {
+    global ${$this->name}, $synAbsolutePath, $synPublicPath;
+    $ret = $disabled = '';
+    //$httpHost = getenv("HTTP_HOST");
+    $mat = $this->compileQry( $this->translatePath($this->mat) );
+    $filext = $this->translate( $this->value );
+    $filename = $this->createFilename().".".$filext;
+    $filepath = $mat.$filename;
+    
+    if ($this->isImage($filepath)) {
+      $thumb = "{$synPublicPath}/thumb.php?src={$filepath}&amp;w=250&amp;h=250&amp;far=1";
+      $src = "'<img src=\"{$thumb}\" class=\"file-preview-image\">'"; 
+    } else 
+      $src = "'<a href=\"/{$filepath}\">{$filename}</a>'";
+    
+    if (!empty($filext)) {
+      $preview = $src;
+      $label = "'{$filename}'";
+    } else {
+      $preview = 'undefined';
+      $label = 'undefined';
+    }
+    
+    $ret = <<<EORET
+    <input id="{$this->name}" type="file" name="{$this->name}" class="file-input-control" />
+    <input type="hidden" name="{$this->name}_old" value="{$filext}" />
+    <script type="text/javascript">
+      preview['{$this->name}'] = new Array();
+      preview['{$this->name}']['src'] = {$preview};
+      preview['{$this->name}']['label'] = {$label};
+    </script>
+EORET;
+
+    return $ret;
+  }
+  
+/*
+  function OLD_html() {
     global ${$this->name}, $synAbsolutePath;
     $ret = $disabled = '';
     $httpHost = getenv("HTTP_HOST");
     $mat = $this->compileQry($this->translatePath($this->mat));
     $filename = $mat.$this->createFilename().".".$this->translate($this->value);
-    if ($this->isImage($filename)) $src="http://$httpHost/$filename"; else $src="images/blank.gif";
+    if ($this->isImage($filename)) 
+      $src = "http://$httpHost/$filename"; 
+    else 
+      $src = "images/blank.gif";
 
     if ($this->translate($this->value)!="") {
       $selected  = "<a style='margin-left:3px;' href=\"$filename\" target=\"_blank\"><img src=\"/admin/images/db.gif\" border=\"0\" alt=\"Download\"/> Download</a><br/>";
@@ -60,7 +100,7 @@ class synInputfile extends synElement {
     $ret .= "</td></tr></table>\n";
     return  $ret;
   }
-
+*/
   //create the file name
   function createFilename($withLang=true) {
     //global $aa_CurrentLang;
