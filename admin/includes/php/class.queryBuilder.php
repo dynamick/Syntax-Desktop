@@ -175,8 +175,16 @@ class queryBuilder {
     $this->limit = "{$offset}, {$limit}";
   }
 
-  public function addOrderBy($field, $dir='ASC') {
-    $this->orderBy[] = "`{$field}` {$dir}";
+  public function addOrderBy($field, $dir='ASC', $table=null) {
+    $prefix = '';
+    // prevent ambigous fields by prepending table alias
+    if (!empty($table)) {
+      foreach( $this->_tables AS $t ) {
+        if ($table == $t->getName())
+          $prefix = $t->getAlias().'.';
+      }
+    }
+    $this->orderBy[] = "{$prefix}`{$field}` {$dir}";
   }
 
   public function debug(){

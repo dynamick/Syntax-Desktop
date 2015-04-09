@@ -810,7 +810,8 @@ EOBOTTOMBAR;
       if (empty($search))
         $qry->setLimit( $limit, $offset );
       if (!empty($sort))
-        $qry->addOrderBy( $sort, $order_dir );
+        $qry->addOrderBy( $sort, $order_dir, $contenitore->getTable() );
+
       //if (!empty($search))
         //$qry->addSearchClause( $search );
 
