@@ -455,7 +455,7 @@ EOBOTTOMBAR;
         'next' => $str['saveandnext'],
          'new' => $str['saveandadd']
       );
-      $actions    = $synHtml->select('name="after" class="form-control"', $after_options);
+      $actions    = $synHtml->select('name="after"', $after_options);
       $ok_button  = $synHtml->button("name='cmd' value='".CHANGE."' class='btn btn-success'", '<i class="fa fa-check"></i> OK');
       $del_button = ($synLoggedUser->canDelete == 1)
                   ? $synHtml->button("name='cmd' value='".DELETE."' class='btn btn-danger' data-toggle=\"confirmation\"", '<i class="fa fa-times"></i> '.$str['delete'])

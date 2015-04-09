@@ -58,7 +58,7 @@ class synSelectMultiCheck extends synElement {
           }
         }
         //$txt .= "<div class=\"checkbox\"><label><input type=\"checkbox\" name=\"{$this->name}[]\" value=\"{$id}\"{$selected}/> {$this->translate($value, true)}</label></div>".$eol;
-        $input .= "<option value=\"{$id}\"{$selected}/>{$this->translate($value, true)}</option>\n";
+        $input .= "<option value=\"{$id}\"{$selected}>{$this->translate($value, true)}</option>\n";
       }
       if (!empty($current_group))
         $input .= "</optgroup>\n";

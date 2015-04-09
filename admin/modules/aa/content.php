@@ -66,6 +66,7 @@
     <link rel="stylesheet" type="text/css" href="../../assets/css/bootstrap-multiselect.css" />
     <link rel="stylesheet" type="text/css" href="../../assets/css/bootstrap-table.min.css" />
     <link rel="stylesheet" type="text/css" href="../../assets/css/fontawesome-iconpicker.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../assets/css/fileinput.min.css" />
     <link rel="stylesheet" type="text/css" href="../../assets/css/animate.css" />
     <link rel="stylesheet" type="text/css" href="../../assets/css/syntax.css" />
 
@@ -79,6 +80,8 @@
       //RPC FUNCTION CALLER
       var g_remoteServer = '<?=$targetFileName?>'; //'ihtml/auto_service.php'
       var g_intervalID;
+      var preview = new Array();
+      
       function callServer(synPrimaryKey, field, value) {
       	var head = document.getElementsByTagName('head').item(0);
       	var old  = document.getElementById('lastLoadedCmds');
@@ -124,6 +127,7 @@
     <script type="text/javascript" src="../../assets/js/bootstrap-datetimepicker.min.js"></script>
     <script type="text/javascript" src="../../assets/js/fontawesome-iconpicker.min.js"></script>
     <script type="text/javascript" src="../../assets/js/bootstrap-multiselect.js"></script>
+    <script type="text/javascript" src="../../assets/js/fileinput.min.js"></script>
     <script type="text/javascript" src="../../assets/js/bootbox.min.js"></script>
     <script type="text/javascript" src="../../assets/js/bootstrap-notify.min.js"></script>
     <script type="text/javascript" src="../../assets/js/jquery.quickPreview.js"></script>
@@ -209,6 +213,60 @@
 
         // init icon-picker
         $('.icp').iconpicker();
+
+/*        
+$("#image").fileinput({
+    initialPreview: [
+        "<img src='/images/summer.jpg' class='file-preview-image' alt='The Moon' title='The Moon'>",
+        "<img src='/images/logo.jpg' class='file-preview-image' alt='The Earth' title='The Earth'>",
+    ],
+    overwriteInitial: true,
+    initialCaption: "The Moon and the Earth"
+});   
+*/
+
+$("#photo----").fileinput({
+    initialPreview: [
+        "<img src='images/summer.jpg' class='file-preview-image' alt='The Moon' title='The Moon'>",
+    ],
+    overwriteInitial: true,
+    initialCaption: "The Moon and the Earth",
+    
+	previewFileType: "image",
+	browseClass: "btn btn-success",
+	browseLabel: "Pick Image",
+	browseIcon: '<i class="fa fa-folder-open-o"></i> ',
+	removeClass: "btn btn-danger",
+	removeLabel: "Delete",
+	removeIcon: '<i class="fa fa-trash"></i> ',
+	uploadClass: "btn btn-info",
+	uploadLabel: "Upload",
+	uploadIcon: '<i class="fa fa-upload"></i> ',
+  layoutTemplates: {
+    icon: '<span class="fa fa-file kv-caption-icon"></span> '
+  }
+  
+});
+     
+
+        // init file input
+        $('.file-input-control').each( function(){
+          var $this = $(this), name = $this.attr('name'), initial = preview[name];
+//console.info( preview[name] );
+          $this.fileinput({
+            showUpload: false, 
+            previewFileType: 'any',
+            //initialPreview: [ preview[name] ],
+            initialPreview: [ initial['src'] ],
+            initialCaption: initial['label'],
+            
+            browseIcon: '<i class="fa fa-folder-open-o"></i> ',
+            removeIcon: '<i class="fa fa-trash"></i> ',
+            layoutTemplates: {
+              icon: '<span class="fa fa-file kv-caption-icon"></span> '
+            }
+          });
+        });
 
         // init image preview
         $('.preview').quickPreview();
