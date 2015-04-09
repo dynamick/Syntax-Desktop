@@ -299,7 +299,7 @@ EOC;
     if(!isset($_SESSION))
       session_start();
     $aa_CurrentLang = $_SESSION['aa_CurrentLang'];
-    
+
     $container = $this->container;
     $key       = $container->getKey();
     $table     = $container->table;
@@ -335,7 +335,7 @@ EOC;
     $file = '';
     if(isset($_FILES['userfile'])) {
       $file = $_FILES['userfile'];
-    
+
       $k = count($file['name']);
       for($i=0 ; $i < $k ; $i++){
         if ( isset($save_path)

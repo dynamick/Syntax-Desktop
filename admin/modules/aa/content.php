@@ -69,6 +69,7 @@
     <link rel="stylesheet" type="text/css" href="../../assets/css/fileinput.min.css" />
     <link rel="stylesheet" type="text/css" href="../../assets/css/animate.css" />
     <link rel="stylesheet" type="text/css" href="../../assets/css/syntax.css" />
+    <link rel="stylesheet" type="text/css" href="plupload.css" />
 
     <script type="text/javascript" src="../../assets/js/jquery.js"></script>
     <script type="text/javascript" src="<?=$synAdminPath?>/includes/js/ckeditor/ckeditor.js"></script>
@@ -81,7 +82,7 @@
       var g_remoteServer = '<?=$targetFileName?>'; //'ihtml/auto_service.php'
       var g_intervalID;
       var preview = new Array();
-      
+
       function callServer(synPrimaryKey, field, value) {
       	var head = document.getElementsByTagName('head').item(0);
       	var old  = document.getElementById('lastLoadedCmds');
@@ -224,7 +225,7 @@
         // init icon-picker
         $('.icp').iconpicker();
 
-/*        
+/*
 $("#image").fileinput({
     initialPreview: [
         "<img src='/images/summer.jpg' class='file-preview-image' alt='The Moon' title='The Moon'>",
@@ -232,7 +233,7 @@ $("#image").fileinput({
     ],
     overwriteInitial: true,
     initialCaption: "The Moon and the Earth"
-});   
+});
 */
 
 $("#photo----").fileinput({
@@ -241,7 +242,7 @@ $("#photo----").fileinput({
     ],
     overwriteInitial: true,
     initialCaption: "The Moon and the Earth",
-    
+
 	previewFileType: "image",
 	browseClass: "btn btn-success",
 	browseLabel: "Pick Image",
@@ -255,21 +256,21 @@ $("#photo----").fileinput({
   layoutTemplates: {
     icon: '<span class="fa fa-file kv-caption-icon"></span> '
   }
-  
+
 });
-     
+
 
         // init file input
         $('.file-input-control').each( function(){
           var $this = $(this), name = $this.attr('name'), initial = preview[name];
 //console.info( preview[name] );
           $this.fileinput({
-            showUpload: false, 
+            showUpload: false,
             previewFileType: 'any',
             //initialPreview: [ preview[name] ],
             initialPreview: [ initial['src'] ],
             initialCaption: initial['label'],
-            
+
             browseIcon: '<i class="fa fa-folder-open-o"></i> ',
             removeIcon: '<i class="fa fa-trash"></i> ',
             layoutTemplates: {
