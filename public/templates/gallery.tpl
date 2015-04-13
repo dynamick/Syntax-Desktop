@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="{$smarty.session.synSiteLangInitial}">
+<html lang="{$synLangInitial}">
 {gallery}{include file="partial/_head.tpl"}
 <body>
   {include file="partial/_header.tpl"}
-  
+
   <div class="section">
     <!-- Page Content -->
     <div class="container">
@@ -15,7 +15,7 @@
     </div>
     <!-- /.container -->
   </div>
-  
+
   {include file="partial/_cta.tpl"}
   {include file="partial/_footer.tpl"}
   {include file="partial/_scripts.tpl"}
