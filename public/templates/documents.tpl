@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{$smarty.session.synSiteLangInitial}">
+<html lang="{$synLangInitial}">
 {include file="partial/_head.tpl"}
 <body>
   {include file="partial/_header.tpl"}
@@ -64,7 +64,7 @@
     <!-- /.row -->
   </div>
   <!-- /.container -->
-  
+
   {include file="partial/_cta.tpl"}
   {include file="partial/_footer.tpl"}
   {include file="partial/_scripts.tpl"}

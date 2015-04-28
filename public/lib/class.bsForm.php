@@ -30,7 +30,7 @@ class bsForm extends formBuilder {
         $input = $this->button($name, $label, $value, $formato);
         break;
       case 'textarea':
-        $input = $this->textArea($name, $identifier, $value, $obbligatorio, $hint);
+        $input = $this->textArea($name, $identifier, $value, $obbligatorio, $label);
         break;
       case 'password':
         $input = $this->inputPassword($name, $identifier, $value, $obbligatorio, $hint, $label, false);
@@ -152,7 +152,7 @@ ENDOFFIELD;
       }
       if ($cnt == 2) {
         $form .= "</div>\n";
-      }       
+      }
 
       $form .= "<div class=\"row\"><div class=\"col-md-12 text-center\">\n";
       if ($this->captcha!='nessuno')
@@ -221,8 +221,9 @@ ENDOFFIELD;
   function textArea($name, $identifier, $value='', $obbligatorio=0, $label) {
     $class = ($obbligatorio==1) ? ' required' : '';
     $index = $this->tabIndex();
+    $ph    = ($this->hide_label) ? " placeholder=\"{$label}\"" : '';
 
-    $ret = "  <textarea name=\"{$name}\" id=\"{$identifier}\" class=\"form-control input-lg{$class}\" rows=\"5\" cols=\"60\" tabindex=\"{$index}\"></textarea>";
+    $ret = "  <textarea name=\"{$name}\" id=\"{$identifier}\" class=\"form-control input-lg{$class}\" rows=\"5\" cols=\"60\" tabindex=\"{$index}\"{$ph}></textarea>";
     return $ret;
   }
 

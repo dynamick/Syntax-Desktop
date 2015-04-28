@@ -12,14 +12,15 @@ require('smarty/Smarty.class.php');
 |*/
 class synSmarty extends Smarty {
    var $synTemplate, $synPackagePath, $synPluginPath;
-   
+
    public $synPageNode = array();
    public $synPageScript = array();
-   
+
    function synSmarty($pageId) {
       global $synAbsolutePath, $synPublicPath, $synPluginPath;
       // Class Constructor. These automatically get set with each new instance.
       parent::__construct();
+      $lang = getLangInitial();
 
       # paths
       $this->template_dir   = $synAbsolutePath.$synPublicPath.'/templates/';
@@ -36,9 +37,10 @@ class synSmarty extends Smarty {
 
       $this->clearCompiledTemplate($this->synTemplate);
       $this->traverseTree($pageId);
-      
+
       $this->assign('synTemplate', $this->synTemplate);
       $this->assign('synPageScript', $this->synPageScript);
+      $this->assign('synLangInitial', $lang);
    }
 
 
@@ -51,23 +53,23 @@ class synSmarty extends Smarty {
     global $db, $synPublicPath, $synAdminPath, $synAbsolutePath, $synWebsiteTitle;
 
     $qry = <<<EOQRY
-    
-    SELECT aa_page.*, 
-           aa_template.id as template_id, aa_template.filename 
-      FROM aa_page, 
-           aa_template 
+
+    SELECT aa_page.*,
+           aa_template.id as template_id, aa_template.filename
+      FROM aa_page,
+           aa_template
      WHERE aa_page.id = '{$pageId}'
        AND aa_page.template = aa_template.id
-       
+
 EOQRY;
     //echo $qry, '<br>';
-    
+
     $db->setFetchMode(ADODB_FETCH_ASSOC);
     $res = $db->Execute($qry);
 
-    if ($res->RecordCount() > 0) 
+    if ($res->RecordCount() > 0)
       $arr = $res->FetchRow();
-    else 
+    else
       return false;
 
     $qry = "SELECT id FROM aa_services WHERE syntable='aa_page'";
@@ -85,7 +87,7 @@ EOQRY;
       }
       $this->assign("synPage".ucfirst($key), $value);
     }
-    
+
     $this->assign('synAdminPath', $synAdminPath);
     $this->assign('synPublicPath', $synPublicPath);
     $this->assign('synAbsolutePath', $synAbsolutePath);
@@ -93,16 +95,16 @@ EOQRY;
 
     //variabile per riconoscere le chiamate via AJAX
     $xhr = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && (strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
-    $this->assign('ajax_call', $xhr);    
-    
+    $this->assign('ajax_call', $xhr);
+
     //se il template esiste su file allora prendo quello, altrimenti lo carico dal database
     $filename = $arr['filename'];
     $template_id = $arr['template_id'];
-    if ($filename != '') 
+    if ($filename != '')
       $template = $filename;
-    else 
+    else
       $template = "db:".$template_id;
-    
+
     $db->setFetchMode(ADODB_FETCH_BOTH);
     return $template;
   }

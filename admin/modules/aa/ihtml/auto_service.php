@@ -316,13 +316,18 @@ EOQ;
       $hiddens  = $synHtml->hidden("name='changeto' value=''");
       $hiddens .= $synHtml->hidden("name='default-cmd' value='".INSERT."'");
 
+      if (isset($_REQUEST['after']))
+        $default_action = $_REQUEST['after'];
+      else
+        $default_action = 'saveandexit';
+
       $after_options = array(
         'exit' => $str['saveandexit'],
         'stay' => $str['save'],
        'clone' => $str['saveandclone'],
          'new' => $str['saveandadd']
       );
-      $actions    = $synHtml->select('name="after" class="form-control"', $after_options);
+      $actions    = $synHtml->select('name="after" class="form-control"', $after_options, $default_action);
       $ok_button  = $synHtml->button("name='cmd' value='".INSERT."' class='btn btn-success'", '<i class="fa fa-check"></i> OK');
       $del_button = null;
 
@@ -410,18 +415,18 @@ EOBOTTOMBAR;
           case 'clone': // salva & duplica
             unset($_POST['id']); //altrimenti continua a lavorare sullo stesso record
             $_SESSION[$synTable.'_clone'] = serialize($_POST);
-            $jumpTo = $PHP_SELF."?cmd=".ADD;
+            $jumpTo = $PHP_SELF."?cmd=".ADD."&after={$after}";
             break;
 
           case 'new': // salva & nuovo
             resetClone($synTable);
-            $jumpTo = $PHP_SELF."?cmd=".ADD;
+            $jumpTo = $PHP_SELF."?cmd=".ADD."&after={$after}";
             break;
 
           case 'stay': // salva & continua
           default:
             resetClone($synTable);
-            $jumpTo = $PHP_SELF."?cmd=".MODIFY."&synPrimaryKey={$synPrimaryKey}";
+            $jumpTo = $PHP_SELF."?cmd=".MODIFY."&synPrimaryKey={$synPrimaryKey}&after={$after}";
             break;
         }
       }
@@ -448,6 +453,11 @@ EOBOTTOMBAR;
       $hiddens .= $synHtml->hidden("name='default-cmd' value='".CHANGE."'");
       //$hiddens .= $synHtml->button("name='off' value='' class='cancel_button' onclick='document.location=\"{$PHP_SELF}\"; return false;'", $ico_off.$str["cancel"], 'reset');
 
+      if (isset($_REQUEST['after']))
+        $default_action = $_REQUEST['after'];
+      else
+        $default_action = 'exit';
+
       $after_options = array(
         'exit' => $str['saveandexit'],
         'stay' => $str['save'],
@@ -456,7 +466,7 @@ EOBOTTOMBAR;
          'new' => $str['saveandadd']
       );
 
-      $actions    = $synHtml->select('name="after" class="form-control"', $after_options);
+      $actions    = $synHtml->select('name="after" class="form-control"', $after_options, $default_action);
       $ok_button  = $synHtml->button("name='cmd' value='".CHANGE."' class=\"btn btn-success\"", '<i class="fa fa-check"></i> OK');
       $del_button = ($synLoggedUser->canDelete == 1)
                   ? $synHtml->button("name='cmd' value='".DELETE."' class=\"btn btn-danger btn-delete\"", '<i class="fa fa-times"></i> '.$str['delete'])
@@ -554,7 +564,7 @@ EOBOTTOMBAR;
           unset($_POST['id']); //altrimenti continua a lavorare sullo stesso record
           $_SESSION[$synTable.'_clone'] = serialize($_POST);
           setAlert( 'Elemento originale salvato correttamente.', 'success' );
-          $jumpTo = $PHP_SELF."?cmd=".ADD;
+          $jumpTo = $PHP_SELF."?cmd=".ADD."&after={$after}";
           break;
 
         case 'next': // salva & prossimo
@@ -563,7 +573,7 @@ EOBOTTOMBAR;
           $res = $db->Execute($nextqry);
           if ( $arr = $res->FetchRow() ) {
             setAlert( 'Modifiche salvate correttamente.', 'success' );
-            $jumpTo = $PHP_SELF."?cmd=".MODIFY."&synPrimaryKey=".urlencode("`id`=\"{$arr['id']}\"");
+            $jumpTo = $PHP_SELF."?cmd=".MODIFY."&synPrimaryKey=".urlencode("`id`=\"{$arr['id']}\"")."&after={$after}";
           } else {
             setAlert( 'Non sono presenti altri record.', 'warning' );
             $jumpTo = $PHP_SELF; //non esiste un record successivo, torno alla lista
@@ -573,14 +583,14 @@ EOBOTTOMBAR;
         case 'new': // salva & nuovo
           resetClone($synTable);
           setAlert( 'Modifiche salvate correttamente.', 'success' );
-          $jumpTo = $PHP_SELF."?cmd=".ADD;
+          $jumpTo = $PHP_SELF."?cmd=".ADD."&after={$after}";
           break;
 
         case 'stay': // salva & continua
         default:
           resetClone($synTable);
           setAlert( 'Modifiche salvate correttamente.', 'success' );
-          $jumpTo = $PHP_SELF."?cmd=".MODIFY."&synPrimaryKey={$synPrimaryKey}";
+          $jumpTo = $PHP_SELF."?cmd=".MODIFY."&synPrimaryKey={$synPrimaryKey}&after={$after}";
 
           //echo '<pre>', print_r($_SESSION['synAlert']), '</pre>';
           //die('--');

@@ -195,7 +195,7 @@
       function getLanLng(){
         var lat = 0;
         var lng = 0;
-        if( $( '#address-data' ) ) {
+        if( $( '#address-data' ).length > 0 ) {
           var address = $('#address-data').val();
           var arr = address.split("|");
           lat = arr[1];
@@ -243,67 +243,33 @@
         $('.icp').iconpicker();
 
         // init address picker
-        var addressPicker = new AddressPicker({
-           map: {
-            id: '#map',
-            center: getLanLng(),
-            zoom: 16
-           }
-           , marker: {
-            draggable: true,
-            visible: true
-           }
-        });
-        $('#address-picker').typeahead(null, {
-          displayKey: 'description',
-          source: addressPicker.ttAdapter()
-        });
-        addressPicker.bindDefaultTypeaheadEvent($('#address-picker'))
-        $(addressPicker).on('addresspicker:selected', function (event, result) {
-          $('#address-data').val($("#address-picker").val()+"|"+result.lat()+"|"+result.lng());
-          $('#lat').html(result.lat());
-          $('#lng').html(result.lng());
-        });
-
-/*
-$("#image").fileinput({
-    initialPreview: [
-        "<img src='/images/summer.jpg' class='file-preview-image' alt='The Moon' title='The Moon'>",
-        "<img src='/images/logo.jpg' class='file-preview-image' alt='The Earth' title='The Earth'>",
-    ],
-    overwriteInitial: true,
-    initialCaption: "The Moon and the Earth"
-});
-*/
-
-$("#photo----").fileinput({
-    initialPreview: [
-        "<img src='images/summer.jpg' class='file-preview-image' alt='The Moon' title='The Moon'>",
-    ],
-    overwriteInitial: true,
-    initialCaption: "The Moon and the Earth",
-
-	previewFileType: "image",
-	browseClass: "btn btn-success",
-	browseLabel: "Pick Image",
-	browseIcon: '<i class="fa fa-folder-open-o"></i> ',
-	removeClass: "btn btn-danger",
-	removeLabel: "Delete",
-	removeIcon: '<i class="fa fa-trash"></i> ',
-	uploadClass: "btn btn-info",
-	uploadLabel: "Upload",
-	uploadIcon: '<i class="fa fa-upload"></i> ',
-  layoutTemplates: {
-    icon: '<span class="fa fa-file kv-caption-icon"></span> '
-  }
-
-});
-
+        if ($('#address-picker').length > 0){
+          var addressPicker = new AddressPicker({
+             map: {
+              id: '#map',
+              center: getLanLng(),
+              zoom: 16
+             }
+             , marker: {
+              draggable: true,
+              visible: true
+             }
+          });
+          $('#address-picker').typeahead(null, {
+            displayKey: 'description',
+            source: addressPicker.ttAdapter()
+          });
+          addressPicker.bindDefaultTypeaheadEvent($('#address-picker'))
+          $(addressPicker).on('addresspicker:selected', function (event, result) {
+            $('#address-data').val($("#address-picker").val()+"|"+result.lat()+"|"+result.lng());
+            $('#lat').html(result.lat());
+            $('#lng').html(result.lng());
+          });
+        }
 
         // init file input
         $('.file-input-control').each( function(){
           var $this = $(this), name = $this.attr('name'), initial = preview[name];
-//console.info( preview[name] );
           $this.fileinput({
             showUpload: false,
             previewFileType: 'any',

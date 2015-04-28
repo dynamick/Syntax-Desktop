@@ -190,7 +190,7 @@ EOSQL;
           );
 
         $template = "email/mail_from_form{$form_id}.html"; // template specifico
-        if ( !is_file($synAbsolutePath.$synPublicPath.'template/'.$template) )
+        if ( !is_file($synAbsolutePath.$synPublicPath.'templates/'.$template) )
           $template = 'email/mail_from_form.html'; // template generico
 
         try {
