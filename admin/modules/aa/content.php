@@ -13,12 +13,11 @@
   if ( isset($_GET['synSetLang']) ) {
     $langid = intval($_GET['synSetLang']);
     if ( isset($_SESSION['aa_CurrentLang']) && $_SESSION['aa_CurrentLang'] != $langid ) {
+      setLang($langid);
       setAlert( sprintf('Lingua attiva: <b>%s</b>', getLangInfo($langid, 'lang') ) ) ;
     }
-    $_SESSION['aa_CurrentLang'] = $langid;
-
   } elseif( !isset($_SESSION['aa_CurrentLang']) || empty($_SESSION['aa_CurrentLang']) ) {
-    setLang(1);
+    setLang();
   }
 
   define ('MODIFY',         'modifyrow');
