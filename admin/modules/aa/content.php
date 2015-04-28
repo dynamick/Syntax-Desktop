@@ -225,45 +225,10 @@
         // init icon-picker
         $('.icp').iconpicker();
 
-/*
-$("#image").fileinput({
-    initialPreview: [
-        "<img src='/images/summer.jpg' class='file-preview-image' alt='The Moon' title='The Moon'>",
-        "<img src='/images/logo.jpg' class='file-preview-image' alt='The Earth' title='The Earth'>",
-    ],
-    overwriteInitial: true,
-    initialCaption: "The Moon and the Earth"
-});
-*/
-
-$("#photo----").fileinput({
-    initialPreview: [
-        "<img src='images/summer.jpg' class='file-preview-image' alt='The Moon' title='The Moon'>",
-    ],
-    overwriteInitial: true,
-    initialCaption: "The Moon and the Earth",
-
-	previewFileType: "image",
-	browseClass: "btn btn-success",
-	browseLabel: "Pick Image",
-	browseIcon: '<i class="fa fa-folder-open-o"></i> ',
-	removeClass: "btn btn-danger",
-	removeLabel: "Delete",
-	removeIcon: '<i class="fa fa-trash"></i> ',
-	uploadClass: "btn btn-info",
-	uploadLabel: "Upload",
-	uploadIcon: '<i class="fa fa-upload"></i> ',
-  layoutTemplates: {
-    icon: '<span class="fa fa-file kv-caption-icon"></span> '
-  }
-
-});
-
 
         // init file input
         $('.file-input-control').each( function(){
           var $this = $(this), name = $this.attr('name'), initial = preview[name];
-//console.info( preview[name] );
           $this.fileinput({
             showUpload: false,
             previewFileType: 'any',
