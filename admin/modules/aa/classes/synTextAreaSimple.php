@@ -30,13 +30,23 @@ class synTextAreaSimple extends synElement {
   function _html() {
     $value=($this->translate($this->value));
     $contents = "";
+    /*
     if ($this->size==0) {
       $contents.="<textarea name=\"{$this->name}\" class=\"form-control\" rows=\"8\" >{$value}</textarea>\n";
     } else {
       $actualSize=strlen(trim($this->value));
       $contents.="&nbsp;Current <font color=\"#CC0000\"><span id=\"messageCount_".$this->name."\">$actualSize</span></font> characters / Maximum <font color=\"#CC0000\">".$this->size." </font>characters<br>\n";
       $contents.="<textarea name=\"".$this->name."\" wrap=\"VIRTUAL\" class=\"form-control\" rows=\"8\" onkeyUp=\"textLimitCheck(this,'{$this->name}', {$this->size});\">{$value}</textarea>\n";
+    }*/
+    $class = 'form-control';
+    $maxlength = null;
+    if ($this->size > 0) {
+      $class .= ' input-limited';
+      $maxlength = "maxlength=\"{$this->size}\"";
+      //$contents .= '<span class="label label-default textarea-indicator"><b>0</b> characters</span>'.PHP_EOL;
     }
+    $contents .= "<textarea name=\"{$this->name}\" class=\"{$class}\" rows=\"8\"{$maxlength}\">{$value}</textarea>\n";
+
     return $contents;
   }
 
