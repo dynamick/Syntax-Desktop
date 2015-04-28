@@ -1,5 +1,5 @@
 # MySQL dump of database 'syntax' on host 'localhost'
-# backup date and time: 03/26/15 14:16:32
+# backup date and time: 04/28/15 15:14:02
 # built by phpMyBackupPro v.2.1
 # http://www.phpMyBackupPro.net
 
@@ -16,7 +16,7 @@ CREATE TABLE `aa_element` (
   `order` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `id` (`classname`)
-) ENGINE=MyISAM AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 COMMENT='Elementi che compongono un contenitore' AUTO_INCREMENT=32;
+) ENGINE=MyISAM AUTO_INCREMENT=33 DEFAULT CHARSET=utf8 COMMENT='Elementi che compongono un contenitore' AUTO_INCREMENT=33;
 
 
 ### data of table `aa_element` ###
@@ -51,6 +51,7 @@ insert into `aa_element` values ('28', 'Text Multiple Join', 'synTextJoin', '160
 insert into `aa_element` values ('29', 'Page Slug', 'synSlug', '170');
 insert into `aa_element` values ('30', 'Date and Time (read-only)', 'synDateTimeReadonly', '91');
 insert into `aa_element` values ('31', 'Icon picker', 'synIcon', '140');
+insert into `aa_element` values ('32', 'Address Picker', 'synAddressPicker', '180');
 
 
 ### structure of table `aa_group_services` ###
@@ -1364,7 +1365,7 @@ CREATE TABLE `aa_users` (
 
 ### data of table `aa_users` ###
 
-insert into `aa_users` values ('8685', 'root', '2e51c0895c310b11347dc020caffa0ab', '1', '1', '1');
+insert into `aa_users` values ('8685', 'root', '81d18a0be8726c44c22d96b248040c1d', '1', '1', '1');
 
 
 ### structure of table `album` ###

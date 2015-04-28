@@ -67,6 +67,7 @@
     <link rel="stylesheet" type="text/css" href="../../assets/css/fontawesome-iconpicker.min.css" />
     <link rel="stylesheet" type="text/css" href="../../assets/css/fileinput.min.css" />
     <link rel="stylesheet" type="text/css" href="../../assets/css/animate.css" />
+        <link rel="stylesheet" type="text/css" href="../../assets/css/typeahead.css" />
     <link rel="stylesheet" type="text/css" href="../../assets/css/syntax.css" />
     <link rel="stylesheet" type="text/css" href="plupload.css" />
 
@@ -116,6 +117,8 @@
         echo '<p>Function not yet implemented...</p>';
     ?>
     </div>
+    <script src="http://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
 
     <script type="text/javascript" src="../../assets/js/moment-with-locales.min.js"></script>
     <script type="text/javascript" src="../../assets/js/bootstrap.min.js"></script>
@@ -131,6 +134,9 @@
     <script type="text/javascript" src="../../assets/js/bootbox.min.js"></script>
     <script type="text/javascript" src="../../assets/js/bootstrap-notify.min.js"></script>
     <script type="text/javascript" src="../../assets/js/jquery.quickPreview.js"></script>
+    <script type="text/javascript" src="../../assets/js/bloodhound.min.js"></script>
+    <script type="text/javascript" src="../../assets/js/typeahead.jquery.min.js"></script>
+    <script type="text/javascript" src="../../assets/js/typeahead-addresspicker.js"></script>
 
     <script type="text/javascript">
       var $table = $('#mainTable');
@@ -188,6 +194,18 @@
         });
       }
 
+      function getLanLng(){
+        var lat = 0;
+        var lng = 0;
+        if( $( '#address-data' ).length > 0 ) {
+          var address = $('#address-data').val();
+          var arr = address.split("|");
+          lat = arr[1];
+          lng = arr[2];
+        }
+        return new google.maps.LatLng(lat, lng);
+      }
+
 
       $(function() {
         // init checkbox switches
@@ -227,6 +245,30 @@
         // init icon-picker
         $('.icp').iconpicker();
 
+        // init address picker
+        if ($('#address-picker').length > 0){
+          var addressPicker = new AddressPicker({
+             map: {
+              id: '#map',
+              center: getLanLng(),
+              zoom: 16
+             }
+             , marker: {
+              draggable: true,
+              visible: true
+             }
+          });
+          $('#address-picker').typeahead(null, {
+            displayKey: 'description',
+            source: addressPicker.ttAdapter()
+          });
+          addressPicker.bindDefaultTypeaheadEvent($('#address-picker'))
+          $(addressPicker).on('addresspicker:selected', function (event, result) {
+            $('#address-data').val($("#address-picker").val()+"|"+result.lat()+"|"+result.lng());
+            $('#lat').html(result.lat());
+            $('#lng').html(result.lng());
+          });
+        }
 
         // init file input
         $('.file-input-control').each( function(){
