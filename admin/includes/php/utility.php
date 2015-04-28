@@ -182,15 +182,23 @@ function lang($id,&$str) {
 
 
   // set the current language
-  function setLang($id) {
+  function setLang( $id = 0 ) {
     global $db;
 
     if(!isset($_SESSION))
       session_start();
 
     $lang = intval($id);
-    if ($lang=='')
-      return false;
+    if ( $lang == 0 ) {
+      $qry = "SELECT id FROM aa_lang WHERE `default` = 1 ORDER BY `order` LIMIT 0, 1 ";
+      $res = $db->Execute( $qry );
+      if ( $res->RecordCount() > 0 ) {
+        $arr = $res->FetchRow();
+        $lang = $arr['id'];
+      } else {
+        throw new Exception("Error default language not found");
+      }
+    }
 
     //get the current lang
     $qry = "SELECT initial FROM aa_lang WHERE id='{$lang}'";
@@ -227,7 +235,6 @@ function lang($id,&$str) {
   function translate($id,$err=false) {
     global $db;
 //echo "{$_SESSION['aa_CurrentLang']} - {$_SESSION['aa_CurrentLangInitial']}<hr>";
-
     if(!isset($_SESSION))
       session_start();
 
@@ -572,6 +579,7 @@ function updateSlug($id){
     } else {
       $title = translate($title);
     }
+
     $new_slug = createUniqueSlug($title);
 
     updateTranslation($slug, $new_slug);
