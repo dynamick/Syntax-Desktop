@@ -30,7 +30,11 @@ class synAddressPicker extends synElement {
   //private function
   function _html() {
     $value = str_replace("\"", "&quot;", ($this->translate($this->getValue())));
+    if( trim( $value ) == "" )
+      $value = "|0|0";
+
     $address = explode("|", $value);
+
     $html = <<<HTML
       <div class="row">
         <div class="col-md-6">
