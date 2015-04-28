@@ -126,10 +126,12 @@
     <script type="text/javascript" src="../../assets/js/bootstrap-datetimepicker.min.js"></script>
     <script type="text/javascript" src="../../assets/js/fontawesome-iconpicker.min.js"></script>
     <script type="text/javascript" src="../../assets/js/bootstrap-multiselect.js"></script>
+    <script type="text/javascript" src="../../assets/js/bootstrap-maxlength.min.js"></script>
     <script type="text/javascript" src="../../assets/js/fileinput.min.js"></script>
     <script type="text/javascript" src="../../assets/js/bootbox.min.js"></script>
     <script type="text/javascript" src="../../assets/js/bootstrap-notify.min.js"></script>
     <script type="text/javascript" src="../../assets/js/jquery.quickPreview.js"></script>
+
     <script type="text/javascript">
       var $table = $('#mainTable');
 
@@ -185,6 +187,7 @@
           }
         });
       }
+
 
       $(function() {
         // init checkbox switches
@@ -288,7 +291,13 @@
           });
         });
 
-
+        // limited textarea
+        $('.input-limited').maxlength({
+          alwaysShow: true,
+          twoCharLinebreak: true,
+          //allowOverMax: true,
+          validate: false
+        });
 
         <?php echo getAlert(); ?>
 
