@@ -1,4 +1,4 @@
-<?
+<?php
   //interface
   $str["logoff"]="Log out";
 
@@ -14,7 +14,7 @@
   $str["lt"]="less than";
   $str["on"]="checked";
   $str["off"]="not checked";
-  
+
 
   //toolbar
   $str["new"]="New";
@@ -31,12 +31,12 @@
   $str["prev"]="Go to the previous page";
   $str["next"]="Go to the next page";
   $str["last"]="Go to the last page";
-  
+
   //tree
   $str["treeinfo"]="Drag and drop the object in the wanted place. Then press SAVE.";
   $str["treesave"]="Save the changes";
   $str["treerefresh"]="Refresh";
-  
+
   ///////////////////////////////////////////////////////////////
   //                          modules
   ///////////////////////////////////////////////////////////////
@@ -110,8 +110,8 @@
   $str["db_recovery_confirm"]="It will delete all the data in the current database. The database then, will be populated with the data of the dump. Are you sure to continue?";
   $str["db_recovery_del"]="Delete this file";
   $str["backup_ok"]="Database successfully backuped";
-  
-  
+
+
   //aa schema
   $str["modify"]="Modify";
   $str["sure_delete"]="Are you sure you want to delete?";
