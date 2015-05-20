@@ -257,6 +257,9 @@
               draggable: true,
               visible: true
              }
+             , autocompleteService: {
+              types: ['geocode', 'establishment']
+             }
           });
           $('#address-picker').typeahead(null, {
             displayKey: 'description',
@@ -264,6 +267,7 @@
           });
           addressPicker.bindDefaultTypeaheadEvent($('#address-picker'))
           $(addressPicker).on('addresspicker:selected', function (event, result) {
+            $('#address-picker').val(result.placeResult.formatted_address);
             $('#address-data').val($("#address-picker").val()+"|"+result.lat()+"|"+result.lng());
             $('#lat').html(result.lat());
             $('#lng').html(result.lng());
