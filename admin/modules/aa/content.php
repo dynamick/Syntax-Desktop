@@ -272,19 +272,25 @@
 
         // init file input
         $('.file-input-control').each( function(){
-          var $this = $(this), name = $this.attr('name'), initial = preview[name];
+          var
+            $this = $(this),
+            name = $this.data('name'),
+            //old_value = $('input[name="' + name + '_old"]').val(),
+            initial = preview[ name ];
           $this.fileinput({
             showUpload: false,
             previewFileType: 'any',
-            //initialPreview: [ preview[name] ],
             initialPreview: [ initial['src'] ],
             initialCaption: initial['label'],
-
             browseIcon: '<i class="fa fa-folder-open-o"></i> ',
             removeIcon: '<i class="fa fa-trash"></i> ',
             layoutTemplates: {
               icon: '<span class="fa fa-file kv-caption-icon"></span> '
             }
+          }).on( 'fileloaded', function() {
+            $this.attr('name', name);
+          }).on('filecleared', function() {
+            $this.attr('name', name);
           });
         });
 

@@ -32,13 +32,13 @@ class synInputfile extends synElement {
     $filext = $this->translate( $this->value );
     $filename = $this->createFilename().".".$filext;
     $filepath = $mat.$filename;
-    
+
     if ($this->isImage($filepath)) {
       $thumb = "{$synPublicPath}/thumb.php?src={$filepath}&amp;w=250&amp;h=250&amp;far=1";
-      $src = "'<img src=\"{$thumb}\" class=\"file-preview-image\">'"; 
-    } else 
+      $src = "'<img src=\"{$thumb}\" class=\"file-preview-image\">'";
+    } else
       $src = "'<a href=\"/{$filepath}\">{$filename}</a>'";
-    
+
     if (!empty($filext)) {
       $preview = $src;
       $label = "'{$filename}'";
@@ -46,9 +46,9 @@ class synInputfile extends synElement {
       $preview = 'undefined';
       $label = 'undefined';
     }
-    
+
     $ret = <<<EORET
-    <input id="{$this->name}" type="file" name="{$this->name}" class="file-input-control" />
+    <input id="{$this->name}" type="file" data-name="{$this->name}" name="" class="file-input-control" />
     <input type="hidden" name="{$this->name}_old" value="{$filext}" />
     <script type="text/javascript">
       preview['{$this->name}'] = new Array();
@@ -59,7 +59,7 @@ EORET;
 
     return $ret;
   }
-  
+
 /*
   function OLD_html() {
     global ${$this->name}, $synAbsolutePath;
@@ -67,9 +67,9 @@ EORET;
     $httpHost = getenv("HTTP_HOST");
     $mat = $this->compileQry($this->translatePath($this->mat));
     $filename = $mat.$this->createFilename().".".$this->translate($this->value);
-    if ($this->isImage($filename)) 
-      $src = "http://$httpHost/$filename"; 
-    else 
+    if ($this->isImage($filename))
+      $src = "http://$httpHost/$filename";
+    else
       $src = "images/blank.gif";
 
     if ($this->translate($this->value)!="") {
