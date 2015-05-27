@@ -318,7 +318,7 @@ class synTree extends synElement {
         $ret .= ($synLoggedUser->canDelete==1 ? $delete : "");
         $ret .= $wrapper[1]."\n";
       } else {
-        $ret .= $__.$wrapper[0].$label.$wrapper[1];
+        $ret .= $__.$wrapper[0]."<span class='item'>".$label."</span> ";
       }
       $ret .= $child;
       $ret .= $_."</li>\n";
