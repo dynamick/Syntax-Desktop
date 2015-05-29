@@ -104,24 +104,25 @@ class ADODB_PDO
   * @param vars Array of variables to bind [optional]
   * @return ADODB_PDO_ResultSet object
   */
-  public function Execute($sql, $vars=null)
+  public function Execute($sql, $vars = null)
   {
     // method 1: query prepare mode
-    //$st = $this->DoQuery($sql, $vars); 
+    if ( !empty($vars) )
+      $st = $this->DoQuery($sql, $vars);
 
-    // method 2: simple query mode 
-    $st = $this->PDOquery($sql); 
+    else // method 2: simple query mode
+      $st = $this->PDOquery($sql);
 
-    if($st){
+    if ($st) {
       $st->setFetchMode($this->fetchmode);
       $this->affected_rows = $st->rowCount();
       $cols = $st->columnCount();
 
       // if query fails or is not a select, don't return any record
-      if ($this->affected_rows === 0 || $cols === 0)      
+      if ($this->affected_rows === 0 || $cols === 0)
         $st->closeCursor();
     }
-    
+
     // if records are found, return a recordset
     return $st ? new ADODB_PDO_ResultSet($st) : false;
   }
@@ -202,7 +203,7 @@ class ADODB_PDO
       if((!$statement->execute($vars)) || ($statement->errorCode() != '00000')) {
         $errorInfo = $statement->errorInfo();
         throw new PDOException("Database error [{$errorInfo[0]}]: {$errorInfo[2]}, driver error code is $errorInfo[1]");
-      } 
+      }
 
     } catch (PDOException $e) {
       $this->error = $e->getMessage();
@@ -231,8 +232,8 @@ class ADODB_PDO
     }
     return $res;
   }
-  
-  
+
+
   /**
   * Will select, getting rows from $offset (1-based), for $nrows.
   * This simulates the MySQL "select * from table limit $offset,$nrows" , and
@@ -422,16 +423,16 @@ class ADODB_PDO
     return $qryRecs;
   }
 
-  
+
   public function showError(){
     return $this->_db->errorInfo();
   }
-  
-  
+
+
   private function debug($sql=null, $vars=null) {
     $error = array("Error" => $this->error);
     $msg = "";
-    
+
     if(!empty($sql))
       $error["SQL Statement"] = $sql;
     if(!empty($vars) && count(array_filter($vars))>0)
@@ -492,13 +493,13 @@ class ADODB_PDO_ResultSet
   public $EOF;
 
   /** recordset pagination **/
-  private $_currentPage;  
+  private $_currentPage;
   private $_atFirstPage;
   private $_atLastPage;
   private $_lastPageNo;
   public $rowsPerPage;
   public $_maxRecordCount;
-  
+
 
   /**
   * Constructor: Initialise resultset and first results
@@ -538,7 +539,7 @@ class ADODB_PDO_ResultSet
      if(!isset($this->results[$next]))
        $this->results[$next] = false;
        $this->close();
-  
+
      $this->fields = $this->results[$next];
      $this->EOF = ($this->cursor == $this->rowcount) ? 1 : 0;
   }
@@ -550,7 +551,7 @@ class ADODB_PDO_ResultSet
 
     return $res;
   }
-  
+
 
   /**
    * If we are using PageExecute(), this will return the maximum possible rows
@@ -593,11 +594,11 @@ class ADODB_PDO_ResultSet
     if ($status != false) $this->_atLastPage = $status;
     return $this->_atLastPage;
   }
-  
+
   public function close()
   {
     return $this->_st->closeCursor();
-  }  
+  }
 }
 
 /**
@@ -615,7 +616,7 @@ class ADODB_PDO_FieldData
   public $unsigned;
   public $zerofill;
   public $has_default;
-  
+
   public $debug;
 
   /**
@@ -672,7 +673,7 @@ class synPager {
   private $startLinks;
   private $moreLinks;
   private $page;
-  
+
   public function __construct($db, $id='adodb', $targetFile, $targetFrame, $showPageLinks=false, $use_session=false, $session_key=false)
   {
     $this->db = $db;

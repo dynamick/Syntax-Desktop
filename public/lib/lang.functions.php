@@ -3,12 +3,20 @@
 ***                                  LANG FUNCTIONS
 *******************************************************************************/
 
+function s_start() {
+  if ( !isset($_SESSION) ) {
+    ini_set( 'session.cookie_httponly', 1 );
+    if ( !session_start() ) {
+      throw new Exception( 'Session cannot be started', 1);
+    }
+  }
+}
+
 //set the current language
 function setLang($id, $initial='') {
   global $db;
 
-  if(!isset($_SESSION))
-    session_start();
+  s_start(); // session_start
 
   $lang = intval($id);
 
@@ -28,7 +36,7 @@ function setLang($id, $initial='') {
         $res = $db->Execute($qry);
         if ($arr = $res->fetchRow()) {
           $initial = $arr['initial'];
-        } else 
+        } else
           die('nessuna lingua attivata'); // l'initial DEVE essere valorizzata...
       }
     }
@@ -60,7 +68,7 @@ function getLangArr() {
   global $db;
   $ret = array();
   $res = $db->Execute("SELECT initial FROM aa_lang");
-  while( list($l) = $res->FetchRow() ) 
+  while( list($l) = $res->FetchRow() )
     $ret[] = $l;
   return $ret;
 }
@@ -69,8 +77,7 @@ function getLangArr() {
 function translateSite($id, $err=false) {
   global $db;
 
-  if(!isset($_SESSION))
-    session_start();
+  s_start(); // session_start
 
   if (isset($_GET["synSiteLang"]))
     setLang($_GET["synSiteLang"]);
@@ -102,8 +109,7 @@ function translateSite($id, $err=false) {
 function updateLang() {
   global $db, $synSiteLang;
 
-  if(!isset($_SESSION))
-    session_start();
+  s_start(); // session_start
 
   if (isset($_GET['synSiteLang']))
     setLang(intval($_GET['synSiteLang']));
@@ -175,31 +181,32 @@ function l($value,$replace="") {
   //$lang=getLang(true);
 
   //get the list of languages
-  $res=$db->Execute("SELECT initial FROM aa_lang");
-  while (list($lang)=$res->FetchRow()) {
-    $languagelist.=$lang.", ";
-    $valuelist.="'".addslashes($value)."', ";
-    $select.=$lang."= '".addslashes($value)."' OR ";
+  $res = $db->Execute( "SELECT initial FROM aa_lang" );
+  while (list($lang) = $res->FetchRow()) {
+    $languagelist .= $lang . ", ";
+    $valuelist .= "'" . addslashes($value) . "', ";
+    $select .= $lang . "= '" . addslashes($value)."' OR ";
   }
-  $languagelist=substr($languagelist,0,-2);
-  $valuelist=substr($valuelist,0,-2);
-  $select=substr($select,0,-3);
+  $languagelist = substr($languagelist, 0, -2);
+  $valuelist = substr($valuelist, 0, -2);
+  $select = substr($select, 0, -3);
   //search for the string if already into database
-  $qry="SELECT * FROM aa_translation WHERE $select";
-  $res=$db->Execute($qry);
-  $count=$res->RecordCount();
+  $qry = "SELECT * FROM aa_translation WHERE {$select}";
+  $res = $db->Execute($qry);
+  $count = $res->RecordCount();
   // already exists
   if ($count>0) {
-    $arr=$res->FetchRow();
-    $id=$arr["id"];
+    $arr = $res->FetchRow();
+    $id = $arr["id"];
   } else {
   //insert the row in each language
-    $qry="INSERT INTO aa_translation ($languagelist) VALUES ($valuelist)";
-    $res=$db->Execute($qry);
-    $id=$db->Insert_ID();
+    $qry = "INSERT INTO aa_translation ({$languagelist}) VALUES ({$valuelist})";
+    $res = $db->Execute($qry);
+    $id = $db->Insert_ID();
   }
-  $ret=translateSite($id);
-  if ($replace!="") $ret=str_replace("###",$replace,$ret);
+  $ret = translateSite($id);
+  if ($replace != "")
+    $ret = str_replace("###", $replace, $ret);
 
   return $ret;
 }
@@ -211,7 +218,12 @@ function translateDictionary($label){
   global $db;
 
   $lng = getLangInitial();
-  $qry = "SELECT t.{$lng} AS value FROM dictionary v JOIN aa_translation t ON v.value=t.id WHERE v.label='{$label}'";
+  $qry = <<<EOQRY
+  SELECT t.{$lng} AS value
+    FROM dictionary v
+    JOIN aa_translation t ON v.value = t.id
+   WHERE v.label = '{$label}'
+EOQRY;
   $res = $db->Execute($qry);
   if ($res->RecordCount()==0) {
     $ret = $label;
@@ -232,7 +244,7 @@ function multiTranslateDictionary($labels=array(), $auto_insert=false){
   $qry = "SELECT v.label, t.{$lng} AS value "
        . "FROM dictionary v "
        . "LEFT JOIN aa_translation t ON v.value=t.id "
-       . "WHERE v.label='".implode("' OR v.label='", $labels)."'";
+       . "WHERE v.label = '".implode("' OR v.label='", $labels)."'";
   $res = $db->Execute($qry);
   $ret = array();
   while ($arr = $res->FetchRow()) {
@@ -292,8 +304,7 @@ function get_languages(){
 
 // returns the active language
 function getActiveLang($variable = 'synSiteLangInitial') {
-  if (!isset($_SESSION))
-    session_start();
+  s_start(); // session_start
 
   if (!isset($_SESSION[ $variable ]))
     updateLang();
@@ -317,14 +328,14 @@ function getLangId() {
 // returns the non-active languages
 function getOtherLangs( $lang = '' ){
   global $languages;
-  
+
   if (empty($lang))
     $lang = getLangId();
 
   $lang_list = empty($languages)
              ? getLangList()
              : $languages;
-             
+
   unset( $lang_list['list'][ intval($lang) ] );
 
   return $lang_list['list'];
@@ -333,13 +344,13 @@ function getOtherLangs( $lang = '' ){
 
 function getLocaleCodes( $filter = array() ){
   global $db, $languages;
-  
+
   if (empty($filter))
     $filter = array_keys( $languages );
-  
+
   $lang = getLangInitial();
   $locale = array( 'active' => '', 'alternate' => array() );
-  
+
   foreach( $languages['list'] as $l ){
     $iso_code = strtolower($l).'_'.strtoupper($l);
     if ($l == $lang)

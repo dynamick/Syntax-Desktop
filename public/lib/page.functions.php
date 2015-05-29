@@ -22,8 +22,8 @@ function createPath($id, $lang = '') {
       WHERE p.id = '{$id}'
 
 EOQ;
-
   $res = $db->Execute($qry);
+
   if($arr = $res->FetchRow()){
     $path = '';
     if (intval($arr['parent']) > 0) :
