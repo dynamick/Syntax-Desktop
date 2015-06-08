@@ -11,8 +11,8 @@ function smarty_function_meta($params, &$smarty){
 //$template         = $smarty->getTemplateVars('synTemplate');
   $page_id          = $smarty->getTemplateVars( 'synPageId' );
   $title_page       = $smarty->getTemplateVars( 'synPageTitle' );
-  $description_page = $smarty->getTemplateVars( 'synPageMetadesc' );
-  $keywords         = $smarty->getTemplateVars( 'synPageMeta_keywords' );
+  $description_page = $smarty->getTemplateVars( 'synPageMetadescription' );
+  $keywords         = $smarty->getTemplateVars( 'synPageMetakeywords' );
   $visible          = explode('|', $smarty->getTemplateVars( 'synPageVisible' ));
   $ogmeta           = $smarty->getTemplateVars( 'ogmeta' );
   $canonical        = $smarty->getTemplateVars( 'canonical' );
