@@ -54,7 +54,7 @@ class synHtml {
       $res = $db->Execute($qry);
       while ($arr = $res->FetchRow()) {
         if ($value == $arr[0])
-          $sel = 'selected="selected"';
+          $sel = ' selected="selected"';
         else
           $sel = '';
         $ret .= "<option value=\"{$arr[0]}\"{$sel}>{$arr[1]}</option>\n";
@@ -63,7 +63,7 @@ class synHtml {
     //array based select
       foreach ($qry as $k => $v) {
         if ($value == $k)
-          $sel = 'selected="selected"';
+          $sel = ' selected="selected"';
         else
           $sel = '';
         $ret .= "<option value=\"{$k}\"{$sel}>{$v}</option>\n";
