@@ -54,14 +54,17 @@
   }
 
 
-
   //http://blog.ideashower.com/post/15147134343/create-a-parent-child-array-structure-in-one-pass
-  function serviceTree($selected=0) {
+  function serviceTree( $selected = 0 ) {
     global $db;
 
     $user = getSynUser();
     $refs = array();
     $list = array();
+
+    $service_path = 'modules/aa/index.php?aa_service=%d&amp;aa_group_services=%d';
+    $window_link = "javascript:createWindow('%s', '%s')";
+    $fake_link = 'javascript:void(0)';
 
     $sql = <<<EOQRY
     SELECT gs.*, s.icon AS service_icon
@@ -81,23 +84,22 @@ EOQRY;
       $thisref['parent'] = $arr['parent'];
       $thisref['name'] = translateDesktop($arr['name']);
 
-      if ( !empty($arr['service']) ){
-        //$link = "index.php?aa_service={$arr["service"]}&amp;aa_group_services={$arr["group"]}";
-        $link = "javascript:createWindow('{$thisref['name']}','modules/aa/index.php?aa_service={$arr["service"]}&amp;aa_group_services={$arr["id"]}')";
-      } elseif ($arr['link']){
-        //$link = $arr['link'];
-        $link = "javascript:createWindow('','{$arr['link']}')";
-      } else {
-        $link = "javascript:void(0)";
-      }
+      if ( !empty($arr['service']) )
+        $link = sprintf( $window_link, $thisref['name'], sprintf( $service_path, $arr['service'], $arr['id']) );
+      elseif ($arr['link'])
+        $link = sprintf( $window_link, '', $arr['link'] );
+      else
+        $link = $fake_link;
+
       $thisref['link'] = $link;
 
-      if (!empty($arr['service_icon'])) {
-        $icon = "modules/aa/".$arr['service_icon'];
-      } elseif (!empty($arr['icon'])) {
-        $icon = "modules/aa/images/service_icon/".$arr['icon'];
-      }
-      $thisref['icon'] = translateIcon($icon);
+      if ( !empty($arr['service_icon']) )
+        $icon = checkIcon( $arr['service_icon'] );
+      elseif ( !empty($arr['icon']) )
+        $icon = checkIcon( $arr['icon'] );
+      else
+        $icon = 'fa-file-o';
+      $thisref['icon'] = $icon;
 
       $active = 0;
       if ( $arr['service'] == $selected ) {
@@ -111,15 +113,31 @@ EOQRY;
       $thisref['active'] = $active;
       $thisref['active_children'] = 0;
 
-      if ($arr['parent'] == 0) {
+      if ($arr['parent'] == 0)
         $list[ $arr['id'] ] = &$thisref;
-      } else {
+      else
         $refs[ $arr['parent'] ]['children'][ $arr['id'] ] = &$thisref;
-      }
     }
     //echo '<pre>', print_r($list), '</pre>';
     return $list;
   }
+
+
+  // transitional
+  // check if an icon is an image file or a font-awesome glyph
+  function checkIcon($icon_str) {
+    if (preg_match( "/(fa-)\w+/i", $icon_str )) {
+      // font-awesome icon
+      $icon = $icon_str;
+    } else {
+      // old image icon
+      $path_parts = pathinfo( $icon_str );
+      $filename = $path_parts['basename'];
+      $icon = translateIcon( $filename );
+    }
+    return $icon;
+  }
+
 
   // transitional
   // converte le icone di Syntax in classi di font-awesome
@@ -129,8 +147,8 @@ EOQRY;
       'accept.png' => 'check-circle',
       'add.png' => 'plus-circle',
       'anchor.png' => 'anchor',
-      'application_double.png' => 'columns',
-      'application_form_edit.png' => 'columns',
+      'application_double.png' => 'files-o',
+      'application_form_edit.png' => 'pencil-square-o',
       'application_view_tile.png' => 'columns',
       'arrow_redo.png' => 'repeat',
       'arrow_rotate_anticlockwise.png' => 'rotate-left',

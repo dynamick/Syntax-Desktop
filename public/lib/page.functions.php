@@ -153,7 +153,7 @@ function getHomepageId() {
     ){
     $ret = $synEntryPoint[$domain];
   } else {
-    $qry = "SELECT id FROM aa_page WHERE parent = 0 LIMIT 0,1";
+    $qry = "SELECT id FROM aa_page WHERE parent = 0 ORDER BY `order` LIMIT 0,1";
     $res = $db->Execute($qry);
     $arr = $res->FetchRow();
     $ret = $arr['id'];

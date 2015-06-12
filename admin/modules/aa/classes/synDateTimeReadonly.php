@@ -25,7 +25,7 @@ class synDateTimeReadonly extends synElement {
   //private function
   function _html() {
     $ret = <<<EOR
-    <input type="text" size="25" id="{$this->name}" name="{$this->name}" class="form-control"
+    <input type="text" size="25" id="{$this->name}" data-name="{$this->name}" class="form-control"
       value="{$this->dateHumanFormat($this->value)}" disabled />
 
 EOR;

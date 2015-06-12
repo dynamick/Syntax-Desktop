@@ -2,7 +2,7 @@
 global $cmd;
 
   //if the tree frame is loaded, tree frame must die
-  if (isset($treeFrame) and $treeFrame=="true") 
+  if (isset($treeFrame) and $treeFrame=="true")
     die();
 
   if (isset($_REQUEST['cmd']) && $_REQUEST['cmd'] != JSON) {
@@ -26,7 +26,7 @@ global $cmd;
       //                                 STEP 0                                 //
      //                                                                        //
     ////////////////////////////////////////////////////////////////////////////
-    
+
     case "1":
       aaHeader($str["first_step"], $str["first_step_bis"]);
 
@@ -70,7 +70,7 @@ global $cmd;
       //read the DB data and set the appropriate variables
       if ( isset($_GET["synPrimaryKey"]) ) {
         $aavalue = substr(stripslashes(urldecode($_GET["synPrimaryKey"])), 5);
-        $where = $_GET["aa_join"]."=".$aavalue; 
+        $where = $_GET["aa_join"]."=".$aavalue;
         $res = $db->Execute("SELECT * FROM aa_services WHERE id={$aavalue}");
         $arr = $res->FetchRow();
         $res2 = $db->Execute("SELECT * FROM aa_services_element WHERE {$where} ORDER BY `order`");
@@ -137,9 +137,9 @@ global $cmd;
       $tmp_serviceNElement = isset($_SESSION["synNElement"]) ? $_SESSION["synNElement"] : 0;
       $tmp_serviceDBSync = isset($_SESSION["synDbSync"]) ? $_SESSION["synDbSync"] : "";
 
-      if ($tmp_serviceId >= 0) 
-        $disabled = " disabled=\"disabled\" "; 
-      else  
+      if ($tmp_serviceId >= 0)
+        $disabled = " disabled=\"disabled\" ";
+      else
         $disabled = "";
       if ($tmp_serviceTitleLang == "" and $tmp_serviceTitle != "") {
         $tmp_serviceTitleLang = translate($tmp_serviceTitle);
@@ -152,22 +152,23 @@ global $cmd;
       if ($tmp_serviceNElement == 0) {
         $tmp_serviceNElement = 2;
         $_SESSION["synNElement"] = $tmp_serviceNElement;
-      }      
-      if ($tmp_serviceDBSync == "1") 
+      }
+      if ($tmp_serviceDBSync == "1")
         $sync_checked = ' checked="checked" ';
-      else 
-        $sync_checked = '';      
+      else
+        $sync_checked = '';
       //echo $synHtml->form("action='{$PHP_SELF}' method='POST' enctype='multipart/form-data' name='myform'");
       echo $synHtml->form("action=\"{$PHP_SELF}\" method=\"post\" enctype=\"multipart/form-data\" autocomplete=\"off\"");
-      
+
       echo inputBlock( $str['servicename'],         $synHtml->text(" name=\"synServiceTitleLang\" value=\"{$tmp_serviceTitleLang}\" autofocus"));
       echo inputBlock( $str['tablename'],           $synHtml->text(" name=\"synServiceTable\" value=\"{$tmp_serviceTable}\" {$disabled}"));
       echo inputBlock( $str['servicedescription'],  $synHtml->text(" name=\"synServiceDescriptionLang\" value=\"{$tmp_serviceDescriptionLang}\" "));
       echo inputBlock( $str['serviceparameter'],    $synHtml->text(" name=\"synNElement\" value=\"{$tmp_serviceNElement}\" onchange=\"if (this.value<2) {alert('Warning: service with less 2 fields are meaningless'); }\" "));
-      echo inputBlock( $str['dbsync'],              $synHtml->check(" name=\"synDbSync\" value=\"1\" class=\"syn-check\" {$sync_checked} "));
+      echo inputBlock( $str['dbsync'],             $synHtml->check(" name=\"synDbSync\" value=\"1\" class=\"syn-check\" {$sync_checked} "));
       echo inputBlock( $str['serviceicon'],         $synHtml->text(" name=\"synServiceIcon\" value=\"{$tmp_serviceIcon}\"", ' icp'));
 
       echo $synHtml->hidden(' name="cmd" value="10" ');
+      echo '<a href="index.php?aa_service=5" class="btn btn-default pull-left" target="_parent">'.$str['cancel'].'</a>';
       echo $synHtml->button(" value=\"{$str["forward"]}\" class=\"btn btn-primary pull-right\"", $str["forward"]);
       echo $synHtml->form_c();
 
@@ -180,7 +181,7 @@ global $cmd;
 
       break;
 
-      
+
         ////////////////////////////////////////////////////////////////////////////
        //                                                                        //
       //                                 STEP 1                                 //
@@ -231,14 +232,14 @@ global $cmd;
       if (!isset($_SESSION["synElmName"]) and !isset($_SESSION["synElmType"])) {
         sess("synElmName");
         sess("synElmType");
-        $_SESSION["synElmName"][0] = "id"; 
+        $_SESSION["synElmName"][0] = "id";
         $synElmName[0] = "id";
-        $_SESSION["synElmType"][0] = 1; 
+        $_SESSION["synElmType"][0] = 1;
         $synElmType[0] = 1 /*synKey*/;
         for ($i=1; $i < $_SESSION["synNElement"]; $i++) {
-          $_SESSION["synElmName"][$i] = ""; 
+          $_SESSION["synElmName"][$i] = "";
           $synElmName[$i] = "";
-          $_SESSION["synElmType"][$i] = 2 /*synText*/; 
+          $_SESSION["synElmType"][$i] = 2 /*synText*/;
           $synElmType[$i] = 2 /*synText*/;
         }
       }
@@ -269,14 +270,14 @@ global $cmd;
       //echo "<script>document.forms['myform'].elements[0].focus();</script>";
 
       break;
-      
-      
+
+
         ////////////////////////////////////////////////////////////////////////////
        //                                                                        //
       //                                 STEP 2                                 //
      //                                                                        //
     ////////////////////////////////////////////////////////////////////////////
-      
+
     case '20':
       aaHeader($str['third_step'], $str['third_step_bis']);
       sess('synElmName');
@@ -347,8 +348,8 @@ global $cmd;
           //order by ASC or DESC??
           if (abs($_SESSION["synInitOrder"])==($i+1)) {
             $negCheck = ""; $posCheck = "";
-            $_SESSION["synInitOrder"] > 0 
-              ? $posCheck = " checked=\"checked\" " 
+            $_SESSION["synInitOrder"] > 0
+              ? $posCheck = " checked=\"checked\" "
               : $negCheck = " checked=\"checked\" ";
             $options = array(
               abs($_SESSION["synInitOrder"]) => 'ASC',
@@ -380,7 +381,7 @@ global $cmd;
 
       break;
 
-      
+
         ////////////////////////////////////////////////////////////////////////////
        //                                                                        //
       //                                 STEP 3                                 //
@@ -560,7 +561,7 @@ global $cmd;
           $html .= "  <span class=\"input-group-addon\" style=\"width:150px; text-align:left;\">\n";
           $html .= "    <label><input type=\"checkbox\" name=\"group[]\" value=\"{$idgroup}\" class=\"trigger\"> {$namegroup}</label>";
           $html .= "  </span>";
-          
+
           $opts = createOptionsArray($idgroup);
           $html .= "<select class=\"form-control\" name=\"startingPoint[{$idgroup}]\" disabled>{$opts}</select>";
 
@@ -582,7 +583,7 @@ global $cmd;
           });
         </script>
 EOS;
-        
+
       } else
         echo "<script>parent.location.href='index.php?aa_service=5';</script>";
 
@@ -594,7 +595,7 @@ EOS;
       //                   ASSIGN SERVICE TO GROUPS (STEP 4)                    //
      //                                                                        //
     ////////////////////////////////////////////////////////////////////////////
-    
+
     case "groups":
       $name = $_POST["servicename"];
       $service = $_POST["service"];
@@ -645,7 +646,7 @@ EOS;
     $arr = $res->FetchRow();
     return $arr['classname'];
   }
-  
+
   function inputBlock( $label, $input, $class='' ) {
     $html = <<<EOHTML
     <div class="form-group {$class}">
@@ -657,19 +658,19 @@ EOS;
     <hr>
 EOHTML;
     return $html;
-  }  
+  }
 
 
   function cellSwitch( $field, $counter, $help) {
     $checked = '';
     $class = ''; //'syn-check';
     $fieldChk = str_replace('syn', 'synChk', $field);
-    
+
     if (isset($_SESSION[$field][$counter]) and $_SESSION[$field][$counter]==1)
       $checked = 'checked="checked"';
     if (isset($_SESSION["synElmType"][$counter]) and $_SESSION["synElmType"][$counter]==1 /*synKey*/)
       $checked = 'checked="checked" onclick="this.checked=true;"';
- 
+
     if (isset($_SESSION[$fieldChk][$counter]) and $_SESSION[$fieldChk][$counter]=='1') {
       $ret  = "<span data-toggle=\"tooltip\" data-placement=\"top\" title=\"{$help}\">";
       $ret .= "<input type=\"hidden\" name=\"{$field}[{$counter}]\" value=\"\">";
@@ -681,7 +682,7 @@ EOHTML;
 
     return $ret;
   }
-  
+
   // returns selectable menu items
   function createOptionsArray($idgroup, $parent='0', $recursion=-1) {
     global $db;
@@ -709,5 +710,5 @@ EOHTML;
       }
     }
     return $ret;
-  }  
+  }
 ?>

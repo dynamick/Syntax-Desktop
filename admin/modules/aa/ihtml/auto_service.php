@@ -282,7 +282,7 @@ EOQ;
   //include custom function. The naming convention is: path/to/modules/aa/custom/$synTable.php
   //if ($cmd != JSON && file_exists($synAbsolutePath.$synAdminPath."/modules/aa/custom/".$synTable.".php")===true) {
   $custom_file = $synAbsolutePath.$synAdminPath."/modules/aa/custom/".$synTable.".php";
-  if (is_file($custom_file))
+  if ($cmd != JSON && is_file($custom_file))
     include ($custom_file);
 
 
@@ -327,7 +327,7 @@ EOQ;
        'clone' => $str['saveandclone'],
          'new' => $str['saveandadd']
       );
-      $actions    = $synHtml->select('name="after" class="form-control"', $after_options, $default_action);
+      $actions    = $synHtml->select('name="after"', $after_options, $default_action);
       $ok_button  = $synHtml->button("name='cmd' value='".INSERT."' class='btn btn-success'", '<i class="fa fa-check"></i> OK');
       $del_button = null;
 
@@ -466,7 +466,7 @@ EOBOTTOMBAR;
          'new' => $str['saveandadd']
       );
 
-      $actions    = $synHtml->select('name="after" class="form-control"', $after_options, $default_action);
+      $actions    = $synHtml->select('name="after"', $after_options, $default_action);
       $ok_button  = $synHtml->button("name='cmd' value='".CHANGE."' class=\"btn btn-success\"", '<i class="fa fa-check"></i> OK');
       $del_button = ($synLoggedUser->canDelete == 1)
                   ? $synHtml->button("name='cmd' value='".DELETE."' class=\"btn btn-danger btn-delete\"", '<i class="fa fa-times"></i> '.$str['delete'])
@@ -518,11 +518,12 @@ EOBOTTOMBAR;
     ////////////////////////////////////////////////////////////////////////
 
     case CHANGE:
-
+//echo '<pre>', print_r($_POST), '</pre>';
       $synPrimaryKey = urldecode(trim($_POST['synPrimaryKey']));
 
       $contenitore->uploadDocument();
       $upd = $contenitore->getUpdateString();
+//echo '<pre>', print_r($upd), '</pre>'; die();
       $ok = true;
 
       if (!empty($upd)) {
@@ -537,7 +538,8 @@ EOBOTTOMBAR;
       if (!$ok) {
         setAlert('<b>Errore</b>: elemento non aggiornato', 'error');
         $jumpTo = $PHP_SELF."?cmd=".MODIFY."&synPrimaryKey=".urlencode($synPrimaryKey);
-
+        echo '<a href="'.$jumpTo.'" class="btn btn-default">Avanti</a>';
+        die();
       }
 
       //else echo 'ok';
@@ -765,6 +767,9 @@ EOBOTTOMBAR;
     ////////////////////////////////////////////////////////////////////////
 
     case JSON:
+      // in this case errors must be handled manually
+      ini_set('display_errors', 0);
+
       if ($synLoggedUser->canModify==1) {
         $label  = $str['modify'];
         $button = "<a href=\"%s&amp;synPrimaryKey=%s\" class=\"btn btn-xs btn-success\" title=\"{$label}\">";
@@ -772,7 +777,7 @@ EOBOTTOMBAR;
         $contenitore->buttons[$button] = "?cmd=".MODIFY;
       }
 
-      # DELETE button
+      // DELETE button
       if ($synLoggedUser->canDelete==1) {
         $label  = $str['delete'];
         $button = "<a href=\"getData.php%s&amp;synPrimaryKey=%s\" class=\"btn btn-xs btn-danger ajax-delete\" title=\"{$label}\">";
@@ -831,22 +836,32 @@ EOBOTTOMBAR;
 
       // get subset results
       $res = $db->execute( $qry->getQuery() );
-      $data = array();
+
+      // pay attention to variables names: they can collide with your data!!!
+      $boostrap_table_data = array();
+      $boostrap_table_errors = array();
+
       while ($row = $res->FetchRow()) {
         $contenitore->updateValues( $row );
-        $hash = $contenitore->getJsonRow();
+        $contenitore_data_hash = $contenitore->getJsonRow();
         if (empty($search))
-          $data[] = $hash;
+          $boostrap_table_data[] = $contenitore_data_hash;
         else {
-          $str_values = strip_tags( implode(' ', $hash) );
+          $str_values = strip_tags( implode(' ', $contenitore_data_hash) );
           if ( stripos( $str_values, $search ) !== false)
-            $data[] = $hash;
+            $boostrap_table_data[] = $contenitore_data_hash;
         }
+
+        // if an error message is thrown, store it for later
+        // otherwise our json may be corrupted!
+        $error = error_get_last();
+        if ( $error !== null )
+          $boostrap_table_errors[] = $error['message'];
       }
       if (!empty($search)) {
-        $count = count($data);
-        if ($offset>0)
-          $data = array_slice( $data, $offset, $limit );
+        $count = count($boostrap_table_data);
+        if ($offset > 0)
+          $boostrap_table_data = array_slice( $boostrap_table_data, $offset, $limit );
       }
 
       //echo '<pre>', print_r($data), '</pre>';
@@ -854,12 +869,15 @@ EOBOTTOMBAR;
       // populate results json
       $json = array(
         'total' => $count,
-        'rows' => $data
+        'rows' => $boostrap_table_data
         );
+
+      // some error occured, add it to json response
+      if ( !empty($boostrap_table_errors) )
+        $json['error'] = $boostrap_table_errors;
 
       echo json_encode( $json );
     break;
-
 
         ////////////////////////////////////////////////////////////////////////
        //                                                                    //

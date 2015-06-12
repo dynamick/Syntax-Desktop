@@ -239,7 +239,14 @@
             refresh: 'fa fa-refresh',
             toggle: 'fa fa-th-list',
             columns: 'fa fa-columns'
-          }
+          },
+          onLoadSuccess: function (data) {
+            if ( typeof data.error != 'undefined' )
+              $.notify({ icon: 'fa fa-exclamation-triangle', message: data.error.message }, { type: 'danger' });
+          },
+          onLoadError: function (status) {
+            $.notify({ icon: 'fa fa-exclamation-triangle', message: 'Event: onLoadError, data: ' + status }, { type: 'danger' });
+          },
         });
 
         // init icon-picker

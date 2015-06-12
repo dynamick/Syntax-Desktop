@@ -719,18 +719,20 @@ EOHTML;
 
   //return the list of field for a SQL UPDATE (i.e.: name='michele', surname='gobbi' )
   function getUpdateString() {
-    $ret="";
-    foreach($this->element as $k=>$v) {
-      //$el=$this->element[$k];
-      if (!($v->isJoin())) {
-        if ($v->multilang==1) $sql=$this->updateMultilangValue($v);
-        else $sql=$v->getSQL();
-        $sql = fixEncoding($sql);
-        if ($sql!="") $ret.=$sql.", ";
+    $ret = array();
+    foreach( $this->element as $k => $v ) {
+      // update only if it's not a join AND it's passed as _GET or _POST
+      if ( !($v->isJoin()) && isset( $_REQUEST[ $v->name ] ) ) {
+        if ($v->multilang == 1)
+          $sql = $this->updateMultilangValue( $v );
+        else
+          $sql = $v->getSQL();
+        $sql = fixEncoding( $sql );
+        if ( !empty($sql) )
+          $ret[] = $sql;
       }
     }
-    $ret=substr($ret, 0, strlen($ret)-2);
-    return $ret;
+    return implode(', ', $ret);
   }
 
 
