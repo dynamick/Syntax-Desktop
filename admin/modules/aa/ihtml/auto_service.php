@@ -518,12 +518,12 @@ EOBOTTOMBAR;
     ////////////////////////////////////////////////////////////////////////
 
     case CHANGE:
-//echo '<pre>', print_r($_POST), '</pre>';
+      //echo '<pre>', print_r($_POST), '</pre>';
       $synPrimaryKey = urldecode(trim($_POST['synPrimaryKey']));
 
       $contenitore->uploadDocument();
       $upd = $contenitore->getUpdateString();
-//echo '<pre>', print_r($upd), '</pre>'; die();
+      //echo '<pre>', print_r($upd), '</pre>'; die();
       $ok = true;
 
       if (!empty($upd)) {
@@ -534,18 +534,14 @@ EOBOTTOMBAR;
       //echo "<a href=\"{$PHP_SELF}?cmd=".MODIFY."&synPrimaryKey={$synPrimaryKey}\">avanti</a>"; die();
 
       //controllo errori
-      //if (!$ok)        echo "<script>alert(\"{$ok}\"); history.go(-1);</script>";
-      if (!$ok) {
+      if ( !$ok ) {
         setAlert('<b>Errore</b>: elemento non aggiornato', 'error');
-        $jumpTo = $PHP_SELF."?cmd=".MODIFY."&synPrimaryKey=".urlencode($synPrimaryKey);
-        echo '<a href="'.$jumpTo.'" class="btn btn-default">Avanti</a>';
-        die();
+        $jumpTo = $PHP_SELF . "?cmd=" . MODIFY . "&synPrimaryKey=" . urlencode($synPrimaryKey);
+        //echo '<a href="'.$jumpTo.'" class="btn btn-default">Avanti</a>'; die();
       }
 
-      //else echo 'ok';
-
       //set the next page
-      if ($_REQUEST["changeto"]!='') {
+      if ( isset( $_REQUEST['changeto'] ) && !empty( $_REQUEST['changeto'] ) ) {
         $after = 'changelang';
       }
 
@@ -553,7 +549,7 @@ EOBOTTOMBAR;
         case 'changelang': // salva & cambia lingua
           resetClone($synTable);
           setAlert( 'Modifiche salvate correttamente.', 'success' );
-          $jumpTo = $PHP_SELF."?cmd=".MODIFY."&synPrimaryKey={$synPrimaryKey}&synSetLang=".$_REQUEST["changeto"];
+          $jumpTo = $PHP_SELF . '?cmd=' . MODIFY . '&synPrimaryKey=' . $synPrimaryKey . '&synSetLang=' . $_REQUEST['changeto'];
           break;
 
         case 'exit': // salva & torna alla lista
@@ -566,16 +562,29 @@ EOBOTTOMBAR;
           unset($_POST['id']); //altrimenti continua a lavorare sullo stesso record
           $_SESSION[$synTable.'_clone'] = serialize($_POST);
           setAlert( 'Elemento originale salvato correttamente.', 'success' );
-          $jumpTo = $PHP_SELF."?cmd=".ADD."&after={$after}";
+          $jumpTo = $PHP_SELF . '?cmd=' . ADD . '&after=' . $after;
           break;
 
         case 'next': // salva & prossimo
           resetClone($synTable);
-          $nextqry = "SELECT `{$synTable}`.id FROM `{$synTable}` WHERE id>".intval($_POST['id'])." ORDER BY id LIMIT 0,1";
-          $res = $db->Execute($nextqry);
+          // select next id
+          $nextqry = "SELECT `{$synTable}`.id FROM `{$synTable}` WHERE " . str_replace( '=', '>', $synPrimaryKey );
+          if ( isset($_SESSION['aa_joinStack'])
+            && is_array($_SESSION['aa_joinStack'])
+            ){
+            // if a join is set, filter this record's siblings
+            $stackLastKey = end( array_keys( $_SESSION['aa_joinStack'] ) );
+            $join         = new synJoin( $_SESSION['aa_joinStack'][ $stackLastKey ]['idjoin']);
+            $toElmName    = $join->toElmName;
+            $value        = $_SESSION['aa_joinStack'][ $stackLastKey ]['value'];
+            $nextqry     .= " AND `{$toElmName}` = '{$value}' ";
+          }
+          $nextqry .= " ORDER BY {$synTable}.id ASC LIMIT 0, 1";
+          $res = $db->Execute( $nextqry );
+
           if ( $arr = $res->FetchRow() ) {
             setAlert( 'Modifiche salvate correttamente.', 'success' );
-            $jumpTo = $PHP_SELF."?cmd=".MODIFY."&synPrimaryKey=".urlencode("`id`=\"{$arr['id']}\"")."&after={$after}";
+            $jumpTo = $PHP_SELF . '?cmd=' . MODIFY . '&synPrimaryKey=' . urlencode("`id`=\"{$arr['id']}\"") . '&after=' .$after;
           } else {
             setAlert( 'Non sono presenti altri record.', 'warning' );
             $jumpTo = $PHP_SELF; //non esiste un record successivo, torno alla lista
