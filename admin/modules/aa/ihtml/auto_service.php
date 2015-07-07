@@ -280,13 +280,13 @@ EOQ;
   }
 
   //include custom function. The naming convention is: path/to/modules/aa/custom/$synTable.php
-  //if ($cmd != JSON && file_exists($synAbsolutePath.$synAdminPath."/modules/aa/custom/".$synTable.".php")===true) {
-  $custom_file = $synAbsolutePath.$synAdminPath."/modules/aa/custom/".$synTable.".php";
-  if ($cmd != JSON && is_file($custom_file))
-    include ($custom_file);
+  $custom_file = $synAbsolutePath . $synAdminPath . '/modules/aa/custom/' . $synTable . '.php';
+  // OCIO le inclusioni non devono rompere il json. l'inclusione di aa_service.php è indispensabile
+  //if ($cmd != JSON && is_file($custom_file))
+  if ( is_file ( $custom_file ) )
+    include ( $custom_file );
 
-
-  switch($cmd) {
+  switch ( $cmd ) {
 
         ////////////////////////////////////////////////////////////////////////////
        //                                                                        //
@@ -523,7 +523,7 @@ EOBOTTOMBAR;
 
       $contenitore->uploadDocument();
       $upd = $contenitore->getUpdateString();
-      //echo '<pre>', print_r($upd), '</pre>'; die();
+      //echo '<pre>', print_r($upd), '</pre>'; //die();
       $ok = true;
 
       if (!empty($upd)) {

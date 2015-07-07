@@ -34,7 +34,7 @@
     $targetFileName = "ihtml/auto_service.php";
 
 ?><!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="box-shadow: -10px 0 15px -15px rgba(0, 0, 0, 0.3) inset;">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">

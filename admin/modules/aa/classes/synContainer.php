@@ -721,8 +721,9 @@ EOHTML;
   function getUpdateString() {
     $ret = array();
     foreach( $this->element as $k => $v ) {
-      // update only if it's not a join AND it's passed as _GET or _POST
-      if ( !($v->isJoin()) && isset( $_REQUEST[ $v->name ] ) ) {
+      // update only if it's not a join AND it's passed as _GET or _POST or _FILES
+      $input = array_merge( $_REQUEST, $_FILES);
+      if ( !($v->isJoin()) && isset( $input[ $v->name ] ) ) {
         if ($v->multilang == 1)
           $sql = $this->updateMultilangValue( $v );
         else

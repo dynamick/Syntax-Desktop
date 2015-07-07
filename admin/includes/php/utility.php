@@ -580,7 +580,7 @@ function updateSlug($id){
       $title = translate($title);
     }
 
-    $new_slug = createUniqueSlug($title);
+    $new_slug = createUniqueSlug( $title, $id );
 
     updateTranslation($slug, $new_slug);
     return true;
@@ -604,7 +604,7 @@ function insertSlug($id){
       } else {
         $title = translate($arr[$l]);
       }
-      $slug_array[] = createUniqueSlug($title);
+      $slug_array[] = createUniqueSlug($title, $id);
     }
 
     updateTranslation($arr['slug'], $slug_array);
@@ -616,7 +616,7 @@ function insertSlug($id){
 
 
 
-function createUniqueSlug($slug){
+function createUniqueSlug( $slug, $id = 0){
   global $db;
   // verifica univocità
 
@@ -627,7 +627,7 @@ function createUniqueSlug($slug){
   $slug = sanitizePath($slug);
 
   $existing = array();
-  $qry = "SELECT t.{$aa_CurrentLangInitial} AS existing FROM `aa_page` p LEFT JOIN `aa_translation` t ON p.slug = t.id";
+  $qry = "SELECT t.{$aa_CurrentLangInitial} AS existing FROM `aa_page` p LEFT JOIN `aa_translation` t ON p.slug = t.id WHERE p.id <> '{$id}' ";
 
   $res = $db->Execute($qry);
   while($arr = $res->fetchrow()){
