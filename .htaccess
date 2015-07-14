@@ -11,8 +11,9 @@ php_flag magic_quotes_gpc off
   RewriteBase /
 
   # redirecting non-www to www
-  #RewriteCond %{HTTP_HOST} !^www\.
-  #RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L]
+  RewriteCond %{HTTP_HOST} !^www\.
+  RewriteCond %{HTTP_HOST} !\.kleis\.biz$
+  RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L]
 
   # add trailing slash
   RewriteCond %{REQUEST_URI} !(/$|\.)
