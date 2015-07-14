@@ -55,63 +55,6 @@ class synUpload extends synElement {
           ) list($app_title, $app_order, $app_table, $app_field, $app_linkfield) = $arr_tmp;
       }
 
-
-      $ret = <<<EOC
-
-      <div id="plup_{$this->name}">
-        <p>You browser doesn't have Flash, Silverlight, or HTML5 support.</p>
-      </div>
-
-      <script type="text/javascript" src="plupload/plupload.full.js"></script>
-      <script type="text/javascript" src="plupload/jquery.plupload.queue.js"></script>
-      <script type="text/javascript" src="plupload/it.js"></script>
-      <script type="text/javascript">
-      $(function() {
-        $("#plup_{$this->name}").pluploadQueue({
-          // General settings
-          runtimes        : 'flash,silverlight,html5',
-          url             : 'ihtml/plupload.php',
-          max_file_size   : '10mb',
-          chunk_size      : '1mb',
-          multiple_queues : true,
-
-          // Resize images on clientside if we can
-          resize : {
-            width         : 1280,
-            height        : 1280,
-            quality       : 90
-          },
-
-          // Specify what files to browse for
-          filters : [{
-            title         : "Image files",
-            extensions    : "jpg,jpeg,gif,png"
-          }],
-
-          // Flash settings
-          flash_swf_url   : 'plupload/plupload.flash.swf',
-
-          // Silverlight settings
-      silverlight_xap_url : 'plupload/plupload.silverlight.xap',
-
-          multipart_params: {
-            'key'         : '{$keyArr[1]}',
-            'description' : '{$app_title}',
-            'order'       : '{$app_order}',
-            'table'       : '{$app_table}',
-            'field'       : '{$app_field}',
-            'linkfield'   : '{$app_linkfield}',
-            'path'        : '{$this->mat}'
-          }
-
-          // eventi: vedi http://www.plupload.com/example_events.php
-        });
-      });
-      </script>
-
-EOC;
-
-// versione per debug
 /*
       $ret = <<<EOC
 
@@ -162,131 +105,64 @@ EOC;
           }
 
           // eventi: vedi http://www.plupload.com/example_events.php
-		, preinit : {
-			Init: function(up, info) {
-				log('[Init]', 'Info:', info, 'Features:', up.features);
-			},
-
-			UploadFile: function(up, file) {
-				log('[UploadFile]', file);
-
-				// You can override settings before the file is uploaded
-				// up.settings.url = 'upload.php?id=' + file.id;
-				// up.settings.multipart_params = {param1 : 'value1', param2 : 'value2'};
-			}
-		},
-
-		// Post init events, bound after the internal events
-		init : {
-			Refresh: function(up) {
-				// Called when upload shim is moved
-				log('[Refresh]');
-			},
-
-			StateChanged: function(up) {
-				// Called when the state of the queue is changed
-				log('[StateChanged]', up.state == plupload.STARTED ? "STARTED" : "STOPPED");
-			},
-
-			QueueChanged: function(up) {
-				// Called when the files in queue are changed by adding/removing files
-				log('[QueueChanged]');
-			},
-
-			UploadProgress: function(up, file) {
-				// Called while a file is being uploaded
-				log('[UploadProgress]', 'File:', file, "Total:", up.total);
-			},
-
-			FilesAdded: function(up, files) {
-				// Callced when files are added to queue
-				log('[FilesAdded]');
-
-				plupload.each(files, function(file) {
-					log('  File:', file);
-				});
-			},
-
-			FilesRemoved: function(up, files) {
-				// Called when files where removed from queue
-				log('[FilesRemoved]');
-
-				plupload.each(files, function(file) {
-					log('  File:', file);
-				});
-			},
-
-			FileUploaded: function(up, file, info) {
-				// Called when a file has finished uploading
-				log('[FileUploaded] File:', file, "Info:", info);
-			},
-
-			ChunkUploaded: function(up, file, info) {
-				// Called when a file chunk has finished uploading
-				log('[ChunkUploaded] File:', file, "Info:", info);
-			},
-
-			Error: function(up, args) {
-				// Called when a error has occured
-				log('[error] ', args);
-			}
-		}
-
-
-
-
-
         });
       });
-
-
-	function log() {
-		var str = "";
-
-		plupload.each(arguments, function(arg) {
-			var row = "";
-
-			if (typeof(arg) != "string") {
-				plupload.each(arg, function(value, key) {
-					// Convert items in File objects to human readable form
-					if (arg instanceof plupload.File) {
-						// Convert status to human readable
-						switch (value) {
-							case plupload.QUEUED:
-								value = 'QUEUED';
-								break;
-
-							case plupload.UPLOADING:
-								value = 'UPLOADING';
-								break;
-
-							case plupload.FAILED:
-								value = 'FAILED';
-								break;
-
-							case plupload.DONE:
-								value = 'DONE';
-								break;
-						}
-					}
-
-					if (typeof(value) != "function") {
-						row += (row ? ', ' : '') + key + '=' + value;
-					}
-				});
-
-				str += row + " ";
-			} else {
-				str += arg + " ";
-			}
-		});
-
-		$('#log').append(str + "\\n");
-	}
       </script>
-    <textarea wrap="off" spellcheck="false" style="width: 100%; height: 150px; font-size: 11px" id="log"></textarea>
+
 EOC;
 */
+
+      $ret = <<<EOC
+      <input id="{$this->name}" name="{$this->name}[]" type="file" multiple=true>
+      <script type="text/javascript">
+      $(function() {
+        $("#{$this->name}").fileinput({
+          allowedFileTypes: ['image'],
+          browseIcon: '<i class="fa fa-folder-open-o"></i> ',
+          removeIcon: '<i class="fa fa-trash"></i> ',
+          uploadIcon: '<i class="fa fa-upload"></i> ',
+          previewFileIcon: '<i class="fa fa-file-o"></i> &nbsp;',
+          msgValidationErrorIcon: '<i class="fa fa-exclamation-circle"></i> &nbsp;',
+          uploadClass: 'btn btn-warning',
+          layoutTemplates: {
+            icon: '<span class="fa fa-file kv-caption-icon"></span> '
+          },
+          fileActionSettings: {
+            removeIcon:       '<i class="fa fa-trash text-danger"></i>',
+            uploadIcon:       '<i class="fa fa-upload text-info"></i>',
+            indicatorNew:     '<i class="fa fa-hand-o-down text-warning"></i>',
+            indicatorSuccess: '<i class="fa fa-check-circle file-icon-large text-success"></i>',
+            indicatorError:   '<i class="fa fa-exclamation-circle text-danger"></i>',
+            indicatorLoading: '<i class="fa fa-hand-o-up text-muted"></i>'
+          },
+          uploadUrl: "ihtml/upload2.php",
+          uploadAsync: true,
+          uploadExtraData: function() {
+            return {
+              key         : '{$keyArr[1]}',
+              description : '{$app_title}',
+              order       : '{$app_order}',
+              table       : '{$app_table}',
+              field       : '{$app_field}',
+              linkfield   : '{$app_linkfield}',
+              path        : '{$this->mat}'
+            };
+          }
+        });
+      });
+      </script>
+EOC;
+
+/*
+    $ret = <<<EORET
+    <input id="{$this->name}" name="{$this->name}[]" type="file" class="file-input-control" multiple=true>
+    <script type="text/javascript">
+      preview['{$this->name}[]'] = new Array();
+    </script>
+EORET;
+*/
+
+
     } else {
       $ret = "This field is disabled in insert mode. Save and modify this entry to upload files.";
     }
@@ -350,7 +226,7 @@ EOC;
 
   //normally an element hasn't a document to delete (only synInputfile)
   function deleteDocument() {
-  	global $synAbsolutePath, ${$this->name}, ${$this->name."_name"}, ${$this->name."_old"};
+    global $synAbsolutePath, ${$this->name}, ${$this->name."_name"}, ${$this->name."_old"};
     include_once("../../includes/php/utility.php");
 
     $ext = $this->translate($this->getValue());
@@ -377,7 +253,7 @@ EOC;
 
   //get the label of the element
   function getCell() {
-  	global $synAbsolutePath;
+    global $synAbsolutePath;
     $ext = $this->translate($this->value);
     $mat = $this->translatePath($this->mat);
     $filename = $mat.$this->createFilename().'.'.$ext;
@@ -398,7 +274,7 @@ EOC;
 
   //check if it is an image or a document
   function isImage($filename) {
-  	global $synAbsolutePath;
+    global $synAbsolutePath;
     if (file_exists($synAbsolutePath.$filename)) {
       if (getimagesize($synAbsolutePath.$filename)!==false)
         $ret=true;
@@ -427,7 +303,7 @@ EOC;
 
   //function for the auto-configuration
   function configuration($i='', $k=99) {
-  	global
+    global
       $synAbsolutePath, $synElmLabel, $synElmName, $synElmSize, $synElmPath, $synChkVisible,
       $synChkMultilang, $synElmValue, $synElmType, $synElmHelp, $synChkEditable, $synChkKey;
 

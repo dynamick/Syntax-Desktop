@@ -39,7 +39,7 @@ if (phpthumb_functions::version_compare_replacement(phpversion(), '4.3.2', '>=')
 } else {
   $PHPTHUMB_CONFIG['max_source_pixels']                  = round(max(intval(ini_get('memory_limit')), intval(get_cfg_var('memory_limit'))) * 1048576 / 6);
 }
-$PHPTHUMB_CONFIG['prefer_imagemagick']                   = false;
+$PHPTHUMB_CONFIG['prefer_imagemagick']                   = true;
 $PHPTHUMB_CONFIG['imagemagick_use_thumbnail']            = false;
 if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') {
   $PHPTHUMB_CONFIG['imagemagick_path']                   = 'C:/ImageMagick/convert.exe';
