@@ -34,7 +34,8 @@ class synSelectMultiCheck extends synElement {
   //private function
   function _html() {
     // relies on http://davidstutz.github.io/bootstrap-multiselect/
-    $input = "<select id=\"{$this->name}\" name=\"{$this->name}[]\" multiple=\"multiple\" class=\"multi-select\">";
+    $input  = "<input name=\"{$this->name}[]\" type=\"hidden\" value=\"\">"; // in case of empty selection, otherwise nothing passes to the DB
+    $input .= "<select id=\"{$this->name}\" name=\"{$this->name}[]\" multiple=\"multiple\" class=\"multi-select\">";
     if ($this->chkTargetMultilang($this->qry) == 1)
       $this->multilang = 1;
 
