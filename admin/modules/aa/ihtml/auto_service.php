@@ -625,18 +625,25 @@ EOBOTTOMBAR;
       $code = 200;
 
       $synPrimaryKey = stripslashes(urldecode($_REQUEST["synPrimaryKey"]));
-      $res = $db->Execute("SELECT * FROM {$synTable} WHERE {$synPrimaryKey}");
 
-      //delete if the user has the owner permission
-      $arr = $res->FetchRow();
-      $contenitore->updateValues($arr);
+      //$res = $db->Execute("SELECT * FROM {$synTable} WHERE {$synPrimaryKey}");
+      //$db->SetFetchMode(ADODB_FETCH_BOTH);
+      //$arr = $res->FetchRow();
+      //$contenitore->updateValues( $arr );
       //if ($contenitore->ownerField=="" OR in_array($arr[$contenitore->ownerField],$_SESSION["synGroupChild"]) OR $arr[$contenitore->ownerField]==0) {
+
       $canDelete = $contenitore->isDeletable();
       if ($canDelete===true) {
         $contenitore->deleteDocument();
         $contenitore->execute_callbacks('delete');
 
-        $res = $db->Execute( "DELETE FROM {$synTable} WHERE {$synPrimaryKey}" );
+        $del = "DELETE FROM {$synTable} WHERE {$synPrimaryKey}";
+        $res = $db->Execute( $del );
+        if ( isset($debug) && $debug == 1 ) {
+          echo $res;
+          $jumpTo = $PHP_SELF . "?cmd=" . MODIFY . "&synPrimaryKey=" . urlencode($synPrimaryKey);
+          echo '<a href="'.$jumpTo.'" class="btn btn-default">Avanti</a>'; die();
+        }
         if ($res) {
           $msg['status'] = 'Elemento eliminato correttamente.';
         } else {

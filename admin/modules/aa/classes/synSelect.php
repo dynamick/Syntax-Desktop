@@ -13,16 +13,16 @@ class synSelect extends synElement {
   //constructor(name, value, label, size, help)
   function synSelect($n="", $v="", $l="", $s=11, $h="") {
     global $$n;
-    
-    if ($n=="") 
+
+    if ($n=="")
       $n =  "text".date("his");
-    if ($l=="") 
+    if ($l=="")
       $l =  ucfirst($n);
     $this->type = "file";
     $this->name  = $n;
-    if (isset($$n) and $$n) 
-      $this->selected = $$n; 
-    else 
+    if (isset($$n) and $$n)
+      $this->selected = $$n;
+    else
       $this->value = $v;
     $this->label = $l;
     $this->size  = $s;
@@ -36,7 +36,7 @@ class synSelect extends synElement {
     $disable = "";
     $selected = "";
     $this->value = $this->createArray($this->qry,$this->path);
-    if ($this->chkTargetMultilang()==1) 
+    if ($this->chkTargetMultilang()==1)
       $this->multilang=1;
     $txt = "<select name=\"{$this->name}\" {$disable} class=\"form-control\">";
     if (is_array($this->value)) {
@@ -45,29 +45,29 @@ class synSelect extends synElement {
         $label = ($this->multilang==1) ? $this->translate($v, true) : $v;
         $txt .= "<option value=\"{$k}\" {$selected}>{$label}</option>";
       }
-    } 
+    }
     $txt .= "</select>\n";
 
-    return $txt; 
+    return $txt;
   }
-  
+
   //sets the value of the element
   function setValue($v) {
     global $n, $$n;
     //if (is_array($v)) $this->value = $v;
-    if (!isset($_REQUEST[$$n])) 
+    if (!isset($_REQUEST[$$n]))
       $this->value = $this->createArray($this->qry, $this->path);
     $this->selected = $v;
-  }  
+  }
 
   //sets the value of the element
   function getValue() {
     return $this->selected;
-  }  
+  }
 
   function getSQLValue() {
     return intval($this->getValue());
-  } 
+  }
 
 
   //get the label of the element
@@ -79,7 +79,7 @@ class synSelect extends synElement {
       else return "<font color='red'>x</font>";
     } else return $this->selected;
   }
-  
+
   //check if the target service is multilang
   function chkTargetMultilang($val='') {
     global $db;
@@ -108,7 +108,7 @@ class synSelect extends synElement {
     */
     return $ret;
   }
-  
+
   function setPath($path) {
   	$this->path = $path;
   }
@@ -120,7 +120,7 @@ class synSelect extends synElement {
   function createArray($qry,$null=false) {
     global $db;
     $qry = $this->compileQry($qry);
-    
+
     $ret = array();
     $ownerField = '';
     // discover an "owner field" in the service
@@ -134,29 +134,29 @@ class synSelect extends synElement {
       $qry2 = "SELECT ase.*,ae.classname FROM aa_services_element ase JOIN aa_element ae ON ase.type=ae.id WHERE ase.container='{$id}' ORDER BY ase.`order`";
       $res = $db->Execute($qry2);
       while ($arr = $res->FetchRow()) {
-        if (strtolower($arr["classname"]) == "synowner") 
+        if (strtolower($arr["classname"]) == "synowner")
           $ownerField = $arr["name"];
       }
     }
-    
-    // ATTENTION: This is a security control. All the "select" widget on the 
+
+    // ATTENTION: This is a security control. All the "select" widget on the
     // "aa_groups" table are filtered with the allowed groups.
     if ($destTable == "aa_groups") {
       $ret = array_flip($_SESSION["synGroupChild"]);
     } else {
       $res = $db->Execute($qry);
-      if ($null == true) 
+      if ($null == true)
         $ret[] = '';
       while ($arr = $res->FetchRow()) {
-        if ($ownerField == "" OR $arr[$ownerField] == "" OR in_array($arr[$ownerField], $_SESSION["synGroupChild"]) OR $this->selected == $arr[0]) { 
+        if ($ownerField == "" OR $arr[$ownerField] == "" OR in_array($arr[$ownerField], $_SESSION["synGroupChild"]) OR $this->selected == $arr[0]) {
           $ret[$arr[0]] = $arr[1];
-        } 
+        }
       }
-    } //end if aa_groups    
-    
+    } //end if aa_groups
+
     return $ret;
   }
-  
+
   //function for the auto-configuration
   function configuration($i="",$k=99) {
     global $synElmName,$synElmType,$synElmLabel,$synElmSize,$synElmHelp, $synElmQry, $synElmPath;
@@ -168,9 +168,9 @@ class synSelect extends synElement {
     $res=$db->Execute("SELECT * FROM aa_services order by name");
     $txt="<select name=\"synElmQry[$i]\" >";
     while ($arr=$res->FetchRow()) {
-      if(isset($synElmQry[$i])) {  
-        if (strpos($synElmQry[$i]." ","FROM ".$arr["syntable"]." ")===false ) $selected=""; 
-        else $selected="selected=\"selected\""; 
+      if(isset($synElmQry[$i])) {
+        if (strpos($synElmQry[$i]." ","FROM ".$arr["syntable"]." ")===false ) $selected="";
+        else $selected="selected=\"selected\"";
       }
       if ($arr["syntable"]!="") $txt.="<OPTION VALUE=\"SELECT * FROM ".$arr["syntable"]."\" $selected>".translate($arr["name"])."</option>";
     }
@@ -178,29 +178,29 @@ class synSelect extends synElement {
 
     $this->configuration[4]="Query: ".$txt;
 
-    if (!isset($synElmSize[$i]) or $synElmSize[$i]=="") 
+    if (!isset($synElmSize[$i]) or $synElmSize[$i]=="")
       $synElmSize[$i]=$this->size;
     $this->configuration[5]="Dimensione: ".$synHtml->text(" name=\"synElmSize[$i]\" value=\"$synElmSize[$i]\"");
 
-    if (!isset($synElmPath[$i]) or $synElmPath[$i]=="") 
-      $checked=""; 
-    else 
+    if (!isset($synElmPath[$i]) or $synElmPath[$i]=="")
+      $checked="";
+    else
       $checked=" checked='checked' ";
     $this->configuration[6]="NULL: ".$synHtml->hidden(" name=\"synElmPath[$i]\" value=\"\"").$synHtml->check(" name=\"synElmPath[$i]\" value=\"1\" $checked");
-    
+
     //enable or disable the 3 check at the last configuration step
     $_SESSION["synChkKey"][$i]=1;
     $_SESSION["synChkVisible"][$i]=1;
     $_SESSION["synChkEditable"][$i]=0;
     $_SESSION["synChkMultilang"][$i]=0;
 
-    if ($k==99) 
+    if ($k==99)
       return $this->configuration;
-    else 
+    else
       return $this->configuration[$k];
   }
-  
-  
+
+
 } //end of class inputfile
 
 ?>

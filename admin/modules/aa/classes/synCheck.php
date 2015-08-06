@@ -40,7 +40,8 @@ class synCheck extends synElement {
     // regular checkbox
     //$input = "<div class=\"checkbox\"><label><input type=\"checkbox\" name=\"{$this->name}\" maxsize=\"{$this->size}\" value=\"{$this->value}\"{$selected} /></label></div>";
     // bootstrap switch
-    $input = "<input type=\"checkbox\" name=\"{$this->name}\" maxsize=\"{$this->size}\" value=\"{$this->value}\"{$selected} class=\"syn-check\" />";
+    $input  = "<input type=\"hidden\" name=\"{$this->name}\" value=\"\"/>";
+    $input .= "<input type=\"checkbox\" name=\"{$this->name}\" maxsize=\"{$this->size}\" value=\"{$this->value}\"{$selected} class=\"syn-check\" />";
     return $input;
   }
 
