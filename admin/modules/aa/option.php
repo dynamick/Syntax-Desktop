@@ -60,8 +60,8 @@
         </div>
       </div>
 
-      <div id="multilang" class="panel panel-default"></div>
-      <div id="custom" class="panel panel-default"></div>
+      <div id="multilang" class="panel-default"></div>
+      <div id="custom" class="panel-default"></div>
     </div>
 
     <script src="../../assets/js/jquery.js"></script>

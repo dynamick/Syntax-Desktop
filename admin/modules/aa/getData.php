@@ -8,7 +8,8 @@
 
   session_start();
   include_once ('../../config/cfg.php');
-  include_once ('../../includes/php/jslib.inc');
+  //include_once ('../../includes/php/jslib.inc');
+  include_once ('../../includes/php/menu.php');
   include_once ('classes/synContainer.php');
   include_once ('classes/synHtml.php');
 

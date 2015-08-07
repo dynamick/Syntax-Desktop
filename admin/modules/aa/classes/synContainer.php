@@ -454,11 +454,15 @@ EOHTML;
       $elm = $this->getElement( $v->fromElmName );
       $key = md5($v->name);
       $url = 'index.php?aa_value='.$elm->getValue().'&aa_idjoin='.$v->id;
+      $fa_icon = translateIcon( 'modules/aa/' . $v->icon );
 
       $j  = "<a class=\"btn btn-link btn-xs btn-block\" href=\"{$url}\" target=\"_parent\">";
-      $j .= "<img src=\"".$v->icon."\" alt=\"".$v->name."\" style=\"vertical-align:bottom\"/> "; //</a>";
+      if ( !empty($fa_icon) ) {
+        $j .= "<i class=\"fa ".$fa_icon." join-icon\"></i> ";
+      } else {
+        $j .= "<img src=\"".$v->icon."\" alt=\"".$v->name."\" style=\"vertical-align:bottom\"/> ";
+      }
       $j .= "<small class=\"badge\">".$v->getCount( $this->getKeyValue() )."</small></a>";
-
       //$ret[$v->toElmName] = $j;
       $ret[$key] = $j;
     }

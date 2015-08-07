@@ -742,37 +742,30 @@ EOBOTTOMBAR;
 
     case RPC:
       global $contenitore, $debug;
+      $msg = array();
 
-      $synPrimaryKey = stripslashes($_GET["synPrimaryKey"]);
-      $field = $_GET["field"];
-      $value = $_GET["value"];
-      $synTable = $contenitore->getTable();
+      if ( isset($_GET['synPrimaryKey']) && !empty($_GET['synPrimaryKey'])) {
+        $synPrimaryKey = urldecode(stripslashes( $_GET['synPrimaryKey'] ));
 
-      $qry = "UPDATE {$synTable} SET `{$field}`='{$value}' WHERE {$synPrimaryKey}";
-      $err = $db->Execute($qry);
+        $field = $_GET['field'];
+        $value = $_GET['value'];
+        $synTable = $contenitore->getTable();
 
-      //controllo errori
-      if (!$err)
-        echo "<script>alert(\"".htmlentities($err)."\");</script>";
-
-/*
-      $synPrimaryKey = stripslashes(urldecode($_GET["synPrimaryKey"]));
-      $field = $_GET['field'];
-      $value = $_GET['value'];
-      $synTable = $contenitore->getTable();
-
-      $qry = "UPDATE {$synTable} SET `{$field}`='{$value}' WHERE {$synPrimaryKey}";
-      $ret = $db->Execute($qry);
-      //echo $qry;
-
-      //controllo errori
-      if ($ret == false) {
-        echo json_encode(array('message'=>'Aggiornamento fallito', 'type'=>'alert-error'));
-
+        $qry = "UPDATE {$synTable} SET `{$field}` = '{$value}' WHERE {$synPrimaryKey}";
+        if ( $db->Execute( $qry ) ) {
+          $code = 200;
+        } else {
+          $code = 500;
+          $msg['error'] = 'Cannot execute update query!';
+        }
       } else {
-        echo json_encode(array('message'=>'Record aggiornato correttamente', 'type'=>'alert-success'));
+        $code = 500;
+        $msg['error'] = 'synPrimaryKey not set!';
       }
-*/
+
+      header( 'HTTP/1.0 '.$code ); // this tells jQuery the operation's outcome
+      echo json_encode( $msg );
+
     break;
 
 
@@ -788,7 +781,7 @@ EOBOTTOMBAR;
 
       if ($synLoggedUser->canModify==1) {
         $label  = $str['modify'];
-        $button = "<a href=\"%s&amp;synPrimaryKey=%s\" class=\"btn btn-xs btn-success\" title=\"{$label}\">";
+        $button = "<a href=\"%s&amp;synPrimaryKey=%s\" class=\"btn btn-xs btn-bl-ock btn-success\" title=\"{$label}\">";
         $button.= "<i class=\"fa fa-edit\"></i></a>";
         $contenitore->buttons[$button] = "?cmd=".MODIFY;
       }
@@ -796,7 +789,7 @@ EOBOTTOMBAR;
       // DELETE button
       if ($synLoggedUser->canDelete==1) {
         $label  = $str['delete'];
-        $button = "<a href=\"getData.php%s&amp;synPrimaryKey=%s\" class=\"btn btn-xs btn-danger ajax-delete\" title=\"{$label}\">";
+        $button = "<a href=\"getData.php%s&amp;synPrimaryKey=%s\" class=\"btn btn-xs btn-bl-ock btn-danger ajax-delete\" title=\"{$label}\">";
         $button.= "<i class=\"fa fa-trash\"></i></a>";
         $contenitore->buttons[$button] = "?cmd=".DELETE;
       }
@@ -897,96 +890,6 @@ EOBOTTOMBAR;
 
         ////////////////////////////////////////////////////////////////////////
        //                                                                    //
-      //                   LIST ALL ROWS - DEPRECATED                       //
-     //                                                                    //
-    ////////////////////////////////////////////////////////////////////////
-/*
-    case 'OLD':
-      global $treeFrame;
-      echo "<!-- *** inclusione di schema.php *** -->\n";
-
-      resetClone($synTable);
-      // TO DO: questo sbianca la ricerca. trovare una soluzione!!!
-      //unset($_POST); //in caso di edit abortito
-
-      //Change the rows mod and del button
-      # EDIT button
-      if ($synLoggedUser->canModify==1) {
-        $label  = $str['modify'];
-        $button = "<a href=\"%s&amp;synPrimaryKey=%s\" class=\"btn btn-xs btn-success\" title=\"{$label}\">";
-        //$button.= "<img src=\"img/container_edit.png\" alt=\"{$label}\" /></a>";
-        $button.= "<i class=\"fa fa-edit\"></i></a>";
-        $contenitore->buttons[$button] = "?cmd=".MODIFY;
-      }
-
-      # DELETE button
-      if ($synLoggedUser->canDelete==1) {
-        $label  = $str['delete'];
-        $button = "<a href=\"%s&amp;synPrimaryKey=%s\" class=\"btn btn-xs btn-danger\" title=\"{$label}\" ";
-        $button.= "onclick=\"return (confirm('{$str["sure_delete"]}'));\">";
-        //$button.= "<img src=\"img/container_delete.png\" alt=\"{$label}\" /></a>";
-        $button.= "<i class=\"fa fa-trash\"></i></a>";
-        $contenitore->buttons[$button] = "?cmd=".DELETE;
-      }
-
-      //perfrom the qry
-      $qry = addQueryWhere("SELECT `{$synTable}`.* FROM `{$synTable}`");
-
-      $pager = new synPager($db, 'syntax', 'content.php', 'content', true, true, "pager_{$synTable}");
-      $res = $pager->Execute($qry, $synRowsPerPage);
-
-      if ($treeFrame == "true") {
-        $contenitore->getTree($qry);
-        // die();
-      } else {
-        if ($contenitore->treeExists()===true) {
-          echo "<script type=\"text/javascript\">\n"
-             . "  parent.refreshTreeFrame();\n"
-             . "  parent.openTreeFrame();\n"
-             . "</script>\n";
-        }
-        echo "<form action=\"?cmd=".MULTIPLEDELETE."\" method=\"post\" style=\"margin: 0px;\">\n"
-           . "  <table id=\"mainTable\" class=\"table table-striped table-condensed\">\n"
-           . "    <thead>\n"
-           . "      <tr>\n".$contenitore->getHeader()."      </tr>\n"
-           . "    </thead>\n"
-           . "    <tbody>\n";
-        while ($arr = $res->FetchRow()) {
-          $contenitore->updateValues($arr);
-          echo "      <tr>\n".$contenitore->getRow()."      </tr>\n";
-        }
-        echo "    </tbody>\n"
-           . "  </table>\n</form>\n";
-
-        if ($synLoggedUser->canDelete==1) {
-          echo <<<EOSCRIPT
-          <script src="../../assets/js/jquery.selectable-list.js"></script>
-          <script>
-          $(function(){
-            $("table").selectableList();
-          });
-          </script>
-EOSCRIPT;
-        }
-
-        echo "<script type=\"text/javascript\">\n" // start page scripts
-           . "  var arrpage = ['".implode("','", explode("  ", $pager->index))."'];\n"
-           . "  paging('".$pager->firstPage."','".$pager->prevPage."','".$pager->nextPage."','".$pager->lastPage."', arrpage, '".$pager->footer."');\n"
-            //  initToolbar ( newBtn, saveBtn, removeBtn, switchBtn, refreshBtn, homeBtn, backBtn)
-           . "  initToolbar (".$synLoggedUser->canInsert.", 0, ".$synLoggedUser->canDelete.", 1, 1, 0);\n"
-           . "</script>\n"; // end page scripts
-
-        //update the columns field for searching
-        echo $contenitore->getColumnSearch();
-
-        //echo the multilang option
-        echo $contenitore->getMultilangBoxNew(1);
-      }
-
-      break;
-*/
-        ////////////////////////////////////////////////////////////////////////
-       //                                                                    //
       //                          LIST ALL ROWS                             //
      //                                                                    //
     ////////////////////////////////////////////////////////////////////////
@@ -1078,13 +981,23 @@ EOTABLE;
   }
 
   function aaHeader($title, $title2='') {
-    $header = <<<EOHEADER
-    <div id="formHeader" class="page-header">
-      <h2>
+    global $cmd;
+    if ($cmd != '') {
+      $header = <<<EOHEADER
+      <div id="formHeader" class="page-header">
+        <h2>
+          <span data-placement="right" data-toggle="tooltip" data-original-title="{$title2}">{$title}</span>
+        </h2>
+      </div>
+EOHEADER;
+    } else {
+      $header = <<<EOHEADER
+      <h2 class="table-toolbar-title">
         <span data-placement="right" data-toggle="tooltip" data-original-title="{$title2}">{$title}</span>
       </h2>
-    </div>
 EOHEADER;
+
+    }
     echo $header;
   }
 

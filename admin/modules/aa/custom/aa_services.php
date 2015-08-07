@@ -10,7 +10,7 @@ global $cmd;
       //$contenitore->buttons["&nbsp; <img src='images/service_icon/wand.png' alt=\"Service-O-Matic\"> &nbsp;"]="?cmd=1&aa_service=129&aa_join=container";
       //$button = "<a href=\"%s&amp;synPrimaryKey=%s\" class=\"button\" title=\"Service-O-Matic\">";
       //$button.= "<img src=\"images/service_icon/wand.png\" alt=\"Service-O-Matic\"></a>";
-      $button = "<a class=\"btn btn-xs btn-warning %s\" href=\"?cmd=1&amp;aa_service=129&amp;aa_join=container&amp;synPrimaryKey=%s\" title=\"{$label}\">";
+      $button = "<a class=\"btn btn-xs btn-bl-ock btn-warning %s\" href=\"?cmd=1&amp;aa_service=129&amp;aa_join=container&amp;synPrimaryKey=%s\" title=\"{$label}\">";
       $button.= "<i class=\"fa fa-magic\"></i></a>";
       $contenitore->buttons[$button] = $label;
       break;

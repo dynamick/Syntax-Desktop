@@ -59,8 +59,9 @@ class synCheck extends synElement {
   //get the value for listing of the element
   function getCell() {
     global $key;
-    if ($this->selected==true) $selected="checked=\"checked\""; else $selected="";
-    return "<input type='checkbox' name='".$this->name."' maxsize='".$this->size."' value='".$this->value."' $selected onclick=\"callServer('".$this->container->getKey()."', '".$this->name."', this.checked==false?'':'".$this->value."');\" />";
+    $selected = ($this->selected==true) ? 'checked="checked"' : null;
+    //return "<input type='checkbox' name='".$this->name."' maxsize='".$this->size."' value='".$this->value."' $selected onclick=\"callServer('".$this->container->getKey()."', '".$this->name."', this.checked==false?'':'".$this->value."');\" />";
+    return "<input type=\"checkbox\" name=\"{$this->name}\" value=\"{$this->value}\" {$selected} data-key=\"{$this->container->getKey()}\" class=\"rpc\" />";
   }
 
   //function for the auto-configuration

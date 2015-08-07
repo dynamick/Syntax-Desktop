@@ -2,7 +2,8 @@
   if(!isset($_SESSION))
     session_start();
   include_once ("../../config/cfg.php");
-  include_once ("../../includes/php/jslib.inc");
+  //include_once ("../../includes/php/jslib.inc");
+  include_once ("../../includes/php/menu.php");
   include_once ("classes/synContainer.php");
   include_once ("classes/synHtml.php");
 
@@ -74,38 +75,15 @@
     <script type="text/javascript" src="../../assets/js/jquery.js"></script>
     <script type="text/javascript" src="<?=$synAdminPath?>/includes/js/ckeditor/ckeditor.js"></script>
     <script type="text/javascript" src="<?=$synAdminPath?>/includes/js/ckeditor/adapters/jquery.js"></script>
-
-    <script type="text/javascript" src="content.js?rand=<?=rand(0,1000)?>"></script>
+    <script type="text/javascript" src="content.js"></script>
     <script type="text/javascript">
-    //<![CDATA[
-      //RPC FUNCTION CALLER
-      var g_remoteServer = '<?=$targetFileName?>'; //'ihtml/auto_service.php'
-      var g_intervalID;
-      var preview = new Array();
-
-      function callServer(synPrimaryKey, field, value) {
-      	var head = document.getElementsByTagName('head').item(0);
-      	var old  = document.getElementById('lastLoadedCmds');
-      	if (old) head.removeChild(old);
-
-      	script = document.createElement('script');
-      	script.src = g_remoteServer+"?synPrimaryKey="+synPrimaryKey+"&field="+field+"&value="+value+"&cmd=rpcfunction&aa_service=<?=$_SESSION["aa_service"]?>&rand="+Math.random();
-        script.type = 'text/javascript';
-      	script.defer = true;
-      	script.id = 'lastLoadedCmds';
-      	void(head.appendChild(script));
-        debug("<b>RPC:</b> "+g_remoteServer+"?synPrimaryKey="+synPrimaryKey+"&field="+field+"&value="+value+"&cmd=rpcfunction&aa_service=<?=$_SESSION["aa_service"]?>");
-      }
-
-      //BUTTON FUNCTION
-      action('newBtn',    'window.parent.content.document.location.href="content.php?cmd=<?=ADD?>";');
-      action('backBtn',   'window.parent.content.history.back();');
-      action('refreshBtn','window.parent.content.location.reload();');
-      action('saveBtn',   'window.parent.content.document.forms[0].submit()');
-      action('removeBtn', 'window.parent.content.confirmDeletion()');
-      action('homeBtn',   'window.parent.content.location.href="<?=$PHP_SELF?>"');
-
-    //]]>
+    //BUTTON FUNCTION
+    action('newBtn',    'window.parent.content.document.location.href="content.php?cmd=<?= ADD ?>";');
+    action('backBtn',   'window.parent.content.history.back();');
+    action('refreshBtn','window.parent.content.location.reload();');
+    action('saveBtn',   'window.parent.content.document.forms[0].submit()');
+    action('removeBtn', 'window.parent.content.confirmDeletion()');
+    action('homeBtn',   'window.parent.content.location.href="<?= $PHP_SELF ?>"');
     </script>
   </head>
   <body>
@@ -365,22 +343,27 @@
           console.log('alert closed');
         });
         */
-        /*
-        // rpc
-        $('input.rpc').change(function(){
-          var $this = $(this);
-          var params = {
-              aa_service: '<?= $synContainer ?>',
-              cmd:'<?= RPC ?>',
+
+        // RPC functions
+        $('#content').on( 'change', 'input.rpc', function() {
+          var
+            $this = $(this),
+            params = {
+              aa_service: '<?php echo $synContainer ?>',
+              cmd: '<?php echo RPC ?>',
               field: $this.attr('name'),
               value: $this.is(':checked') ? '1' : '',
-              synPrimaryKey: $this.attr('rel')
-          }
-          $.getJSON('<?= $synAdminPath ?>/modules/aa/_content.php', params, function(ret){
-            $('.page-header').after('<div class="alert '+ ret.type +'"><button data-dismiss="alert" class="close">×</button>'+ ret.message +'</div>');
+              synPrimaryKey: $this.data('key')
+            };
+          $.getJSON(
+            'getData.php',
+            params
+          ).fail( function( jqXHR, textStatus, errorThrown ) {
+            var res = jqXHR.responseJSON;
+            if ( typeof res.error != 'undefined' )
+              $.notify({ icon: 'fa fa-exclamation-triangle', message: res.error },{ type: 'danger' });
           });
         });
-        */
       });
     </script>
   </body>

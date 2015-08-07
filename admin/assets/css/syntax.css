@@ -346,4 +346,23 @@ ul.nav-tree li span.opener.opened span.tree-icon-open {
   padding:2px;
   width: 25px;
 }
+.join-icon {
+  font-size:125%;
+  vertical-align: middle;
+  font-weight: lighter;
+  text-shadow: none;
+}
+.table-toolbar-spacer {
+  clear:both;
+  margin-top:1em;
+}
+.table-toolbar-title {
+  float:left;
+  line-height: 34px;
+  margin: 25px 0;
+  position: relative;
+}
+.fixed-table-toolbar .bars, .fixed-table-toolbar .columns, .fixed-table-toolbar .search {
+  margin:25px 0 25px 5px;
+}
 /* END table */
