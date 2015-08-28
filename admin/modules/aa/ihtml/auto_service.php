@@ -1007,4 +1007,9 @@ EOHEADER;
       $_SESSION[$synTable.'_clone'] = '';
   }
 
+  function js_location($location) {
+    /* riposiziona la pagina */
+    echo "<script>if (!window.top.synDebug) window.location=\"{$location}\";</script>";
+  }
+
 ?>
