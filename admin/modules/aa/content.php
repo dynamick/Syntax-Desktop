@@ -77,6 +77,7 @@
     <script type="text/javascript" src="<?=$synAdminPath?>/includes/js/ckeditor/adapters/jquery.js"></script>
     <script type="text/javascript" src="content.js"></script>
     <script type="text/javascript">
+    var preview = new Array();
     //BUTTON FUNCTION
     action('newBtn',    'window.parent.content.document.location.href="content.php?cmd=<?= ADD ?>";');
     action('backBtn',   'window.parent.content.history.back();');
@@ -96,11 +97,13 @@
     ?>
     </div>
     <script src="http://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <!--script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script-->
+    <script src="../../assets/js/jquery.js"></script>
 
     <script type="text/javascript" src="../../assets/js/moment-with-locales.min.js"></script>
     <script type="text/javascript" src="../../assets/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../../assets/js/bootstrap-table.min.js"></script>
+    <script type="text/javascript" src="../../assets/js/bootstrap-table.js"></script>
+    <script type="text/javascript" src="../../assets/js/bootstrap-table-cookie.min.js"></script>
     <script type="text/javascript" src="../../assets/js/bootstrap-table-it-IT.min.js"></script>
 
     <script type="text/javascript" src="../../assets/js/bootstrap-switch.min.js"></script>
@@ -218,12 +221,28 @@
             toggle: 'fa fa-th-list',
             columns: 'fa fa-columns'
           },
+          url: 'getData.php?cmd=getjson',
+          clickToSelect: false,
+          showFilter: true,
+          showRefresh: true,
+          showToggle: true,
+          showColumns: true,
+          search: true,
+          sidePagination: 'server',
+          pagination: true,
+          pageList: [10, 20, 50, 100],
+          iconsPrefix: 'fa',
+          cookie: true,
+          cookieIdTable: 'service-<?php echo $synContainer ?>',
+          cookieExpire: '1y',
+          cookiesEnabled: ['bs.table.sortorder', 'bs.table.sortname', 'bs.table.pagenumber', 'bs.table.pagelist', 'bs.table.columns', 'bs.table.searchtext', 'bs.table.filtercontrol'], // must set it in lowercase otherwise the plugin messes it up
           onLoadSuccess: function (data) {
             if ( typeof data.error != 'undefined' )
               $.notify({ icon: 'fa fa-exclamation-triangle', message: data.error.message }, { type: 'danger' });
           },
           onLoadError: function (status) {
-            $.notify({ icon: 'fa fa-exclamation-triangle', message: 'Event: onLoadError, data: ' + status }, { type: 'danger' });
+            if ( typeof status != 'undefined' )
+              $.notify({ icon: 'fa fa-exclamation-triangle', message: 'Event: onLoadError, data: ' + status }, { type: 'danger' });
           },
         });
 

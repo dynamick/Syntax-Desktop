@@ -938,23 +938,14 @@ EOBOTTOMBAR;
              ? 'desc'
              : 'asc' ;
         $header = $contenitore->getJsonHeader();
+        //          data-cookie-id-table="settings_{$synTable}"
+        /*
+                  data-sort-name="{$_SESSION['aa_order']}"
+          data-sort-order="{$dir}"
+        */
         $table = <<<EOTABLE
         <div id="filter-bar"></div>
-        <table id="mainTable"
-          class="table table-striped table-condensed"
-          data-url="getData.php?cmd=getjson"
-          data-click-to-select="false"
-          data-show-filter="true"
-          data-show-refresh="true"
-          data-show-toggle="true"
-          data-show-columns="true"
-          data-search="true"
-          data-sort-name="{$_SESSION['aa_order']}"
-          data-sort-order="{$dir}"
-          data-side-pagination="server"
-          data-pagination="true"
-          data-page-list="[10, 20, 50, 100]"
-          data-icons-prefix="fa">
+        <table id="mainTable" class="table table-striped table-condensed">
           <thead>
             <tr>{$header}</tr>
           </thead>
