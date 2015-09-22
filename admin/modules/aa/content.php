@@ -132,6 +132,39 @@
         }
       });
 
+      function sendNotify( obj ) {
+        if ( obj instanceof Array) {
+          for ( o in obj)
+            sendNotify( obj[o] );
+        } else {
+          var icon, type, delay = 5000;
+          switch (obj.type) {
+            case 1:
+            case 4:
+              icon = 'fa fa-exclamation-triangle';
+              type = 'danger';
+              delay = 0;
+              break;
+            case 2:
+              icon = 'fa fa-exclamation-circle';
+              type = 'warning';
+              break;
+            case 8:
+              icon = 'fa fa-info-circle';
+              type = 'info';
+              break;
+            default:
+              icon = 'fa fa-check-circle';
+              type = 'success';
+              break;
+          }
+          $.notify(
+            { icon: icon, message: obj.message },
+            { type: type, delay:delay }
+          );
+        }
+      }
+
       function deleteSelectedRows() {
         $ids = new Array();
         $rows = $table.bootstrapTable('getSelections');
@@ -146,21 +179,21 @@
 
         }).done(function( responseText ) {
           if ( typeof responseText.unauthorized != 'undefined' )
-            $.notify({ icon: 'fa fa-exclamation-triangle', message: responseText.unauthorized },{ type: 'warning' });
+            sendNotify({ type:2, message: responseText.unauthorized });
           $table.bootstrapTable('refresh');
 
         }).fail(function( jqXHR, textStatus, errorThrown ) {
           var res = jqXHR.responseJSON;
           if ( typeof res.error != 'undefined' )
-            $.notify({ icon: 'fa fa-exclamation-triangle', message: res.error },{ type: 'danger' });
-          console.error( errorThrown );
+            sendNotify({ type:1, message: res.error });
+          //console.error( errorThrown );
 
         }).always(function( responseText ) {
           var res = responseText;
           if ( typeof res.responseJSON != 'undefined' ) // if the request fails
             res = responseText.responseJSON;
           if ( typeof res.status != 'undefined' )
-            $.notify({ icon: 'fa fa-info-circle', message: res.status });
+            sendNotify({ type:8, message: res.status });
         });
       }
 
@@ -238,11 +271,11 @@
           cookiesEnabled: ['bs.table.sortorder', 'bs.table.sortname', 'bs.table.pagenumber', 'bs.table.pagelist', 'bs.table.columns', 'bs.table.searchtext', 'bs.table.filtercontrol'], // must set it in lowercase otherwise the plugin messes it up
           onLoadSuccess: function (data) {
             if ( typeof data.error != 'undefined' )
-              $.notify({ icon: 'fa fa-exclamation-triangle', message: data.error.message }, { type: 'danger' });
+              sendNotify( data.error );
           },
           onLoadError: function (status) {
             if ( typeof status != 'undefined' )
-              $.notify({ icon: 'fa fa-exclamation-triangle', message: 'Event: onLoadError, data: ' + status }, { type: 'danger' });
+              sendNotify({ type:1, message:'Event: onLoadError, data: ' + status });
           },
         });
 
@@ -329,7 +362,7 @@
 
               }).always(function( responseText ) {
                 if ( typeof responseText.status != 'undefined' )
-                  $.notify({ icon: 'fa fa-info-circle', message: responseText.status });
+                  sendNotify( responseText.status );
               });
             }
           });
@@ -380,7 +413,7 @@
           ).fail( function( jqXHR, textStatus, errorThrown ) {
             var res = jqXHR.responseJSON;
             if ( typeof res.error != 'undefined' )
-              $.notify({ icon: 'fa fa-exclamation-triangle', message: res.error },{ type: 'danger' });
+              sendNotify({ type:1, message: res.error });
           });
         });
       });

@@ -24,6 +24,7 @@ class ADODB_PDO
 
   /** Debug flag, publically accessible */
   public $debug;
+  public $error_mode;
   private $error;
 
   /** PDO demands fetchmodes on each resultset, so define a default */
@@ -75,6 +76,7 @@ class ADODB_PDO
         }
         $this->_db->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
         $this->fetchmode = ADODB_FETCH_BOTH;
+        $this->error_mode = 1;
         break;
     }
   }
@@ -88,6 +90,14 @@ class ADODB_PDO
     $this->fetchmode = $fm;
   }
 
+  /**
+  * SetErrorMode:
+  * @param fm Integer specified by constant
+  */
+  public function SetErrorMode($mode = 1)
+  {
+    $this->error_mode = $mode;
+  }
   /**
   * Insert_ID: Retrieve the ID of the last insert operation
   * @return String containing last insert ID
@@ -223,12 +233,16 @@ class ADODB_PDO
     $res = false;
     // set error mode to Exception. Comment this line (or set to PDO::ERRMODE_SILENT) to fail silently.
     $this->_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
     try {
       $res = $this->_db->query($sql);
 
     } catch (PDOException $e) {
       $this->error = $e->getMessage();
-      $this->debug($sql);
+      if ( $this->error_mode === 2 )
+        throw new Exception( $this->error );
+      else
+        $this->debug($sql);
     }
     return $res;
   }
@@ -469,7 +483,7 @@ class ADODB_PDO
     }
     $msg .= "\n\t</div>\n";
 
-    echo $msg;
+    //echo $msg;
   }
 }
 

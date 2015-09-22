@@ -778,6 +778,8 @@ EOBOTTOMBAR;
     case JSON:
       // in this case errors must be handled manually
       ini_set('display_errors', 0);
+      $db->setErrorMode(2);
+      $error = NULL;
 
       if ($synLoggedUser->canModify==1) {
         $label  = $str['modify'];
@@ -839,17 +841,24 @@ EOBOTTOMBAR;
       //if (!empty($search))
         //$qry->addSearchClause( $search );
 
+      $boostrap_table_data = array();
+      $boostrap_table_errors = array();
+
       // get row total
       $tot = $db->Execute( $qry->getCountQuery() );
       list($count) = $tot->fetchRow();
 
       // get subset results
-      $res = $db->execute( $qry->getQuery() );
+      try {
+        $res = $db->execute( $qry->getQuery() );
+      } catch( Exception $e) {
+        $boostrap_table_errors[] = array(
+          'message' => $e->getMessage(),
+          'type' => 1
+          );
+      }
 
       // pay attention to variables names: they can collide with your data!!!
-      $boostrap_table_data = array();
-      $boostrap_table_errors = array();
-
       while ($row = $res->FetchRow()) {
         $contenitore->updateValues( $row );
         $contenitore_data_hash = $contenitore->getJsonRow();
@@ -864,9 +873,17 @@ EOBOTTOMBAR;
         // if an error message is thrown, store it for later
         // otherwise our json may be corrupted!
         $error = error_get_last();
-        if ( $error !== null )
-          $boostrap_table_errors[] = $error['message'];
+        //echo '<pre>', print_r($error), '</pre>';
+        if ( $error !== null ) {
+          $file  = str_replace( $synAbsolutePath, '', $error['file']);
+          $mex   = "<b>{$error['message']}</b><br> in {$file}, line {$error['line']}";
+          $alert = array( 'type' => $error['type'], 'message' => $mex );
+          //echo '<pre>', print_R($row_error), '</pre>';
+          if ( !in_array( $alert, $boostrap_table_errors) )
+            $boostrap_table_errors[] = $alert;
+        }
       }
+
       if (!empty($search)) {
         $count = count($boostrap_table_data);
         if ($offset > 0)

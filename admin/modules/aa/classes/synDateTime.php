@@ -66,6 +66,7 @@ EOINPUT;
 
   //get the label of the element
   function getCell() {
+    $dummy .= 'pirla';
     return $this->dateHumanFormat( $this->getValue() );
   }
 
