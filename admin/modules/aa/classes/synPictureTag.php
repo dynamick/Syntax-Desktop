@@ -39,7 +39,7 @@ class synPictureTag extends synElement {
 
   //private function
   function _html() {
-    global $db, ${$this->name};
+    global $db, ${$this->name}, $synPublicPath;
     $fieldname = $this->name;
     $value = $this->getValue();
     $session_id = urlencode(session_id());
@@ -50,10 +50,13 @@ class synPictureTag extends synElement {
       $res=$db->Execute($qry);
       if ($arr=$res->FetchRow()) {
         $filename_parts = pathinfo($arr["filename"]);
+        $path = $arr['path'] . '/' . $filename_parts['filename'].'.'.$filename_parts['extension'];
+        $src = $synPublicPath.'/thumb.php?src='.$path.'&amp;w=240&amp;h=240&amp;zc=1';
         $ret .= "<div id=\"currentpic\">";
         $ret .= "<h2>Immagine scelta</h2>";
         $ret .= "<div >";
-        $ret .= cleverThumbAlmanacco($arr["path"]."/", $filename_parts["filename"], $filename_parts["extension"], "", $arr["caption"], 240, 240, false, " rel=\"".$arr["id"]."\" class=\"selected\" ");
+        //$ret .= cleverThumbAlmanacco($arr["path"]."/", $filename_parts["filename"], $filename_parts["extension"], "", $arr["caption"], 240, 240, false, " rel=\"".$arr["id"]."\" class=\"selected\" ");
+        $ret .= "<img src=\"{$src}\" alt=\"\" rel=\"{$arr["id"]}\" class=\"selected\"/>";
         $ret .= "</div>";
         $ret .= "<div >";
         $ret .= "<table cellpadding=\"0\" cellspacing=\"0\">";
@@ -98,7 +101,7 @@ class synPictureTag extends synElement {
               }
             })
 
-            $("#tagresult img").live('click', function() {
+            $("#tagresult img").on('click', function() {
                 if ($(this).parent().hasClass("selected")) {
                   $("#tagresult .picture_result").removeClass("selected");
                   $("#$fieldname").val($value);
@@ -122,16 +125,23 @@ EOF;
   function getCell() {
   	global $synAbsolutePath, $db;
     $value = $this->value;
-
-    if ($value!="") {
+    $ret = '';
+    if (!empty($value)) {
       $qry = "SELECT * FROM media WHERE id=".$value;
-      $res=$db->Execute($qry);
-      if ($arr=$res->FetchRow()) {
-        $filename_parts = pathinfo($arr["filename"]);
-        $size=filesize($synAbsolutePath.$arr["path"]."/".$arr["filename"]);
-        list($w,$h)=@getimagesize($synAbsolutePath.$arr["path"]."/".$arr["filename"]);
-        $show="style=\"background-image:url(/public/mat/thumb/".$arr["filename"].");\"";
-        $ret .= "<a class=\"preview\" ".$show." onMouseOver=\"openbox('/public/mat/thumb/".$arr["filename"]."')\" onMouseOut=\"closebox()\"><span>".$ext." - <strong>".byteConvert($size)."</strong><br/>".$w."&#215;".$h."px</span></a>";
+      $res = $db->Execute($qry);
+      if ($arr = $res->FetchRow()) {
+        $filename_parts = pathinfo( $arr["filename"] );
+        $filename = $arr["path"] . "/" . $arr["filename"];
+        $ext      = $filename_parts['extension'];
+        $size = filesize($synAbsolutePath . $filename );
+        $fsize = byteConvert($size);
+        list( $w, $h ) = @getimagesize( $synAbsolutePath . $filename );
+        $show = "style=\"background-image:url(/public/mat/" . $filename . ");\"";
+        //$ret .= "<a class=\"preview\" {$show} onMouseOver=\"openbox('/public/mat/thumb/{$arr["filename"]}')\" onMouseOut=\"closebox()\"><span>".$ext." - <strong>".byteConvert($size)."</strong><br/>".$w."&#215;".$h."px</span></a>";
+        if ($size < 100000)
+          $show = "style=\"background-image:url('{$filename}');\"";
+        $ret .= "<a class=\"preview\" {$show} href=\"{$filename}\" data-ext=\"{$ext}\" data-size=\"{$fsize}\" data-width=\"{$w}\" data-height=\"{$h}px\">&nbsp;</a>";
+
       } else $ret="<span style='color: gray'>Empty</span>";
     }
     return $ret;
