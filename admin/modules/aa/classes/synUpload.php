@@ -55,67 +55,9 @@ class synUpload extends synElement {
           ) list($app_title, $app_order, $app_table, $app_field, $app_linkfield) = $arr_tmp;
       }
 
-/*
-      $ret = <<<EOC
+      $ret = "<input id=\"{$this->name}\" name=\"{$this->name}[]\" type=\"file\" multiple=true>";
 
-      <div id="plup_{$this->name}">
-        <p>You browser doesn't have Flash, Silverlight, or HTML5 support.</p>
-      </div>
-
-      <script type="text/javascript" src="plupload/plupload.full.js"></script>
-      <script type="text/javascript" src="plupload/jquery.plupload.queue.js"></script>
-      <script type="text/javascript" src="plupload/it.js"></script>
-      <script type="text/javascript">
-      $(function() {
-        $("#plup_{$this->name}").pluploadQueue({
-          // General settings
-          runtimes        : 'flash,silverlight,html5',
-          url             : 'ihtml/plupload.php',
-          max_file_size   : '10mb',
-          chunk_size      : '1mb',
-          multiple_queues : true,
-
-          // Resize images on clientside if we can
-          resize : {
-            width         : 1280,
-            height        : 1280,
-            quality       : 90
-          },
-
-          // Specify what files to browse for
-          filters : [{
-            title         : "Image files",
-            extensions    : "jpg,jpeg,gif,png"
-          }],
-
-          // Flash settings
-          flash_swf_url   : 'plupload/plupload.flash.swf',
-
-          // Silverlight settings
-      silverlight_xap_url : 'plupload/plupload.silverlight.xap',
-
-          multipart_params: {
-            'key'         : '{$keyArr[1]}',
-            'description' : '{$app_title}',
-            'order'       : '{$app_order}',
-            'table'       : '{$app_table}',
-            'field'       : '{$app_field}',
-            'linkfield'   : '{$app_linkfield}',
-            'path'        : '{$this->mat}'
-          }
-
-          // eventi: vedi http://www.plupload.com/example_events.php
-        });
-      });
-      </script>
-
-EOC;
-*/
-
-      $ret = <<<EOC
-      <input id="{$this->name}" name="{$this->name}[]" type="file" multiple=true>
-      <script type="text/javascript">
-      $(function() {
+      $script = <<<EOC
         $("#{$this->name}").fileinput({
           allowedFileTypes: ['image'],
           browseIcon: '<i class="fa fa-folder-open-o"></i> ',
@@ -149,19 +91,9 @@ EOC;
             };
           }
         });
-      });
-      </script>
 EOC;
 
-/*
-    $ret = <<<EORET
-    <input id="{$this->name}" name="{$this->name}[]" type="file" class="file-input-control" multiple=true>
-    <script type="text/javascript">
-      preview['{$this->name}[]'] = new Array();
-    </script>
-EORET;
-*/
-
+      enqueue_js($script);
 
     } else {
       $ret = "This field is disabled in insert mode. Save and modify this entry to upload files.";

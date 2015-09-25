@@ -101,9 +101,9 @@
   </footer>
 
 
-  <script src="assets/js/jquery.js"></script>
-  <script src="assets/js/bootstrap.min.js"></script>
-  <script src="assets/js/ie10-viewport-bug-workaround.js"></script>
+  <script src="assets/js/vendor/jquery.js"></script>
+  <script src="assets/js/vendor/bootstrap.min.js"></script>
+  <script src="assets/js/vendor/ie10-viewport-bug-workaround.js"></script>
   <script>
   $(document).ready(function(){
   });

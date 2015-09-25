@@ -9,17 +9,17 @@ class synTextArea extends synElement {
 
   //constructor(name, value, label, size, help)
   function synTextArea($n='', $v=null , $l=null, $s=150, $h='') {
-    if ($n=='') 
+    if ($n=='')
       $n            = 'textarea'.date('his');
-    if ($l=='') 
+    if ($l=='')
       $l            = ucfirst($n);
 
     $this->type     = 'Default';
     $this->name     = $n;
-    if ($v==null) { 
-      global $$n; 
-      $this->value  = $$n; 
-    } else 
+    if ($v==null) {
+      global $$n;
+      $this->value  = $$n;
+    } else
       $this->value  = $v;
     $this->label    = $l;
     $this->size     = $s;
@@ -48,16 +48,12 @@ class synTextArea extends synElement {
   <textarea name="{$this->name}" id="ck_{$this->name}" class="editor" style="height:{$height}px" rel="{$this->type}">
     {$value}
   </textarea>
-  <script type="text/javascript">
-    CKEDITOR.replace( 'ck_{$this->name}', {customConfig:'{$ckConfig}', toolbar:'{$this->type}', height:{$height} } );
-  </script>
 EOC;
-    // NB: quando passiamo a jquery lo script sopra va centralizzato!
-
     $_SESSION['KCFINDER']['disabled'] = false;
     $_SESSION['KCFINDER']['uploadURL'] = $synPublicPath.$mat.'/';
+    enqueue_js( "CKEDITOR.replace( 'ck_{$this->name}', {customConfig:'{$ckConfig}', toolbar:'{$this->type}', height:{$height} });" );
 
-    if ($this->big==1) $contents = '</td></tr><tr><td colspan=2>'.$contents;
+    //if ($this->big==1) $contents = '</td></tr><tr><td colspan=2>'.$contents;
     return $contents;
   }
 
@@ -76,7 +72,7 @@ EOC;
 
     $array=array("Default"=>"Default", "Basic"=>"Basic", "Deluxe"=>"Deluxe");
     $value = "";
-    if (isset($synElmPath[$i])) $value = $synElmPath[$i];    
+    if (isset($synElmPath[$i])) $value = $synElmPath[$i];
     $this->configuration[5]="Tipo: ".$synHtml->select(" name=\"synElmPath[$i]\"",$array,$value);
 
 #    if (!isset($synElmQry[$i]) or $synElmQry[$i]=="") $checked=""; else $checked=" checked='checked' ";

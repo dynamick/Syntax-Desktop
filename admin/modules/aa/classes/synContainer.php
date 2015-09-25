@@ -538,7 +538,7 @@ EOHTML;
     }
 
     if ($this->multidelete==true)
-      $headers[] = '<th data-field="state" data-checkbox="true" data-switchable="false"></th>';
+      $headers[] = '<th data-field="state" data-checkbox="true" data-switchable="false" data-tableexport-display="none"></th>';
 
     foreach( $this->element as $k => $v ) {
       //$headers[] = "<th>{$v->colname}</th>";
@@ -568,11 +568,11 @@ EOHTML;
     foreach( $this->joins as $k => $v) {
       //echo $k.':<pre>', print_r($v), '</pre>';
       $key = md5($v->name);
-      $headers[] = "<th data-field=\"{$key}\" data-sortable=\"false\">{$v->name}</th>";
+      $headers[] = "<th data-field=\"{$key}\" data-sortable=\"false\" data-tableexport-display=\"none\">{$v->name}</th>";
     }
 
     foreach( $this->buttons as $k => $v)
-      $headers[] = "<th data-field=\"{$v}\" data-switchable=\"false\"></th>";
+      $headers[] = "<th data-field=\"{$v}\" data-switchable=\"false\" data-tableexport-display=\"none\"></th>";
 
     //echo '<pre>', print_r($this->joins), '</pre>'; die('111');
     //echo '<pre>', print_r($headers), '</pre>'; die('111');
@@ -824,10 +824,8 @@ EOHTML;
       $safehtml = addslashes($html);
 
       $ret = <<<EORETURN
-      <script type="text/javascript">
-        var txt="{$safehtml}";
-        window.parent.content.addBox('multilang', txt);
-      </script>
+      var txt ="{$safehtml}";
+      window.parent.content.addBox('multilang', txt);
 EORETURN;
     }
     return $ret;

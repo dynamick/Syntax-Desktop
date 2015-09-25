@@ -1332,4 +1332,10 @@ ENDOFRET;
   }
   return $ret;
 }
+
+function enqueue_js( $script ) {
+  global $js;
+  array_push($js, $script);
+}
+
 ?>

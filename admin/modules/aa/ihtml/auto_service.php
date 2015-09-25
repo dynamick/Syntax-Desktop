@@ -354,14 +354,11 @@ EOBOTTOMBAR;
       echo $bottom;
       echo $synHtml->form_c();
 
-
-
       //initToolbar ( newBtn, saveBtn, removeBtn, switchBtn, refreshBtn, homeBtn, backBtn)
-      echo "<script>initToolbar (false,true,false,true,true,true);</script>\n";
+      enqueue_js( 'initToolbar (false, true, false, true, true, true);' );
 
       //echo the multilang option
-      echo $contenitore->getMultilangBoxNew(2);
-
+      enqueue_js( $contenitore->getMultilangBoxNew(2) );
       break;
 
 
@@ -495,18 +492,12 @@ EOBOTTOMBAR;
       echo $bottom;
       echo $synHtml->form_c();
 
+      // initToolbar ( newBtn, saveBtn, removeBtn, switchBtn, refreshBtn, homeBtn, backBtn)
+      enqueue_js( 'initToolbar (false, true, true, true, true, true);' );
+      enqueue_js( "action('removeBtn', 'if (confirm(top.str[\"aa_confirmDel\"])) window.parent.content.document.location=\"content.php?cmd=delrow&synPrimaryKey=".urlencode($synPrimaryKey)."\";');" );
 
-      //initToolbar ( newBtn, saveBtn, removeBtn, switchBtn, refreshBtn, homeBtn, backBtn)
-      $script = "<script type=\"text/javascript\">\n";
-      $script.= "  initToolbar (false, true, true, true, true, true);\n";
-      //$script.= "  action('removeBtn', 'if (confirm(top.str[\"aa_confirmDel\"])) window.parent.content.document.location=\"content.php?cmd=delrow&synPrimaryKey=".urlencode($synPrimaryKey)."\";');\n";
-      $script.= "  action('removeBtn', 'if (confirm(top.str[\"aa_confirmDel\"])) window.parent.content.document.location=\"content.php?cmd=delrow&synPrimaryKey=".urlencode($synPrimaryKey)."\";');\n";
-      $script.= "</script>\n";
-
-      echo $script;
-
-      //echo the multilang option
-      echo $contenitore->getMultilangBoxNew(2);
+      // echo the multilang option
+      enqueue_js( $contenitore->getMultilangBoxNew(2) );
 
       break;
 
@@ -945,11 +936,9 @@ EOBOTTOMBAR;
         $contenitore->getTree( $qry );
 
       } else {
-        if ($contenitore->treeExists()===true) {
-          echo "<script type=\"text/javascript\">\n"
-             . "  parent.refreshTreeFrame();\n"
-             . "  parent.openTreeFrame();\n"
-             . "</script>\n";
+        if ( $contenitore->treeExists() === true ) {
+          enqueue_js( 'parent.refreshTreeFrame();' );
+          enqueue_js( 'parent.openTreeFrame();' );
         }
         $dir = (isset($_SESSION['aa_order_direction']) && strpos($_SESSION['aa_order_direction'], 'DESC'))
              ? 'desc'
@@ -961,7 +950,6 @@ EOBOTTOMBAR;
           data-sort-order="{$dir}"
         */
         $table = <<<EOTABLE
-        <div id="filter-bar"></div>
         <table id="mainTable" class="table table-striped table-condensed">
           <thead>
             <tr>{$header}</tr>
@@ -972,12 +960,11 @@ EOTABLE;
         echo aaHeader( translateDesktop($contenitore->title), translateDesktop($contenitore->description) );
         echo $table;
 
-        echo "<script type=\"text/javascript\">\n" // start page scripts
-           . "  initToolbar (".$synLoggedUser->canInsert.", 0, ".$synLoggedUser->canDelete.", 1, 1, 0);\n"
-           . "</script>\n"; // end page scripts
+        // init the toolbar
+        enqueue_js( "initToolbar ({$synLoggedUser->canInsert}, 0, {$synLoggedUser->canDelete}, 1, 1, 0);" );
 
         //echo the multilang option
-        echo $contenitore->getMultilangBoxNew(1);
+        enqueue_js( $contenitore->getMultilangBoxNew(1) );
       }
       break;
 

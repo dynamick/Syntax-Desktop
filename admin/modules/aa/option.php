@@ -64,10 +64,7 @@
       <div id="custom" class="panel-default"></div>
     </div>
 
-    <script src="../../assets/js/jquery.js"></script>
-    <script src="../../assets/js/bootstrap.min.js"></script>
-    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
-    <script src="../../assets/js/bootbox.min.js"></script>
+    <script src="../../assets/js/option_js.php"></script>
     <script>
     $(document).ready(function(){
       makeToolBar('menu1');
