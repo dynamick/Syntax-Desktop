@@ -1,17 +1,17 @@
 <?php
   //this is an auto-generated page by SyntaxDesktop
   error_reporting(E_ALL & ~(E_NOTICE | E_DEPRECATED | E_WARNING));
-  ini_set('display_errors', 1);  
-  
+  ini_set('display_errors', 1);
+
   header('Content-type: text/html; charset=utf-8');
   header('X-UA-Compatible: IE=edge,chrome=1');
-  
+
   if(!isset($_SESSION))
     session_start();
 
-  if(ini_get('date.timezone')=='') 
+  if(ini_get('date.timezone')=='')
     date_default_timezone_set('Europe/Rome');
-  
+
   if (file_exists(dirname(__FILE__).'/public/config/cfg.php')) {
     require('public/config/cfg.php');
   } else {
@@ -20,8 +20,9 @@
 
   // Main
   $pageId = getPageId();
-  
-  $smarty = new synSmarty($pageId);
+
+  $smarty = new synSmarty();
+  $smarty->setPage($pageId);
   $smarty->display($smarty->synTemplate);
 
 // EOF index.php

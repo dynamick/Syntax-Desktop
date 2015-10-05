@@ -16,11 +16,15 @@ class synSmarty extends Smarty {
    public $synPageNode = array();
    public $synPageScript = array();
 
-   function synSmarty($pageId) {
-      global $synAbsolutePath, $synPublicPath, $synPluginPath;
+   function synSmarty() {
+      global $synAbsolutePath, $synPublicPath, $synPluginPath, $synWebsiteTitle;
       // Class Constructor. These automatically get set with each new instance.
       parent::__construct();
-      $lang = getLangInitial();
+
+      $lang = (isset($_SESSION['synSiteLangInitial']))
+        ? strtoupper($_SESSION['synSiteLangInitial'])
+        : null;
+
 
       # paths
       $this->template_dir   = $synAbsolutePath.$synPublicPath.'/templates/';
@@ -33,14 +37,33 @@ class synSmarty extends Smarty {
       $this->debugging      = false;
       $this->caching        = false;
       $this->cache_lifetime = 100;
+
+      $this->assign('synPublicPath', $synPublicPath);
+      $this->assign('synAbsolutePath', $synAbsolutePath);
+      $this->assign('synWebsiteTitle', $synWebsiteTitle);
+
+      $this->assign('synPageScript', $this->synPageScript);
+      $this->assign('synLangInitial', $lang);
+
+   }
+
+   function setPage($pageId) {
+      global $synAbsolutePath, $synPublicPath, $synPluginPath;
+
       $this->synTemplate    = $this->getSynTemplate($pageId);
 
       $this->clearCompiledTemplate($this->synTemplate);
       $this->traverseTree($pageId);
 
       $this->assign('synTemplate', $this->synTemplate);
-      $this->assign('synPageScript', $this->synPageScript);
-      $this->assign('synLangInitial', $lang);
+
+      if (isset($this->synPageNode[2])){
+        $this->assign('synRootNode', $this->synPageNode[2]);
+      } elseif (isset($this->synPageNode[1])){
+        $this->assign('synRootNode', $this->synPageNode[1]);
+      } else {
+        $this->assign('synRootNode', $this->synPageNode[0]);
+      }
    }
 
 
@@ -87,11 +110,6 @@ EOQRY;
       }
       $this->assign("synPage".ucfirst($key), $value);
     }
-
-    $this->assign('synAdminPath', $synAdminPath);
-    $this->assign('synPublicPath', $synPublicPath);
-    $this->assign('synAbsolutePath', $synAbsolutePath);
-    $this->assign('synWebsiteTitle', $synWebsiteTitle);
 
     //variabile per riconoscere le chiamate via AJAX
     $xhr = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && (strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
