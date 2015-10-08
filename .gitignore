@@ -2,6 +2,7 @@ admin/config/config.php
 admin/modules/phpMyBackupPro/global_conf.php
 cache/*
 logs/*
+_deprecated/
 *.db
 *.DS_Store
 .project
