@@ -17,18 +17,16 @@
     <link rel="stylesheet" type="text/css" href="../../assets/css/syntax.css" />
 
     <script type="text/javascript">
-    //<![CDATA[
-    var actionArray = Array();
-
-    //array dei pulsanti [icona, actionId, label, separatore]
-    var toolArray = [
-      // 0              1             2                       3
-      ['plus-circle',   'newBtn',     '<?=$str["new"]?>',     'btn-success'],
-      ['save',          'saveBtn',    '<?=$str["save"]?>',    'btn-primary'],
-      ['times-circle',  'removeBtn',  '<?=$str["delete"]?>',  'btn-danger'],
-      ['refresh',       'refreshBtn', '<?=$str["refresh"]?>', 'btn-info'],
-      ['reply',         'backBtn',    '<?=$str["back"]?>',    'btn-info']
-    ];
+    var
+      actionArray = Array(),
+      toolArray = [ //array dei pulsanti [icona, actionId, label, separatore]
+        // 0              1             2                       3
+        ['plus-circle',   'newBtn',     '<?php echo $str["new"]?>',     'btn-success'],
+        ['save',          'saveBtn',    '<?php echo $str["save"]?>',    'btn-primary'],
+        ['times-circle',  'removeBtn',  '<?php echo $str["delete"]?>',  'btn-danger'],
+        ['refresh',       'refreshBtn', '<?php echo $str["refresh"]?>', 'btn-info'],
+        ['reply',         'backBtn',    '<?php echo $str["back"]?>',    'btn-info']
+      ];
 
     function makeToolBar(where){//crea i pulsanti
       var str='';
@@ -59,12 +57,11 @@
           <div id="menu1" class="btn-group btn-group-justified" role="group"></div>
         </div>
       </div>
-
       <div id="multilang" class="panel-default"></div>
       <div id="custom" class="panel-default"></div>
     </div>
 
-    <script src="../../assets/js/option_js.php"></script>
+    <script type="text/javascript" src="../../assets/js/js_libs.php?scope=option&amp;v=<?php echo $synVersion ?>"></script>
     <script>
     $(document).ready(function(){
       makeToolBar('menu1');
@@ -75,10 +72,10 @@
       // syncronous delete
       $('.btn-delete').click(function(e){
         e.preventDefault();
-        bootbox.confirm( '<?= $str["sure_delete"] ?>', function(result) {
+        bootbox.confirm( '<?php echo $str["sure_delete"] ?>', function(result) {
           if (result == true) {
-            //$(e.currentTarget).unbind( 'click' ).trigger( 'click' );
-            alert('ok');
+            $(e.currentTarget).unbind( 'click' ).trigger( 'click' );
+            //alert('ok');
           } else {
             return true;
           }

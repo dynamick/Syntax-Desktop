@@ -57,6 +57,6 @@
     }
 ?>
     </div>
-    <script type="text/javascript" src="../../assets/js/tree_js.php?v=<?php echo $synVersion ?>"></script>
+    <script type="text/javascript" src="../../assets/js/js_libs.php?scope=tree&amp;v=<?php echo $synVersion ?>"></script>
   </body>
 </html>

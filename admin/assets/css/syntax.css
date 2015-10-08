@@ -19,6 +19,9 @@ body {
   font-family: 'Open Sans', sans-serif;
   font-weight:300;
 }
+body.desktop {
+  overflow: hidden;
+}
 .footer {
   position: absolute;
   bottom: 0;

@@ -68,7 +68,10 @@ $(function() {
     cookiesEnabled: ['bs.table.sortorder', 'bs.table.sortname', 'bs.table.pagenumber', 'bs.table.pagelist', 'bs.table.columns', 'bs.table.searchtext', 'bs.table.filtercontrol'], // must set it in lowercase otherwise the plugin messes it up
     showExport: true,
     exportTypes: ['sql','xml','csv','excel'],
-    exportOptions: { tableName: syntax.service.table },
+    exportOptions: {
+      tableName: syntax.service.table,
+      fileName: syntax.appname + '.' + syntax.service.table
+    },
     onLoadSuccess: function (data) {
       if ( typeof data.error != 'undefined' )
         sendNotify( data.error );
@@ -110,8 +113,8 @@ $(function() {
           console.error( errorThrown );
 
         }).always(function( responseText ) {
-          if ( typeof responseText.status != 'undefined' )
-            sendNotify( responseText.status );
+          if ( typeof responseText != 'undefined' )
+            sendNotify( responseText );
         });
       }
     });

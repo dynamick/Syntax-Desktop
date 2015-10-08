@@ -58,9 +58,9 @@
   if ( isset($cmd)
     && in_array( $cmd, array(ADD, MODIFY))
     ){
-    $js_file = 'form_js.php';
+    $js_scope = 'single';
   } else {
-    $js_file = 'index_js.php';
+    $js_scope = 'index';
   }
 
  /***************************************************************************
@@ -86,14 +86,13 @@
     <link rel="stylesheet" type="text/css" href="../../assets/css/fontawesome-iconpicker.min.css" />
     <link rel="stylesheet" type="text/css" href="../../assets/css/fileinput.min.css" />
     <link rel="stylesheet" type="text/css" href="../../assets/css/animate.css" />
-        <link rel="stylesheet" type="text/css" href="../../assets/css/typeahead.css" />
+    <link rel="stylesheet" type="text/css" href="../../assets/css/typeahead.css" />
     <link rel="stylesheet" type="text/css" href="../../assets/css/syntax.css" />
-    <link rel="stylesheet" type="text/css" href="plupload.css" />
-
     <script type="text/javascript">
     var
       preview = new Array(),
       syntax = {
+        appname: '<?php echo sanitizePath($synWebsiteTitle) ?>',
         service: {
           id: '<?php echo $synContainer ?>',
           table: '<?php echo $contenitore->getTable() ?>',
@@ -123,7 +122,7 @@
     <?php echo $contents; ?>
     </div>
 
-    <script type="text/javascript" src="../../assets/js/<?php echo $js_file ?>?v=<?php echo $synVersion ?>"></script>
+    <script type="text/javascript" src="../../assets/js/js_libs.php?scope=<?php echo $js_scope ?>&amp;v=<?php echo $synVersion ?>"></script>
     <script type="text/javascript">
     //BUTTON FUNCTIONS
     for( var key in actions ) {

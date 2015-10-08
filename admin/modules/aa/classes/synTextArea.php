@@ -41,19 +41,25 @@ class synTextArea extends synElement {
   //private function
   function _html() {
     global $synAdminPath, $synPublicPath, $mat, $synAbsolutePath;
-    $height = $this->size;
-    $value = $this->translate($this->value);
-    $ckConfig = $synAdminPath.'/includes/js/ckeditor/syntax.config.php';
-    $contents = <<<EOC
-  <textarea name="{$this->name}" id="ck_{$this->name}" class="editor" style="height:{$height}px" rel="{$this->type}">
-    {$value}
-  </textarea>
-EOC;
-    $_SESSION['KCFINDER']['disabled'] = false;
-    $_SESSION['KCFINDER']['uploadURL'] = $synPublicPath.$mat.'/';
-    enqueue_js( "CKEDITOR.replace( 'ck_{$this->name}', {customConfig:'{$ckConfig}', toolbar:'{$this->type}', height:{$height} });" );
 
-    //if ($this->big==1) $contents = '</td></tr><tr><td colspan=2>'.$contents;
+    if (!isset($_SESSION))
+      session_start();
+
+    $height   = $this->size;
+    $value    = $this->translate( $this->value );
+    $ckConfig = $synAdminPath . '/assets/js/vendor/ckeditor/syntax-config.js';
+    $lang     = isset( $_SESSION['aa_CurrentLangInitial'] )
+              ? $_SESSION['aa_CurrentLangInitial']
+              : 'en';
+    $contents = <<<EOC
+    <textarea name="{$this->name}" id="ck_{$this->name}" class="form-control" style="height:{$height}px;">{$value}</textarea>
+EOC;
+
+    $_SESSION['KCFINDER']['disabled'] = false;
+    $_SESSION['KCFINDER']['uploadURL'] = $synPublicPath . $mat . DIRECTORY_SEPARATOR;
+
+    enqueue_js( "CKEDITOR.replace( 'ck_{$this->name}', {customConfig:'{$ckConfig}', toolbar:'{$this->type}', height:{$height}, language:'{$lang}'} );" );
+
     return $contents;
   }
 

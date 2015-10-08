@@ -613,6 +613,7 @@ EOBOTTOMBAR;
 
     case DELETE:
       $msg = array();
+      $boostrap_table_message = array();
       $code = 200;
 
       $synPrimaryKey = stripslashes(urldecode($_REQUEST["synPrimaryKey"]));
@@ -637,18 +638,31 @@ EOBOTTOMBAR;
         }
         if ($res) {
           $msg['status'] = 'Elemento eliminato correttamente.';
+          $boostrap_table_message[] = array(
+            'message' => $msg['status'],
+            'type' => 8
+            );
+
         } else {
           $code = 500;
           $msg['error'] = 'Impossibile eliminare l\'elemento.';
+          $boostrap_table_message[] = array(
+            'message' => $msg['error'],
+            'type' => 1
+            );
         }
       } else {
         $msg['unauthorized'] = 'Non sei autorizzato ad eliminare questo elemento.';
+        $boostrap_table_message[] = array(
+          'message' => $msg['unauthorized'],
+          'type' => 2
+          );
       }
 
       if (isset($xhr) && $xhr) {
         //http_response_code( $code ); // php 5.4
         header( 'HTTP/1.0 '.$code ); // this tells jQuery the operation's outcome
-        echo json_encode( $msg );
+        echo json_encode( $boostrap_table_message );
 
       } else {
         if ( isset($msg['unauthorized']) )
@@ -676,6 +690,7 @@ EOBOTTOMBAR;
       //TODO: attenzione alle chiavi. Prende solamente l'id!!!!!!!!!
       $i = 0;
       $msg = array();
+      $boostrap_table_message = array();
       $code = 200;
 
       //http://php.net/manual/en/function.http-response-code.php
@@ -695,19 +710,31 @@ EOBOTTOMBAR;
             } else {
               $code = 401;
               $msg['unauthorized'] = "Row {$key}: {$canDelete}";
+              $boostrap_table_message[] = array(
+                'message' => "Row {$key}: {$canDelete}",
+                'type' => 2
+                );
             }
           } else {
             $code = 404;
             $msg['error'] = "{$key} non trovata in {$synTable}";
+            $boostrap_table_message[] = array(
+                'message' => "{$key} non trovata in {$synTable}",
+                'type' => 1
+                );
           }
         }
         $msg['status'] = "{$i} {$str['row_deleted']}";
+        $boostrap_table_message[] = array(
+          'message' => $msg['status'],
+          'type' => 0
+          );
       }
 
       if ($xhr) {
         //http_response_code( $code ); // php 5.4
         header( 'HTTP/1.0 '.$code ); // this tells jQuery the operation's outcome
-        echo json_encode( $msg );
+        echo json_encode( $boostrap_table_message );
 
       } else {
         //echo '<script>alert("'. implode(', ', $msg) .'");</script>';
@@ -883,6 +910,7 @@ EOBOTTOMBAR;
 
       //echo '<pre>', print_r($data), '</pre>';
       //$qry->debug();
+
       // populate results json
       $json = array(
         'total' => $count,
@@ -910,13 +938,13 @@ EOBOTTOMBAR;
       //unset($_POST); //in caso di edit abortito
 
       if ($synLoggedUser->canModify==1) {
-        $label  = $str['modify'];
+        $label = $str['modify'];
         $contenitore->buttons[$label] = MODIFY;
       }
 
       # DELETE button
       if ($synLoggedUser->canDelete==1) {
-        $label  = $str['delete'];
+        $label = $str['delete'];
         $contenitore->buttons[$label] = DELETE;
       }
 

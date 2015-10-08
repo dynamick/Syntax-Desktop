@@ -20,29 +20,22 @@
 
 ?><!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Syntax Desktop - Ver. <?php echo htmlentities($synVersion)?></title>
-    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:700,300,600,400&subset=latin,cyrillic">
-    <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css" />
-    <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.min.css" />
-    <link rel="stylesheet" type="text/css" href="assets/css/syntax.css" />
+  <title>Syntax Desktop - Ver. <?php echo htmlentities($synVersion)?></title>
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:700,300,600,400&subset=latin,cyrillic">
+  <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.min.css" />
+  <link rel="stylesheet" type="text/css" href="assets/css/syntax.css" />
 
-
-<!-- INCLUDO LE STRINGHE PER LE LINGUE -->
+  <!-- INCLUDO LE STRINGHE PER LE LINGUE -->
   <script type="text/javascript"><?php echo $jsLang ?></script>
-
-<!-- INCLUDO LO SCRIPT PER L'OROLOGIO IN ALTO A DX -->
-  <!--script type="text/javascript" src="includes/js/liveclock/clock.js"></script-->
-
-<!-- INCLUDO LE FUNZIONI PER GESTIRE IL DESKTOP -->
-  <script type="text/javascript" src="functions/js/desktop.js"></script>
 </head>
-<body class="desktop" onload="desktopInit();">
-  <nav class="navbar navbar-default navbar-fixed-top">
+<body class="desktop">
+  <nav class="navbar navbar-default navbar-fixed-top" id="desktopbar_top">
     <div class="container-fluid">
       <div class="navbar-header">
         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -100,21 +93,13 @@
     </div>
   </footer>
 
-
-  <script src="assets/js/vendor/jquery.js"></script>
-  <script src="assets/js/vendor/bootstrap.min.js"></script>
-  <script src="assets/js/vendor/ie10-viewport-bug-workaround.js"></script>
-  <script>
-  $(document).ready(function(){
-  });
-  </script>
+  <script type="text/javascript" src="assets/js/js_libs.php?scope=desktop&amp;v=<?php echo $synVersion ?>"></script>
 </body>
 </html>
 <?php
-
   else:
-  // unauthenticated user or session timeout, request login:
-    include ($synAbsolutePath.$synAdminPath."/modules/login/index.php");
+    // unauthenticated user or session timeout, request login:
+    include ( $synAbsolutePath . $synAdminPath . '/modules/login/index.php' );
 
   endif; //if getSynUser()
 ?>

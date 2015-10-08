@@ -64,7 +64,6 @@ EOALERT;
       </div>
     </div>
   </div>
-  <script src="assets/js/jquery.js"></script>
-  <script src="assets/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="assets/js/js_libs.php?v=<?php echo $synVersion ?>"></script>
 </body>
 </html>
