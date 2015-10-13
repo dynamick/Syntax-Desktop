@@ -334,7 +334,7 @@ EOQ;
       $bottom = <<<EOBOTTOMBAR
         <nav class="navbar form-toolbar navbar-fixed-bottom">
           <div class="container-fluid">
-            <a href="{$PHP_SELF}" class="btn btn-primary navbar-btn">
+            <a href="{$PHP_SELF}" class="btn btn-primary navbar-btn animsition-link">
               <i class="fa fa-mail-reply"></i> {$str["cancel"]}
             </a>
             <div class="navbar-form navbar-right">
@@ -472,7 +472,7 @@ EOBOTTOMBAR;
       $bottom = <<<EOBOTTOMBAR
         <nav class="navbar form-toolbar navbar-fixed-bottom">
           <div class="container-fluid">
-            <a href="{$PHP_SELF}" class="btn btn-primary navbar-btn">
+            <a href="{$PHP_SELF}" class="btn btn-primary navbar-btn animsition-link>
               <i class="fa fa-mail-reply"></i> {$str["cancel"]}
             </a>
             <div class="navbar-form navbar-right">
@@ -801,7 +801,7 @@ EOBOTTOMBAR;
 
       if ($synLoggedUser->canModify==1) {
         $label  = $str['modify'];
-        $button = "<a href=\"%s&amp;synPrimaryKey=%s\" class=\"btn btn-xs btn-bl-ock btn-success\" title=\"{$label}\">";
+        $button = "<a href=\"%s&amp;synPrimaryKey=%s\" class=\"btn btn-xs btn-bl-ock btn-success animsition-link\" title=\"{$label}\">";
         $button.= "<i class=\"fa fa-edit\"></i></a>";
         $contenitore->buttons[$button] = "?cmd=".MODIFY;
       }

@@ -21,7 +21,8 @@ if ( !$debug ) {
 $base = array(
   'vendor/jquery.js',
   'vendor/bootstrap.min.js',
-  'vendor/ie10-viewport-bug-workaround.js'
+  'vendor/ie10-viewport-bug-workaround.js',
+  'vendor/animsition.js'
   );
 
 // scripts for desktop managing

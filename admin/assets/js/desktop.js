@@ -6,7 +6,27 @@ var
   topBarHeight = topbar.height(),
   bottombar = $('#desktopbar_bottom'),
   bottomBarHeight = bottombar.outerHeight(),
-  contentarea = null;
+  contentarea = null,
+
+  anim_options = {
+    inClass: 'fade-in-up',
+    outClass: 'fade-out-down',
+    inDuration: 800,
+    outDuration: 500,
+    linkElement: '.animsition-link',
+    loading: true,
+    loadingParentElement: 'body',
+    loadingClass: 'animsition-loading',
+    loadingInner: '', // e.g '<img src="loading.svg" />'
+    timeout: false,
+    timeoutCountdown: 5000,
+    onLoadEvent: true,
+    browser: [ 'animation-duration', '-webkit-animation-duration'],
+    overlay : false,
+    overlayClass : 'animsition-overlay-slide',
+    overlayParentElement : 'body',
+    transition: function(url){ window.location.href = url; }
+  };
 
 $(window).resize(function(){
   var dim = winSize();
@@ -28,17 +48,19 @@ function winSize(){
 function createWindow(titolo,file) {
   var dim = winSize();
   if ( contentarea !== null )
-    removeWindow();
+    destroyWindow();
   contentarea = createElement( file, dim.w, dim.h );
 
   if ( $('#closeBtn').length < 1 )
     setWindowButtons();
 }
-function removeWindow() {
+function hideWindow() {
   $('#closeBtn').hide();
-  $(contentarea).fadeOut( 350, function(){
-    $(this).remove();
-  });
+  $(contentarea).animsition('out', $(this), 'javascript:destroyWindow()' );
+}
+function destroyWindow() {
+  $(contentarea).remove();
+  contentarea = null;
 }
 
 function createElement( file, width, height ){
@@ -54,12 +76,13 @@ function createElement( file, width, height ){
       width: width,
       height: height,
       backgroundColor: '#fff',
-      border: 0
+      border: 0,
     })
-    .attr('src', file)
-    .hide()
+    .addClass('animsition')
+    .attr( 'src', file )
     .appendTo('body')
-    .fadeIn();
+    .animsition( anim_options )
+    .animsition('in');
 
   return $el;
 }
@@ -78,7 +101,8 @@ function setWindowButtons() {
       'type': 'button',
       'html': '<i class="fa fa-times"></i>'
     }).on('click', function(){
-      removeWindow();
+      hideWindow();
       $el.remove();
     }).appendTo( $el );
 }
+

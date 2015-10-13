@@ -1,15 +1,16 @@
 <?php
-ini_set('display_errors','On');
 
-if(!isset($_SESSION)) session_start();
+ini_set('display_errors','On');
+date_default_timezone_set ('Europe/Rome');
+
+if (!isset($_SESSION))
+  session_start();
 
 $dir = dirname(__FILE__) . '/';
 
 if (!file_exists($dir.'config.php')) {
   die("Please <strong>rename</strong> /admin/config/config.sample.php in /admin/config/config.php");
 }
-
-
 
 ///////////////////////////////////////////////////////////////////////////////
 //  DO NOT MODIFY UNDER THIS LINE

@@ -29,71 +29,95 @@
   <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:700,300,600,400&subset=latin,cyrillic">
   <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css" />
   <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.min.css" />
+  <link rel="stylesheet" type="text/css" href="assets/css/animsition.min.css" />
   <link rel="stylesheet" type="text/css" href="assets/css/syntax.css" />
 
   <!-- INCLUDO LE STRINGHE PER LE LINGUE -->
   <script type="text/javascript"><?php echo $jsLang ?></script>
 </head>
 <body class="desktop">
-  <nav class="navbar navbar-default navbar-fixed-top" id="desktopbar_top">
-    <div class="container-fluid">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="fa fa-bars"></span>
-        </button>
-        <span class="navbar-brand syn-brand">sd</span>
+  <div class="animsition">
+    <nav class="navbar navbar-default navbar-fixed-top" id="desktopbar_top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="fa fa-bars"></span>
+          </button>
+          <span class="navbar-brand syn-brand">sd</span>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <?php echo createMenu2( $aa_service ) ?>
+          <ul class="nav navbar-nav navbar-right">
+            <li>
+              <a href="/index.php" target="_blank">Visit Site</a>
+            </li>
+            <li class="dropdown ">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                Account
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" role="menu">
+                <li class="dropdown-header">SETTINGS</li>
+                <li class="divider"></li>
+                <li>
+                  <a href="modules/login/logoff.php">
+                    <i class="fa fa-power-off"></i>
+                    <?php echo $str["logoff"]?>
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
       </div>
-      <div id="navbar" class="collapse navbar-collapse">
-        <?php echo createMenu2( $aa_service ) ?>
-        <ul class="nav navbar-nav navbar-right">
-          <li>
-            <a href="/index.php" target="_blank">Visit Site</a>
-          </li>
-          <li class="dropdown ">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-              Account
-              <span class="caret"></span>
+    </nav>
+
+    <footer class="footer" id="desktopbar_bottom">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-10">
+            <span class="label label-primary">
+              <i class="fa fa-user"></i>
+              <small><?php echo username( getSynUser() );?></small>
+            </span>&nbsp;
+            <span class="label label-default">
+              <i class="fa fa-group"></i>
+              <small><?php echo groupname( $_SESSION['synUser'] ); ?></small>
+            </span>
+          </div>
+          <div class="col-md-2 text-right">
+            <a href="modules/login/logoff.php" class="btn btn-danger btn-xs animsition-link" title="<?php echo $str["logoff"]?>">
+              <i class="fa fa-power-off"></i>
             </a>
-            <ul class="dropdown-menu" role="menu">
-              <li class="dropdown-header">SETTINGS</li>
-              <li class="divider"></li>
-              <li>
-                <a href="modules/login/logoff.php">
-                  <i class="fa fa-power-off"></i>
-                  <?php echo $str["logoff"]?>
-                </a>
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-
-  <footer class="footer" id="desktopbar_bottom">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-md-10">
-          <span class="label label-primary">
-            <i class="fa fa-user"></i>
-            <small><?php echo username( getSynUser() );?></small>
-          </span>&nbsp;
-          <span class="label label-default">
-            <i class="fa fa-group"></i>
-            <small><?php echo groupname( $_SESSION['synUser'] ); ?></small>
-          </span>
-        </div>
-        <div class="col-md-2 text-right">
-          <a href="modules/login/logoff.php" class="btn btn-danger btn-xs" title="<?php echo $str["logoff"]?>">
-            <i class="fa fa-power-off"></i>
-          </a>
+          </div>
         </div>
       </div>
-    </div>
-  </footer>
-
+    </footer>
+  </div>
   <script type="text/javascript" src="assets/js/js_libs.php?scope=desktop&amp;v=<?php echo $synVersion ?>"></script>
+  <script>
+    var $el = $('.animsition');
+    $(document).ready(function() {
+      $el.animsition({
+        inClass: 'zoom-in',
+        outClass: 'zoom-out',
+        inDuration: 800,
+        outDuration: 800,
+        loading: false,
+        loadingParentElement: 'body', //animsition wrapper element
+        loadingClass: 'animsition-loading',
+        loadingInner: '', // e.g '<img src="loading.svg" />'
+        timeout: false,
+        timeoutCountdown: 5000,
+        onLoadEvent: true,
+        browser: [ 'animation-duration', '-webkit-animation-duration'],
+        overlay : false,
+        overlayClass : 'animsition-overlay-slide',
+        overlayParentElement : 'body',
+      });
+    });
+  </script>
 </body>
 </html>
 <?php

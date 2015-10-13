@@ -23,7 +23,8 @@ class synKey extends synElement {
 
   //private function
   function _html() {
-    $html = "<div class=\"form-control-static\">{$this->value}</div>"
+    $value = $this->value ? $this->value : '&nbsp;';
+    $html = "<div class=\"form-control-static\">{$value}</div>"
           . "<input type=\"hidden\" name=\"{$this->name}\" maxsize=\"{$this->size}\" value=\"{$this->value}\">";
     return $html;
   }
@@ -33,25 +34,25 @@ class synKey extends synElement {
     global ${$this->name}, $db;
     $c = $this->container;
     $table= $c->table;
-    
+
     //echo "<hr>";
     //echo ${$this->name}." .name<br>";
     //echo $this->value." .value<br>";
     //echo $table." .tablename<br>";
     //echo "<hr>";
-    
+
     //calculate the next key
     $res=$db->Execute("SHOW TABLE STATUS LIKE \"$table\"");
     $arr=$res->FetchRow();
     $nextKey=$arr["Auto_increment"];
     //echo $nextKey." .nextKey<br>";
-    
-    if ($this->value=="") return $nextKey;  
+
+    if ($this->value=="") return $nextKey;
     else return $this->value;
-   
+
   }
-  
-  
+
+
   //function for the auto-configuration
   function configuration($i="",$k=99) {
     global $synElmName,$synElmType,$synElmLabel,$synElmSize,$synElmHelp;
