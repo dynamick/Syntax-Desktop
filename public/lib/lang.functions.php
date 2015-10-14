@@ -345,18 +345,20 @@ function getOtherLangs( $lang = '' ){
 function getLocaleCodes( $filter = array() ){
   global $db, $languages;
 
-  if (empty($filter))
+  if ( empty($filter) )
     $filter = array_keys( $languages );
 
   $lang = getLangInitial();
   $locale = array( 'active' => '', 'alternate' => array() );
 
-  foreach( $languages['list'] as $l ){
-    $iso_code = strtolower($l).'_'.strtoupper($l);
-    if ($l == $lang)
-      $locale['active'] = $iso_code;
-    else
-      $locale['alternate'][] = $iso_code;
+  foreach( $languages['list'] as $k => $l ){
+    if ( in_array( $k, $filter ) ) {
+      $iso_code = strtolower($l) . '_' . strtoupper($l);
+      if ($l == $lang)
+        $locale['active'] = $iso_code;
+      else
+        $locale['alternate'][] = $iso_code;
+    }
   }
   return $locale;
 }
