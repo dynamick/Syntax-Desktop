@@ -1,7 +1,7 @@
 <?php
   //this is an auto-generated page by SyntaxDesktop
-  error_reporting(E_ALL);// & ~(E_NOTICE | E_DEPRECATED | E_WARNING));
-  ini_set('display_errors', 1);
+  error_reporting(E_ALL & ~(E_NOTICE | E_DEPRECATED | E_WARNING));
+  ini_set('display_errors', 0);
 
   header('Content-type: text/html; charset=utf-8');
   header('X-UA-Compatible: IE=edge,chrome=1');
