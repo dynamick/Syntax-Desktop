@@ -1349,7 +1349,7 @@ insert into `aa_translation` values ('764', 'Ip', 'Ip');
 insert into `aa_translation` values ('765', '', '');
 insert into `aa_translation` values ('766', 'Domain', 'Domain');
 insert into `aa_translation` values ('767', 'imposta il dominio su cui impostare la lingua (es. www.dominio.it). Lascia vuoto per abilitarla su qualsiasi dominio.', 'imposta il dominio su cui impostare la lingua (es. www.dominio.it). Lascia vuoto per abilitarla su qualsiasi dominio.');
-
+insert into `aa_translation` values ('768', 'Area riservata', 'Private Area');
 
 ### structure of table `aa_users` ###
 
@@ -1578,6 +1578,7 @@ insert into `dictionary` values ('145', 'error_required_field', '709');
 insert into `dictionary` values ('146', 'message_logout', '218');
 insert into `dictionary` values ('147', 'cookie_disclaimer', '751');
 insert into `dictionary` values ('148', 'read_more', '752');
+insert into `dictionary` values ('149', 'reserved_area', '768');
 
 
 ### structure of table `documents` ###

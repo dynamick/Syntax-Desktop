@@ -92,7 +92,9 @@ define('COOKIE_NAME', 'syntax_web_user');
 define('PAGE_ACCOUNT',  52);
 define('PAGE_SEARCH',   58);
 define('PAGE_PRIVACY',  59);
-define('DEFAULT_GROUP', 1); // gruppo utenti default
+define('PAGE_NEWS',     55);
+define('PAGE_GALLERY',  54);
+define('DEFAULT_GROUP',  1); // gruppo utenti default
 
 define('ACCOUNT_KEY',   'syntax_user'); // nome del cookie
 define('ADMIN_NAME',    'Admin');

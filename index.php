@@ -1,6 +1,6 @@
 <?php
   //this is an auto-generated page by SyntaxDesktop
-  error_reporting(E_ALL & ~(E_NOTICE | E_DEPRECATED | E_WARNING));
+  error_reporting(E_ALL);// & ~(E_NOTICE | E_DEPRECATED | E_WARNING));
   ini_set('display_errors', 1);
 
   header('Content-type: text/html; charset=utf-8');

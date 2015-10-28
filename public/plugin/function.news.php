@@ -45,8 +45,8 @@ EOQ;
         extract($arr);
         unset($src);
 
-        $url = $newsPath.createItemPath( $title, $id );
-        $alt = htmlspecialchars(trim(strip_tags($titolo)));
+        $url = $newsPath . createItemPath( $title, $id );
+        $alt = attributize( $title );
         $fdate = htmlentities(sql2human($date, '%d %B %Y'));
         $abstract = troncaTesto( strip_tags($text), 150 );
 

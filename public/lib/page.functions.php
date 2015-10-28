@@ -30,17 +30,33 @@ EOQ;
 
   if ( $arr = $res->FetchRow() ){
     $path = '';
-    if (intval($arr['parent']) > 0) :
+    $default = false;
+    if ( intval( $arr['parent'] ) > 0 ) :
       $path = createPath( $arr['parent'], $lang );
     else :
       $domain = getLanguageDomain( $lang );
-      $path = ($lang == getDomainDefaultLanguage( $domain ))
-            ? ''
+      $default = ( $lang == getDomainDefaultLanguage( $domain ) );
+    /*
+    if ($lang == 'it'){
+      print_debug( $languages );
+      echo $lang . ' -- ' . $domain .  '--' .getDomainDefaultLanguage( $domain ) ;
+    }*/
+
+      $path = ($default)
+            ? NULL
             : DIRECTORY_SEPARATOR . $lang;
     endif;
     $path .= $arr['slug'];
   }
-  return $path . DIRECTORY_SEPARATOR;
+
+  // esplicitly sets the lang if we don't have other clues
+  // otherwise reaching the home in default language becomes impossible!
+  //if ( empty($path) && $default )
+  //  $path = '?synSiteLang=' . array_search( $lang, $languages['list'] );
+  //else
+    $path .= DIRECTORY_SEPARATOR;
+
+  return $path;
 }
 
 
@@ -261,46 +277,6 @@ function get404pageId() {
   }
 }*/
 
-function getLangFromUrl() {
-  global $languages;
-
-  if (empty($languages))
-    $languages  = getLangList();
-
-  if ( !isset($languages['domain'])
-    || empty($languages['domain'])
-    ){
-    // serve user's preferred language in browser settings, if available
-    $user_languages = get_languages();
-    $user_available_languages = array_intersect( $user_languages, $languages['list'] );
-    $lang = array_shift( $user_available_languages );
-
-  } else {
-    // language domain set
-    $domain = 'http://' . getenv('SERVER_NAME'); // TODO: dynamic protocol?
-    if (in_array( $domain, $languages['domain']) ) {
-      // search registered domain to get its relative language id
-      $lang_id = array_search( $domain, $languages['domain'] );
-      $lang = $languages['list'][$lang_id];
-
-    } else {
-      // domain not found, serve default language
-      if ( is_array($languages['default']) ) { // it should be, in case of domain languages
-        if ( isset($languages['default'][$domain]) )
-          $lang = $languages['default'][$domain];
-        else
-          $lang = array_shift($languages['default']);
-
-      } else {
-        if ( isset($languages['default']) )
-          $lang = $languages['default'];
-        else
-          $lang = array_shift($languages['list']);
-      }
-    }
-  }
-  return $lang;
-}
 
 function getPageId( $test = false ) {
   global $db, $synEntryPoint, $languages;
@@ -347,7 +323,7 @@ function getPageId( $test = false ) {
         setLang($lang_id, $lang);
         return $new_url;
       } else {
-        header("Location: " . $new_url, true, 302);
+        header( 'Location: ' . $new_url, true, 302 );
         exit();
       }
     }
@@ -384,7 +360,7 @@ function getPageId( $test = false ) {
         }
       }
 
-      $required_slug = rtrim( $matches[2], '/' );
+      $required_slug = isset($matches[2]) ? rtrim( $matches[2], '/' ) : NULL;
       if (empty($required_slug)) {
         // slug vuoto
         $ret = getHomepageId();
@@ -587,10 +563,11 @@ EOQRY;
 
       $active = ($arr['id'] == $currPage);
       $menu[] = array(
-        'title' => $title,
-        'link' => $link,
-        'active' => $active,
-        'is_url' => $is_url
+        'id'      => $arr['id'],
+        'title'   => $title,
+        'link'    => $link,
+        'active'  => $active,
+        'is_url'  => $is_url
       );
     }
   }
@@ -606,7 +583,7 @@ function createSubmenuPrivate( $id = 0, $expand = false, $first_child = false, $
   $lang     = getLangId();
   $currPage = $smarty->getTemplateVars('synPageId');
   $nodeArr  = $smarty->synPageNode;
-  $menu     = array();
+  $ret      = array();
 
   foreach($nodeArr as $node)
     $idArr[] = $node['id'];
@@ -626,17 +603,19 @@ EOQRY;
     $active = ($arr['id'] == $currPage) || (is_array($idArr) && in_array($arr['id'], $idArr))
             ? TRUE
             : FALSE;
-
     $children = array();
+
     if ($expand || $first_child || $active)
       $children = createSubmenuPrivate( $arr['id'], $expand, false, $field );
 
-    if ($first_child && count($child) > 0) {
-      $item   = reset($child);
+    if ( $first_child
+      && count($children) > 0
+      ){
+      $item   = reset($children);
       $link   = $item['link'];
       $is_url = FALSE;
     } else {
-      if (empty($arr['url'])) {
+      if ( empty($arr['url']) ){
         $link   = createPath( $arr['id'] );
         $is_url = FALSE;
       } else {
@@ -645,15 +624,16 @@ EOQRY;
       }
     }
 
-    if (!$active && !$expand)
-      $children = array();
+    if ( !$active && !$expand )
+      $children = FALSE;
 
     $ret[] = array(
-      'title' => $title,
-      'link' => $link,
-      'active' => $active,
-      'is_url' => $is_url,
-      'child' => $children
+      'id'      => $arr['id'],
+      'title'   => $title,
+      'link'    => $link,
+      'active'  => $active,
+      'is_url'  => $is_url,
+      'child'   => $children
     );
   }
   return $ret;

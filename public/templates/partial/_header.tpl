@@ -1,23 +1,29 @@
 ﻿{function name=render_main_menu level=1 parent=0}
           <ul {if $level eq 1}class="nav navbar-nav"{else}class="dropdown-menu lv{$level}" aria-labelledby="drop{$parent}"{/if}>
-{foreach $items as $item}{if count($item.child) > 0}{if $level eq 1}
+{foreach $items as $item}
+  {if isset($item.child) and count($item.child) > 0}
+    {if $level eq 1}
             <li class="dropdown{if $item.active} active{/if}">
               <a href="{$item.link}" data-toggle="dropdown" class="dropdown-toggle" role="button" id="drop{$item.id}">
                 {$item.title} <b class="caret"></b>
               </a>
-{else}
+    {else}
             <li class="dropdown-submenu{if $item.active} active{/if}">
               <a href="{$item.link}" data-toggle="dropdown" class="dropdown-toggle" role="button" id="drop{$item.id}">
                 {$item.title}
               </a>
-{/if}
-{if count($item.child) > 0}{call name=render_main_menu items=$item.child level=$level+1 parent=$item.id}{/if}
+    {/if}
+    {call name=render_main_menu items=$item.child level=$level+1 parent=$item.id}
             </li>
-{else}
+  {else}
             <li{if $item.active} class="active"{/if}>
-              <a href="{$item.link}"{if $item.is_url} target="_blank"{/if}>{$item.title}{if $item.is_url} <i class="fa fa-exterrnal-link"></i>{/if}</a>
+              <a href="{$item.link}"{if $item.is_url} target="_blank"{/if}>
+                {$item.title}
+                {if $item.is_url} <i class="fa fa-exterrnal-link"></i>{/if}
+              </a>
             </li>
-{/if}{/foreach}
+  {/if}
+{/foreach}
           </ul>
 {/function}
 

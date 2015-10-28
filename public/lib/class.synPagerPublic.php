@@ -80,11 +80,13 @@ class synPagerPublic {
     $linksperpage = $this->linksPerPage ? $this->linksPerPage : $pages;
     if($parameters) $parameters = "?".$parameters;
 
-    for($i=1; $i <= $pages; $i+=$linksperpage)
-      if($this->rs->AbsolutePage() >= $i) $start = $i;
+    $start = 1;
+    for ($i=1; $i <= $pages; $i+=$linksperpage)
+      if ($this->rs->AbsolutePage() >= $i)
+        $start = $i;
 
     $numbers = array(); //= '';
-    $end = $start+$linksperpage-1;
+    $end = $start + $linksperpage-1;
     $link = $this->id . "_next_page";
     if($end > $pages) $end = $pages;
 

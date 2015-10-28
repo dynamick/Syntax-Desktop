@@ -62,8 +62,10 @@ function smarty_function_lang( $params, &$smarty ){
       $path = $alt_uris[ $initial ];
     } else {
       // not visible in this language, link the home page
-      $path = getLanguageDomain( $initial ) . DIRECTORY_SEPARATOR;
-      $path .= ($default == '1') ? NULL : $initial . DIRECTORY_SEPARATOR;
+      $path  = getLanguageDomain( $initial ) . DIRECTORY_SEPARATOR;
+      $path .= ($default == '1')
+             ? '?synSiteLang=' . $id // esplicitly set this language without further guesses
+             : $initial . DIRECTORY_SEPARATOR;
     }
 
     $list[] = array(

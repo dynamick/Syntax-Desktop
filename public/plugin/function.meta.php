@@ -46,6 +46,9 @@ function smarty_function_meta($params, &$smarty){
 
   if ( empty( $canonical ) ){
     $page_path = getLanguageDomain( $langId ) . createPath( $page_id, $lang );
+    // remove query string, just in case
+    if (strpos($page_path, '?'))
+      $page_path = strstr($page_path, '?', true);
     if ( isset($_GET['synSiteLang'])
       || isset($_GET['_next_page'])
       || $page_path != $default_server . $_SERVER['REQUEST_URI']
@@ -53,7 +56,7 @@ function smarty_function_meta($params, &$smarty){
       if ( isset($_GET['title']) ){
         $page_path .= createItemPath( $_GET['title'], $req );
       }
-      $canonical = $server . $page_path;
+      $canonical = $default_server . $page_path;
     }
   }
 
@@ -104,9 +107,12 @@ function smarty_function_meta($params, &$smarty){
     $meta[] = '<link rel="canonical" href="' . attributize( $canonical ) . '">';
 
   // previous/next navigation for blog-like items
-  if ( !empty($item) && is_array($item['navlinks']) ) {
+  if ( !empty($item)
+    && isset($item['navlinks'])
+    && is_array($item['navlinks'])
+    ){
     foreach( $item['navlinks'] as $nav ) {
-      $meta[] = '<link rel="' . $nav['type'] . '" href="' . $server . $nav['url'] . '" title="' . attributize( $nav['title'] ) . '">';
+      $meta[] = '<link rel="' . $nav['type'] . '" href="' . $default_server . $nav['url'] . '" title="' . attributize( $nav['title'] ) . '">';
     }
   }
 
