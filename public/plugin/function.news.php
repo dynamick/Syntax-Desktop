@@ -9,7 +9,7 @@ function smarty_function_news($params, &$smarty) {
             ? intval($_GET['id'])
             : 0;
   $lang     = getLangInitial();
-  $langId   = getLangId();  
+  $langId   = getLangId();
 
   if ( $req == 0) {
     // -------------------------------- NEWS LIST ----------------------------- //
@@ -113,7 +113,7 @@ EOQ;
       } else {
         $src = $synPublicPath.'/mat/default.png';
       }
-      
+
       $social_share = social_share( $safeurl, $safettl );
       $navlinks = getPrevNextLinks( $db, $date, $newsPath, $lang );
 

@@ -3,6 +3,8 @@ admin/modules/phpMyBackupPro/global_conf.php
 cache/*
 logs/*
 _deprecated/
+_test/
+_gulp/*
 *.db
 *.DS_Store
 .project

@@ -49,19 +49,34 @@ function setLang($id, $initial='') {
   }
 }
 
-function getLangList(){
+function getLangList() {
   global $db;
-  $ret = array();
-  $res = $db->Execute("SELECT * FROM aa_lang WHERE `active`=1");
+  $ret = array( 'list' => array(), 'domain' => array() );
+  $res = $db->Execute("SELECT * FROM aa_lang WHERE `active` = '1'");
   while($arr = $res->fetchrow()){
     extract($arr, EXTR_PREFIX_ALL, 'lang');
-    if ( $lang_default == '1' )
-      $ret['default'] = $lang_initial;
     $ret['list'][$lang_id] = $lang_initial;
+    if ( !empty($lang_domain) ) {
+      // check protocol presence
+      $domain = ensureUrlScheme( $lang_domain );
+      if ( filter_var( $domain, FILTER_VALIDATE_URL) )
+        $ret['domain'][$lang_id] = $domain;
+      else
+        throw new Exception("Domain not valid for language '{$lang_initial}'");
+
+      // manage default lang per-domain
+      if ( $lang_default == '1'
+        && !isset($ret['default'][$domain])
+        ){
+        $ret['default'][$domain] = $lang_initial;
+      }
+    } else {
+      if ( $lang_default == '1' )
+        $ret['default'] = $lang_initial;
+    }
   }
   return $ret;
 }
-
 
 //return languages array
 function getLangArr() {
@@ -71,6 +86,49 @@ function getLangArr() {
   while( list($l) = $res->FetchRow() )
     $ret[] = $l;
   return $ret;
+}
+
+function getLanguageDomain( $lang ) {
+  global $languages;
+
+  if (empty($languages))
+    $languages  = getLangList();
+
+  if (is_numeric($lang)) {
+    $lang_id = $lang;
+  } else {
+    $lang_id = array_search( $lang, $languages['list'] );
+    if (!$lang_id)
+      $lang_id = array_search( $languages['default'], $languages['list'] );
+  }
+
+  if (isset( $languages['domain'][$lang_id]) )
+    $server = $languages['domain'][$lang_id];
+    //elseif (isset( $languages['domain'][$default_lang_id]) )
+  else
+    $server = 'http://' . getenv('SERVER_NAME');
+
+  return $server;
+}
+
+function getDomainDefaultLanguage( $domain = null ) {
+  global $languages;
+
+  if (empty($languages))
+    $languages = getLangList();
+  if (empty($domain))
+    $domain = 'http://' . getenv('SERVER_NAME');
+
+  if ( isset($languages['domain'])
+    && isset($languages['default'][$domain])
+    ){
+    $default_lang = $languages['default'][$domain];
+  } else {
+    $default_lang = is_array($languages['default']) ? array_shift($languages['default']) : $languages['default'];
+  }
+  //echo 'trovato '. $default_lang.' come default per ' . $domain . '<br>'; //die();
+
+  return $default_lang;
 }
 
 //translate an element for the desktop. If err==true display the error message
@@ -105,7 +163,6 @@ function translateSite($id, $err=false) {
   return $ret;
 }
 
-
 function updateLang() {
   global $db, $synSiteLang;
 
@@ -128,12 +185,10 @@ function updateLang() {
   if ( !isset($_SESSION['synSiteLang'])
     || $_SESSION['synSiteLang'] == ''
     ){
-//echo 'pref: <pre>', print_r(get_languages()), '</pre>';
     $available = array();
     $preferred = implode("', '", array_reverse(get_languages()));
-//echo 'pref: <pre>', print_r($preferred), '</pre>';
 
-/*
+    /*
     perchè $preferred è girato al contrario?
     ORDER BY FIELD ritorna PRIMA i record non elencati, POI quelli elencati
     nell'ordine dato. Il DESC inverte questa logica, ma per mantenere l'ordine
@@ -151,7 +206,7 @@ function updateLang() {
     2. en
     3. es
     4. fr
-*/
+    */
 
     $sql = <<<EOSQL
     SELECT id, initial
@@ -172,8 +227,7 @@ EOSQL;
   //echo '<pre>', print_r($_SESSION), '</pre>';
 }
 
-
-
+// DEPRECATED??
 // if not already exists, insert a row in the translation table and return the
 // translation for the current selected lang
 function l($value,$replace="") {
@@ -263,7 +317,6 @@ function multiTranslateDictionary($labels=array(), $auto_insert=false){
   }
   return $ret;
 }
-
 
 
 function get_languages(){
