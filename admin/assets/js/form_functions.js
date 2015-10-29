@@ -60,7 +60,7 @@ $(function() {
         }
         //console.info(lat, lng);
         return new google.maps.LatLng( lat, lng );
-      },*/
+      },
       apiLoad = function() {
         // remotely get googlemaps api
         $.getScript('https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places&callback=synAddressPicker')
