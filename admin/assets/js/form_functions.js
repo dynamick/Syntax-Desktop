@@ -37,32 +37,39 @@ $(function() {
       pickerOptions = {
         map: {
           id: '#map',
-          center: getLanLng(),
-          zoom: 16
+          center: getLanLng,
+          reverseGeocoding: true,
+          displayMarker: true
         }, marker: {
           draggable: true,
           visible: true
-        }, autocompleteService: {
-          types: ['geocode', 'establishment']
+        },
+        zoomForLocation: 18,
+        draggable: true,
+        reverseGeocoding: true,
+        autocompleteService: {
+          types: [ 'geocode', 'establishment']
         }
       },
       getLanLng = function(){
-        var lat = 0, lng = 0;
-        if ( $data.length > 0 ) {
+        var lat = 45.403757,  lng = 10.978879;
+        if ( $data.val() != '' ) {
           var coords = $data.val().split('|');
           lat = coords[1];
           lng = coords[2];
         }
+        //console.info(lat, lng);
         return new google.maps.LatLng( lat, lng );
-      },
+      },*/
       apiLoad = function() {
+        // remotely get googlemaps api
         $.getScript('https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places&callback=synAddressPicker')
           .fail(function (jqxhr) {
             console.error('Could not load Google Maps: ' + jqxhr);
           });
       },
       initPicker = function() {
-        if ($.fn.AddressPicker !== undefined) {
+        if ( typeof( AddressPicker ) === 'function' ) {
           var addressPicker = new AddressPicker( pickerOptions );
           $elem.typeahead(null, {
             displayKey: 'description',
@@ -80,13 +87,18 @@ $(function() {
         }
       };
     if ($elem.length > 0){
+      // element #address-picker exists, proceed
       if (window.google && google.maps) {
+        // google maps available, launch picker
         initPicker();
       } else {
+        // load google maps, then re-launch
         apiLoad();
       }
     }
   }
+  synAddressPicker();
+
 
   // init address picker
   /*

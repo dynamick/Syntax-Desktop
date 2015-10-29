@@ -56,7 +56,7 @@
   ob_end_clean();
 
   if ( isset($cmd)
-    && in_array( $cmd, array(ADD, MODIFY))
+    && in_array( $cmd, array(ADD, MODIFY, '1', '10', '20', '30', 'groups', 'buttonList'))
     ){
     $js_scope = 'single';
   } else {
@@ -126,7 +126,7 @@
     <?php echo $contents; ?>
     </div>
 
-    <script type="text/javascript" src="../../assets/js/js_libs.php?scope=<?php echo $js_scope ?>&amp;v=<?php echo $synVersion ?>"></script>
+    <script type="text/javascript" src="../../assets/js/js_libs.php?scope=<?php echo $js_scope ?>&amp;v=<?php echo $synVersion ?>&amp;debug=1"></script>
     <script type="text/javascript">
     //BUTTON FUNCTIONS
     for( var key in actions ) {

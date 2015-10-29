@@ -6,12 +6,15 @@ global $cmd;
     die();
 
   if (isset($_REQUEST['cmd']) && $_REQUEST['cmd'] != JSON) {
+    /*
     echo "<script>";
     echo "window.parent.content.action('homeBtn','window.parent.document.location.href=\"index.php?aa_service=5\";');";
     echo "</script>\n";
+    */
+    enqueue_js( 'window.parent.content.action("homeBtn","window.parent.document.location.href=\'index.php?aa_service=5\';");' );
   }
 
-  switch($_REQUEST["cmd"]) {
+  switch($_REQUEST['cmd']) {
     case ADD:             break;
     case MODIFY:          break;
     case CHANGE:          break;
@@ -172,12 +175,16 @@ global $cmd;
       echo $synHtml->button(" value=\"{$str["forward"]}\" class=\"btn btn-primary pull-right\"", $str["forward"]);
       echo $synHtml->form_c();
 
-
+      /*
       echo "<script>initToolbar (false,false,false,true,true,true,true);action('newBtn','document.location.href=\"?cmd=0\";');</script>\n";
       //echo "<script>document.forms['myform'].elements[0].focus();</script>";
       echo "<script>";
       echo "  window.parent.content.addBox('multilang','');";
       echo "</script>";
+      */
+      enqueue_js( 'initToolbar( false, false, false, true, true, true, true);' );
+      enqueue_js( 'action("newBtn","document.location.href=\'?cmd=0\'");' );
+      enqueue_js( 'window.parent.content.addBox("multilang","");' );
 
       break;
 
@@ -189,6 +196,7 @@ global $cmd;
     ////////////////////////////////////////////////////////////////////////////
 
     case "10":
+
       aaHeader($str["second_step"], $str["second_step_bis"]);
       sess("synServiceTitleLang");
       sess("synServiceTable");
@@ -266,7 +274,9 @@ global $cmd;
       echo $synHtml->form_c();
 
       //initToolbar ( newBtn, saveBtn, removeBtn, switchBtn, refreshBtn, homeBtn, backBtn)
-      echo "<script>initToolbar (false,false,false,true,true,true,true);action('newBtn','document.location.href=\"?cmd=0\";');</script>\n";
+      //echo "<script>initToolbar (false,false,false,true,true,true,true);action('newBtn','document.location.href=\"?cmd=0\";');</script>\n";
+      enqueue_js( 'initToolbar( false, false, false, true, true, true, true );' );
+      enqueue_js( 'action("newBtn", "document.location.href=\'?cmd=0\';");' );
       //echo "<script>document.forms['myform'].elements[0].focus();</script>";
 
       break;
@@ -376,7 +386,10 @@ global $cmd;
       echo $synHtml->form_c();
 
       //initToolbar ( newBtn, saveBtn, removeBtn, switchBtn, refreshBtn, homeBtn, backBtn)
-      echo "<script>initToolbar (false,false,false,true,true,true,false);action('newBtn','document.location.href=\"?cmd=0\";');</script>\n";
+      //echo "<script>initToolbar (false,false,false,true,true,true,false);action('newBtn','document.location.href=\"?cmd=0\";');</script>\n";
+      enqueue_js( 'initToolbar( false, false, false, true, true, true, false );' );
+      enqueue_js( 'action("newBtn", "document.location.href=\'?cmd=0\';");' );
+
       //echo "<script>document.forms['myform'].save.focus();</script>";
 
       break;
@@ -576,16 +589,16 @@ global $cmd;
         echo $synHtml->button(" value='".$str["save"]."' class='btn btn-primary' ", $str["save"]);
         echo $synHtml->form_c();
 
-        echo <<<EOS
-        <script type="text/javascript">
-          $('.trigger').click(function() {
-            $(this).parents('span').next('select').attr('disabled', !this.checked);
-          });
-        </script>
+        $script <<<EOS
+        $('.trigger').click(function() {
+          $(this).parents('span').next('select').attr('disabled', !this.checked);
+        });
 EOS;
+        enqueue_js( $script );
 
       } else
-        echo "<script>parent.location.href='index.php?aa_service=5';</script>";
+        //echo "<script>parent.location.href='index.php?aa_service=5';</script>";
+        enqueue_js( 'parent.location.href="index.php?aa_service=5";' );
 
       break;
 
@@ -607,8 +620,10 @@ EOS;
         }
       }
       // js alerts
-      echo "<script>alert('".$str["service_reminder"]."');</script>";
-      echo "<script>parent.location.href='index.php?aa_service=5';</script>";
+      //echo "<script>alert('".$str["service_reminder"]."');</script>";
+      //echo "<script>parent.location.href='index.php?aa_service=5';</script>";
+      enqueue_js( "alert('{$str["service_reminder"]}');" );
+      enqueue_js( "parent.location.href='index.php?aa_service=5';" );
 
       break;
 

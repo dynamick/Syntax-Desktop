@@ -36,12 +36,6 @@ EOQ;
     else :
       $domain = getLanguageDomain( $lang );
       $default = ( $lang == getDomainDefaultLanguage( $domain ) );
-    /*
-    if ($lang == 'it'){
-      print_debug( $languages );
-      echo $lang . ' -- ' . $domain .  '--' .getDomainDefaultLanguage( $domain ) ;
-    }*/
-
       $path = ($default)
             ? NULL
             : DIRECTORY_SEPARATOR . $lang;
@@ -51,9 +45,9 @@ EOQ;
 
   // esplicitly sets the lang if we don't have other clues
   // otherwise reaching the home in default language becomes impossible!
-  //if ( empty($path) && $default )
-  //  $path = '?synSiteLang=' . array_search( $lang, $languages['list'] );
-  //else
+  if ( empty($path) && $default )
+    $path = '?synSiteLang=' . array_search( $lang, $languages['list'] );
+  else
     $path .= DIRECTORY_SEPARATOR;
 
   return $path;
