@@ -589,7 +589,7 @@ global $cmd;
         echo $synHtml->button(" value='".$str["save"]."' class='btn btn-primary' ", $str["save"]);
         echo $synHtml->form_c();
 
-        $script <<<EOS
+        $script = <<<EOS
         $('.trigger').click(function() {
           $(this).parents('span').next('select').attr('disabled', !this.checked);
         });

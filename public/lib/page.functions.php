@@ -12,6 +12,7 @@ $languages = null;
 function createPath( $id = 0, $lang = NULL ) {
   global $db, $languages;
 
+  $req = $_SERVER['REQUEST_URI'];
   if ( empty($id) || $id == 0 )
     $id = getHomepageId();
 
@@ -45,9 +46,11 @@ EOQ;
 
   // esplicitly sets the lang if we don't have other clues
   // otherwise reaching the home in default language becomes impossible!
+  /*
   if ( empty($path) && $default )
     $path = '?synSiteLang=' . array_search( $lang, $languages['list'] );
   else
+  */
     $path .= DIRECTORY_SEPARATOR;
 
   return $path;
@@ -277,7 +280,6 @@ function getPageId( $test = false ) {
 
   $ret     = false;
   $domain  = 'http://' . getenv('SERVER_NAME');
-  //$domain  = $_SERVER['SERVER_NAME'];
   $pattern = '/^\/([a-z]{2}\/)*'        // matcha la lingua, es. 'en/' - opzionale
            . '([a-z0-9-_\+]+\/)*'       // matcha 'pagina/' - opzionale (cattura solo l'ultima occorrenza)
            . '(?:[a-z0-9-_~\.\/]+)?$/'; // matcha 'cat~1/', 'pippo~1.html' o 'index.html' - opzionale (NON viene catturato)
@@ -301,6 +303,7 @@ function getPageId( $test = false ) {
 
   $lang = getLangFromUrl();
   $default_lang = getDomainDefaultLanguage( $domain );
+  //echo $lang .'--'. $default_lang .'<br>'; //die('307');
 
   if ( empty($uri)
     || $uri == 'index.php'
@@ -309,6 +312,7 @@ function getPageId( $test = false ) {
     // URI vuoto
     if ( $lang
       && $lang != $default_lang
+      && !isset( $_SESSION['synSiteLang'])
       ){
       // lingua trovata e diversa dal default, redirigo alla home in lingua
       $new_url = getLanguageDomain( $lang ) . DIRECTORY_SEPARATOR . $lang . DIRECTORY_SEPARATOR;

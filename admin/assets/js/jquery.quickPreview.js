@@ -9,7 +9,7 @@
 
     $(document).on({
       mouseenter: function (e) {
-        var $this = $(this), caption = new Array(), size = new Array(), el;
+        var $this = $(this), caption = [], size = [], el;
 
         if ($this.data('ext'))
           caption.push( '<span class="label label-success">'+$this.data('ext')+'</span>' );

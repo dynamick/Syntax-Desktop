@@ -232,7 +232,6 @@ EOSQL;
       $preferred_id = $arr['id'];
       $preferred_initial = $arr['initial'];
     }
-
     setLang($preferred_id, $preferred_initial);
   }
   //echo '<pre>', print_r($_SESSION), '</pre>';
@@ -388,6 +387,7 @@ function getLangFromUrl() {
   } else {
     // language domain set
     $domain = 'http://' . getenv('SERVER_NAME'); // TODO: dynamic protocol?
+
     if (in_array( $domain, $languages['domain']) ) {
       // search registered domain to get its relative language id
       $lang_id = array_search( $domain, $languages['domain'] );

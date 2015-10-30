@@ -3,7 +3,7 @@ function deleteSelectedRows() {
     $ids = new Array(),
     $rows = $table.bootstrapTable('getSelections');
 
-  for (i in $rows)
+  for(i in $rows)
     $ids.push( "`id`='" + $rows[i].id + "'" );
 
   $.ajax({
@@ -34,7 +34,7 @@ function deleteSelectedRows() {
 //multidelete confirm
 function confirmDeletion(){
   bootbox.confirm( syntax.str.confirm, function(result) {
-    if (result == true) {
+    if (result === true) {
       deleteSelectedRows();
     } else {
       return true;
@@ -93,14 +93,14 @@ $(function() {
   // init tooltip
   $('[data-toggle="tooltip"]').tooltip({
     container: 'body'
-  })
+  });
 
   // ajax delete
   $('body').on('click', '.ajax-delete', function(e){
     var $this = $(this);
     e.preventDefault();
     bootbox.confirm( syntax.str.confirm, function(result) {
-      if (result == true) {
+      if (result === true) {
         $.ajax({
           method    : 'POST',
           url       : $this.attr('href'),
