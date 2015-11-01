@@ -37,7 +37,7 @@ function setLang($id, $initial='') {
         if ($arr = $res->fetchRow()) {
           $initial = $arr['initial'];
         } else
-          die('nessuna lingua attivata'); // l'initial DEVE essere valorizzata...
+          throw new Exception("No available languages!"); // l'initial DEVE essere valorizzata...
       }
     }
 
@@ -49,19 +49,44 @@ function setLang($id, $initial='') {
   }
 }
 
-function getLangList(){
+function getLangList() {
   global $db;
-  $ret = array();
-  $res = $db->Execute("SELECT * FROM aa_lang WHERE `active`=1");
+  $ret = array(
+    'list' => array(),
+    'domain' => array(),
+    'default' => ''
+  );
+  $res = $db->Execute("SELECT * FROM aa_lang WHERE `active` = '1'");
   while($arr = $res->fetchrow()){
     extract($arr, EXTR_PREFIX_ALL, 'lang');
-    if ( $lang_default == '1' )
-      $ret['default'] = $lang_initial;
     $ret['list'][$lang_id] = $lang_initial;
+
+    if ( !empty($lang_domain) ) {
+      // check protocol presence
+      $domain = ensureUrlScheme( $lang_domain );
+      if ( filter_var( $domain, FILTER_VALIDATE_URL) )
+        $ret['domain'][$lang_id] = $domain;
+      else
+        throw new Exception("Domain not valid for language '{$lang_initial}'");
+
+      // manage default lang per-domain
+      if ( $lang_default == '1'){
+        if ( !is_array($ret['default']) )
+          $ret['default'] = array();
+        $ret['default'][$domain] = $lang_initial;
+      }
+    } else {
+      if ( $lang_default == '1' ) {
+        $ret['default'] = $lang_initial;
+      }
+    }
   }
+  //$bt = debug_backtrace();
+  //print_debug( $bt[0]['file'] );
+  //print_debug($ret);
+
   return $ret;
 }
-
 
 //return languages array
 function getLangArr() {
@@ -71,6 +96,50 @@ function getLangArr() {
   while( list($l) = $res->FetchRow() )
     $ret[] = $l;
   return $ret;
+}
+
+function getLanguageDomain( $lang ) {
+  global $languages;
+
+  if (empty($languages))
+    $languages  = getLangList();
+
+  if (is_numeric($lang)) {
+    $lang_id = $lang;
+  } else {
+    $lang_id = array_search( $lang, $languages['list'] );
+    if (!$lang_id)
+      $lang_id = array_search( $languages['default'], $languages['list'] );
+  }
+
+  if (isset( $languages['domain'][$lang_id]) )
+    $server = $languages['domain'][$lang_id];
+    //elseif (isset( $languages['domain'][$default_lang_id]) )
+  else
+    $server = 'http://' . getenv('SERVER_NAME');
+
+  return $server;
+}
+
+function getDomainDefaultLanguage( $domain = null ) {
+  global $languages;
+
+  if (empty($languages))
+    $languages = getLangList();
+  if (empty($domain))
+    $domain = 'http://' . getenv('SERVER_NAME');
+
+  if ( isset($languages['domain'])
+    && isset($languages['default'][$domain])
+    ){
+    $default_lang = $languages['default'][$domain];
+  } else {
+    //$default_lang = is_array($languages['default']) ? array_shift($languages['default']) : $languages['default'];
+    $default_lang = is_array($languages['default']) ? reset($languages['default']) : $languages['default'];
+  }
+  //echo 'trovato '. $default_lang.' come default per ' . $domain . '<br>'; //die();
+
+  return $default_lang;
 }
 
 //translate an element for the desktop. If err==true display the error message
@@ -105,7 +174,6 @@ function translateSite($id, $err=false) {
   return $ret;
 }
 
-
 function updateLang() {
   global $db, $synSiteLang;
 
@@ -128,12 +196,10 @@ function updateLang() {
   if ( !isset($_SESSION['synSiteLang'])
     || $_SESSION['synSiteLang'] == ''
     ){
-//echo 'pref: <pre>', print_r(get_languages()), '</pre>';
     $available = array();
     $preferred = implode("', '", array_reverse(get_languages()));
-//echo 'pref: <pre>', print_r($preferred), '</pre>';
 
-/*
+    /*
     perchè $preferred è girato al contrario?
     ORDER BY FIELD ritorna PRIMA i record non elencati, POI quelli elencati
     nell'ordine dato. Il DESC inverte questa logica, ma per mantenere l'ordine
@@ -151,7 +217,7 @@ function updateLang() {
     2. en
     3. es
     4. fr
-*/
+    */
 
     $sql = <<<EOSQL
     SELECT id, initial
@@ -166,14 +232,12 @@ EOSQL;
       $preferred_id = $arr['id'];
       $preferred_initial = $arr['initial'];
     }
-
     setLang($preferred_id, $preferred_initial);
   }
   //echo '<pre>', print_r($_SESSION), '</pre>';
 }
 
-
-
+// DEPRECATED??
 // if not already exists, insert a row in the translation table and return the
 // translation for the current selected lang
 function l($value,$replace="") {
@@ -265,7 +329,6 @@ function multiTranslateDictionary($labels=array(), $auto_insert=false){
 }
 
 
-
 function get_languages(){
 	$user_languages = array();
 
@@ -301,6 +364,53 @@ function get_languages(){
   return $user_languages;
 }
 
+function getLangFromUrl() {
+  global $languages;
+
+  if (empty($languages))
+    $languages  = getLangList();
+
+  if (isset($_GET['synSiteLang']) && !empty($_GET['synSiteLang'])) {
+    $requested_lang = intval($_GET['synSiteLang']);
+    if (isset($languages['list'][$requested_lang]))
+      return $languages['list'][$requested_lang];
+  }
+
+  if ( !isset($languages['domain'])
+    || empty($languages['domain'])
+    ){
+    // serve user's preferred language in browser settings, if available
+    $user_languages = get_languages();
+    $user_available_languages = array_intersect( $user_languages, $languages['list'] );
+    $lang = array_shift( $user_available_languages );
+
+  } else {
+    // language domain set
+    $domain = 'http://' . getenv('SERVER_NAME'); // TODO: dynamic protocol?
+
+    if (in_array( $domain, $languages['domain']) ) {
+      // search registered domain to get its relative language id
+      $lang_id = array_search( $domain, $languages['domain'] );
+      $lang = $languages['list'][$lang_id];
+
+    } else {
+      // domain not found, serve default language
+      if ( is_array($languages['default']) ) { // it should be, in case of domain languages
+        if ( isset($languages['default'][$domain]) )
+          $lang = $languages['default'][$domain];
+        else
+          $lang = reset($languages['default']);
+
+      } else {
+        if ( isset($languages['default']) )
+          $lang = $languages['default'];
+        else
+          $lang = reset($languages['list']);
+      }
+    }
+  }
+  return $lang;
+}
 
 // returns the active language
 function getActiveLang($variable = 'synSiteLangInitial') {

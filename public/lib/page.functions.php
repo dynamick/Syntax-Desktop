@@ -4,14 +4,19 @@
 *******************************************************************************/
 $languages = null;
 
-
-function createPath($id, $lang = '') {
+/*
+ * Returns a page path, localized for the selected language.
+ * - If no id is passed, returns the home page path.
+ * - If no lang is passed, defaults to the current language.
+ */
+function createPath( $id = 0, $lang = NULL ) {
   global $db, $languages;
 
-  if (empty($id) OR $id == 0)
-    return;
+  $req = $_SERVER['REQUEST_URI'];
+  if ( empty($id) || $id == 0 )
+    $id = getHomepageId();
 
-  if (empty($lang))
+  if ( empty($lang) )
     $lang = getLangInitial();
 
   $qry = <<<EOQ
@@ -22,28 +27,43 @@ function createPath($id, $lang = '') {
       WHERE p.id = '{$id}'
 
 EOQ;
-  $res = $db->Execute($qry);
+  $res = $db->Execute( $qry );
 
-  if($arr = $res->FetchRow()){
+  if ( $arr = $res->FetchRow() ){
     $path = '';
-    if (intval($arr['parent']) > 0) :
+    $default = false;
+    if ( intval( $arr['parent'] ) > 0 ) :
       $path = createPath( $arr['parent'], $lang );
     else :
-      $path = ($lang == $languages['default']) ? '' : '/'.$lang;
+      $domain = getLanguageDomain( $lang );
+      $default = ( $lang == getDomainDefaultLanguage( $domain ) );
+      $path = ($default)
+            ? NULL
+            : DIRECTORY_SEPARATOR . $lang;
     endif;
     $path .= $arr['slug'];
   }
 
-  return $path.'/';
+  // esplicitly sets the lang if we don't have other clues
+  // otherwise reaching the home in default language becomes impossible!
+  /*
+  if ( empty($path) && $default )
+    $path = '?synSiteLang=' . array_search( $lang, $languages['list'] );
+  else
+  */
+    $path .= DIRECTORY_SEPARATOR;
+
+  return $path;
 }
 
 
+
 function createItemPath( $title, $id, $leaf = true ) {
-  $segment = sanitizePath($title).'~'.$id;
+  $segment = sanitizePath( $title ) . '~' . $id;
   if ($leaf)
     $segment .= '.html';
   else
-    $segment .= '/';
+    $segment .= DIRECTORY_SEPARATOR;
   return $segment;
 }
 
@@ -54,7 +74,7 @@ function getAlternateLinks( $page_id, $title_id, $item_id, $filter = array()) {
 
   if (empty($filter))
     $filter = array_keys( $languages['list'] );
-  $server = 'http://'.$_SERVER['SERVER_NAME'];
+
   $active_lang_id = getLangId();
   $titles = array();
   $urls = array();
@@ -68,7 +88,7 @@ function getAlternateLinks( $page_id, $title_id, $item_id, $filter = array()) {
     if ( $active_lang_id != $lang_id
       && in_array( $lang_id, $filter )
       ){
-      $urls[$lang] = $server
+      $urls[$lang] = getLanguageDomain( $lang_id )
                    . createPath( $page_id, $lang )
                    . createItemPath( $titles[$lang], $item_id );
     }
@@ -76,16 +96,80 @@ function getAlternateLinks( $page_id, $title_id, $item_id, $filter = array()) {
   return $urls;
 }
 
-
-
-function sanitizePath($txt) {
+/*
+ * converts unicode characters into iso
+ */
+function accentFold( $txt ) {
   // substitutes cyrillic chars
-  $enlow =  array('a', 'a', 'b', 'b', 'v', 'v', 'g', 'g', 'd', 'd', 'je', 'je', 'jo', 'jo', 'zh', 'zh', 'z', 'z', 'i', 'i', 'j', 'j', 'k', 'k', 'l', 'l', 'm', 'm', 'n', 'n', 'o', 'o', 'p', 'p', 'r', 'r', 's', 's', 't', 't', 'u', 'u', 'f', 'f', 'h', 'h', 'ts', 'ts', 'ch', 'ch', 'sh', 'sh', 'shch', 'shch', '', '', 'y', 'y', '', '', 'e', 'e', 'ju', 'ju', 'ja', 'ja');
-  $ru = array('А', 'а', 'Б', 'б', 'В', 'в', 'Г', 'г', 'Д', 'д', 'Е', 'е', 'Ё', 'ё', 'Ж', 'ж', 'З', 'з', 'И', 'и', 'Й', 'й', 'К', 'к', 'Л', 'л', 'М', 'м', 'Н', 'н', 'О', 'о', 'П', 'п', 'Р', 'р', 'С', 'с', 'Т', 'т', 'У', 'у', 'Ф', 'ф', 'Х', 'х', 'Ц', 'ц', 'Ч', 'ч', 'Ш', 'ш', 'Щ', 'щ', 'Ъ', 'ъ', 'Ы', 'ы', 'Ь', 'ь', 'Э', 'э', 'Ю', 'ю', 'Я', 'я');
-  $uni = array('А'=>'А', 'а'=>'а', 'Б'=>'Б', 'б'=>'б', 'В'=>'В', 'в'=>'в', 'Г'=>'Г', 'г'=>'г', 'Д'=>'Д', 'д'=>'д', 'Е'=>'Е', 'е'=>'е', 'Ж'=>'Ж', 'ж'=>'ж', 'З'=>'З', 'з'=>'з', 'И'=>'И', 'и'=>'и', 'Й'=>'Й', 'й'=>'й', 'К'=>'К', 'к'=>'к', 'Л'=>'Л', 'л'=>'л', 'М'=>'М', 'м'=>'м', 'Н'=>'Н', 'н'=>'н', 'О'=>'О', 'о'=>'о', 'П'=>'П', 'п'=>'п', 'Р'=>'Р', 'р'=>'р', 'С'=>'С', 'с'=>'с', 'Т'=>'Т', 'т'=>'т', 'У'=>'У', 'у'=>'у', 'Ф'=>'Ф', 'ф'=>'ф', 'Х'=>'Х', 'х'=>'х', 'Ц'=>'Ц', 'ц'=>'ц', 'Ч'=>'Ч', 'ч'=>'ч', 'Ш'=>'Ш', 'ш'=>'ш', 'Щ'=>'Щ', 'щ'=>'щ', 'Ъ'=>'Ъ', 'ъ'=>'ъ', 'Ы'=>'Ы', 'ы'=>'ы', 'Ь'=>'Ь', 'ь'=>'ь', 'Э'=>'Э', 'э'=>'э', 'Ю'=>'Ю', 'ю'=>'ю', 'Я'=>'Я', 'я'=>'я');
+  $enlow =  array('a', 'a', 'b', 'b', 'v', 'v', 'g', 'g', 'd', 'd', 'je', 'je', 'jo', 'jo', 'zh', 'zh', 'z', 'z', 'i', 'i', 'j', 'j', 'k', 'k', 'l', 'l', 'm', 'm', 'n', 'n', 'o', 'o', 'p', 'p', 'r', 'r', 's', 's', 't', 't', 'u', 'u', 'f', 'f', 'h', 'h', 'ts', 'ts', 'ch', 'ch', 'sh', 'sh', 'shch', 'shch', '',   '', 'y', 'y',  '',  '', 'e', 'e', 'ju', 'ju', 'ja', 'ja');
+  $ru =     array('А', 'а', 'Б', 'б', 'В', 'в', 'Г', 'г', 'Д', 'д',  'Е',  'е',  'Ё',  'ё',  'Ж',  'ж', 'З', 'з', 'И', 'и', 'Й', 'й', 'К', 'к', 'Л', 'л', 'М', 'м', 'Н', 'н', 'О', 'о', 'П', 'п', 'Р', 'р', 'С', 'с', 'Т', 'т', 'У', 'у', 'Ф', 'ф', 'Х', 'х',  'Ц',  'ц',  'Ч',  'ч',  'Ш',  'ш',    'Щ',    'щ', 'Ъ', 'ъ', 'Ы', 'ы', 'Ь', 'ь', 'Э', 'э',  'Ю',  'ю',  'Я',  'я');
+  $uni = array(
+    'А'=>'А',
+    'а'=>'а',
+    'Б'=>'Б',
+    'б'=>'б',
+    'В'=>'В',
+    'в'=>'в',
+    'Г'=>'Г',
+    'г'=>'г',
+    'Д'=>'Д',
+    'д'=>'д',
+    'Е'=>'Е',
+    'е'=>'е',
+    'Ж'=>'Ж',
+    'ж'=>'ж',
+    'З'=>'З',
+    'з'=>'з',
+    'И'=>'И',
+    'и'=>'и',
+    'Й'=>'Й',
+    'й'=>'й',
+    'К'=>'К',
+    'к'=>'к',
+    'Л'=>'Л',
+    'л'=>'л',
+    'М'=>'М',
+    'м'=>'м',
+    'Н'=>'Н',
+    'н'=>'н',
+    'О'=>'О',
+    'о'=>'о',
+    'П'=>'П',
+    'п'=>'п',
+    'Р'=>'Р',
+    'р'=>'р',
+    'С'=>'С',
+    'с'=>'с',
+    'Т'=>'Т',
+    'т'=>'т',
+    'У'=>'У',
+    'у'=>'у',
+    'Ф'=>'Ф',
+    'ф'=>'ф',
+    'Х'=>'Х',
+    'х'=>'х',
+    'Ц'=>'Ц',
+    'ц'=>'ц',
+    'Ч'=>'Ч',
+    'ч'=>'ч',
+    'Ш'=>'Ш',
+    'ш'=>'ш',
+    'Щ'=>'Щ',
+    'щ'=>'щ',
+    'Ъ'=>'Ъ',
+    'ъ'=>'ъ',
+    'Ы'=>'Ы',
+    'ы'=>'ы',
+    'Ь'=>'Ь',
+    'ь'=>'ь',
+    'Э'=>'Э',
+    'э'=>'э',
+    'Ю'=>'Ю',
+    'ю'=>'ю',
+    'Я'=>'Я',
+    'я'=>'я');
   $txt =  stripslashes(str_replace($ru, $enlow, strtr($txt, $uni)));
 
-  // accent folding
   $search = array(
     'À','Á','Â','Ä','Å','Æ','Ã','Ă','à','á','â','ä','å','æ','ã','ă',
     'ß',
@@ -115,13 +199,18 @@ function sanitizePath($txt) {
     '-percent','-eq','_','-','-plus','-point'
   );
 
-  $txt = str_replace($search, $replace, $txt);
-  $txt = trim(strtolower(preg_replace('/[^A-Za-z0-9_]/', ' ', $txt)));
-  $txt = str_replace(' ', '-', $txt);
-  while (strstr($txt, '--'))
-    $txt = str_replace('--','-',$txt);
+  return str_replace($search, $replace, $txt);
+}
 
-  return $txt;
+function sanitizePath( $string ) {
+  // converts all accented characters into simple ones
+  $string = accentFold( $string );
+  // replaces punctuation characters with spaces
+  $string = trim( strtolower( preg_replace( '/[^A-Za-z0-9_]/', ' ', $string ) ) );
+  // collapses and replace spaces with dashes
+  $string = preg_replace( '/[\s]+/', '-', $string );
+
+  return $string;
 }
 
 
@@ -147,11 +236,11 @@ function getDomain(){
 function getHomepageId() {
   global $db, $synEntryPoint;
 
-  extract(getDomain());
+  extract( getDomain() );
   if ( is_array($synEntryPoint)
     && array_key_exists($domain, $synEntryPoint)
     ){
-    $ret = $synEntryPoint[$domain];
+    $ret = $synEntryPoint[ $domain ];
   } else {
     $qry = "SELECT id FROM aa_page WHERE parent = 0 ORDER BY `order` LIMIT 0,1";
     $res = $db->Execute($qry);
@@ -186,10 +275,11 @@ function get404pageId() {
 }*/
 
 
-function getPageId() {
+function getPageId( $test = false ) {
   global $db, $synEntryPoint, $languages;
 
   $ret     = false;
+  $domain  = 'http://' . getenv('SERVER_NAME');
   $pattern = '/^\/([a-z]{2}\/)*'        // matcha la lingua, es. 'en/' - opzionale
            . '([a-z0-9-_\+]+\/)*'       // matcha 'pagina/' - opzionale (cattura solo l'ultima occorrenza)
            . '(?:[a-z0-9-_~\.\/]+)?$/'; // matcha 'cat~1/', 'pippo~1.html' o 'index.html' - opzionale (NON viene catturato)
@@ -209,56 +299,100 @@ function getPageId() {
     $uri = strstr($uri, '?', true);
 
   if (empty($languages))
-    $languages  = getLangList();
+    $languages = getLangList();
+
+  $lang = getLangFromUrl();
+  $default_lang = getDomainDefaultLanguage( $domain );
+  //echo $lang .'--'. $default_lang .'<br>'; //die('307');
 
   if ( empty($uri)
     || $uri == 'index.php'
     || $uri == '/'
     ){
     // URI vuoto
-
-    if (!isset($_SESSION['synSiteLang'])) {
-      // provo a determinare la lingua dell'utente
-      $user_languages = get_languages();
-      $user_available_languages = array_intersect($user_languages, $languages['list']);
-      $lang = array_shift($user_available_languages);
-
-      if ( $lang
-        && $lang != $languages['default']
-        ){
-        // lingua trovata e diversa dal default, redirigo alla home in lingua
-        header("Location: /{$lang}/", true, 302);
+    if ( $lang
+      && $lang != $default_lang
+      && !isset( $_SESSION['synSiteLang'])
+      ){
+      // lingua trovata e diversa dal default, redirigo alla home in lingua
+      $new_url = getLanguageDomain( $lang ) . DIRECTORY_SEPARATOR . $lang . DIRECTORY_SEPARATOR;
+      if ($test) {
+        $lang_id = array_search( $lang, $languages['list'] );
+        setLang($lang_id, $lang);
+        return $new_url;
+      } else {
+        header( 'Location: ' . $new_url, true, 302 );
         exit();
       }
     }
 
-    $lang = $languages['default'];
+    $lang = $default_lang;
     $ret = getHomepageId();
-
 
   } else {
     if (preg_match($pattern, $uri, $matches)) {
-      //echo 'matches: <pre>', print_r($matches), '</pre>';
-
-      $lang = rtrim($matches[1], '/');
-      if ( empty($lang) // lingua non passata
-        || !in_array($lang, $languages['list']) // lingua non disponibile
+      $lang_str = rtrim( $matches[1], '/' );
+      if ( empty($lang_str) // lingua non passata
+        || !in_array($lang_str, $languages['list']) // lingua non disponibile
         ){
         // utilizzo lingua di default
-        $lang = $languages['default'];
+        $lang = $default_lang;
+      } else {
+        $lang = $lang_str;
+      }
+      $str_domain = getLanguageDomain( $lang_str );
+      if (  $str_domain != $domain ) {
+        // we're in the wrong domain!
+        if ( $lang_str == getDomainDefaultLanguage( $str_domain ) ) {
+          // language is default in that domain, so remove it
+          $uri = $matches[2];
+        }
+        $new_url = $str_domain . $uri;
+        if ( $test ) {
+          $lang_id = array_search( $lang_str, $languages['list'] );
+          setLang($lang_id, $lang_str);
+          return $new_url;
+        } else {
+          header('Location: ' . $new_url, true, 302);
+          exit;
+        }
       }
 
-      $required_slug = rtrim($matches[2], '/');
+      $required_slug = isset($matches[2]) ? rtrim( $matches[2], '/' ) : NULL;
       if (empty($required_slug)) {
         // slug vuoto
         $ret = getHomepageId();
       } else {
-        // cerco lo slug
-        $qry = "SELECT p.id FROM aa_page p LEFT JOIN aa_translation t ON p.slug = t.id WHERE t.{$lang} = '{$required_slug}'";
-        // echo $qry.'<br>';
+        // cerco lo slug in tutte le lingue
+        foreach ($languages['list'] as $iso_code) {
+          // faccio una query per ciascuna lingua, con un campo fittizio lang
+          $sql[] = "SELECT p.id, '{$iso_code}' AS lang "
+                 . "FROM aa_page p "
+                 . "LEFT JOIN aa_translation t ON p.slug = t.id "
+                 . "WHERE t.{$iso_code} = '{$required_slug}'";
+        }
+        // unisco le query. Trova la lingua corrente, se esiste; altrimenti la prima che trova.
+        $qry = '(' . implode(') UNION (', $sql) . ') ORDER BY FIELD(lang, "' . $lang . '") DESC LIMIT 0,1';
         $res = $db->execute($qry);
         if ($arr = $res->fetchRow()) {
-          $ret = $arr['id'];
+          if ( $arr['lang'] == $lang
+            && getLanguageDomain( $arr['lang'] ) == $domain
+            ){
+            // slug trovato nella lingua corrente, tutto ok
+            $ret = $arr['id'];
+
+          } else {
+            // slug trovato in altra lingua, rimando al dominio corretto
+            $new_url = getLanguageDomain( $arr['lang'] ) . createPath( $arr['id'], $arr['lang'] );
+            if ( $test ) {
+              $lang_id = array_search( $arr['lang'], $languages['list'] );
+              setLang($lang_id, $arr['lang']);
+              return $new_url;
+            } else {
+              header('Location: ' . $new_url, true, 302);
+              exit;
+            }
+          }
         } else {
           // slug non trovato
           $ret = false;
@@ -270,18 +404,24 @@ function getPageId() {
     }
   }
 
-  // imposto la lingua selezionata
   $lang_id = array_search($lang, $languages['list']);
-  setLang($lang_id, $lang);
+  // imposto la lingua selezionata
+  if ( !isset($_SESSION['synSiteLang'])
+    || $lang_id != $_SESSION['synSiteLang']
+    ){
+    setLang($lang_id, $lang);
+  }
 
   // TODO: recuperare dinamicamente la 404?
   if ($ret === false) {
-    //echo "{$uri} not found";
-    // $ret = '404';
     // pagina non trovata o non valida
-    header('HTTP/1.0 404 Not Found');
-    header('Location: /404/');
-    exit;
+    if ($test) {
+      return $uri . ' not found, 404';
+    } else {
+      header('HTTP/1.0 404 Not Found');
+      header('Location: /404/');
+      exit;
+    }
   }
 
   return $ret;
@@ -421,10 +561,11 @@ EOQRY;
 
       $active = ($arr['id'] == $currPage);
       $menu[] = array(
-        'title' => $title,
-        'link' => $link,
-        'active' => $active,
-        'is_url' => $is_url
+        'id'      => $arr['id'],
+        'title'   => $title,
+        'link'    => $link,
+        'active'  => $active,
+        'is_url'  => $is_url
       );
     }
   }
@@ -440,7 +581,7 @@ function createSubmenuPrivate( $id = 0, $expand = false, $first_child = false, $
   $lang     = getLangId();
   $currPage = $smarty->getTemplateVars('synPageId');
   $nodeArr  = $smarty->synPageNode;
-  $menu     = array();
+  $ret      = array();
 
   foreach($nodeArr as $node)
     $idArr[] = $node['id'];
@@ -460,17 +601,19 @@ EOQRY;
     $active = ($arr['id'] == $currPage) || (is_array($idArr) && in_array($arr['id'], $idArr))
             ? TRUE
             : FALSE;
-
     $children = array();
+
     if ($expand || $first_child || $active)
       $children = createSubmenuPrivate( $arr['id'], $expand, false, $field );
 
-    if ($first_child && count($child) > 0) {
-      $item   = reset($child);
+    if ( $first_child
+      && count($children) > 0
+      ){
+      $item   = reset($children);
       $link   = $item['link'];
       $is_url = FALSE;
     } else {
-      if (empty($arr['url'])) {
+      if ( empty($arr['url']) ){
         $link   = createPath( $arr['id'] );
         $is_url = FALSE;
       } else {
@@ -479,15 +622,16 @@ EOQRY;
       }
     }
 
-    if (!$active && !$expand)
-      $children = array();
+    if ( !$active && !$expand )
+      $children = FALSE;
 
     $ret[] = array(
-      'title' => $title,
-      'link' => $link,
-      'active' => $active,
-      'is_url' => $is_url,
-      'child' => $children
+      'id'      => $arr['id'],
+      'title'   => $title,
+      'link'    => $link,
+      'active'  => $active,
+      'is_url'  => $is_url,
+      'child'   => $children
     );
   }
   return $ret;

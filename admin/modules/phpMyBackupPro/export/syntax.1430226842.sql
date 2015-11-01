@@ -172,14 +172,15 @@ CREATE TABLE `aa_lang` (
   `active` varchar(255) NOT NULL,
   `order` int(11) NOT NULL DEFAULT '0',
   `default` varchar(255) NOT NULL,
+  `domain` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 AUTO_INCREMENT=3;
 
 
 ### data of table `aa_lang` ###
 
-insert into `aa_lang` values ('1', 'italiano', 'it', 'italy.png', '1', '10', '1');
-insert into `aa_lang` values ('2', 'english', 'en', 'greatbritain.png', '1', '20', '');
+insert into `aa_lang` values ('1', 'italiano', 'it', 'italy.png', '1', '10', '1', '');
+insert into `aa_lang` values ('2', 'english', 'en', 'greatbritain.png', '1', '20', '', '');
 
 
 ### structure of table `aa_page` ###
@@ -539,7 +540,7 @@ insert into `aa_services_element` values ('591', '143', 'autore', '21', '', '', 
 insert into `aa_services_element` values ('592', '143', 'format', '23', '', '', '', '757', '0', '758', '', 'portrait|landscape', '', '', '70', '', '');
 insert into `aa_services_element` values ('593', '142', 'visible', '24', '', '1', '', '760', '0', '761', '', 'SELECT id, lang FROM `aa_lang`', '', '', '25', '', '');
 insert into `aa_services_element` values ('595', '4', 'ip', '31', '', '1', '', '764', '30', '765', '', '', '', '', '120', '', '');
-
+insert into `aa_services_element` values ('596', '136', 'domain', '2', '', '1', '', '766', '255', '767', '', '', '', '', '5', '', '');
 
 ### structure of table `aa_template` ###
 
@@ -1346,7 +1347,9 @@ insert into `aa_translation` values ('762', 'Faicon', 'Faicon');
 insert into `aa_translation` values ('763', '', '');
 insert into `aa_translation` values ('764', 'Ip', 'Ip');
 insert into `aa_translation` values ('765', '', '');
-
+insert into `aa_translation` values ('766', 'Domain', 'Domain');
+insert into `aa_translation` values ('767', 'imposta il dominio su cui impostare la lingua (es. www.dominio.it). Lascia vuoto per abilitarla su qualsiasi dominio.', 'imposta il dominio su cui impostare la lingua (es. www.dominio.it). Lascia vuoto per abilitarla su qualsiasi dominio.');
+insert into `aa_translation` values ('768', 'Area riservata', 'Private Area');
 
 ### structure of table `aa_users` ###
 
@@ -1575,6 +1578,7 @@ insert into `dictionary` values ('145', 'error_required_field', '709');
 insert into `dictionary` values ('146', 'message_logout', '218');
 insert into `dictionary` values ('147', 'cookie_disclaimer', '751');
 insert into `dictionary` values ('148', 'read_more', '752');
+insert into `dictionary` values ('149', 'reserved_area', '768');
 
 
 ### structure of table `documents` ###

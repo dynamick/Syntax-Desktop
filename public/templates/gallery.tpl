@@ -7,7 +7,7 @@
   <div class="section">
     <!-- Page Content -->
     <div class="container">
-    {if $item neq ''}
+    {if isset($item) and $item neq ''}
       {include file="partial/_gallery_detail.tpl"}
     {else}
       {include file="partial/_gallery_list.tpl"}

@@ -56,7 +56,7 @@
   ob_end_clean();
 
   if ( isset($cmd)
-    && in_array( $cmd, array(ADD, MODIFY))
+    && in_array( $cmd, array(ADD, MODIFY, '1', '10', '20', '30', 'groups', 'buttonList'))
     ){
     $js_scope = 'single';
   } else {

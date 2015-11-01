@@ -88,7 +88,7 @@ EOQ;
         FROM  photos p
   INNER JOIN  album a ON p.album = a.id
    LEFT JOIN  aa_translation t1 ON a.title = t1.id
-   
+
        WHERE  p.album = '{$req}'
     ORDER BY  p.ordine ASC,
               p.title
@@ -100,10 +100,10 @@ EOQ;
     $list = false;
     $album = false;
     $mainfoto = array();
-    
+
     if ($tot>0) {
       $list = array();
-
+      $cnt = 0;
       while ($arr = $res->FetchRow()) {
         extract($arr);
         $cnt ++;
@@ -117,7 +117,7 @@ EOQ;
           'alt' => $alt,
           'title' => $title
         );
-        
+
         if ($cnt < 4)
           $mainfoto[] = $src; // per openGraph
       }
@@ -134,20 +134,20 @@ EOQ;
         'date'         => $date,
         'fdate'        => $fdate,
         'permalink'    => $permalink,
-        'social_share' => $social_share        
+        'social_share' => $social_share
       );
 
-      $visible_arr = explode( '|', $visible );
-      $locales = getLocaleCodes( $visible_arr );
-      $alt_links = getAlternateLinks( $page, $title_id, $aid, $visible_arr );
-      $ogmeta = getOpenGraph( $albumtitle, null, $mainfoto, $permalink, 'article', $date, $locales );
-      
+      $visible_arr  = explode( '|', $visible );
+      $locales      = getLocaleCodes( $visible_arr );
+      $alt_links    = getAlternateLinks( $page, $title_id, $aid, $visible_arr );
+      $ogmeta       = getOpenGraph( $albumtitle, null, $mainfoto, $permalink, 'article', $date, $locales );
+
       $smarty->assign( 'photos', $list );
       $smarty->assign( 'item', $album );
       $smarty->assign( 'ogmeta', $ogmeta );
       $smarty->assign( 'canonical', $permalink );
       $smarty->assign( 'alternate', $alt_links );
-      
+
     } else {
       header('HTTP/1.0 404 Not Found');
       header('Location: /404/');

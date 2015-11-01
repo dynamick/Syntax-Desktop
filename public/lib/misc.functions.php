@@ -253,7 +253,7 @@ if (!function_exists('getOpenGraph')) {
         )
       )
     );
-    
+
     if ( isset($locale['active']) )
       $meta['fb']['props']['locale'] = $locale['active'];
 
@@ -444,5 +444,13 @@ if (!function_exists('alternate_column_languages')) {
     return implode( ',', $ret );
   }
 }
+
+if (!function_exists('ensureUrlScheme')) {
+  function ensureUrlScheme( $url, $scheme = 'http://' ) {
+    return parse_url($url, PHP_URL_SCHEME) === null ?
+      $scheme . $url : $url;
+  }
+}
+
 
 // EOF misc.functions.php

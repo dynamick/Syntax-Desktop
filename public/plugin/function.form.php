@@ -6,8 +6,8 @@ function smarty_function_form($params, &$smarty) {
   if(!isset($_SESSION))
     session_start();
 
-  $page     = intval($params['page']);
-  $formid   = intval($params['id']);
+  $page     = isset($params['page']) ? intval($params['page']) : NULL;
+  $formid   = isset($params['id']) ? intval($params['id']) : NULL;
   $lng      = $_SESSION['synSiteLangInitial'];
   $t        = multiTranslateDictionary(array(
             'informativa',
@@ -75,8 +75,7 @@ function smarty_function_form($params, &$smarty) {
       }
     }
 
-
-    $form->setAttributes(array( // configurazione
+    $form_config = array( // configurazione
       'action'          => $synPublicPath.'/server/dispatch.php',
       'xhtml'           => false,
       'method'          => 'post',
@@ -97,7 +96,9 @@ function smarty_function_form($params, &$smarty) {
       'include_script'  => false,
       'ajax_submit'     => true,
       'debug'           => false
-      ));
+      );
+
+    $form->setAttributes( $form_config );
 
     foreach($fieldset as $s => $l) {
     	$form->addFieldset($s, $l);
@@ -115,7 +116,7 @@ function smarty_function_form($params, &$smarty) {
     unset($_SESSION['form'.$form_id]);
   }
 
-  if ($form_cfg['include_script'] == false)
+  if ( isset($form_config['include_script']) && !$form_config['include_script'] )
     $smarty->assign('pageScript', $form->validateScript() );
 
   return '<div id="form'.$form_id.'-wrapper">'.$html.'</div>';

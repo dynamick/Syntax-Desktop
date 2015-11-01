@@ -4,7 +4,7 @@ function smarty_function_meta($params, &$smarty){
 
   $lang             = getLangInitial();
   $langId           = getLangId();
-  $server           = 'http://'.$_SERVER['SERVER_NAME'];
+  $default_server   = 'http://' . $_SERVER['SERVER_NAME'];
   $req              = isset( $_GET['id'] )
                     ? intval( $_GET['id'] )
                     : 0;
@@ -13,7 +13,7 @@ function smarty_function_meta($params, &$smarty){
   $title_page       = $smarty->getTemplateVars( 'synPageTitle' );
   $description_page = $smarty->getTemplateVars( 'synPageMetadescription' );
   $keywords         = $smarty->getTemplateVars( 'synPageMetakeywords' );
-  $visible          = explode('|', $smarty->getTemplateVars( 'synPageVisible' ));
+  $visible          = array_filter( explode('|', $smarty->getTemplateVars( 'synPageVisible' )) );
   $ogmeta           = $smarty->getTemplateVars( 'ogmeta' );
   $canonical        = $smarty->getTemplateVars( 'canonical' );
   $item             = $smarty->getTemplateVars( 'item' );
@@ -30,31 +30,33 @@ function smarty_function_meta($params, &$smarty){
   if ( empty($title) )
     $title = $title_page;
   else
-    $title .= ' > '.$title_page;
+    $title .= ' > ' . $title_page;
 
   // title is a required tag!
-  $meta[] = '<title>'.str_replace('"', null, $title.' > '.$synWebsiteTitle).'</title>';
+  $meta[] = '<title>' . attributize( $title . ' > ' . $synWebsiteTitle ) . '</title>';
 
-  if (trim($description)=='')
-    $description = $description_page;
+  if ( empty( $description ) )
+    $description = trim( $description_page );
 
-  if (!empty( $description ))
-    $meta[] = '<meta name="description" content="'.str_replace('"', null, $description).'">';
+  if ( !empty( $description ) )
+    $meta[] = '<meta name="description" content="' . attributize( $description ) . '">';
 
-  if (!empty( $keywords ))
-    $meta[] = '<meta name="keywords" content="'.$keywords.'">';
+  if ( !empty( $keywords ) )
+    $meta[] = '<meta name="keywords" content="' . attributize( $keywords ) . '">';
 
-  if (empty( $canonical )) {
+  if ( empty( $canonical ) ){
+    $page_path = getLanguageDomain( $langId ) . createPath( $page_id, $lang );
+    // remove query string, just in case
+    if (strpos($page_path, '?'))
+      $page_path = strstr($page_path, '?', true);
     if ( isset($_GET['synSiteLang'])
       || isset($_GET['_next_page'])
+      || $page_path != $default_server . $_SERVER['REQUEST_URI']
       ){
-
-      $page_path = createPath( $page_id );
-
-      if (isset($_GET['title'])){
-        $page_path .= $_GET['title'].'~'.$_GET['id'].'.html';
+      if ( isset($_GET['title']) ){
+        $page_path .= createItemPath( $_GET['title'], $req );
       }
-      $canonical = $server.$page_path;
+      $canonical = $default_server . $page_path;
     }
   }
 
@@ -65,9 +67,9 @@ function smarty_function_meta($params, &$smarty){
         if (!empty($val)) {
           if (is_array( $val )) {
             foreach( $val as $v)
-              $meta[] = '<meta '.$s['attr'].'="'.$s['prefix'].':'.$prop.'" content="'.$v.'">';
+              $meta[] = '<meta ' . $s['attr'] . '="' . $s['prefix'] . ':' . $prop . '" content="' . attributize( $v ) . '">';
           } else {
-            $meta[] = '<meta '.$s['attr'].'="'.$s['prefix'].':'.$prop.'" content="'.$val.'">';
+            $meta[] = '<meta ' . $s['attr'] . '="' . $s['prefix'] . ':' . $prop . '" content="' . attributize( $val ) . '">';
           }
         }
       }
@@ -79,32 +81,38 @@ function smarty_function_meta($params, &$smarty){
     $meta[] = '<meta name="robots" content="noindex, nofollow">';
 
   } else {
-    // page visible in current lang, let spiders indexing
+    // page visible in current lang, let spiders index it
     $meta[] = '<meta name="robots" content="index, follow">';
 
     if ( empty( $alternate ) && empty( $item )) {
       foreach( $visible as $lang_visible ){
-        // for each language different from the selected one, provide an alternate href
-        if ( $lang_visible != $langId && in_array($langId, $visible) ) {
+        // for each language different from the selected one, provide an alternate href (if is visible)
+        if ( !empty($visible)
+          && $lang_visible != $langId
+          && in_array($langId, $visible)
+          ){
           $initial  = $languages['list'][$lang_visible];
-          $href     = $server.createPath( $page_id, $initial );
-          $meta[]   = '<link rel="alternate" hreflang="'.$initial.'" href="'.$href.'">';
+          $href     = getLanguageDomain( $langId) . createPath( $page_id, $initial );
+          $meta[]   = '<link rel="alternate" hreflang="' . $initial . '" href="' . attributize( $href ) . '">';
         }
       }
     } else {
-      // it's an item and there are alternate
+      // it's an item and there are alternates
       foreach( $alternate as $alt_lang => $alt_link )
-        $meta[] = '<link rel="alternate" hreflang="'.$alt_lang.'" href="'.$alt_link.'">';
+        $meta[] = '<link rel="alternate" hreflang="' . $alt_lang . '" href="' . attributize( $alt_link ) . '">';
     }
   }
 
   if (!empty( $canonical ))
-    $meta[] = '<link rel="canonical" href="'.$canonical.'">';
+    $meta[] = '<link rel="canonical" href="' . attributize( $canonical ) . '">';
 
-  // prev-next navigation for news items
-  if ( !empty($item) && is_array($item['navlinks']) ) {
+  // previous/next navigation for blog-like items
+  if ( !empty($item)
+    && isset($item['navlinks'])
+    && is_array($item['navlinks'])
+    ){
     foreach( $item['navlinks'] as $nav ) {
-      $meta[] = '<link rel="'.$nav['type'].'" href="'.$server.$nav['url'].'" title="'.attributize( $nav['title'] ).'">';
+      $meta[] = '<link rel="' . $nav['type'] . '" href="' . $default_server . $nav['url'] . '" title="' . attributize( $nav['title'] ) . '">';
     }
   }
 

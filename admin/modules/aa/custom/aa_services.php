@@ -56,10 +56,14 @@ global $cmd;
   }
 
   if ($cmd!=RPC && $cmd!=JSON) {
+    /*
     echo "<script>";
     echo "window.parent.content.initToolbar (true,false,true,true,true,true,false);";
     echo "window.parent.content.action('newBtn','window.parent.document.location.href=\"index.php?aa_service=129&aa_join=container&aa_value=0&cmd=1\";');";
     echo "</script>\n";
+    */
+    enqueue_js( 'window.parent.content.initToolbar( true, false, true, true, true, true, false );' );
+    enqueue_js( 'window.parent.content.action("newBtn", "window.parent.document.location.href=\'index.php?aa_service=129&aa_join=container&aa_value=0&cmd=1\';");' );
   }
 
 ?>
