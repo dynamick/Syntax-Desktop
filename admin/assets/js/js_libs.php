@@ -66,8 +66,9 @@ $form = array(
   'vendor/bootstrap-multiselect.js',
   'vendor/bootstrap-maxlength.min.js',
   'vendor/fileinput.min.js',
-  'vendor/bloodhound.min.js',
-  'vendor/typeahead.jquery.min.js',
+  //'vendor/bloodhound.min.js',
+  //'vendor/typeahead.jquery.min.js',
+  'vendor/typeahead.bundle.min.js',  
   'vendor/typeahead-addresspicker.js',
   );
 
