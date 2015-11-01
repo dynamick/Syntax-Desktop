@@ -34,8 +34,8 @@ class synSelectMultiCheck extends synElement {
   //private function
   function _html() {
     // relies on http://davidstutz.github.io/bootstrap-multiselect/
-    $input  = "<input name=\"{$this->name}[]\" type=\"hidden\" value=\"\">"; // in case of empty selection, otherwise nothing passes to the DB
-    $input .= "<select id=\"{$this->name}\" name=\"{$this->name}[]\" multiple=\"multiple\" class=\"multi-select\">";
+    $input  = "<input name=\"{$this->name}\" type=\"hidden\" value=\"\">"; // in case of empty selection, otherwise nothing passes to the DB
+    $input .= "<select id=\"{$this->name}\" name=\"{$this->name}\" multiple=\"multiple\" class=\"multi-select\" data-option-name=\"{$this->name}[]\">";
     if ($this->chkTargetMultilang($this->qry) == 1)
       $this->multilang = 1;
 
@@ -71,18 +71,17 @@ class synSelectMultiCheck extends synElement {
 
   //sets the value of the element
   function setValue($v) {
-    #global $$n;
-    #if (!isset($_REQUEST[$$n]))
-    $this->value = $this->createArray($this->qry,$this->path);
+    $this->value = $this->createArray( $this->qry, $this->path );
     $this->selected = $v;
     return;
   }
 
   //sets the value of the element
   function getValue() {
-    if (is_array($this->selected))
-      return implode("|",$this->selected);
-    else return;
+    if ( is_array($this->selected) )
+      return implode( '|', $this->selected );
+    else 
+      return;
   }
 
   //get the label of the element
@@ -90,9 +89,9 @@ class synSelectMultiCheck extends synElement {
     $ret = '';
     if ($this->chkTargetMultilang($this->qry) == 1)
       $this->multilang = 1;
-    $this->value = $this->createArray2($this->qry, $this->path);
+    $this->value = $this->createArray2( $this->qry, $this->path );
     $selArr = explode('|', $this->selected);
-    if (is_array($this->value)) {
+    if ( is_array($this->value) ) {
       $ret = array();
       foreach($this->value as $v)
         if (in_array($v['id'], $selArr))
@@ -110,69 +109,64 @@ class synSelectMultiCheck extends synElement {
     $this->qry = $qry;
   }
 
-  function createArray($qry,$null=false) {
+  function createArray( $qry, $null = false ) {
     global $db;
-    $qry=$this->compileQry($qry);
-    $res=$db->Execute($qry);
-    if ($null==true) $ret['NULL']="";
-    while ($arr=$res->FetchRow()) $ret[$arr[0]]=$arr[1];
+    $qry = $this->compileQry($qry);
+    $res = $db->Execute($qry);
+    if ($null === true) 
+      $ret['NULL'] = '';
+    while ($arr = $res->FetchRow()) 
+      $ret[$arr[0]] = $arr[1];
     return $ret;
   }
 
-  function createArray2($qry,$null=false) {
+  function createArray2( $qry, $null=false ) {
     global $db;
-    $qry=$this->compileQry($qry);
-    $res=$db->Execute($qry);
-    if ($null==true) $ret['NULL']="";
-    while ($arr=$res->FetchRow()) {
-      $r["id"]=$arr[0];
-      $r["value"]=$arr[1];
-      if (isset($arr[2]) and $arr[2]!="") $r["group"]=$arr[2];
-      $ret[]=$r;
+    $qry = $this->compileQry($qry);
+    $res = $db->Execute($qry);
+    if ( $null === true ) 
+      $ret['NULL'] = '';
+    while ( $arr = $res->FetchRow() ) {
+      $r['id'] = $arr[0];
+      $r['value'] = $arr[1];
+      if ( isset($arr[2]) && !empty($arr[2]) ) 
+        $r['group'] = $arr[2];
+      $ret[] = $r;
     }
     return $ret;
   }
-
-  // enhanced & moved to synElement
-/*
-  //check if the target service is multilang
-  function chkTargetMultilang() {
-    global $db;
-    $ret=false;
-    $qry="SELECT * FROM aa_services";
-    $res=$db->Execute($qry);
-    while ($arr=$res->FetchRow()) {
-      $table=$arr["syntable"];
-      if (strpos($this->qry,$table)!==false)  $ret=$arr["multilang"];
-    }
-    return $ret;
-  }
-*/
 
   //function for the auto-configuration
-  function configuration($i="",$k=99) {
-    global $synElmName,$synElmType,$synElmLabel,$synElmSize,$synElmHelp,$synElmPath;
-    global $synElmQry;
-    global $synChkKey, $synChkVisible, $synChkEditable, $synChkMultilang;
+  function configuration( $i='', $k=99 ) {
+    global 
+      $synElmName, 
+      $synElmType, 
+      $synElmLabel, 
+      $synElmSize, 
+      $synElmHelp, 
+      $synElmPath,
+      $synElmQry,
+      $synChkKey, 
+      $synChkVisible, 
+      $synChkEditable, 
+      $synChkMultilang;
+    
     $synHtml = new synHtml();
-    //parent::configuration();
-    $tmp_val = isset($synElmQry[$i]) ? htmlentities($synElmQry[$i]) : "";
-    $this->configuration[4]="Query: ".$synHtml->text(" name=\"synElmQry[$i]\" value=\"".$tmp_val."\"");
-
-    #if (!isset($synElmPath[$i]) or $synElmPath[$i]=="") $checked=""; else $checked=" checked='checked' ";
-    #$this->configuration[5]="NULL: ".$synHtml->check(" name=\"synElmPath[$i]\" value=\"1\" $checked");
-
-    #if (!isset($synElmSize[$i]) or $synElmSize[$i]=="") $synElmSize[$i]=$this->size;
-    #$this->configuration[6]="Dimensione: ".$synHtml->text(" name=\"synElmSize[$i]\" value=\"$synElmSize[$i]\"");
+    $tmp_val = isset($synElmQry[$i]) 
+             ? htmlentities($synElmQry[$i]) 
+             : '';
+    $this->configuration[4] = "Query: " . $synHtml->text(" name=\"synElmQry[{$i}]\" value=\"{$tmp_val}\"");
 
     //enable or disable the 3 check at the last configuration step
-    $_SESSION["synChkKey"][$i]=1;
-    $_SESSION["synChkVisible"][$i]=1;
-    $_SESSION["synChkEditable"][$i]=0;
-    $_SESSION["synChkMultilang"][$i]=0;
+    $_SESSION['synChkKey'][$i] = 1;
+    $_SESSION['synChkVisible'][$i] = 1;
+    $_SESSION['synChkEditable'][$i] = 0;
+    $_SESSION['synChkMultilang'][$i] = 0;
 
-    if ($k==99) return $this->configuration;
-    else return $this->configuration[$k];
+    if ($k==99) 
+      return $this->configuration;
+    else 
+      return $this->configuration[$k];
   }
 
 } //end of class inputfile

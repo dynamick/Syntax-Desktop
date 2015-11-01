@@ -18,13 +18,23 @@ $(function() {
   });
 
   // init multi-select
-  $('.multi-select').multiselect({
-    enableClickableOptGroups: true,
-    disableIfEmpty: true,
-    selectedClass: 'multiselect-selected',
-    includeSelectAllOption: true
+  $('.multi-select').each(function(){
+    // different initialization for each element
+    var 
+      $this = $(this), 
+      optionName = $this.data('option-name');
+    $this.multiselect({
+      enableClickableOptGroups: true,
+      disableIfEmpty: true,
+      selectedClass: 'multiselect-selected',
+      checkboxName: optionName,
+      includeSelectAllOption: true,
+      enableFiltering: true,
+      enableCaseInsensitiveFiltering: true,
+      maxHeight: 200
+    });
   });
-
+  
   // init icon-picker
   $('.icp').iconpicker();
 
