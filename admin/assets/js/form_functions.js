@@ -20,8 +20,8 @@ $(function() {
   // init multi-select
   $('.multi-select').each(function(){
     // different initialization for each element
-    var 
-      $this = $(this), 
+    var
+      $this = $(this),
       optionName = $this.data('option-name');
     $this.multiselect({
       enableClickableOptGroups: true,
@@ -34,111 +34,15 @@ $(function() {
       maxHeight: 200
     });
   });
-  
+
   // init icon-picker
   $('.icp').iconpicker();
 
-  synAddressPicker = function(){
-    var
-      $elem = $('#address-picker'),
-      $data = $('#address-data'),
-      $lat = $('#lat'),
-      $lng = $('#lng'),
-      pickerOptions = {
-        map: {
-          id: '#map',
-          center: getLanLng,
-          reverseGeocoding: true,
-          displayMarker: true
-        }, marker: {
-          draggable: true,
-          visible: true
-        },
-        zoomForLocation: 18,
-        draggable: true,
-        reverseGeocoding: true,
-        autocompleteService: {
-          types: [ 'geocode', 'establishment']
-        }
-      },
-      getLanLng = function(){
-        var lat = 45.403757,  lng = 10.978879;
-        if ( $data.val() != '' ) {
-          var coords = $data.val().split('|');
-          lat = coords[1];
-          lng = coords[2];
-        }
-        //console.info(lat, lng);
-        return new google.maps.LatLng( lat, lng );
-      },
-      apiLoad = function() {
-        // remotely get googlemaps api
-        $.getScript('https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places&callback=synAddressPicker')
-          .fail(function (jqxhr) {
-            console.error('Could not load Google Maps: ' + jqxhr);
-          });
-      },
-      initPicker = function() {
-        if ( typeof( AddressPicker ) === 'function' ) {
-          var addressPicker = new AddressPicker( pickerOptions );
-          $elem.typeahead(null, {
-            displayKey: 'description',
-            source: addressPicker.ttAdapter()
-          });
-          addressPicker.bindDefaultTypeaheadEvent( $elem );
-          $(addressPicker).on( 'addresspicker:selected', function (event, result) {
-            $elem.val( result.placeResult.formatted_address );
-            $data.val( $elem.val() + '|' + result.lat() + '|' + result.lng() );
-            $lat.html( result.lat() );
-            $lng.html( result.lng() );
-          });
-        } else {
-          console.error('AddressPicker not available!');
-        }
-      };
-    if ($elem.length > 0){
-      // element #address-picker exists, proceed
-      if (window.google && google.maps) {
-        // google maps available, launch picker
-        initPicker();
-      } else {
-        // load google maps, then re-launch
-        apiLoad();
-      }
-    }
-  }
-  synAddressPicker();
-
-
-  // init address picker
-  /*
-  if ($('#address-picker').length > 0){
-    var addressPicker = new AddressPicker({
-       map: {
-        id: '#map',
-        center: getLanLng(),
-        zoom: 16
-       }
-       , marker: {
-        draggable: true,
-        visible: true
-       }
-       , autocompleteService: {
-        types: ['geocode', 'establishment']
-       }
-    });
-    $('#address-picker').typeahead(null, {
-      displayKey: 'description',
-      source: addressPicker.ttAdapter()
-    });
-    addressPicker.bindDefaultTypeaheadEvent($('#address-picker'))
-    $(addressPicker).on('addresspicker:selected', function (event, result) {
-      $('#address-picker').val(result.placeResult.formatted_address);
-      $('#address-data').val($("#address-picker").val()+"|"+result.lat()+"|"+result.lng());
-      $('#lat').html(result.lat());
-      $('#lng').html(result.lng());
-    });
-  }*/
+  // address picker
+  var apikey = null;
+  $.when( loadGoogleMaps( 3, apikey, 'it', ['places'] ) ).then( function() {
+    synAddressPicker.init();
+  });
 
   // init file input
   $('.file-input-control').each( function(){

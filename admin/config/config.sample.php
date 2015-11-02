@@ -30,7 +30,7 @@ $synWebsite="/";
 $synRowsPerPage=20;
 
 //version
-$synVersion="2.12.1";
+$synVersion="2.12.2";
 
 //relative path. to the /admin folder I.e. /admin
 $synAdminPath="/admin";

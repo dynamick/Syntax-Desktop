@@ -34,21 +34,29 @@ class synAddressPicker extends synElement {
       $value = "|0|0";
 
     $address = explode("|", $value);
-
+    // WARNING - don't update typeahead.bundle until typeahead.addresspicker supports v.0.11
     $html = <<<HTML
-      <div class="row">
-        <div class="col-md-6">
-          <input type="text" value="{$address[0]}" class="form-control" id="address-picker" placeholder="Enter an address"/>
-          <br>
-          Lat: <span class="label label-default" id="lat">{$address[1]}</span>
-          <br>
-          Lng: <span class="label label-default" id="lng">{$address[2]}</span>
+      <div class="map-widget">
+        <div class="map-widget-map" id="map"></div>
+        <div class="map-widget-controls">
+          <div class="input-group">
+            <span class="input-group-addon">
+              <i class="fa fa-map-marker"></i>
+            </span>
+            <input type="text" value="{$address[0]}" class="form-control"
+              id="address-picker" placeholder="Enter an address"/>
+            <span class="input-group-addon">
+              <b>Lat:</b>
+              <span id="lat">{$address[1]}</span>
+            </span>
+            <span class="input-group-addon">
+              <b>Lon:</b>
+              <span id="lng">{$address[2]}</span>
+            </span>
+          </div>
         </div>
-        <div class="col-md-6">
-          <div id="map"></div>
-        </div>
-        <input type="hidden" name="{$this->name}" id="address-data" value="{$value}"/>
       </div>
+      <input type="hidden" name="{$this->name}" id="address-data" value="{$value}">
 HTML;
 
     return $html;

@@ -4,6 +4,7 @@
 
 .twitter-typeahead {
   display: block !important;
+  height:38px;
 }
 
 .typeahead {
@@ -29,14 +30,14 @@
 
 .tt-dropdown-menu {
   width: 422px;
-  margin-top: 12px;
+  margin-top:0;
   padding: 8px 0;
   background-color: #fff;
   border: 1px solid #ccc;
   border: 1px solid rgba(0, 0, 0, 0.2);
-  -webkit-border-radius: 8px;
-     -moz-border-radius: 8px;
-          border-radius: 8px;
+  -webkit-border-radius: 0 0 4px 4px;
+     -moz-border-radius: 0 0 4px 4px;
+          border-radius: 0 0 4px 4px;
   -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
      -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
           box-shadow: 0 5px 10px rgba(0,0,0,.2);
@@ -44,8 +45,8 @@
 
 .tt-suggestion {
   padding: 3px 20px;
-  font-size: 18px;
-  line-height: 24px;
+  font-size: 14px;
+  line-height: 20px;
 }
 
 .tt-suggestion.tt-cursor {

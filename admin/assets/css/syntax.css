@@ -374,4 +374,30 @@ ul.nav-tree li span.opener.opened span.tree-icon-open {
 .fixed-table-toolbar .bars, .fixed-table-toolbar .columns, .fixed-table-toolbar .search {
   margin:25px 0 25px 5px;
 }
+.map-widget {}
+.map-widget-map {
+  background-color: #ccc;
+  height: 350px;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  border-color:#ccc;
+  border-style:solid;
+  border-width:1px 1px 0 1px;
+}
+.map-widget-controls .input-group-addon:first-child,
+.map-widget-controls .input-group-btn:first-child,
+.map-widget-controls .form-control:first-child {
+  border-top-left-radius: 0;
+}
+.map-widget-controls .input-group-addon:last-child,
+.map-widget-controls .input-group-btn:last-child,
+.map-widget-controls .form-control:last-child {
+  border-top-right-radius: 0;
+}
+.map-widget-controls .tt-dropdown-menu {
+  top: auto !important;
+  bottom:100%;
+  border-radius:4px 4px 0 0;
+}
+
 /* END table */

@@ -66,10 +66,11 @@ $form = array(
   'vendor/bootstrap-multiselect.js',
   'vendor/bootstrap-maxlength.min.js',
   'vendor/fileinput.min.js',
-  //'vendor/bloodhound.min.js',
-  //'vendor/typeahead.jquery.min.js',
-  'vendor/typeahead.bundle.min.js',  
+  // WARNING - don't update typeahead.bundle until typeahead.addresspicker supports v.0.11!
+  'vendor/typeahead.bundle.min.js',
   'vendor/typeahead-addresspicker.js',
+  'load-google-maps.js',
+  'synAddressPicker.js',
   );
 
 // rich text editor
