@@ -41,16 +41,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- (function (root, factory) {
-	if (typeof define === 'function' && define.amd) {
-		// AMD. Register as an anonymous module.
-		define(['jquery', 'knockout'], factory);
-	}
-        else {
-		// Browser globals
-		factory(root.jQuery, root.ko);
-	}
-})(this, function ($, ko) {
+!function ($) {
     "use strict";// jshint ;_;
 
     if (typeof ko !== 'undefined' && ko.bindingHandlers && !ko.bindingHandlers.multiselect) {
@@ -147,6 +138,12 @@
     function Multiselect(select, options) {
 
         this.$select = $(select);
+        
+        // Placeholder via data attributes
+        if (this.$select.attr("data-placeholder")) {
+            options.nonSelectedText = this.$select.data("placeholder");
+        }
+        
         this.options = this.mergeOptions($.extend({}, options, this.$select.data()));
 
         // Initialization.
@@ -197,7 +194,11 @@
                 if (options.length === 0) {
                     return this.nonSelectedText;
                 }
-                else if (this.allSelectedText && options.length == $('option', $(select)).length) {
+                else if (this.allSelectedText 
+                            && options.length === $('option', $(select)).length 
+                            && $('option', $(select)).length !== 1 
+                            && this.multiple) {
+
                     if (this.selectAllNumber) {
                         return this.allSelectedText + ' (' + options.length + ')';
                     }
@@ -210,10 +211,11 @@
                 }
                 else {
                     var selected = '';
+                    var delimiter = this.delimiterText;
+                    
                     options.each(function() {
                         var label = ($(this).attr('label') !== undefined) ? $(this).attr('label') : $(this).text();
-
-                        selected += label + ', ';
+                        selected += label + delimiter;
                     });
                     
                     return selected.substr(0, selected.length - 2);
@@ -232,8 +234,11 @@
                 }
                 else {
                     var selected = '';
+                    var delimiter = this.delimiterText;
+                    
                     options.each(function () {
-                        selected += $(this).text() + ', ';
+                        var label = ($(this).attr('label') !== undefined) ? $(this).attr('label') : $(this).text();
+                        selected += label + delimiter;
                     });
                     return selected.substr(0, selected.length - 2);
                 }
@@ -296,6 +301,7 @@
             onSelectAll: function() {
                 
             },
+            enableHTML: false,
             buttonClass: 'btn btn-default',
             inheritClass: false,
             buttonWidth: 'auto',
@@ -325,6 +331,7 @@
             allSelectedText: 'All selected',
             numberDisplayed: 3,
             disableIfEmpty: false,
+            delimiterText: ', ',
             templates: {
                 button: '<button type="button" class="multiselect dropdown-toggle" data-toggle="dropdown"><span class="multiselect-selected-text"></span> <b class="caret"></b></button>',
                 ul: '<ul class="multiselect-container dropdown-menu"></ul>',
@@ -641,7 +648,7 @@
 
                     // Search all option in optgroup
                     var $options = group.nextUntil('li.multiselect-group');
-                    var $visibleOptions = $options.filter(":visible");
+                    var $visibleOptions = $options.filter(":visible:not(.disabled)");
 
                     // check or uncheck items
                     var allChecked = true;
@@ -675,12 +682,19 @@
             var $label = $('label', $li);
             $label.addClass(inputType);
 
+            if (this.options.enableHTML) {
+                $label.html(" " + label);
+            }
+            else {
+                $label.text(" " + label);
+            }
+        
             var $checkbox = $('<input/>').attr('type', inputType);
 
             if (this.options.checkboxName) {
                 $checkbox.attr('name', this.options.checkboxName);
             }
-            $label.append($checkbox);
+            $label.prepend($checkbox);
 
             var selected = $element.prop('selected') || false;
             $checkbox.val(value);
@@ -691,7 +705,6 @@
                     .addClass('multiselect-all');
             }
 
-            $label.append(" " + label);
             $label.attr('title', $element.attr('title'));
 
             this.$ul.append($li);
@@ -733,8 +746,14 @@
 
             // Add a header for the group.
             var $li = $(this.options.templates.liGroup);
-            $('label', $li).text(groupName);
-
+            
+            if (this.options.enableHTML) {
+                $('label', $li).html(groupName);
+            }
+            else {
+                $('label', $li).text(groupName);
+            }
+            
             if (this.options.enableClickableOptGroups) {
                 $li.addClass('multiselect-group-clickable');
             }
@@ -774,11 +793,18 @@
                 var $li = $(this.options.templates.li);
                 $('label', $li).addClass("checkbox");
                 
-                if (this.options.selectAllName) {
-                    $('label', $li).append('<input type="checkbox" name="' + this.options.selectAllName + '" />');
+                if (this.options.enableHTML) {
+                    $('label', $li).html(" " + this.options.selectAllText);
                 }
                 else {
-                    $('label', $li).append('<input type="checkbox" />');
+                    $('label', $li).text(" " + this.options.selectAllText);
+                }
+                
+                if (this.options.selectAllName) {
+                    $('label', $li).prepend('<input type="checkbox" name="' + this.options.selectAllName + '" />');
+                }
+                else {
+                    $('label', $li).prepend('<input type="checkbox" />');
                 }
                 
                 var $checkbox = $('input', $li);
@@ -787,8 +813,6 @@
                 $li.addClass("multiselect-item multiselect-all");
                 $checkbox.parent().parent()
                     .addClass('multiselect-all');
-
-                $('label', $li).append(" " + this.options.selectAllText);
 
                 this.$ul.prepend($li);
 
@@ -990,14 +1014,14 @@
 
                 $checkbox.prop('checked', true);
                 $option.prop('selected', true);
+                
+                if (triggerOnChange) {
+                    this.options.onChange($option, true);
+                }
             }
 
             this.updateButtonText();
             this.updateSelectAll();
-
-            if (triggerOnChange && selectValues.length === 1) {
-                this.options.onChange($option, true);
-            }
         },
 
         /**
@@ -1044,14 +1068,14 @@
 
                 $checkbox.prop('checked', false);
                 $option.prop('selected', false);
+                
+                if (triggerOnChange) {
+                    this.options.onChange($option, false);
+                }
             }
 
             this.updateButtonText();
             this.updateSelectAll();
-            
-            if (triggerOnChange && deselectValues.length === 1) {
-                this.options.onChange($option, false);
-            }
         },
         
         /**
@@ -1107,7 +1131,7 @@
             var justVisible = typeof justVisible === 'undefined' ? true : justVisible;
             
             if(justVisible) {              
-                var visibleCheckboxes = $("li input[type='checkbox']:enabled", this.$ul).filter(":visible");
+                var visibleCheckboxes = $("li input[type='checkbox']:not(:disabled)", this.$ul).filter(":visible");
                 visibleCheckboxes.prop('checked', false);
                 
                 var values = visibleCheckboxes.map(function() {
@@ -1152,6 +1176,9 @@
             
             if (this.options.disableIfEmpty && $('option', this.$select).length <= 0) {
                 this.disable();
+            }
+            else {
+                this.enable();
             }
             
             if (this.options.dropRight) {
@@ -1247,7 +1274,7 @@
          * @returns {Boolean}
          */
         hasSelectAll: function() {
-            return $('li.' + this.options.selectAllValue, this.$ul).length > 0;
+            return $('li.multiselect-all', this.$ul).length > 0;
         },
 
         /**
@@ -1258,7 +1285,7 @@
                 var allBoxes = $("li:not(.multiselect-item):not(.filter-hidden) input:enabled", this.$ul);
                 var allBoxesLength = allBoxes.length;
                 var checkedBoxesLength = allBoxes.filter(":checked").length;
-                var selectAllLi  = $("li." + this.options.selectAllValue, this.$ul);
+                var selectAllLi  = $("li.multiselect-all", this.$ul);
                 var selectAllInput = selectAllLi.find("input");
                 
                 if (checkedBoxesLength > 0 && checkedBoxesLength === allBoxesLength) {
@@ -1280,7 +1307,12 @@
             var options = this.getSelected();
             
             // First update the displayed button text.
-            $('.multiselect .multiselect-selected-text', this.$container).text(this.options.buttonText(options, this.$select));
+            if (this.options.enableHTML) {
+                $('.multiselect .multiselect-selected-text', this.$container).html(this.options.buttonText(options, this.$select));
+            }
+            else {
+                $('.multiselect .multiselect-selected-text', this.$container).text(this.options.buttonText(options, this.$select));
+            }
             
             // Now update the title attribute of the button.
             $('.multiselect', this.$container).attr('title', this.options.buttonTitle(options, this.$select));
@@ -1381,4 +1413,4 @@
         $("select[data-role=multiselect]").multiselect();
     });
 
-});
+}(window.jQuery);

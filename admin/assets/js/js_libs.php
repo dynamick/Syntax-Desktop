@@ -22,7 +22,7 @@ $base = array(
   'vendor/jquery.js',
   'vendor/bootstrap.min.js',
   'vendor/ie10-viewport-bug-workaround.js',
-  'vendor/animsition.js'
+  'vendor/animsition.min.js'
   );
 
 // scripts for desktop managing
@@ -37,7 +37,7 @@ $tree = array(
 
 // scripts for toast and alerts
 $messaging = array(
-  'vendor/bootbox.min.js',
+  'vendor/bootbox.js',
   'vendor/bootstrap-notify.min.js',
   );
 
@@ -46,7 +46,7 @@ $table = array(
   'vendor/bootstrap-table.js',
   'vendor/bootstrap-table-cookie.min.js',
   'vendor/tableExport.min.js',
-  'vendor/bootstrap-table-export.js',
+  'vendor/bootstrap-table-export.min.js',
   'vendor/bootstrap-table-it-IT.min.js',
   );
 
@@ -64,11 +64,11 @@ $form = array(
   'vendor/bootstrap-datetimepicker.min.js',
   'vendor/fontawesome-iconpicker.min.js',
   'vendor/bootstrap-multiselect.js',
-  'vendor/bootstrap-maxlength.min.js',
+  'vendor/bootstrap-maxlength.js',
   'vendor/fileinput.min.js',
   // WARNING - don't update typeahead.bundle until typeahead.addresspicker supports v.0.11!
   'vendor/typeahead.bundle.min.js',
-  'vendor/typeahead-addresspicker.js',
+  'vendor/typeahead-addresspicker.min.js',
   'load-google-maps.js',
   'synAddressPicker.js',
   );
