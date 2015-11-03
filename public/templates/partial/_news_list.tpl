@@ -9,7 +9,7 @@
   <article class="row">
     <div class="col-md-4">
       <a href="{$n.url}" class="thumbnail">
-        <img src="{$synPublicPath}/thumb.php?src={$n.src}&amp;w=600&amp;h=300&amp;zc=1" alt="{$n.alt}" class="img-responsive">
+        <img src="{thumb src=$n.src w=600 h=300 zc=1}" alt="{$n.alt}" class="img-responsive">
       </a>
     </div>
     <div class="col-md-8">

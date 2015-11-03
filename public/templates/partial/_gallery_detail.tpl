@@ -8,7 +8,7 @@
     </div>
   </div>
   <!-- /.row -->
-  <hr> 
+  <hr>
   {if $item.social_share neq ''}
   <div class="pull-right">
     <ul class="list-inline">
@@ -25,12 +25,12 @@
     <i class="fa fa-clock-o"></i>
     Posted on <time datetime="{$item.date}">{$item.fdate}</time>
   </p>
-  <hr>  
+  <hr>
   <div class="row">
   {foreach from=$photos key=k item=p}
     <div class="col-xs-6 col-md-3 text-center">
       <a href="{$p.src}" class="thumbnail popup" title="{$p.alt}">
-        <img class="img-responsive img-hover" src="{$synPublicPath}/thumb.php?src={$p.src}&amp;w=300&amp;h=300&amp;zc=1" alt="{$p.alt}" />
+        <img class="img-responsive img-hover" src="{thumb src=$p.src w=300 h=300 zc=1}" alt="{$p.alt}" />
       </a>
     </div>
     {if ($k+1) % 4 == 0}
@@ -40,7 +40,7 @@
     {include '_alert.tpl' msg='Non ci sono foto disponibili.'}
   {/foreach}
   </div>
-  
+
 {capture name='pageScript'}
   <script type="text/javascript">
   $(document).ready(function(){
@@ -63,5 +63,5 @@
     });
   });
   </script>
-{/capture}      
+{/capture}
 {append var=synPageScript value=$smarty.capture.pageScript scope=parent}

@@ -13,7 +13,7 @@
   {foreach from=$albums key=k item=a}
     <div class="col-md-4 img-portfolio">
         <a href="{$a.url}">
-          <img class="img-responsive img-hover" src="{$synPublicPath}/thumb.php?src={$a.src}&amp;w=700&amp;h=400&amp;zc=1" alt="{$a.alt}" />
+          <img class="img-responsive img-hover" src="{thumb src=$a.src w=700 h=400 zc=1}" alt="{$a.alt}" />
         </a>
         <h3>
           <a href="{$a.url}">{$a.title}</a>
