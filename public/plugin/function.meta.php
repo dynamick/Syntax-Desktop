@@ -11,8 +11,10 @@ function smarty_function_meta($params, &$smarty){
 //$template         = $smarty->getTemplateVars('synTemplate');
   $page_id          = $smarty->getTemplateVars( 'synPageId' );
   $title_page       = $smarty->getTemplateVars( 'synPageTitle' );
+  $metatitle_page   = $smarty->getTemplateVars( 'synPageMetatitle' );
   $description_page = $smarty->getTemplateVars( 'synPageMetadescription' );
   $keywords         = $smarty->getTemplateVars( 'synPageMetakeywords' );
+
   $visible          = array_filter( explode('|', $smarty->getTemplateVars( 'synPageVisible' )) );
   $ogmeta           = $smarty->getTemplateVars( 'ogmeta' );
   $canonical        = $smarty->getTemplateVars( 'canonical' );
@@ -26,6 +28,10 @@ function smarty_function_meta($params, &$smarty){
                     ? $ogmeta['fb']['props']['description']
                     : null;
   $meta             = array();
+
+  // if set, give priority to metatitle
+  if ( !empty($metatitle_page) )
+    $title_page = $metatitle_page;
 
   if ( empty($title) )
     $title = $title_page;
