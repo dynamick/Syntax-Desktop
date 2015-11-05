@@ -9,13 +9,19 @@ class synInputfile extends synElement {
   var $mat;
 
   //constructor(name, value, label, size, help, $mat)
-  function synInputfile($n="", $v="", $l="", $s=255, $h="", $mat="/mat/") {
-    if ($n=="") $n =  "text".date("his");
-    if ($l=="") $l =  ucfirst($n);
+  function synInputfile( $n = '', $v = '', $l = '', $s = 255, $h = '', $mat = '/mat/') {
+    if (empty($n))
+      $n = 'text' . date('his');
+    if (empty($l))
+      $l = ucfirst($n);
 
-    $this->type = "file";
+    $this->type  = 'file';
     $this->name  = $n;
-    if ($v==null) { global $$n; $this->value = $$n; } else $this->value = $v;
+    if ($v==null) {
+      global $$n;
+      $this->value = $$n;
+    } else
+      $this->value = $v;
     $this->label = $l;
     $this->size  = $s;
     $this->help  = $h;
@@ -30,8 +36,8 @@ class synInputfile extends synElement {
     //$httpHost = getenv("HTTP_HOST");
     $mat = $this->compileQry( $this->translatePath($this->mat) );
     $filext = $this->translate( $this->value );
-    $filename = $this->createFilename().".".$filext;
-    $filepath = $mat.$filename;
+    $filename = $this->createFilename() . "." . $filext;
+    $filepath = $mat . $filename;
 
     if ($this->isImage($filepath)) {
       $thumb = "{$synPublicPath}/thumb.php?src={$filepath}&amp;w=250&amp;h=250&amp;far=1";
@@ -43,8 +49,8 @@ class synInputfile extends synElement {
       $preview = $src;
       $label = "'{$filename}'";
     } else {
-      $preview = 'undefined';
-      $label = 'undefined';
+      $preview = 'null';
+      $label = 'null';
     }
 
     $ret = <<<EORET

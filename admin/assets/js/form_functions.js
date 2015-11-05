@@ -39,10 +39,12 @@ $(function() {
   $('.icp').iconpicker();
 
   // address picker
-  var apikey = null;
-  $.when( loadGoogleMaps( 3, apikey, 'it', ['places'] ) ).then( function() {
-    synAddressPicker.init();
-  });
+  if ($('.map-widget').length > 0) {
+    var apikey = null;
+    $.when( loadGoogleMaps( 3, apikey, 'it', ['places'] ) ).then( function() {
+      synAddressPicker.init();
+    });
+  }
 
   // init file input
   $('.file-input-control').each( function(){

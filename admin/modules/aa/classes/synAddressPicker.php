@@ -16,11 +16,12 @@ class synAddressPicker extends synElement {
     if ($v==null) {
       global $$n;
       $this->value = (isset($_REQUEST[$n])) ? $_REQUEST[$n] : '';
-    } else $this->value = $v;
+    } else
+      $this->value = $v;
     $this->label = $l;
     $this->size  = $s;
     $this->help  = $h;
-    $this->db    = " VARCHAR(".$this->size.") NOT NULL";
+    $this->db    = " VARCHAR(" . $this->size . ") NOT NULL";
 
     $this->configuration();
   }
