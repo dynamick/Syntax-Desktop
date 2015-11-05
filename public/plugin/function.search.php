@@ -12,11 +12,12 @@
 function smarty_function_search($params, &$smarty) {
   global $db;
 
-  $newsPage   = createPath(PAGE_NEWS);
-  $albumPage  = createPath(PAGE_GALLERY);
+  $newsPage   = createPath( PAGE_NEWS );
+  $albumPage  = createPath( PAGE_GALLERY );
+  $lng        = getLangInitial();
   $server     = 'http://'.$_SERVER['SERVER_NAME'];
-  $maxitems   = isset($params['maxitems'])
-              ? intval($params['maxitems'])
+  $maxitems   = isset( $params['maxitems'] )
+              ? intval( $params['maxitems'] )
               : 10;
   $pager      = null;
   $list       = null;
@@ -26,14 +27,14 @@ function smarty_function_search($params, &$smarty) {
 
   if ( isset($needle)
     && $needle != ''
-    && $needle != "cerca nel sito"
+    && $needle != 'cerca nel sito'
     ){
-    $lng = getLangInitial();
 
     // search on news, pages, album. You can add here all the relevant queries
+    // don't forget to declare the 'type'!
     $qry = <<<ENDOFQUERY
 
-( SELECT n.id, t1.{$lng} AS title, t2.{$lng} AS text, 'news' AS tipo
+( SELECT n.id, t1.{$lng} AS title, t2.{$lng} AS text, 'news' AS type
   FROM news n
   LEFT JOIN aa_translation t1 ON n.title=t1.id
   LEFT JOIN aa_translation t2 ON n.text=t2.id
@@ -41,7 +42,7 @@ function smarty_function_search($params, &$smarty) {
 
 ) UNION (
 
-  SELECT a.id, t1.{$lng} AS title, t2.{$lng} AS text, 'pagina' AS tipo
+  SELECT a.id, t1.{$lng} AS title, t2.{$lng} AS text, 'page' AS type
   FROM aa_page a
   LEFT JOIN aa_translation t1 ON a.title=t1.id
   LEFT JOIN aa_translation t2 ON a.text=t2.id
@@ -50,7 +51,7 @@ function smarty_function_search($params, &$smarty) {
 
 ) UNION (
 
-  SELECT a.id, a.title, NULL AS text, 'album' AS tipo
+  SELECT a.id, a.title, NULL AS text, 'album' AS type
   FROM album a
   WHERE (LOWER(a.title) LIKE '%{$needle}%')
 
@@ -68,25 +69,26 @@ ENDOFQUERY;
 
     while ( $arr = $res->FetchRow() ) {
       // build the url of the item, based on its type
-      switch ($arr['tipo']){
+      switch ($arr['type']){
         case 'news':
-          $path = $newsPage.sanitizePath($arr['title']).'~'.$arr['id'].'.html';
+          $path = $newsPage . createItemPath( $arr['title'], $arr['id'] );
           break;
         case 'album':
-          $path = $albumPage.sanitizePath($arr['title']).'~'.$arr['id'].'.html';
+          $path = $albumPage . createItemPath( $arr['title'], $arr['id'] );
           break;
+        // add types as needed
         default:
-          $path = createPath($arr['id']);
+          $path = createPath( $arr['id'] );
           break;
       }
 
       // list item
-      if (!empty($arr['text'])) {
-        $abstract = $arr['text'];
-        if (stripos($abstract, $needle)) {
-          $abstract = str_ireplace($needle, "<mark>{$needle}</mark>", strip_tags($abstract));
+      if ( !empty($arr['text']) ) {
+        $abstract = strip_tags( $arr['text'] );
+        if ( stripos($abstract, $needle) !== FALSE ) {
+          $abstract = str_ireplace($needle, "<mark>{$needle}</mark>", $abstract );
         }
-        $abstract = excerpt($abstract, $needle, 500); // see mis.functions.php
+        $abstract = excerpt( $abstract, $needle, 500 ); // see misc.functions.php
       }
 
       $list[] = array(
@@ -98,7 +100,7 @@ ENDOFQUERY;
         );
     }
 
-    if ($pgr->rs->LastPageNo()>1)
+    if ( $pgr->rs->LastPageNo()>1 )
       $pager = $pgr->pagerArrList();
 
     $smarty->assign('needle', $needle);
