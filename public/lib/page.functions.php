@@ -623,7 +623,7 @@ EOQRY;
     }
 
     if ( !$active && !$expand )
-      $children = FALSE;
+      $children = NULL;
 
     $ret[] = array(
       'id'      => $arr['id'],
