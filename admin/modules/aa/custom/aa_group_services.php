@@ -2,21 +2,21 @@
 global $cmd;
 
 	switch($cmd) {
-		case "":
-      $grp = "";
-      $qry="SELECT * FROM aa_groups ORDER BY name";
-      $res=$db->Execute($qry);
-      while (list($id,$name)=$res->FetchRow()) {
-        $grp.="<option value='$id'>$name</option>";
+		case '':
+      $grp = '';
+      $qry = 'SELECT * FROM aa_groups ORDER BY name';
+      $res = $db->Execute($qry);
+      while ( list($id, $name) = $res->FetchRow()) {
+        $grp .= "<option value=\"{$id}\">{$name}</option>";
       }
-      $grp = "<select name='group2copy'>$grp</select>";
+      $grp = "<select name=\"group2copy\">{$grp}</select>";
 
       //echo "<script>";
       //echo "  var txt=\"<form class='box' action='content.php?cmd=copy' target='content' method='post'>".$str["menu_copy"]."<br />$grp</br /> ".$str["in_this_group"]."<br /><input type='submit' value='".$str["copy"]."' class='action_button'  /><input type='hidden' name='aa_value' value='".$_GET["aa_value"]."' /></form>\"; ";
       //echo "  window.parent.content.addBox('copy',txt);";
       //echo "</script>";
       $script = <<<EOSCRIPT
-      var form = new array(
+      var form = new Array(
         '<form class="box" action="content.php?cmd=copy" target="content" method="post">',
         '{$str["menu_copy"]}<br />',
         '{$grp}</br />',
