@@ -472,7 +472,7 @@ EOBOTTOMBAR;
       $bottom = <<<EOBOTTOMBAR
         <nav class="navbar form-toolbar navbar-fixed-bottom">
           <div class="container-fluid">
-            <a href="{$PHP_SELF}" class="btn btn-primary navbar-btn animsition-link>
+            <a href="{$PHP_SELF}" class="btn btn-primary navbar-btn animsition-link">
               <i class="fa fa-mail-reply"></i> {$str["cancel"]}
             </a>
             <div class="navbar-form navbar-right">

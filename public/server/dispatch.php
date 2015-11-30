@@ -173,6 +173,9 @@ EOSQL;
           }
         }
 
+        // lowercase the keys and extract to variables
+        extract( array_change_key_case($_POST, CASE_LOWER) );
+
         $sender = array(
           'name' => ($nome || $cognome) ? "$nome $cognome" : $synWebsiteTitle,
           'mail' => ($email) ? $email : $form_destinatario

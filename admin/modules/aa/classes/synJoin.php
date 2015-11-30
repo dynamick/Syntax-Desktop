@@ -69,22 +69,22 @@ var $icon;
     return $count;
   }
 
-  
+
   // experimental
   function getCaptionValue($value) {
     global $db;
     $qry="SELECT s.syntable,se.name FROM aa_services s INNER JOIN aa_services_element se ON s.id=se.container WHERE s.id=".$this->fromService." AND se.type=2";
     $res=$db->Execute($qry);
     if ($res->RecordCount()>0) {
-      $arr=$res->FetchRow();
-      $qry="SELECT ".$arr["name"]." FROM ".$arr["syntable"]." WHERE id=".$value;
-      $res=$db->Execute($qry);
-      $arr=$res->FetchRow();
-      $ret=translate($arr[0]);
+      $arr = $res->FetchRow();
+      $qry = "SELECT `{$arr['name']}` FROM `{$arr['syntable']}` WHERE id = '{$value}'";
+      $res = $db->Execute($qry);
+      $arr = $res->FetchRow();
+      $ret = translate($arr[0]);
     } else $ret="";
     return $ret;
   }
-  
+
 } //end of class text
 
 ?>

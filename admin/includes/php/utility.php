@@ -1335,6 +1335,8 @@ ENDOFRET;
 
 function enqueue_js( $script ) {
   global $js;
+  if (empty($js))
+    $js = array();
   array_push($js, $script);
 }
 

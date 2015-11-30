@@ -65,7 +65,8 @@ $form = array(
   'vendor/fontawesome-iconpicker.min.js',
   'vendor/bootstrap-multiselect.js',
   'vendor/bootstrap-maxlength.js',
-  'vendor/fileinput.min.js',
+  //'vendor/canvas-to-blob.min.js', //blueimp-canvas-to-blob
+  'vendor/fileinput.min.js', //http://plugins.krajee.com/file-image-management-demo
   // WARNING - don't update typeahead.bundle until typeahead.addresspicker supports v.0.11!
   'vendor/typeahead.bundle.min.js',
   'vendor/typeahead-addresspicker.min.js',
