@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*************************************
 * class TEXT Numeric                 *
@@ -24,9 +24,9 @@ class synTextDecimal extends synElement {
 
   //private function
   function _html() {
-    return "<input type='text' name='".$this->name."' maxsize='".$this->size."' value='".$this->value."'/>"; 
+    return "<input type='text' name='".$this->name."' maxsize='".$this->size."' value='".$this->value."'/>";
   }
-  
+
   //function for the auto-configuration
   function configuration($i="",$k=99) {
     global $synElmName,$synElmType,$synElmLabel,$synElmSize,$synElmHelp;
@@ -48,9 +48,9 @@ class synTextDecimal extends synElement {
 
   function getSQLValue() {
     return floatval($this->getValue());
-  } 
-  
-  
+  }
+
+
 } //end of class text
 
 ?>
