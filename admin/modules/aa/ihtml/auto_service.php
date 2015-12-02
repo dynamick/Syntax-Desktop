@@ -879,7 +879,17 @@ EOBOTTOMBAR;
       // pay attention to variables names: they can collide with your data!!!
       while ($row = $res->FetchRow()) {
         $contenitore->updateValues( $row );
-        $contenitore_data_hash = $contenitore->getJsonRow();
+        try {
+          $contenitore_data_hash = $contenitore->getJsonRow();
+        } catch( Exception $e) {
+          // data cannot be json-encoded
+          $contenitore_data_hash = '';
+          $boostrap_table_errors[] = array(
+            'message' => $e->getMessage(),
+            'type' => 1
+            );
+        }
+
         if (empty($search))
           $boostrap_table_data[] = $contenitore_data_hash;
         else {
@@ -921,7 +931,19 @@ EOBOTTOMBAR;
       if ( !empty($boostrap_table_errors) )
         $json['error'] = $boostrap_table_errors;
 
-      echo json_encode( $json );
+      $output = json_encode( $json );
+
+      if ( $output == false && json_last_error() !== JSON_ERROR_NONE ) {
+        // json-encoding failed
+        $boostrap_table_errors[] = array(
+          'message' => json_last_error_msg(),
+          'type' => 1
+          );
+        echo json_encode( array('error' => $boostrap_table_errors ) );
+      } else {
+        echo $output;
+      }
+
     break;
 
         ////////////////////////////////////////////////////////////////////////

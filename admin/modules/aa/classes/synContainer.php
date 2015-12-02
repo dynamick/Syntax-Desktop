@@ -445,8 +445,18 @@ EOHTML;
         $flg = 1;
       else
         $flg = 0;
-      //$ret  .= $this->_col( $even, $flg, $key, $field, $this->element[$k]->editable );
-      $ret[$field]   = $this->element[ $k ]->getCell();
+      $cell = $this->element[ $k ]->getCell();
+
+      // test encoding
+      if ( json_encode( $cell ) === false
+        && json_last_error() !== JSON_ERROR_NONE
+        ){
+        $message = "Failed to parse json string (id: %s, field: %s), error: '%s'";
+        throw new Exception( sprintf( $message, $this->getKeyValue(), $field, json_last_error_msg() ) );
+        $cell = '';
+      }
+
+      $ret[$field] = $cell;
     }
 
     //joins
