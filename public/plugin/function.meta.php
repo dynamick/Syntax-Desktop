@@ -32,6 +32,8 @@ function smarty_function_meta($params, &$smarty){
   // if set, give priority to metatitle
   if ( !empty($metatitle_page) )
     $title_page = $metatitle_page;
+  else
+    $title_page = $title_page . ' > ' . $synWebsiteTitle;
 
   if ( empty($title) )
     $title = $title_page;
@@ -39,7 +41,7 @@ function smarty_function_meta($params, &$smarty){
     $title .= ' > ' . $title_page;
 
   // title is a required tag!
-  $meta[] = '<title>' . attributize( $title . ' > ' . $synWebsiteTitle ) . '</title>';
+  $meta[] = '<title>' . attributize( $title ) . '</title>';
 
   if ( empty( $description ) )
     $description = trim( $description_page );

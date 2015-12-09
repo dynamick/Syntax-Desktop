@@ -883,7 +883,7 @@ EOBOTTOMBAR;
           $contenitore_data_hash = $contenitore->getJsonRow();
         } catch( Exception $e) {
           // data cannot be json-encoded
-          $contenitore_data_hash = '';
+          $contenitore_data_hash = array(); // it must be an object!
           $boostrap_table_errors[] = array(
             'message' => $e->getMessage(),
             'type' => 1
