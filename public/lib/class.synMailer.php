@@ -50,7 +50,7 @@ class synMailer extends PHPMailerLite {
 
     // Method to send mail: ("mail", "sendmail", or "smtp")
     //$this->Mailer = 'mail'; // metodo mail sembra non accettare 'to' multipli
-    $this->Mailer = 'sendmail';
+    $this->Mailer = 'mail';
 
     // path dei template
     $this->template_path = $_SERVER['DOCUMENT_ROOT'].'/public/templates/';
