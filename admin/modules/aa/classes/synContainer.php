@@ -6,29 +6,31 @@
 * Create a class container           *
 **************************************/
 class synContainer {
-  var $element=array();
+  var $element = array();
   var $buttons;
   var $multidelete;
   var $table;
   var $title;
   var $description;
-  var $joins=array();
+  var $joins = array();
   var $multilang;
   var $ownerField;
   var $hooks = array();
+  var $order_field;
+  var $order_direction;
 
   //private var
   var $even;
 
   //constructor
-  function synContainer($table, $buttons, $multidelete, $title="", $description="",$multilang) {
-    $this->table=$table;
-    $this->element=array();
-    $this->buttons=$buttons;
-    $this->multidelete=$multidelete;
-    $this->title=$title;
-    $this->description=$description;
-    $this->multilang=$multilang;
+  function synContainer( $table, $buttons, $multidelete, $title = NULL, $description = NULL, $multilang ) {
+    $this->table = $table;
+    $this->element = array();
+    $this->buttons = $buttons;
+    $this->multidelete = $multidelete;
+    $this->title = $title;
+    $this->description = $description;
+    $this->multilang = $multilang;
     #self::$instance = $this;
   }
 
@@ -43,13 +45,19 @@ class synContainer {
   }
 
   //getter for table name
-  function getTable() {return $this->table;}
+  function getTable() {
+    return $this->table;
+  }
 
   //getter for title
-  function getTitle() {return $this->title;}
+  function getTitle() {
+    return $this->title;
+  }
 
   //getter for description
-  function getDescription() {return $this->description;}
+  function getDescription() {
+    return $this->description;
+  }
 
   //getter for element name
   function getElement($name) {
@@ -66,6 +74,22 @@ class synContainer {
     $this->element[]=&$ref;
     $ref->setContainer($this);
     if (strtolower(get_class($ref))=="synowner") $this->ownerField=$ref->name;
+  }
+
+  function setDefaultOrderDirection( $direction = 'ASC') {
+    $this->order_direction = $direction;
+  }
+
+  function getDefaultOrderDirection() {
+    return $this->order_direction;
+  }
+
+  function setDefaultOrder( $field ) {
+    $this->order_field = $field;
+  }
+
+  function getDefaultOrder() {
+    return $this->order_field;
   }
 
   //write out the insert/modify mask
@@ -143,45 +167,63 @@ EOHTML;
   function getTree($qry) {
     global $db;
 
-    $ret = "";
-    $startQry = "";
-    if ($this->table=="aa_page") $qry.=",`order`";
+    $ret = '';
+    $startQry = '';
 
+    if ( is_a($qry, 'queryBuilder')) {
+      $qry->addOrderBy( 'order', 'ASC', 'aa_page' );
+      $qry = $qry->getQuery();
+    } else {
+      if ($this->table == 'aa_page')
+        $qry .= ', `order`';
+    }
     ////////////////////////////
     // get the starting qry
     // elements
-    foreach($this->element as $k=>$v) {
-      if (strtolower(get_class($this->element[$k]))=="syntreegroup")
-        $groupField=$this->element[$k]->name;
-      if (strtolower(get_class($this->element[$k]))=="syntree")
-        $treeField=$this->element[$k]->name;
-      if (strtolower(get_class($this->element[$k]))=="synkey")
-        $keyField=$this->element[$k]->name;
+    foreach( $this->element as $k => $v ) {
+      $el_class_name = strtolower( get_class( $this->element[$k] ) );
+
+      if ($el_class_name == 'syntreegroup')
+        $groupField = $this->element[$k]->name;
+
+      if ($el_class_name == 'syntree')
+        $treeField = $this->element[$k]->name;
+
+      if ($el_class_name == 'synkey')
+        $keyField = $this->element[$k]->name;
     }
 
-    if (isset($groupField) && $groupField!='') {
-      $res=$db->Execute($qry);
-      while ($arr=$res->FetchRow()) {
-        $id=$arr["id"];
-        $parent=$arr[$treeField];
-        if (strpos($qry,"WHERE")==false) $myqry=str_replace("ORDER BY", " WHERE `$keyField` ='$parent' ORDER BY",$qry);
-        else $myqry=str_replace("ORDER BY", " AND `$keyField` ='$parent' ORDER BY",$qry);
+    if ( isset($groupField)
+      && !empty($groupField)
+      ){
+      $res = $db->Execute($qry);
+      while ($arr = $res->FetchRow()) {
+        $id = $arr['id'];
+        $parent = $arr[$treeField];
+        if (strpos( $qry, 'WHERE') == false)
+          $myqry = str_replace('ORDER BY', " WHERE `{$keyField}` = '{$parent}' ORDER BY", $qry);
+        else
+          $myqry = str_replace('ORDER BY', " AND `{$keyField}` = '{$parent}' ORDER BY", $qry);
         //echo $myqry."<br>";
-        $res2=$db->Execute($myqry);
+        $res2 = $db->Execute( $myqry );
         //echo $id." padri: ".$res2->RecordCount()."<br>";
-        if ($res2->RecordCount()==0) $ret.="OR `$keyField`='$id' ";
+        if ($res2->RecordCount() == 0)
+          $ret .= "OR `{$keyField}` = '{$id}' ";
       }
-      if (strlen($ret)>0) {
-        $startQry=str_replace("ORDER BY "," AND (".substr($ret,3).") ORDER BY ",$qry);
+      if (strlen($ret) > 0) {
+        $startQry = str_replace( 'ORDER BY ', " AND (". substr($ret, 3) .") ORDER BY ", $qry);
       }
-    } else $startQry="";
+    } else {
+      $startQry = '';
+    } // isset($groupField)
     ///////////////////////
-//echo 'qry: '.$qry.'<br>';
-//echo 'startQry: '.$startQry.'<br>';
+    //echo 'qry: '.$qry.'<br>';
+    //echo 'startQry: '.$startQry.'<br>';
     //elements
-    foreach($this->element as $k=>$v) {
-      if (strtolower(get_class($this->element[$k]))=="syntree")
-        $this->element[$k]->getTree($qry, $startQry);
+    foreach( $this->element as $k => $v) {
+      if ( strtolower(get_class($this->element[$k])) == 'syntree' ) {
+        $this->element[$k]->getTree( $qry, $startQry );
+      }
     }
   }
 

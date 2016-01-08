@@ -1,60 +1,71 @@
 <?php
 
-if(!isset($_SESSION))
+if (!isset($_SESSION))
   session_start();
-if(!isset($_REQUEST['cmd']))
+
+if (!isset($_REQUEST['cmd']))
   $_REQUEST['cmd'] = '';
 
 // auto-load delle classi istanziate
 function __autoload($class) {
   global $synAbsolutePath;
-  require_once $synAbsolutePath.'/admin/modules/aa/classes/'.$class.'.php';
+  require_once $synAbsolutePath . '/admin/modules/aa/classes/' . $class . '.php';
 }
 
   //definizione variabili globali
-  $synContainer = isset($_REQUEST["aa_service"]) ? $_REQUEST["aa_service"] : $_SESSION["aa_service"];
-  $buttons = array();
+  $buttons      = array();
+  $synContainer = isset($_REQUEST['aa_service'])
+                ? $_REQUEST['aa_service']
+                : $_SESSION['aa_service'];
 
-  //creo il contenitore
-  if(!isset($db))
+  if ( !isset($db) )
     include_once ("../../../config/cfg.php"); //if RPC
 
-  $res = $db->Execute("SELECT * FROM aa_services WHERE id='{$synContainer}'");
-  $arr = $res->FetchRow();
-  $synDb = str_replace(" ", "_", strToLower($arr["syntable"]) );
-  $contenitore = synContainer::getInstance($synDb, $buttons, true, $arr["name"], $arr["description"],$arr["multilang"]);
+  //creo il contenitore
+  $res = $db->Execute( "SELECT syntable, name, description, multilang, dbsync, initOrder FROM aa_services WHERE id = '{$synContainer}'" );
 
-  $dbSync = $arr["dbsync"];
+  extract( $res->FetchRow(), EXTR_PREFIX_ALL, 'cont' );
+  $table = str_replace( ' ', '_', strToLower( $cont_syntable ) );
+  $dbSync = $cont_dbsync;
+  $cont_order = ( $cont_initOrder{0} === '-' ) ? 'DESC' : 'ASC';
+  $contenitore = synContainer::getInstance( $table, $buttons, TRUE, $cont_name, $cont_description, $cont_multilang );
+  $contenitore->setDefaultOrderDirection( $cont_order );
 
   //ci aggiungo gli elementi
-  $res = $db->Execute("SELECT se.*, e.classname as classname FROM aa_services_element se INNER JOIN aa_element e ON se.type=e.id WHERE container='{$synContainer}' order by `order`, `id`");
-  $count = 0;
-  while ($arr = $res->FetchRow()) {
-    $obj[$count] = new $arr["classname"]( $arr["name"], $arr["value"], translateDesktop($arr["label"]), $arr["size"], translateDesktop($arr["help"]) );
-    $obj[$count]->isListable($arr["isvisible"], $arr["label"], $arr["iseditable"]);
-  //$obj[$count]->setContainer($contenitore);
+  $elem_qry = <<<EOEQRY
+      SELECT se.*, e.classname AS classname
+        FROM aa_services_element se
+  INNER JOIN aa_element e ON se.type = e.id
+       WHERE se.container = '{$synContainer}'
+    ORDER BY se.`order`, se.`id`
+EOEQRY;
+  $res = $db->Execute( $elem_qry );
+  while ( $arr = $res->FetchRow() ) {
+    extract( $arr, EXTR_PREFIX_ALL, 'elem');
+    $elem = new $elem_classname( $elem_name, $elem_value, translateDesktop($elem_label), $elem_size, translateDesktop($elem_help) );
+    $elem->isListable( $elem_isvisible, $elem_label, $elem_iseditable );
+    if ($elem_path)
+      $elem->setPath( $elem_path );
+    if ($elem_iskey == 1)
+      $elem->setKey( TRUE );
+    if ($elem_ismultilang == 1)
+      $elem->setMultilang( TRUE );
 
-    if ($arr["path"] != "")
-      $obj[$count]->setPath($arr["path"]);
-    if ($arr["iskey"] == 1)
-      $obj[$count]->setKey(true);
-    if ($arr["ismultilang"] == 1)
-      $obj[$count]->setMultilang(true);
-
-    if ( $arr["qry"]!=''
-      && ( !isset($_REQUEST[$arr['name']]) || $_REQUEST[$arr["name"]] == '' )
+    if ( !empty($elem_qry)
+      && ( !isset($_REQUEST[$elem_name]) || empty($_REQUEST[$elem_name]) )
       ){
-      $obj[$count]->setQry($arr["qry"]);
-      $obj[$count]->setPath($arr["path"]);
+      $elem->setQry( $elem_qry );
+      $elem->setPath( $elem_path );
     }
 
-    $contenitore->checkJoins($arr["id"]);
-    $contenitore->addElement($obj[$count]);
-    $count++;
+    if ($elem_id == abs( $cont_initOrder ) )
+      $contenitore->setDefaultOrder( $elem_name );
+    $contenitore->checkJoins( $elem_id );
+    $contenitore->addElement( $elem );
   }
 
   //sincronizzo il db con gli elementi aggiunti al contenitore
-  if ($dbSync=="1" && $_REQUEST["cmd"]=='')
+  if ( $dbSync == '1' && $_REQUEST['cmd'] == '' )
     $contenitore->dbSynchronize();
 
   //----------------------------------------------------------------------------
@@ -83,6 +94,7 @@ function __autoload($class) {
 
 
   //if some search qry is done, add the constraint to the qry string
+  // !!! DEPRECATED START !!!
   function addQueryWhere ($qry) {
     global $aa_qry, $synTable, $db, $aa_group_services, $contenitore, $treeFrame;
 
@@ -151,15 +163,17 @@ function __autoload($class) {
     if (isset($_SESSION["aa_qry"])) $qry=$_SESSION["aa_qry"];
 
     if (isset($_GET["aa_order"])) {
-      if ($_SESSION["aa_order"]==$_GET["aa_order"])
-        if ($_SESSION["aa_order_direction"]==" DESC") $_SESSION["aa_order_direction"]=" ASC";
-        else $_SESSION["aa_order_direction"]=" DESC";
+      if ( $_SESSION["aa_order"] == $_GET["aa_order"])
+        if ($_SESSION["aa_order_direction"] == " DESC")
+          $_SESSION["aa_order_direction"] = " ASC";
+        else
+          $_SESSION["aa_order_direction"] = " DESC";
 
-      $_SESSION["aa_order"]=$_GET["aa_order"];
+      $_SESSION["aa_order"] = $_GET["aa_order"];
 
     } elseif (!isset($_SESSION["aa_order"])) {
       global $synTable;
-      $res=$db->Execute("SELECT s.initOrder FROM aa_services s where s.syntable='".$synTable."'");
+      $res = $db->Execute("SELECT s.initOrder FROM aa_services s where s.syntable='".$synTable."'");
       list($initOrderElement)=$res->FetchRow();
       if ($initOrderElement!=0) {
         $sign=abs($initOrderElement)/$initOrderElement;
@@ -177,9 +191,7 @@ function __autoload($class) {
     #echo 'Query: <code>',$qry,'</code>';
     return $qry;
   } //end addQueryWhere
-
-
-
+  // !!! DEPRECATED END !!!
 
   // new queryBuilder
   function buildQuery($contenitore, $db) {
@@ -192,20 +204,24 @@ function __autoload($class) {
     $table = $query->addTable( $contenitore->getTable() );
 
     foreach( $contenitore->element AS $e ){
-      if ($e->multilang == 1) {
-        $translation = $query->addJoin( 'aa_translation' );
-        $translation->setOn( $table->setField($e->name), $translation->setField('id') );
-        $translation->setMode( 'LEFT' );
-        $translation->addField( $_SESSION['aa_CurrentLangInitial'], $e->name.'aatrans' );
-      }
-      if (isset($e->table_join)) {
-        $tjoin = $query->addJoin( $table->getName() . '-' . $e->table_join );
-        $tjoin->setOn( $tjoin->setField( 'id_' . $table->getName()), $table->setField('id') );
-        $tjoin->addField( 'id_' . $e->table_join );
-        $query->addWhereClause( $tjoin->setField( $e->name ), 1 );
+      if ( !$treeFrame
+        || $treeFrame && ($e->list || $e->is_key)
+        ){
+        if ($e->multilang == 1) {
+          $translation = $query->addJoin( 'aa_translation' );
+          $translation->setOn( $table->setField($e->name), $translation->setField('id') );
+          $translation->setMode( 'LEFT' );
+          $translation->addField( $_SESSION['aa_CurrentLangInitial'], $e->name.'aatrans' );
+        }
+        if (isset($e->table_join)) {
+          $tjoin = $query->addJoin( $table->getName() . '-' . $e->table_join );
+          $tjoin->setOn( $tjoin->setField( 'id_' . $table->getName()), $table->setField('id') );
+          $tjoin->addField( 'id_' . $e->table_join );
+          $query->addWhereClause( $tjoin->setField( $e->name ), 1 );
 
-      } else {
-        $table ->addField( $e->name );
+        } else {
+          $table ->addField( $e->name );
+        }
       }
     }
 
@@ -971,36 +987,26 @@ EOBOTTOMBAR;
       }
 
       //perform the qry
-      $qry = addQueryWhere("SELECT `{$synTable}`.* FROM `{$synTable}`");
-      $res = $db->Execute( $qry );
-      //echo 'qry: '.$qry.'<br>';
+      //$qry = addQueryWhere("SELECT `{$synTable}`.* FROM `{$synTable}`");
 
-      /*
-      $qry = buildQuery( $contenitore, $db );
-      $res = $db->execute( $qry->getQuery() );
-      echo 'qry: '.$qry->getQuery().'<br>';
-      */
 
-      if ($treeFrame == "true") {
+      if ($treeFrame == 'true') {
+        // TODO: full implementation of queryBuilder into synContainer and synTree
         //$contenitore->getTree2( $qry );
+        $qry = buildQuery( $contenitore, $db );
         $contenitore->getTree( $qry );
-
+        //echo 'order: '.$qry->getOrderBy().'<br>';
       } else {
         if ( $contenitore->treeExists() === true ) {
           enqueue_js( 'parent.refreshTreeFrame();' );
           enqueue_js( 'parent.openTreeFrame();' );
         }
-        $dir = (isset($_SESSION['aa_order_direction']) && strpos($_SESSION['aa_order_direction'], 'DESC'))
-             ? 'desc'
-             : 'asc' ;
+        $sort_name = $contenitore->getDefaultOrder();
+        $sort_dir = strtolower( $contenitore->getDefaultOrderDirection() );
         $header = $contenitore->getJsonHeader();
         //          data-cookie-id-table="settings_{$synTable}"
-        /*
-                  data-sort-name="{$_SESSION['aa_order']}"
-          data-sort-order="{$dir}"
-        */
         $table = <<<EOTABLE
-        <table id="mainTable" class="table table-striped table-condensed">
+        <table id="mainTable" class="table table-striped table-condensed" data-sort-name="{$sort_name}" data-sort-order="{$sort_dir}">
           <thead>
             <tr>{$header}</tr>
           </thead>

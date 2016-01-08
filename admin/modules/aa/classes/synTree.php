@@ -256,31 +256,43 @@ class synTree extends synElement {
 
   var $openbranch = null;
 
-  function createBsTree($qry, $id=0, $startingQry='', $recursion=0) {
+  function createBsTree( $qry = '', $id = 0, $startingQry = '', $recursion = 0 ) {
     global $db, $contenitore, $synLoggedUser;
     $ret      = '';
     $tmpCount = 0;
-    $newRec   = $recursion+2;
+    $newRec   = $recursion + 2;
 
     // calculate indentation based on recursion
     $_   = $this->indent(0, $newRec);
     $__  = $this->indent(1, $newRec);
+//echo '1] '. $qry . '<br><hr>';
+//echo '2] '. $startingQry . '<br><hr>';
+    if ($qry) {
+      // deprecated: old  query builder
+      if ($this->chkTargetMultilang())
+        $this->multilang = 1;
+      if (strpos(strtolower($qry), "where"))
+        $and = " AND ";
+      else
+        $and = " WHERE ";
+      if (strpos(strtolower($qry), "order"))
+        $q = str_replace("ORDER", $and.$this->name." = '{$id}' ORDER", $qry);
+      else
+        $q = $qry.$and.$this->name." = '{$id}'";
+      if (!empty($startingQry))
+        $q = $startingQry;
 
-    if ($this->chkTargetMultilang())
-      $this->multilang = 1;
-    if (strpos(strtolower($qry), "where"))
-      $and = " AND ";
-    else
-      $and = " WHERE ";
-    if (strpos(strtolower($qry), "order"))
-      $q = str_replace("ORDER", $and.$this->name." = '{$id}' ORDER", $qry);
-    else
-      $q = $qry.$and.$this->name." = '{$id}'";
-    if (!empty($startingQry))
-      $q = $startingQry;
+      //echo $q . '<br>';
+      $res = $db->Execute($q);
+      $totalNodes = $res->RecordCount();
 
-    $res = $db->Execute($q);
-    $totalNodes = $res->RecordCount();
+    } else {
+      $qry = buildQuery( $contenitore, $db );
+      $tot = $db->Execute( $qry->getCountQuery() );
+      list($totalNodes) = $tot->fetchRow();
+
+      $res = $db->execute( $qry->getQuery() );
+    }
 
     while ($arr = $res->FetchRow()) {
       $child = '';
