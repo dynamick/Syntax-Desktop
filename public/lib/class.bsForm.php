@@ -5,6 +5,10 @@
 class bsForm extends formBuilder {
   private $counter = 0;
   protected $input_class = 'form-control';
+  protected $button_class = 'btn';
+  protected $submit_button_class = 'btn-primary';
+  protected $reset_button_class = 'btn-default';
+
 
   public function addField($name, $label, $value='', $tipo='text', $obbligatorio=0, $formato='', $options=array(), $fieldset='', $hint='', $disabled=false) {
     $identifier = (is_array($name))
@@ -69,41 +73,56 @@ class bsForm extends formBuilder {
         break;
     }
 
-    if($input!='') {
-      $this->counter ++;
-
-      $label = trim($label).($obbligatorio==1 ? ' '.$this->required_mark : null);
-      $hint = ($hint) ? "<span class=\"help-block\">{$hint}</span>" : null;
-      $f = '';
-      $span = null;
-      if ($this->class=='form-vertical') {
-        $span = ($split_column) ? 'span6 ' : 'span12 clearfix ';
-        if ($this->counter==1) {
-          $f .= '<div class="row-fluid">';
+    if ($input != '') {
+      if (isset($this->group_fields[$name])) {
+        // field is associated to a group
+        $group_id = $this->group_fields[$name];
+        if (!isset($this->groups[$group_id]['fields'][$name])) {
+          // add field to group
+          $this->groups[$group_id]['fields'][$name] = array(
+            'label' => $label_tag,
+            'input' => $input,
+            'key' => $this->field_key
+          );
         }
-      }
 
-      $f  .= <<<ENDOFFIELD
-      <div class="{$span}form-group">
-        {$label_tag}
-        {$input}
-        {$hint}
-      </div>
+      } else {
+        $this->counter ++;
+
+        $label = trim($label).($obbligatorio==1 ? ' '.$this->required_mark : null);
+        $hint = ($hint) ? "<span class=\"help-block\">{$hint}</span>" : null;
+        $f = '';
+        $span = null;
+        if ($this->class=='form-vertical') {
+          $span = ($split_column) ? 'span6 ' : 'span12 clearfix ';
+          if ($this->counter==1) {
+            $f .= '<div class="row-fluid">';
+          }
+        }
+
+        $f  .= <<<ENDOFFIELD
+        <div class="{$span}form-group">
+          {$label_tag}
+          {$input}
+          {$hint}
+        </div>
 ENDOFFIELD;
 
-      if ($this->class=='form-vertical') {
-        if ($this->counter==2 || $split_column==false) {
-          $f .= '</div>'.PHP_EOL;
-          $this->counter = 0;
+        if ($this->class=='form-vertical') {
+          if ($this->counter==2 || $split_column==false) {
+            $f .= '</div>'.PHP_EOL;
+            $this->counter = 0;
+          }
         }
-      }
 
-      if($fieldset){
-        $this->fieldset[$fieldset]['fields'][] = $f;
-      } else {
-        $this->fields[] = $f;
-      }
+        if($fieldset){
+          $this->fieldset[$fieldset]['fields'][] = $f;
+        } else {
+          $this->fields[] = $f;
+        }
+      } // if (isset($this->group_fields[$name]))
     }
+
     if (is_array($name))
       $this->hook[$name[0]] = $label;
     else
@@ -127,31 +146,63 @@ ENDOFFIELD;
     $form .= $this->error;
     //if ($this->ajax_submit)      $form .= "<div class=\"form-respond text-center\"></div>\n";
 
+    // special groups management!
+    if (!empty($this->groups)) {
+      foreach($this->groups as $k => $g) {
+        $html = $g['html'];
+        $fset = $g['fieldset'];
+
+        if (!empty($g['fields'])) {
+          $field_key = 0;
+          foreach ($g['fields'] as $key => $field) {
+            // replace the field html with the one provided by the group
+            $find = array("%%{$key}_label%%", "%%{$key}%%");
+            $replace = array($field['label'], $field['input']);
+            $html = str_replace($find, $replace, $html);
+            if ($field_key == 0)
+              $field_key = $field['key'];
+          }
+          // remove group, as it's not needed anymore
+          unset( $this->groups[$k] );
+        }
+
+        if(!empty($fset) && isset($this->fieldset[$fset])){
+          // add the modified html to its fieldset
+          $this->fieldset[$fset]['fields'][ $field_key ] = $html;
+        } else {
+          // add the modified html to the form
+          $this->fields[ $field_key ] = $html;
+        }
+      }
+    }
+
     if ($tot) {
       // ci sono fieldset
       $cnt = 1;
       foreach ($this->fieldset as $k => $s) {
-        $block_class = 'item_bottom'; // classi per skroller
-        if ($cnt == 1) {
-          $form .= "<div class=\"row\">\n";
-          $block_class = 'item_top'; // classi per skroller
-        }
-        $form .= "  <fieldset id=\"fs{$k}\" class=\"col-md-6 col-sm-6 col-md-6 col-xs-12\">\n";
-        $form .= "    <div class=\"{$block_class}\">\n";
-        if ($s['legend']!='' && !is_numeric($s['legend']))
-          $form .= "    <legend><span>{$s['legend']}</span></legend>\n";
-        $form .= implode(PHP_EOL, $s['fields']);
-        $form .= "    </div>\n";
-        $form .= "  </fieldset>\n";
+        ksort( $s['fields'], SORT_NUMERIC );
+        $fs = '';
 
-        if ($cnt == 2) {
-          $form .= "</div>\n";
-          $cnt = 1;
-        } else
-          $cnt = 2;
-      }
-      if ($cnt == 2) {
-        $form .= "</div>\n";
+        if ( !empty($s['legend']) && !is_numeric($s['legend']) )
+          $fs .= "    <legend><span>{$s['legend']}</span></legend>\n";
+
+        if (!empty($s['fields'])) {
+          $fs .= "  <fieldset id=\"fs{$k}\" class=\"col-md-12\">\n";
+          $fs .= implode(PHP_EOL, $s['fields']);
+          $fs .= "  </fieldset>\n";
+        }
+
+        if (isset($this->group_fieldset[ $k ])) {
+          // fieldset associated to a group
+          $group_id = $this->group_fieldset[ $k ];
+          if (!isset($this->groups[ $group_id ]['fields'][$name])) {
+            // seize the fieldset for later use
+            $this->groups[$group_id]['html'] .= $fs;
+          }
+        } else {
+          // append the fieldset to the main form
+          $form .= $fs;
+        }
       }
 
       $form .= "<div class=\"row\"><div class=\"col-md-12 text-center\">\n";
@@ -161,34 +212,33 @@ ENDOFFIELD;
       if ($this->privacy == true)
         $form .= $this->insertDisclaimer();
 
-      if ($this->inline_buttons){
+      if ($this->inline_buttons)
         $form .=  $this->insertInlineButtons($this->buttons);
-      } else {
+      else
         $form .=  $this->insertButtons($this->buttons);
-      }
+
       $form .= "</div></div>\n";
 
     } else {
       // non ci sono fieldset, inserisco i campi nel form
+      ksort( $this->fields, SORT_NUMERIC );
+
       $form .= implode(PHP_EOL, $this->fields);
 
-      if($this->captcha!='nessuno'){
+      if ( $this->captcha != 'nessuno' )
         $form .= $this->insertCaptcha($this->captcha);
-      }
 
-      if($this->privacy==true){
+      if ( $this->privacy == true )
         $form .= $this->insertDisclaimer();
-      }
 
-      if($this->inline_buttons){
+      if ( $this->inline_buttons )
         $form .= $this->insertInlineButtons($this->buttons);
-      } else {
+      else
         $form .= $this->insertButtons($this->buttons);
-      }
     }
     $form .= "</form>\n";
 
-    if ($this->include_script)
+    if ( $this->include_script )
       $form .= $this->validateScript();
 
     return $form;
@@ -332,7 +382,20 @@ EORF;
     return $ret;
   }
 
-  function insertDisclaimer(){
+
+  function linkedDisclaimer() {
+    $disclaimer = sprintf( $this->approvazione_link, $this->submitLabel, $this->privacy_page );
+    $ret = <<<EOPD
+    <div class="control-group">
+      <input type="hidden" name="privacy" id="fprivacy" value="1" {$this->tagClosure()}>
+      <p class="text-muted"><small>{$disclaimer}</small></p>
+    </div>
+EOPD;
+    return $ret;
+  }
+
+
+  function defaultDisclaimer(){
     $ret = <<<EOPD
       <div class="control-group">
         <label class="control-label">Privacy</label>
@@ -352,7 +415,6 @@ EORF;
 EOPD;
     return $ret;
   }
-
 
 
   function insertCaptcha($type){
@@ -375,8 +437,6 @@ EOPD;
     }
     return $ret;
   }
-
-
 
 
   function setSynCaptcha(){
@@ -423,43 +483,6 @@ EOSC;
     return $ret;
   }
 
-  /*
-  function validateScript(){
-    $params = array();
-    // campi particolari
-    if($this->haschecks){
-      $params[] = "    highlight: function(element){ $(element).addClass('error').siblings('span.{$this->cblabelclass}').addClass('error-field');}";
-      $params[] = "    unhighlight: function(element, errorClass, validClass){ $(element).removeClass('error').siblings('span.{$this->cblabelclass}').removeClass('error-field'); }";
-    }
-
-    // regole particolari
-    if ( is_array($this->validateRules)
-      && count($this->validateRules)>0
-      ) $params[] = "    rules:{".implode(",\n", $this->validateRules)."}";
-
-    $rules = implode(",\n  ", $params);
-    $js  = <<<EOSCRIPT
-    <script type="text/javascript">
-      function sdValidate(form){
-        $.validator.messages.required="{$this->error1}";
-        $.validator.messages.email="{$this->error2}";
-        $.validator.messages.remote="{$this->error3}";
-        $.validator.messages.equalTo="{$this->error4}";
-        form.validate({
-          {$rules}
-        });
-      }
-
-      $(document).ready(function(){
-        var form = $("#form{$this->id}");
-        sdValidate(form);
-      });
-    </script>
-EOSCRIPT;
-
-    return $js;
-  }
-  */
 }
 
 

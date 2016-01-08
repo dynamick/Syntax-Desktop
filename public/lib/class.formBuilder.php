@@ -9,13 +9,14 @@
   * @param int $id ID del form (record sul db)
   * @param array $attributes Attributi del form
   * @return str $form
-  * @version 1.2
+  * @version 1.3
   */
 
 class formBuilder {
 
   protected $action;
   protected $approvazione;
+  protected $approvazione_link;
   protected $captcha = 'nessuno';
   protected $captchaConfig = array();
   protected $captchaLabel = 'Codice di sicurezza';
@@ -43,6 +44,7 @@ class formBuilder {
   protected $method;
   protected $multipart = 0;
   protected $privacy = false;
+  protected $privacy_page = NULL;
   protected $privacyLabel = 'Privacy';
   protected $required_mark = '*';
   protected $resetLabel = 'Reset';
@@ -58,22 +60,28 @@ class formBuilder {
   protected $inline_buttons = false;
   protected $reset_button = true;
   protected $submit_button = true;
-  protected $xhtml = true;
+  protected $xhtml = false;
   protected $include_script = true;
   protected $ajax_submit = false;
 
+  protected $field_key = 0;
+  protected $groups = array();
+  protected $group_fields = array();
+  protected $group_fieldset = array();
+  protected $extra_markup = '';
 
-  function __construct($id) {
+
+  function __construct( $id ) {
     $this->setAttributes(array(
-      'id'=>$id,
-      'method'=>'post',
-      'captchaConfig'=>array(
-        'width'=>300,
-        'height'=>80,
-        'chars'=>5,
-        'dict'=>1,
-        'lines'=>1,
-        'noise'=>1
+      'id' => $id,
+      'method' => 'post',
+      'captchaConfig' => array(
+        'width'   => 300,
+        'height'  => 80,
+        'chars'   => 5,
+        'dict'    => 1,
+        'lines'   => 1,
+        'noise'   => 1
         )
     ));
   }
@@ -111,6 +119,32 @@ class formBuilder {
       'fields' => array()
       );
     $this->lastFs = $id;
+  }
+
+  public function addGroup($id, $html, $fields, $fieldset){
+    // build the index
+
+    // if there are fields, add them to the index
+    if (is_array($fields)) {
+      foreach($fields as $f) {
+        $this->group_fields[ $f ] = $id;
+      }
+    }
+
+    // if fieldset is an array, this is a group of fieldset. add them to the index
+    if (is_array($fieldset)) {
+      foreach($fieldset as $fs) {
+        $this->group_fieldset[ $fs ] = $id;
+      }
+    }
+
+    // add the group object
+    $this->groups[$id] = array(
+      'id' => $id,
+      'html' => $html,
+      'fields' => array(),
+      'fieldset' => $fieldset
+    );
   }
 
 
@@ -174,19 +208,35 @@ class formBuilder {
         break;
     }
 
-    if($input!='') {
-      //$f  = "<div{$class}>\n";
-      $f  = "<{$this->container_element}>\n";
-      $f .= $label_tag.PHP_EOL;
-      $f .= $input.PHP_EOL;
-      $f .= ($hint) ? "<span class=\"hint\">{$hint}</span>" : '';
-      $f .= "</{$this->container_element}>\n";
+    $this->field_key ++;
 
-      if($fieldset){
-        $this->fieldset[$fieldset]['fields'][] = $f;
+    if ($input!='') {
+      if (isset($this->group_fields[$name])) {
+        // field is associated to a group
+        $group_id = $this->group_fields[$name];
+        if (!isset($this->groups[$group_id]['fields'][$name])) {
+          // add field to group
+          $this->groups[$group_id]['fields'][$name] = array(
+            'label' => $label_tag,
+            'input' => $input,
+            'key' => $this->field_key
+          );
+        }
+
       } else {
-        $this->fields[] = $f;
-      }
+        //$f  = "<div{$class}>\n";
+        $f  = "<{$this->container_element}>\n";
+        $f .= $label_tag.PHP_EOL;
+        $f .= $input.PHP_EOL;
+        $f .= ($hint) ? "<span class=\"hint\">{$hint}</span>" : '';
+        $f .= "</{$this->container_element}>\n";
+
+        if($fieldset){
+          $this->fieldset[$fieldset]['fields'][] = $f;
+        } else {
+          $this->fields[] = $f;
+        }
+      } // if (isset($this->group_fields[$name]))
     }
     $this->hook[$name] = $label;
   }
@@ -206,53 +256,105 @@ class formBuilder {
 
     $form  = "<form{$enctype} id=\"form{$this->id}\"{$class} method=\"{$this->method}\" action=\"{$this->action}\">\n";
     $form .= $this->error;
-    if($tot){
-      // ci sono fieldset, aggiungo i campi speciali all'ultimo
-      if($this->captcha!='nessuno'){
-        $this->fieldset[$this->lastFs]['fields'][] = $this->insertCaptcha($this->captcha);
+
+    // special groups management!
+    if ( !empty($this->groups) ) {
+      foreach( $this->groups as $k => $g ) {
+        $html = $g['html'];
+        $fset = $g['fieldset'];
+
+        if (!empty($g['fields'])) {
+          $field_key = 0;
+          foreach ($g['fields'] as $key => $field) {
+            // replace the field html with the one provided by the group
+            $find = array("%%{$key}_label%%", "%%{$key}%%");
+            $replace = array($field['label'], $field['input']);
+            $html = str_replace($find, $replace, $html);
+            if ($field_key == 0)
+              $field_key = $field['key'];
+          }
+          // remove group, as it's not needed anymore
+          unset( $this->groups[$k] );
+        }
+
+        if ( !empty($fset) && isset($this->fieldset[$fset]) ){
+          // add the modified html to its fieldset
+          $this->fieldset[$fset]['fields'][ $field_key ] = $html;
+        } else {
+          // add the modified html to the form
+          $this->fields[ $field_key ] = $html;
+        }
+      }
+    }
+
+    if ($tot) {
+      // there are fieldsets
+      foreach ($this->fieldset as $k => $s) {
+        ksort( $s['fields'], SORT_NUMERIC );
+        $fs = '';
+
+        if ($s['legend']!='' && !is_numeric($s['legend']))
+          $fs .= "    <header>{$s['legend']}</header>\n";
+
+        if (!empty($s['fields'])) {
+          $fs .= "  <fieldset id=\"fs{$k}\" class=\"col-md-12 margin-bottom-40\">\n";
+          $fs .= implode(PHP_EOL, $s['fields']);
+          $fs .= "  </fieldset>\n";
+        }
+
+        if (isset($this->group_fieldset[ $k ])) {
+          // fieldset associated to a group
+          $group_id = $this->group_fieldset[ $k ];
+          if (!isset($this->groups[ $group_id ]['fields'][$name])) {
+            // seize the fieldset for later use
+            $this->groups[$group_id]['html'] .= $fs;
+          }
+        } else {
+          // append the fieldset to the main form
+          $form .= $fs;
+        }
       }
 
-      if($this->privacy==true){
-        $this->fieldset[$this->lastFs]['fields'][] = $this->insertDisclaimer();
-      }
+      $form .= "<div class=\"row\"><div class=\"col-md-12\">\n";
+      if ($this->captcha!='nessuno')
+        $form .= $this->insertCaptcha($this->captcha);
 
-      if($this->inline_buttons){
-        $this->fieldset[$this->lastFs]['fields'][] = $this->insertInlineButtons($this->buttons);
+      if ($this->privacy == true)
+        $form .= $this->insertDisclaimer();
+
+      if ($this->inline_buttons){
+        $form .=  $this->insertInlineButtons($this->buttons);
       } else {
-        $this->fieldset[$this->lastFs]['fields'][] = $this->insertButtons($this->buttons);
+        $form .=  $this->insertButtons($this->buttons);
       }
-
-
-      foreach($this->fieldset as $k => $s){
-        $form .= "  <fieldset id=\"fs{$k}\">\n";
-        if($s['legend']!='')
-          $form .= "    <legend><span>{$s['legend']}</span></legend>\n";
-        $form .= implode(PHP_EOL, $s['fields']);
-        $form .= "  </fieldset>\n";
-      }
+      $form .= "</div></div>\n";
 
     } else {
-      // non ci sono fieldset, inserisco i campi nel form
+      // there are no fieldsets, append fields directly to the form
+      ksort( $this->fields, SORT_NUMERIC );
       $form .= implode(PHP_EOL, $this->fields);
 
-      if($this->captcha!='nessuno'){
+      if ( $this->captcha != 'nessuno' )
         $form .= $this->insertCaptcha($this->captcha);
-      }
 
-      if($this->privacy==true){
+      if ( $this->privacy === true )
         $form .= $this->insertDisclaimer();
-      }
 
-      if($this->inline_buttons){
+      if ( $this->inline_buttons )
         $form .= $this->insertInlineButtons($this->buttons);
-      } else {
+      else
         $form .= $this->insertButtons($this->buttons);
-      }
     }
     $form .= "</form>\n";
 
     if ($this->include_script)
       $form .= $this->validateScript();
+
+    if (!empty($this->groups)) {
+      // there are seized fieldsets, store them in extra_markup
+      foreach( $this->groups as $g)
+        $this->extra_markup .= $g['html'];
+    }
 
     return $form;
   }
@@ -494,7 +596,32 @@ EOSC;
     return $ret;
   }
 
-  function insertDisclaimer(){
+  function insertDisclaimer($type){
+    $ret = '';
+    if ($this->privacy) {
+      if ($this->privacy_page) {
+        $ret = $this->linkedDisclaimer();
+      } else {
+        $ret = $this->defaultDisclaimer();
+      }
+    }
+    return $ret;
+  }
+
+
+  function linkedDisclaimer() {
+    $disclaimer = sprintf( $this->approvazione_link, $this->submitLabel, $this->privacy_page );
+    $ret = <<<EOPD
+      <div class="full">
+        <input type="hidden" name="privacy" id="fprivacy" value="1" {$this->tagClosure()}>
+        {$disclaimer}
+      </div>
+EOPD;
+    return $ret;
+  }
+
+
+  function defaultDisclaimer(){
     $ret = <<<EOPD
       <div class="full">
         <p class="disclaimer">{$this->informativa}</p>
@@ -552,6 +679,11 @@ EOPD;
 
   function addButtons($button){
     $this->additionalButtons[] = $button;
+  }
+
+
+  function getExtraMarkup(){
+    return $this->extra_markup;
   }
 
 

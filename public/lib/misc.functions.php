@@ -445,6 +445,7 @@ if (!function_exists('alternate_column_languages')) {
   }
 }
 
+
 if (!function_exists('ensureUrlScheme')) {
   function ensureUrlScheme( $url, $scheme = 'http://' ) {
     return parse_url($url, PHP_URL_SCHEME) === null ?
@@ -452,5 +453,19 @@ if (!function_exists('ensureUrlScheme')) {
   }
 }
 
+/*
+ * check if variable exists and is not null, optionally returns a default value.
+ * Useful to avoid 'undefined variable' notices.
+ */
+if (!function_exists('safe_get')) {
+  function safe_get( $var, $default = NULL, $callback = FALSE ) {
+    if ( isset($var) ) {
+      if ( isset($callback) )
+        $var = call_user_func( $callback, $var );
+      return $var;
+    } else
+      return $default;
+  }
+}
 
 // EOF misc.functions.php

@@ -3,15 +3,15 @@
 function smarty_function_form($params, &$smarty) {
   global $db, $synWebsiteTitle, $synPublicPath;
 
-  if(!isset($_SESSION))
-    session_start();
+  s_start(); // session_start
 
-  $page     = isset($params['page']) ? intval($params['page']) : NULL;
-  $formid   = isset($params['id']) ? intval($params['id']) : NULL;
-  $lng      = $_SESSION['synSiteLangInitial'];
+  $page     = safe_get( $params['page'], NULL, 'intval' );
+  $formid   = safe_get( $params['id'], NULL );
+  $lng      = getLangInitial();
   $t        = multiTranslateDictionary(array(
             'informativa',
             'informativa_privacy',
+            'informativa_privacy_link',
             'checkfields',
             'campo_obbligatorio',
             'email_non_valida',
@@ -35,13 +35,12 @@ function smarty_function_form($params, &$smarty) {
   if (!$form_id)
     return false;  // nessun form trovato, esco
 
-  $fieldset = getFormFieldset($form_id, $lng); // vedi sotto
-  $fields   = getFormFields($form_id, $lng, $params); // vedi sotto
-  $form     = new bsForm($form_id);
+  $fieldset = getFormFieldset( $form_id, $lng ); // vedi sotto
+  $fields   = getFormFields( $form_id, $lng, $params ); // vedi sotto
+  $form     = new bsForm( $form_id );
+  //$form     = new formBuilder($form_id);
 
-  $session  = isset($_SESSION['form'.$form_id])
-            ? $_SESSION['form'.$form_id]
-            : false;
+  $session  = safe_get( $_SESSION['form'.$form_id], FALSE );
   $html     = "<h2>{$form_var['titolo']}</h2>\n";
 
   if ( isset($session)
@@ -75,51 +74,92 @@ function smarty_function_form($params, &$smarty) {
       }
     }
 
+    $privacy_page = $form_var['privacy_page']
+                  ? createPath( $form_var['privacy_page'] )
+                  : NULL;
+
     $form_config = array( // configurazione
-      'action'          => $synPublicPath.'/server/dispatch.php',
-      'xhtml'           => false,
-      'method'          => 'post',
-      'class'           => 'synform',
-      'hide_label'      => false,
-      'resetLabel'      => $t['cancella'],
-      'submitLabel'     => $t['invia'],
-      'captcha'         => $form_var['captcha'],
-      'captchaConfig'   => array( 'width'=>270, 'height'=>50 ),
-      'captchaLabel'    => $t['codice_sicurezza'],
-      'privacy'         => $form_var['privacy'],
-      'informativa'     => nl2br($t['informativa_privacy']),
-      'approvazione'    => $t['informativa'],
-      'checkfields'     => $t['checkfields'],
-      'error1'          => $t['campo_obbligatorio'],
-      'error2'          => $t['email_non_valida'],
-      'error3'          => $t['verifica_valore'],
-      'include_script'  => false,
-      'ajax_submit'     => true,
-      'debug'           => false
+      'action'              => $synPublicPath . '/server/dispatch.php',
+      'method'              => 'post',
+      'class'               => 'synform',
+      'hide_label'          => false,
+      'resetLabel'          => $t['cancella'],
+      'submitLabel'         => $t['invia'],
+      'button_class'        => 'btn',
+      'submit_button_class' => 'btn-primary',
+      'reset_button_class'  => 'btn-default',
+      'captcha'             => $form_var['captcha'],
+      'captchaConfig'       => array( 'width' => 270, 'height' => 50 ),
+      'captchaLabel'        => $t['codice_sicurezza'],
+      'privacy'             => $form_var['privacy'],
+      'privacy_page'        => $privacy_page,
+      'informativa'         => nl2br($t['informativa_privacy']),
+      'approvazione'        => $t['informativa'],
+      'approvazione_link'   => $t['informativa_privacy_link'],
+      'checkfields'         => $t['checkfields'],
+      'error1'              => $t['campo_obbligatorio'],
+      'error2'              => $t['email_non_valida'],
+      'error3'              => $t['verifica_valore'],
+      'include_script'      => false,
+      'ajax_submit'         => true,
+      'debug'               => false
       );
 
     $form->setAttributes( $form_config );
 
-    foreach($fieldset as $s => $l) {
+    foreach ($fieldset as $s => $l)
     	$form->addFieldset($s, $l);
-    }
+
+    // ============================ START GROUPs ============================ */
+    // special markup for custom fields
+    // syntax: $form->addGroup( <group name>, <group html>, <array of field names>, <fieldset id> );
+    /*
+
+    $group0 = <<<EOGROUP
+    <div id="cp" class="well">
+      <section>
+        %%nome_label%%
+        <label class="input">
+        %%nome%%
+        </label>
+      </section>
+    </div>
+EOGROUP;
+    $group_fields = array('nome');
+    $form->addGroup('name', $group0, $group_fields, 0);
+
+    */
+    // ============================  END GROUPs ============================= */
 
     foreach($fields as $f) {
-    	$form->addField($f['titolo'], $f['label'], $f['value'], $f['tipo'], $f['obbligatorio'], $f['formato'], $f['opzioni'], $f['fieldset']);
+    	$form->addField(
+        $f['titolo'],
+        $f['label'],
+        $f['value'],
+        $f['tipo'],
+        $f['obbligatorio'],
+        $f['formato'],
+        $f['opzioni'],
+        $f['fieldset']
+      );
     }
 
-    if (isset($session['error'])) {
+    if ( isset($session['error']) )
 	  	$form->errorMsg($session['error']);
-    }
 
   	$html .= $form->render();
-    unset($_SESSION['form'.$form_id]);
+    unset( $_SESSION['form'.$form_id] );
   }
 
-  if ( isset($form_config['include_script']) && !$form_config['include_script'] )
-    $smarty->assign('pageScript', $form->validateScript() );
+  if ( isset($form_config['include_script']) && $form_config['include_script'] === FALSE )
+    $smarty->assign( 'pageScript', $form->validateScript() );
 
-  return '<div id="form'.$form_id.'-wrapper">'.$html.'</div>';
+  // eventuali fieldset catturati
+  $extra_markup = $form->getExtraMarkup();
+  if (!empty($extra_markup))
+    $smarty->assign( 'extra_markup', $extra_markup );
+
+  return '<div id="form' . $form_id . '-wrapper">' . $html . '</div>';
 }
 
 
@@ -128,7 +168,7 @@ function getFormAttributesByPage($req, $lng='it'){
   global $db;
   $qr1 = <<<EOSQL
 
-     SELECT f.id, f.destinatario, f.privacy, f.captcha,
+     SELECT f.id, f.destinatario, f.privacy, f.privacy_page, f.captcha,
             t1.{$lng} AS titolo, t2.{$lng} AS descrizione, t3.{$lng} AS risposta
        FROM forms f
   LEFT JOIN aa_translation t1 ON f.titolo=t1.id
@@ -148,7 +188,7 @@ function getFormAttributesById($req, $lng='it'){
   global $db;
   $qr1 = <<<EOSQL
 
-     SELECT f.id, f.destinatario, f.privacy, f.captcha,
+     SELECT f.id, f.destinatario, f.privacy, f.privacy_page, f.captcha,
             t1.{$lng} AS titolo, t2.{$lng} AS descrizione, t3.{$lng} AS risposta
        FROM forms f
   LEFT JOIN aa_translation t1 ON f.titolo=t1.id

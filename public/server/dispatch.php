@@ -3,10 +3,8 @@
   ini_set('display_errors', 0);
 
   require_once('../config/cfg.php');
-  //global $db, $synRootPasswordSalt, $synPublicPath, $synWebsiteTitle;
 
-  if (!isset($_SESSION))
-    session_start();
+  s_start(); // session_start
 
   if (!isset($_SESSION['spammer']))
     $_SESSION['spammer'] = 0;
