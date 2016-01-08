@@ -1,5 +1,5 @@
 # MySQL dump of database 'syntax' on host 'localhost'
-# backup date and time: 01/08/16 16:10:01
+# backup date and time: 01/08/16 18:29:42
 # built by phpMyBackupPro v.2.1
 # http://www.phpMyBackupPro.net
 
@@ -74,7 +74,7 @@ CREATE TABLE `aa_group_services` (
   `ip` varchar(30) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `group` (`group`)
-) ENGINE=MyISAM AUTO_INCREMENT=235 DEFAULT CHARSET=utf8 AUTO_INCREMENT=235;
+) ENGINE=MyISAM AUTO_INCREMENT=237 DEFAULT CHARSET=utf8 AUTO_INCREMENT=237;
 
 
 ### data of table `aa_group_services` ###
@@ -139,6 +139,8 @@ insert into `aa_group_services` values ('231', '4040', '153', '501', '1', '0', '
 insert into `aa_group_services` values ('232', '3080', '18', '627', '1', '156', '', '1', '1', '1', '', '', '');
 insert into `aa_group_services` values ('233', '3060', '18', '728', '1', '157', '', '1', '1', '1', '', 'accept.png', '');
 insert into `aa_group_services` values ('234', '3095', '18', '739', '1', '158', '', '', '1', '1', '', 'accept.png', '');
+insert into `aa_group_services` values ('235', '3105', '18', '802', '1', '159', '', '1', '1', '1', '', '', '');
+insert into `aa_group_services` values ('236', '3115', '18', '803', '1', '160', '', '1', '1', '1', '', '', '');
 
 
 ### structure of table `aa_groups` ###
@@ -181,6 +183,28 @@ CREATE TABLE `aa_lang` (
 
 insert into `aa_lang` values ('1', 'italiano', 'it', 'italy.png', '1', '10', '1', '');
 insert into `aa_lang` values ('2', 'english', 'en', 'greatbritain.png', '1', '20', '', '');
+
+
+### structure of table `aa_logs` ###
+
+DROP TABLE IF EXISTS `aa_logs`;
+
+CREATE TABLE `aa_logs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `timestamp` datetime NOT NULL,
+  `ip_address` varchar(255) NOT NULL,
+  `user_agent` varchar(255) NOT NULL,
+  `request_uri` varchar(255) NOT NULL,
+  `response` text NOT NULL,
+  `redirect_id` int(11) NOT NULL DEFAULT '0',
+  `dispatched` varchar(255) NOT NULL,
+  `referer` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 AUTO_INCREMENT=3;
+
+
+### data of table `aa_logs` ###
+
 
 
 ### structure of table `aa_page` ###
@@ -241,7 +265,7 @@ CREATE TABLE `aa_service_joins` (
   `container` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `container` (`container`)
-) ENGINE=MyISAM AUTO_INCREMENT=25 DEFAULT CHARSET=utf8 AUTO_INCREMENT=25;
+) ENGINE=MyISAM AUTO_INCREMENT=26 DEFAULT CHARSET=utf8 AUTO_INCREMENT=26;
 
 
 ### data of table `aa_service_joins` ###
@@ -254,6 +278,7 @@ insert into `aa_service_joins` values ('21', 'Fieldset', '528', '549', '', '152'
 insert into `aa_service_joins` values ('22', 'Campi', '528', '539', '', '152');
 insert into `aa_service_joins` values ('23', 'Opzioni', '538', '553', '', '153');
 insert into `aa_service_joins` values ('24', 'Dati inviati', '528', '587', '', '152');
+insert into `aa_service_joins` values ('25', 'Occurences', '598', '608', '', '159');
 
 
 ### structure of table `aa_services` ###
@@ -273,7 +298,7 @@ CREATE TABLE `aa_services` (
   `initOrder` int(8) NOT NULL DEFAULT '0',
   `multilang` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=159 DEFAULT CHARSET=utf8 PACK_KEYS=1 AUTO_INCREMENT=159;
+) ENGINE=MyISAM AUTO_INCREMENT=161 DEFAULT CHARSET=utf8 PACK_KEYS=1 AUTO_INCREMENT=161;
 
 
 ### data of table `aa_services` ###
@@ -306,6 +331,8 @@ insert into `aa_services` values ('155', '470', '', 'images/service_icon/chart_o
 insert into `aa_services` values ('156', '617', '', 'images/service_icon/plugin.png', '618', '2', 'aa_element', '0', '1', '569', '');
 insert into `aa_services` values ('157', '718', '', 'images/service_icon/emoticon_smile.png', '719', '0', 'social_network', '0', '1', '583', '');
 insert into `aa_services` values ('158', '729', '', 'images/service_icon/page_white_edit.png', '730', '2', 'dati_inviati', '0', '1', '-589', '');
+insert into `aa_services` values ('159', '772', '', 'fa-refresh', '773', '0', 'redirect', '0', '1', '598', '');
+insert into `aa_services` values ('160', '783', '', 'fa-paper-plane', '784', '0', 'aa_logs', '0', '1', '603', '');
 
 
 ### structure of table `aa_services_element` ###
@@ -332,7 +359,7 @@ CREATE TABLE `aa_services_element` (
   `ismultilang` varchar(1) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `container` (`container`)
-) ENGINE=MyISAM AUTO_INCREMENT=598 DEFAULT CHARSET=utf8 COMMENT='Containers' AUTO_INCREMENT=598;
+) ENGINE=MyISAM AUTO_INCREMENT=611 DEFAULT CHARSET=utf8 COMMENT='Containers' AUTO_INCREMENT=611;
 
 
 ### data of table `aa_services_element` ###
@@ -542,6 +569,19 @@ insert into `aa_services_element` values ('593', '142', 'visible', '24', '', '1'
 insert into `aa_services_element` values ('595', '4', 'ip', '31', '', '1', '', '764', '30', '765', '', '', '', '', '120', '', '');
 insert into `aa_services_element` values ('596', '136', 'domain', '2', '', '1', '', '766', '255', '767', '', '', '', '', '5', '', '');
 insert into `aa_services_element` values ('597', '152', 'privacy_page', '12', '', '', '', '769', '11', '770', '1', 'SELECT id,title FROM `aa_page` ORDER BY `order`', '', '', '55', '', '');
+insert into `aa_services_element` values ('598', '159', 'id', '1', '1', '1', '', '774', '0', '775', '', '', '', '', '0', '', '');
+insert into `aa_services_element` values ('599', '159', 'from', '2', '', '1', '', '776', '255', '777', '', '', '', '', '10', '', '');
+insert into `aa_services_element` values ('600', '159', 'to', '2', '', '1', '', '778', '255', '779', '', '', '', '', '20', '', '');
+insert into `aa_services_element` values ('601', '159', 'header', '23', '', '1', '', '780', '0', '781', '', '301|302|404', '', '', '30', '', '');
+insert into `aa_services_element` values ('602', '160', 'id', '1', '1', '1', '', '785', '0', '786', '', '', '', '', '0', '', '');
+insert into `aa_services_element` values ('603', '160', 'timestamp', '15', '', '1', '', '787', '0', '788', '', '', '', '', '10', '', '');
+insert into `aa_services_element` values ('604', '160', 'ip_address', '2', '', '', '', '789', '255', '790', '', '', '', '', '20', '', '');
+insert into `aa_services_element` values ('605', '160', 'user_agent', '2', '', '1', '', '791', '255', '792', '', '', '', '', '30', '', '');
+insert into `aa_services_element` values ('606', '160', 'request_uri', '2', '', '1', '', '793', '255', '794', '', '', '', '', '40', '', '');
+insert into `aa_services_element` values ('607', '160', 'response', '8', '', '', '', '795', '0', '796', '', '', '', '', '50', '', '');
+insert into `aa_services_element` values ('608', '160', 'redirect_id', '3', '', '', '', '797', '11', '798', '', '', '', '', '60', '', '');
+insert into `aa_services_element` values ('609', '160', 'dispatched', '9', '', '1', '', '799', '255', '800', '', '', '1', '', '70', '', '');
+insert into `aa_services_element` values ('610', '160', 'referer', '2', '', '', '', '804', '255', '805', '', '', '', '', '45', '', '');
 
 
 ### structure of table `aa_template` ###
@@ -579,7 +619,7 @@ CREATE TABLE `aa_translation` (
   `it` text NOT NULL,
   `en` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=772 DEFAULT CHARSET=utf8 AUTO_INCREMENT=772;
+) ENGINE=MyISAM AUTO_INCREMENT=806 DEFAULT CHARSET=utf8 AUTO_INCREMENT=806;
 
 
 ### data of table `aa_translation` ###
@@ -1355,6 +1395,40 @@ insert into `aa_translation` values ('767', 'imposta il dominio su cui impostare
 insert into `aa_translation` values ('768', 'Area riservata', 'Private Area');
 insert into `aa_translation` values ('770', 'Se non selezionata, usa il testo standard del dizionario', 'Se non selezionata, usa il testo standard del dizionario');
 insert into `aa_translation` values ('771', 'Cliccando su <b>%s</b>, confermi di aver letto e accettato la nostra  <a href=\"%s\">privacy policy</a>.', 'By clicking on <b>\"%s\"</b>, you are agreeing to our <a href=\"%s\">privacy policy</a>.');
+insert into `aa_translation` values ('772', 'Redirects', 'Redirects');
+insert into `aa_translation` values ('773', 'URL da reindirizzare', 'URL da reindirizzare');
+insert into `aa_translation` values ('774', 'Id', 'Id');
+insert into `aa_translation` values ('775', '', '');
+insert into `aa_translation` values ('776', 'From', 'From');
+insert into `aa_translation` values ('777', 'Inserire l\'URL da reindirizzare, con dominio (http://miosito/vecchio-url/) o senza (/vecchio-url/).', '');
+insert into `aa_translation` values ('778', 'To', 'To');
+insert into `aa_translation` values ('779', 'Inserire l\'URL a cui reindirizzare la pagina. Il dominio è opzionale; è anche possibile inserire il segnaposto %server%.', '');
+insert into `aa_translation` values ('780', 'Header', 'Header');
+insert into `aa_translation` values ('781', 'Codice HTTP da ritornare al client.', '');
+insert into `aa_translation` values ('782', 'Redirects', 'Redirects');
+insert into `aa_translation` values ('783', 'Logs', 'Logs');
+insert into `aa_translation` values ('784', '', '');
+insert into `aa_translation` values ('785', 'Id', 'Id');
+insert into `aa_translation` values ('786', '', '');
+insert into `aa_translation` values ('787', 'Timestamp', 'Timestamp');
+insert into `aa_translation` values ('788', '', '');
+insert into `aa_translation` values ('789', 'Ip_address', 'Ip_address');
+insert into `aa_translation` values ('790', '', '');
+insert into `aa_translation` values ('791', 'User_agent', 'User_agent');
+insert into `aa_translation` values ('792', '', '');
+insert into `aa_translation` values ('793', 'Request_uri', 'Request_uri');
+insert into `aa_translation` values ('794', '', '');
+insert into `aa_translation` values ('795', 'Response', 'Response');
+insert into `aa_translation` values ('796', '', '');
+insert into `aa_translation` values ('797', 'Redirect_id', 'Redirect_id');
+insert into `aa_translation` values ('798', '', '');
+insert into `aa_translation` values ('799', 'Dispatched', 'Dispatched');
+insert into `aa_translation` values ('800', '', '');
+insert into `aa_translation` values ('801', 'Logs', 'Logs');
+insert into `aa_translation` values ('802', 'Redirects', 'Redirects');
+insert into `aa_translation` values ('803', 'Logs', 'Logs');
+insert into `aa_translation` values ('804', 'Referer', 'Referer');
+insert into `aa_translation` values ('805', '', '');
 
 
 ### structure of table `aa_users` ###
@@ -1790,6 +1864,23 @@ insert into `photos` values ('3', 'a3bed77987333ce78e33dba9aec6adc103375f9e_2048
 insert into `photos` values ('4', 'fc64058e4f18255d34dbc6a6ece1f6cc961b6254_5', 'jpg', '4', '40', '2015-03-07 12:16:11', '8685', 'landscape');
 
 
+### structure of table `redirect` ###
+
+DROP TABLE IF EXISTS `redirect`;
+
+CREATE TABLE `redirect` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `from` varchar(255) NOT NULL,
+  `to` varchar(255) NOT NULL,
+  `header` enum('301','302','404') NOT NULL DEFAULT '301',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 AUTO_INCREMENT=2;
+
+
+### data of table `redirect` ###
+
+
+
 ### structure of table `social_network` ###
 
 DROP TABLE IF EXISTS `social_network`;
@@ -1876,4 +1967,4 @@ CREATE TABLE `users` (
 
 ### data of table `users` ###
 
-insert into `users` values ('1', 'Dummy', 'Dummy', 'SyntaxDesktop', 'info@syntaxdesktop.com', 'via Garibaldi', 'Villafranca', '37069', 'Verona', '', '2', '2ae96aa0273507ab41936958fb4dfd4a', '1', '2010-01-01 00:00:00', '2015-03-02 15:30:41', '2015-03-09 11:18:40', '127.0.0.1', null, null, '', '', '', '1', '0', '6');
+insert into `users` values ('4', 'Dummy', 'Dummy', 'SyntaxDesktop', 'info@syntaxdesktop.com', 'via Garibaldi', 'Villafranca', '37069', 'Verona', '', '2', '2ae96aa0273507ab41936958fb4dfd4a', '1', '2010-01-01 00:00:00', '2015-03-02 15:30:41', '2015-03-09 11:18:40', '127.0.0.1', null, null, '', '', '', '1', '0', '6');

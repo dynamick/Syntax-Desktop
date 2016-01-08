@@ -989,20 +989,22 @@ EOBOTTOMBAR;
       //perform the qry
       //$qry = addQueryWhere("SELECT `{$synTable}`.* FROM `{$synTable}`");
 
+      $sort_name = $contenitore->getDefaultOrder();
+      $sort_dir = strtolower( $contenitore->getDefaultOrderDirection() );
 
       if ($treeFrame == 'true') {
         // TODO: full implementation of queryBuilder into synContainer and synTree
         //$contenitore->getTree2( $qry );
         $qry = buildQuery( $contenitore, $db );
+        $qry->addOrderBy( $sort_name, $sort_dir, $contenitore->getTable() );
+        //$qry = addQueryWhere("SELECT `{$synTable}`.* FROM `{$synTable}`");
         $contenitore->getTree( $qry );
-        //echo 'order: '.$qry->getOrderBy().'<br>';
+
       } else {
         if ( $contenitore->treeExists() === true ) {
           enqueue_js( 'parent.refreshTreeFrame();' );
           enqueue_js( 'parent.openTreeFrame();' );
         }
-        $sort_name = $contenitore->getDefaultOrder();
-        $sort_dir = strtolower( $contenitore->getDefaultOrderDirection() );
         $header = $contenitore->getJsonHeader();
         //          data-cookie-id-table="settings_{$synTable}"
         $table = <<<EOTABLE

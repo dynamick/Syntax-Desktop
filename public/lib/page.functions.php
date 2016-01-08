@@ -274,6 +274,46 @@ function get404pageId() {
   }
 }*/
 
+function logRequest( $uri, $response, $redirect_id = null, $dispatched = null ) {
+  global $db;
+  $ip     = $_SERVER['REMOTE_ADDR'];
+  $agent  = $_SERVER['HTTP_USER_AGENT'];
+  $referer = $_SERVER['HTTP_REFERER'];
+  $insert = <<<EOINS
+  INSERT INTO aa_logs (
+    `timestamp`, `ip_address`, `user_agent`, `request_uri`, `referer`, `response`, `redirect_id`, `dispatched`
+  ) VALUES (
+    NOW(), '{$ip}', '{$agent}', '{$uri}', '{$referer}', '{$response}', '{$redirect_id}', '{$dispatched}'
+  )
+EOINS;
+  $db->execute( $insert );
+  return $db->insert_ID();
+}
+
+
+function checkRedirects( $test = false ) {
+  global $db;
+  $server = 'http://' . getenv('SERVER_NAME');
+  $req = $_SERVER['REQUEST_URI'];
+  $full_req = $server . html_entity_decode($req);
+
+  if (!empty($req)) {
+    $qry = "SELECT * FROM `redirect` WHERE `from` = '{$full_req}' OR CONCAT('{$server}', `from`) = '{$full_req}'";
+    $res = $db->execute( $qry );
+    if ( $arr = $res->fetchrow() ) {
+      $redirect = str_replace( '%server%', $server, $arr['to'] );
+      $response = $arr['header'] . ' - ' . $full_req . ' is redirected to ' . $redirect;
+      if ($test) {
+        echo $response. '<br>';
+      } else {
+        logRequest($req, $response, $arr['id'], 1 );
+        header( 'HTTP/1.0 ' . $arr['header'] );
+        header( 'Location: ' . $redirect );
+      }
+      exit;
+    }
+  }
+}
 
 function getPageId( $test = false ) {
   global $db, $synEntryPoint, $languages;
@@ -389,6 +429,8 @@ function getPageId( $test = false ) {
               setLang($lang_id, $arr['lang']);
               return $new_url;
             } else {
+              $response = '302 - ' . $uri . ' is redirected to ' . $new_url;
+              logRequest( $uri, $response, null, 1 );
               header('Location: ' . $new_url, true, 302);
               exit;
             }
@@ -418,8 +460,9 @@ function getPageId( $test = false ) {
     if ($test) {
       return $uri . ' not found, 404';
     } else {
+      logRequest( $original_uri, $response, null, 0 );
       header('HTTP/1.0 404 Not Found');
-      header('Location: /404/');
+      header('Location: ' . createPath(PAGE_404));
       exit;
     }
   }

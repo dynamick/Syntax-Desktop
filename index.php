@@ -18,6 +18,9 @@
     die('Is it the first time you run Syntax Desktop? If yes, run <a href="admin/setup.php">setup</a>.');
   }
 
+  // check if we must redirect the page
+  checkRedirects();
+
   // Main
   $pageId = getPageId();
 

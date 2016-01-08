@@ -11,6 +11,7 @@ global $cmd;
       }
       $grp = "<select name=\"group2copy\" class=\"form-control\">{$grp}</select>";
 //        '<label class="control-label">{$str["in_this_group"]}</label>',
+      $val = isset($_GET['aa_value']) ? $_GET['aa_value'] : NULL;
       $script = <<<EOSCRIPT
       var form = new Array(
         '<div class="panel-heading">',
@@ -20,7 +21,7 @@ global $cmd;
           '<form class="box" action="content.php?cmd=copy" target="content" method="post">',
             '<div class="form-group">{$grp}</div>',
             '<input type="submit" value="{$str['copy']}" class="btn btn-success btn-block">',
-            '<input type="hidden" name="aa_value" value="{$_GET['aa_value']}">',
+            '<input type="hidden" name="aa_value" value="{$val}">',
           '</form>',
         '</div>'
       );

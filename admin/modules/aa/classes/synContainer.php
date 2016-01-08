@@ -171,7 +171,8 @@ EOHTML;
     $startQry = '';
 
     if ( is_a($qry, 'queryBuilder')) {
-      $qry->addOrderBy( 'order', 'ASC', 'aa_page' );
+      if ($this->table == 'aa_page')
+        $qry->addOrderBy( 'order', 'ASC', 'aa_page' );
       $qry = $qry->getQuery();
     } else {
       if ($this->table == 'aa_page')
