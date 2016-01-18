@@ -483,7 +483,7 @@ class ADODB_PDO
     }
     $msg .= "\n\t</div>\n";
 
-    //echo $msg;
+    echo $msg;
   }
 }
 

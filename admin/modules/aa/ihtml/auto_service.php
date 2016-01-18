@@ -544,7 +544,7 @@ EOBOTTOMBAR;
       if ( !$ok ) {
         setAlert('<b>Errore</b>: elemento non aggiornato', 'error');
         $jumpTo = $PHP_SELF . "?cmd=" . MODIFY . "&synPrimaryKey=" . urlencode($synPrimaryKey);
-        //echo '<a href="'.$jumpTo.'" class="btn btn-default">Avanti</a>'; die();
+        echo '<a href="'.$jumpTo.'" class="btn btn-default">Avanti</a>'; die();
       }
 
       //set the next page

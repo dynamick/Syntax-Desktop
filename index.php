@@ -19,7 +19,7 @@
   }
 
   // check if we must redirect the page
-  checkRedirects();
+  // checkRedirects();
 
   // Main
   $pageId = getPageId();

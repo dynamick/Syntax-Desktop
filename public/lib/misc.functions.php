@@ -458,7 +458,7 @@ if (!function_exists('ensureUrlScheme')) {
  * Useful to avoid 'undefined variable' notices.
  */
 if (!function_exists('safe_get')) {
-  function safe_get( $var, $default = NULL, $callback = FALSE ) {
+  function safe_get( $var, $default = NULL, $callback = NULL ) {
     if ( isset($var) ) {
       if ( isset($callback) )
         $var = call_user_func( $callback, $var );

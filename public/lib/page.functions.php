@@ -457,8 +457,9 @@ function getPageId( $test = false ) {
   // TODO: recuperare dinamicamente la 404?
   if ($ret === false) {
     // pagina non trovata o non valida
+    $response = $uri . ' not found, 404';
     if ($test) {
-      return $uri . ' not found, 404';
+      return $response;
     } else {
       logRequest( $original_uri, $response, null, 0 );
       header('HTTP/1.0 404 Not Found');
