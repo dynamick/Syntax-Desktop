@@ -56,7 +56,7 @@ class synUpload extends synElement {
       }
 
       $ret = "<input id=\"{$this->name}\" name=\"{$this->name}[]\" type=\"file\" multiple=true>";
-
+      $nocache = rand();
       $script = <<<EOC
         $("#{$this->name}").fileinput({
           allowedFileTypes: ['image'],
@@ -77,8 +77,8 @@ class synUpload extends synElement {
             indicatorError:   '<i class="fa fa-exclamation-circle text-danger"></i>',
             indicatorLoading: '<i class="fa fa-hand-o-up text-muted"></i>'
           },
-          uploadUrl: "ihtml/upload2.php",
-          uploadAsync: true,
+          uploadUrl: "ihtml/upload2.php?r={$nocache}",
+          uploadAsync: false,
           uploadExtraData: function() {
             return {
               key         : '{$keyArr[1]}',
