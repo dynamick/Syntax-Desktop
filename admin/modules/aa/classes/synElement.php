@@ -204,7 +204,10 @@ class synElement {
     $this->container = synContainer::getInstance();
   }
 
-
+  function setQry($qry) {
+    $this->qry = $qry;
+  }
+  
   function insert() {
     return true;
   }
@@ -286,11 +289,11 @@ class synElement {
     global $db;
     if($qry=='') return;
     $ismultilang = 0;
-# echo $qry, '##<br>';
+
     preg_match("/^SELECT ([a-zA-Z0-9-_, `\*]+) FROM ([a-zA-Z-_`]+)(?:.*)?$/i", $qry, $matches);
     $field = isset($matches[1]) ? str_replace('`', '', $matches[1]) : '';
     $table = isset($matches[2]) ? str_replace('`', '', $matches[2]) : '';
-# echo $field, ' - ', $table, '<br>';
+
     if ($table!='') {
       if($field=='*'){
         $sql = "SELECT se.name, se.ismultilang FROM aa_services_element se JOIN aa_services s ON se.container=s.id WHERE s.syntable='{$table}' ORDER BY se.`order` LIMIT 1,1";
@@ -300,19 +303,14 @@ class synElement {
       } else {
         $field = explode(',', $field);
         $sql = "SELECT se.name, se.ismultilang FROM aa_services_element se JOIN aa_services s ON se.container=s.id WHERE s.syntable='{$table}' ORDER BY se.`order`";
-# echo $sql, '<br>';
-# echo '<pre>', print_r($field), '</pre><br>';
         $res = $db->Execute($sql);
         while($arr=$res->fetchRow()){
-#         echo '<pre>', print_r($arr), '</pre><br>';
           if($arr['name']==trim($field[1])){
-            #$name = $arr['name'];
             $ismultilang = $arr['ismultilang'];
           }
         }
       }
     }
-    #echo $name, ' is multilang: ', intval($ismultilang), '<br><br>';
     return intval($ismultilang);
   }
 
@@ -340,18 +338,26 @@ class synElement {
     global $db, $synElmName, $synElmType, $synElmLabel, $synElmLabelLang, $synElmSize, $synElmHelp, $synElmHelpLang, $synElmJoinsItem, $synElmOrder, $synElmFilter, $synInitOrder;
     $initOrderChk = "";
     $initOrder = $i+1;
-    if ($synInitOrder==0) $synInitOrder=1;
+    if ($synInitOrder==0) 
+      $synInitOrder=1;
     if (abs($synInitOrder)==$initOrder) {
       $initOrderChk = " checked=\"checked\" ";
       $initOrder = $synInitOrder;
     }
-    if (!isset($synElmName[$i]))  $synElmName[$i] = '';
-    if (!isset($synElmType[$i]))  $synElmType[$i] = '';
-    if (!isset($synElmOrder[$i])) $synElmOrder[$i] = '';
-    if (!isset($synElmLabel[$i])) $synElmLabel[$i] = '';
-    if (!isset($synElmHelp[$i]))  $synElmHelp[$i] = '';
-    if (!isset($synElmLabelLang[$i]) || $synElmLabelLang[$i]=='') $synElmLabelLang[$i] = translate($synElmLabel[$i]);
-    if (!isset($synElmHelpLang[$i])  || $synElmHelpLang[$i]=='')  $synElmHelpLang[$i]  = translate($synElmHelp[$i]);
+    if (!isset($synElmName[$i]))  
+      $synElmName[$i] = '';
+    if (!isset($synElmType[$i]))  
+      $synElmType[$i] = '';
+    if (!isset($synElmOrder[$i])) 
+      $synElmOrder[$i] = '';
+    if (!isset($synElmLabel[$i])) 
+      $synElmLabel[$i] = '';
+    if (!isset($synElmHelp[$i]))  
+      $synElmHelp[$i] = '';
+    if (!isset($synElmLabelLang[$i]) || $synElmLabelLang[$i]=='') 
+      $synElmLabelLang[$i] = translate($synElmLabel[$i]);
+    if (!isset($synElmHelpLang[$i])  || $synElmHelpLang[$i]=='')  
+      $synElmHelpLang[$i]  = translate($synElmHelp[$i]);
 
     $synHtml = new synHtml();
     $this->configuration[1] = $synHtml->text(" name=\"synElmName[$i]\" value=\"$synElmName[$i]\" tabindex=\"".($initOrder*2)."\" style=\"font-weight: bold; color: darkred;\" ");
@@ -360,11 +366,14 @@ class synElement {
     $this->configuration[3] = $synHtml->text(" name=\"synElmLabelLang[$i]\" value=\"$synElmLabelLang[$i]\" ");
   //$this->configuration[4] = $synHtml->text(" name=\"synElmHelp[$i]\" value=\"$synElmHelp[$i]\" ");
     $this->configuration[4] = $synHtml->text(" name=\"synElmHelpLang[$i]\" value=\"$synElmHelpLang[$i]\" ");
-    if ($synElmOrder[$i]==0) $synElmOrder[$i]=$i*10;
+    if ($synElmOrder[$i]==0) 
+      $synElmOrder[$i] = $i*10;
     $this->configuration[6] = $synHtml->text(" name=\"synElmOrder[$i]\" value=\"$synElmOrder[$i]\" size=\"2\" ");
     $this->configuration[7] = $synHtml->radio(" name=\"synInitOrder\" value=\"$initOrder\" $initOrderChk ");
-    if ($k==99) return $this->configuration;
-    else return $this->configuration[$k];
+    if ($k==99) 
+      return $this->configuration;
+    else 
+      return $this->configuration[$k];
   }
 
   function isFileTypeAllowed($mime){

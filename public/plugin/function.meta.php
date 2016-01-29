@@ -97,7 +97,7 @@ function smarty_function_meta($params, &$smarty){
         // for each language different from the selected one, provide an alternate href (if is visible)
         if ( !empty($visible)
           && $lang_visible != $langId
-          && in_array($langId, $visible)
+          && in_array($langId, $languages['list'])
           ){
           $initial  = $languages['list'][$lang_visible];
           $href     = getLanguageDomain( $langId) . createPath( $page_id, $initial );

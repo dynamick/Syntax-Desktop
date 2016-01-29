@@ -48,11 +48,19 @@ class synUpload extends synElement {
       $container = $this->container;
       $keyArr = explode('=', str_replace("'", '', str_replace('`', '', trim(urldecode($container->getKey())))));
       $app_title = $app_order = $app_table = $app_field = $app_linkfield = '';
-      if(isset($this->pattern)) {
+      if (isset($this->pattern)) {
         $arr_tmp = explode('|', $this->pattern);
         if ( is_array( $arr_tmp )
           && count($arr_tmp) == 5
           ) list($app_title, $app_order, $app_table, $app_field, $app_linkfield) = $arr_tmp;
+      }
+      if (isset($this->qry) && preg_match( '/(\d+)x(\d+)/', $this->qry, $match )) {
+        //echo print_r($match); die();
+        $resize_props = 'resizeImage: true, '
+                      . "maxImageWidth: {$match[1]}, "
+                      . "maxImageHeight: {$match[2]}, "
+                      . 'resizeImageQuality: 1.00, ' //. "resizePreference: 'width', "
+                      . PHP_EOL;
       }
 
       $ret = "<input id=\"{$this->name}\" name=\"{$this->name}[]\" type=\"file\" multiple=true>";
@@ -60,6 +68,7 @@ class synUpload extends synElement {
       $script = <<<EOC
         $("#{$this->name}").fileinput({
           allowedFileTypes: ['image'],
+          {$resize_props}
           browseIcon: '<i class="fa fa-folder-open-o"></i> ',
           removeIcon: '<i class="fa fa-trash"></i> ',
           uploadIcon: '<i class="fa fa-upload"></i> ',

@@ -130,6 +130,7 @@ function getDomainDefaultLanguage( $domain = null ) {
     $domain = 'http://' . getenv('SERVER_NAME');
 
   if ( isset($languages['domain'])
+    && is_array($languages['default'])
     && isset($languages['default'][$domain])
     ){
     $default_lang = $languages['default'][$domain];
