@@ -308,7 +308,7 @@ function checkRedirects( $test = false ) {
       } else {
         logRequest($req, $response, $arr['id'], 1 );
         header( 'HTTP/1.0 ' . $arr['header'] );
-        header( 'Location: ' . $redirect );
+        header( 'Location: ' . $redirect, true, $arr['header'] );
       }
       exit;
     }
