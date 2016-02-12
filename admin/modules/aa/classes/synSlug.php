@@ -41,7 +41,7 @@ class synSlug extends synElement {
     <div class="input-group triggerable-group">
       <input type="text" class="form-control" name="{$this->name}" maxsize="{$this->size}" value="{$value}" readonly="readonly" data-oldvalue="{$value}" />
       <span class="input-group-addon">
-        <input type="checkbox" class="trigger-input" aria-label="trigger slug input"
+        <input type="checkbox" class="trigger-input" aria-label="trigger slug input" tabindex="-1"
           data-original-title="Enable editing" data-placement="top" data-toggle="tooltip">
       </span>
     </div>
