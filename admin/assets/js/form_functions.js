@@ -92,4 +92,25 @@ $(function() {
     twoCharLinebreak: true,
     validate: false
   });
+
+  //enableable input
+  jQuery.fn.extend({
+    triggerify: function(){
+      var $this = $(this), $input = $this.find('input[type="text"]'), $trigger = $this.find('.trigger-input');
+      console.log('triggerified');
+      $trigger.change(function(){
+        var $this = $(this), checked = $this.is(':checked');
+        console.log('clicked');
+        $input.prop('readonly', !checked ).focus();
+      });
+      $input.focusout(function(){
+        var $this = $(this);
+        if ($this.val() == '')
+          $this.val( $this.data('oldvalue') );
+        $this.prop('readonly', true);
+        $trigger.prop('checked', false);
+      });
+    }
+  });
+  $('.triggerable-group').triggerify();
 });

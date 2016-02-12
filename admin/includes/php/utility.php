@@ -574,13 +574,18 @@ function updateSlug($id){
   if ($arr = $res->FetchRow()) {
     extract($arr);
 
-    if(empty($parent)){
-      $title = '';
+    if (empty($slug)) {
+      if(empty($parent)){
+        $title = '';
+      } else {
+        $title = translate( $title );
+      }
+      $old_slug = $title;
     } else {
-      $title = translate($title);
+      $old_slug = translate( $slug );
     }
 
-    $new_slug = createUniqueSlug( $title, $id );
+    $new_slug = createUniqueSlug( $old_slug, $id );
 
     updateTranslation($slug, $new_slug);
     return true;
@@ -589,7 +594,7 @@ function updateSlug($id){
 }
 
 
-// inserisce gli slug per tutte le lingue
+// insert slug on each language
 function insertSlug($id){
   global $db;
   $languages = getLangList();
@@ -606,7 +611,6 @@ function insertSlug($id){
       }
       $slug_array[] = createUniqueSlug($title, $id);
     }
-
     updateTranslation($arr['slug'], $slug_array);
     return true;
   }
@@ -615,10 +619,9 @@ function insertSlug($id){
 
 
 
-
+// check uniqueness of slugs. If another exists, append a numeral.
 function createUniqueSlug( $slug, $id = 0){
   global $db;
-  // verifica univocità
 
   if(!isset($_SESSION))
     session_start();
@@ -627,22 +630,23 @@ function createUniqueSlug( $slug, $id = 0){
   $slug = sanitizePath($slug);
 
   $existing = array();
-  $qry = "SELECT t.{$aa_CurrentLangInitial} AS existing FROM `aa_page` p LEFT JOIN `aa_translation` t ON p.slug = t.id WHERE p.id <> '{$id}' ";
+  $qry = "SELECT t.{$aa_CurrentLangInitial} AS existing FROM `aa_page` p "
+       . "LEFT JOIN `aa_translation` t ON p.slug = t.id "
+       . "WHERE p.id <> '{$id}'";
 
   $res = $db->Execute($qry);
-  while($arr = $res->fetchrow()){
+  while ( $arr = $res->fetchrow()) {
     $existing[] = $arr['existing'];
   }
 
-  if($slug!='' && in_array($slug, $existing)){
+  if ( $slug!='' && in_array($slug, $existing) ) {
     $count = 0;
     $slug_tmp = $slug;
     while (in_array($slug, $existing)){
       $count ++;
-      $slug = $slug_tmp.$count;
+      $slug = $slug_tmp . $count; //perhaps add . '-' . $count ?
     }
   }
-//echo 'slug: ', $slug, '</br>'; die();
   return $slug;
 }
 
