@@ -39,8 +39,7 @@ class synSlug extends synElement {
     $value = str_replace( "\"", "&quot;", ( $this->translate( $this->getValue() ) ) );
     $ret = <<<EOHTML
     <div class="input-group triggerable-group">
-      <input type="text" class="form-control" name="{$this->name}" maxsize="{$this->size}" value="{$value}"
-        pattern="^[a-z0-9-]+$" title="only ANSI characters, numbers or hyphens" readonly="readonly" data-oldvalue="{$value}" />
+      <input type="text" class="form-control" name="{$this->name}" maxsize="{$this->size}" value="{$value}" readonly="readonly" data-oldvalue="{$value}" />
       <span class="input-group-addon">
         <input type="checkbox" class="trigger-input" aria-label="trigger slug input"
           data-original-title="Enable editing" data-placement="top" data-toggle="tooltip">

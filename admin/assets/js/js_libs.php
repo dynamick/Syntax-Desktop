@@ -72,6 +72,7 @@ $form = array(
   'vendor/typeahead-addresspicker.min.js',
   'load-google-maps.js',
   'synAddressPicker.js',
+  'vendor/jquery.alphanumeric.js',
   );
 
 // rich text editor
