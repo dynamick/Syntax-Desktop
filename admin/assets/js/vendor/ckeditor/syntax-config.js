@@ -36,22 +36,20 @@ CKEDITOR.editorConfig = function(config) {
 
   config.toolbar = 'Deluxe';
   config.toolbar_Deluxe = [
-    ['Source','-','Save','NewPage','Preview','-','Templates'],
-    ['Cut','Copy','Paste','PasteText','PasteFromWord','-','Print', 'SpellChecker', 'Scayt'],
-    ['Undo','Redo','-','Find','Replace','-','SelectAll','RemoveFormat'],
-    ['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField'],
+    { name: 'document',     items : [ 'Source','-','Save','NewPage','DocProps','Preview','Print','-','Templates' ] },
+    { name: 'clipboard',    items : [ 'Cut','Copy','Paste','PasteText','PasteFromWord','-','Undo','Redo' ] },
+    { name: 'editing',      items : [ 'Find','Replace','-','SelectAll','-','SpellChecker', 'Scayt' ] },
+    { name: 'forms',        items : [ 'Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField' ] },
     '/',
-    ['Bold','Italic','Underline','Strike','-','Subscript','Superscript'],
-    ['NumberedList','BulletedList','-','Outdent','Indent','Blockquote','CreateDiv'],
-    ['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
-    ['BidiLtr', 'BidiRtl'],
-    ['Link','Unlink','Anchor'],
-    ['Image','Table','HorizontalRule','Smiley','SpecialChar','PageBreak','Iframe'],
+    { name: 'basicstyles',  items : [ 'Bold','Italic','Underline','Strike','Subscript','Superscript','-','RemoveFormat' ] },
+    { name: 'paragraph',    items : [ 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl' ] },
+    { name: 'links',        items : [ 'Link','Unlink','Anchor' ] },
+    { name: 'insert',       items : [ 'Image','Flash','Table','HorizontalRule','Smiley','SpecialChar','PageBreak','Iframe' ] },
     '/',
-    ['Styles','Format','Font','FontSize'],
-    ['TextColor','BGColor'],
-    ['Maximize', 'ShowBlocks','-','About']
-  ] ;
+    { name: 'styles',       items : [ 'Styles','Format','Font','FontSize' ] },
+    { name: 'colors',       items : [ 'TextColor','BGColor' ] },
+    { name: 'tools',        items : [ 'Maximize', 'ShowBlocks','-','About' ] }
+  ];
 
   // kcfinder integration
   var kcPath = '/admin/assets/js/vendor/kcfinder/';
@@ -59,7 +57,4 @@ CKEDITOR.editorConfig = function(config) {
   config.filebrowserUploadUrl      = kcPath + 'upload.php?type=file';
   config.filebrowserImageBrowseUrl = kcPath + 'browse.php?type=image';
   config.filebrowserImageUploadUrl = kcPath + 'upload.php?type=image';
-  //config.filebrowserFlashBrowseUrl = kcPath + 'browse.php?type=flash';
-  //config.filebrowserFlashUploadUrl = kcPath + 'upload.php?type=flash';
-
 };

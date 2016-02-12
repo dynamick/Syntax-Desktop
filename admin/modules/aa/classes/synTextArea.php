@@ -34,9 +34,8 @@ class synTextArea extends synElement {
 
   //get the label of the element
   function getCell() {
-    return $this->translate( substr(strip_tags($this->getValue()), 0, 200), true);
+    return  mb_substr( strip_tags( $this->translate( $this->getValue(), false ) ), 0, 200, 'UTF-8');
   }
-
 
   //private function
   function _html() {
