@@ -22,7 +22,11 @@ $(function() {
     // different initialization for each element
     var
       $this = $(this),
-      optionName = $this.data('option-name');
+      optionName = $this.data('option-name'),
+      last = false;
+    if ( $this.parents('.form-group').is('div:last-of-type') ) {
+      last = true;
+    }
     $this.multiselect({
       enableClickableOptGroups: true,
       disableIfEmpty: true,
@@ -33,6 +37,9 @@ $(function() {
       enableCaseInsensitiveFiltering: true,
       maxHeight: 200
     });
+    if (last) {
+      $this.next('.btn-group').addClass('dropup');
+    }
   });
 
   // init icon-picker
