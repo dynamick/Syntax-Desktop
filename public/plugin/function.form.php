@@ -5,21 +5,22 @@ function smarty_function_form($params, &$smarty) {
 
   s_start(); // session_start
 
-  $page     = safe_get( $params['page'], NULL, 'intval' );
-  $formid   = safe_get( $params['id'], NULL );
-  $lng      = getLangInitial();
-  $t        = multiTranslateDictionary(array(
-            'informativa',
-            'informativa_privacy',
-            'informativa_privacy_link',
-            'checkfields',
-            'campo_obbligatorio',
-            'email_non_valida',
-            'verifica_valore',
-            'cancella',
-            'invia',
-            'codice_sicurezza'
-            ));
+  $page         = safe_get( $params['page'], NULL, 'intval' );
+  $formid       = safe_get( $params['id'], NULL );
+  $lng          = getLangInitial();
+  $ajax_submit  = TRUE;
+  $t            = multiTranslateDictionary(array(
+                'informativa',
+                'informativa_privacy',
+                'informativa_privacy_link',
+                'checkfields',
+                'campo_obbligatorio',
+                'email_non_valida',
+                'verifica_valore',
+                'cancella',
+                'invia',
+                'codice_sicurezza'
+                ));
 
   if (!empty($page))
     $form_var = getFormAttributesByPage($page, $lng); // vedi sotto
@@ -37,11 +38,16 @@ function smarty_function_form($params, &$smarty) {
 
   $fieldset = getFormFieldset( $form_id, $lng ); // vedi sotto
   $fields   = getFormFields( $form_id, $lng, $params ); // vedi sotto
+  foreach( $fields as $field ) {
+    if ($field['tipo'] == 'file')
+      $ajax_submit = false; // non posso trasmettere file via ajax
+  }
+
   $form     = new bsForm( $form_id );
   //$form     = new formBuilder($form_id);
 
   $session  = safe_get( $_SESSION['form'.$form_id], FALSE );
-  $html     = "<h2>{$form_var['titolo']}</h2>\n";
+  $html     = ''; //"<h2>{$form_var['titolo']}</h2>\n";
 
   if ( isset($session)
     && $session['submitted']==true
@@ -101,7 +107,7 @@ function smarty_function_form($params, &$smarty) {
       'error2'              => $t['email_non_valida'],
       'error3'              => $t['verifica_valore'],
       'include_script'      => false,
-      'ajax_submit'         => true,
+      'ajax_submit'         => $ajax_submit,
       'debug'               => false
       );
 
@@ -212,9 +218,10 @@ function getFormFields($form_id, $lng='it', $params){
      SELECT f.id, f.titolo, f.tipo, f.obbligatorio, f.formato, f.value, f.fieldset,
             t1.{$lng} AS label
        FROM form_fields f
-  LEFT JOIN aa_translation t1 ON f.label=t1.id
+  LEFT JOIN aa_translation t1 ON f.label = t1.id
+ RIGHT JOIN form_fieldsets fs ON f.fieldset = fs.id
       WHERE f.id_form = '{$form_id}'
-   ORDER BY f.ordine
+   ORDER BY fs.ordine, f.ordine
 
 EOSQL;
   $re2 = $db->execute($qr2);

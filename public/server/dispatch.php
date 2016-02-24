@@ -23,6 +23,10 @@
   , 'application/pdf'
   , 'application/vnd.ms-powerpoint'
   , 'application/x-mspublisher'
+  , 'application/vnd.ms-excel'
+  , 'application/vnd.ms-powerpoint'
+  , 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+  , 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
   , 'image/gif'
   , 'image/x-xbitmap'
   , 'image/png'
@@ -69,7 +73,7 @@ EOFSQL;
 
   // - recupero l'elenco dei campi
   $qr2 = <<<EOSQL
-     SELECT f.titolo, f.formato, f.obbligatorio,
+     SELECT f.titolo, f.tipo, f.formato, f.obbligatorio,
             t1.{$lng} AS label
        FROM form_fields f
   LEFT JOIN aa_translation t1 ON f.label = t1.id
@@ -81,7 +85,7 @@ EOSQL;
   while ($ar2 = $re2->fetchRow()) {
     $labels[$ar2['titolo']] = $ar2['label'];
     if (1 == $ar2['obbligatorio'])
-      $mandatory[$ar2['titolo']] = $ar2['formato'];
+      $mandatory[$ar2['titolo']] = ($ar2['tipo'] == 'file') ? 'file' : $ar2['formato'];
   }
 
   if($_POST['action']=='submit') {
@@ -90,13 +94,23 @@ EOSQL;
 
 // - ciclo il $_POST per cercare dati mancanti
     foreach ($mandatory as $k => $v) {
-      if (empty($_POST[$k])) {
-        $error ++;
-        $_SESSION['form'.$form_id]['error'][$k] = 'empty';
-      }
-      if ($v == 'email' && !preg_match($mailpattern, $_POST[$k])) {
-        $error ++;
-        $_SESSION['form'.$form_id]['error'][$k] = 'empty';
+      if ($v == 'file') {
+        if (empty($_FILES[$k])) {
+          $error ++;
+          $_SESSION['form'.$form_id]['error'][$k] = 'empty';
+        } elseif ( !in_array( $_FILES[$k]['type'], $allowedTypes)) {
+          $error ++;
+          $_SESSION['form'.$form_id]['error'][$k] = 'File type not admitted!';
+        }
+      } else {
+        if (empty($_POST[$k])) {
+          $error ++;
+          $_SESSION['form'.$form_id]['error'][$k] = 'empty';
+        }
+        if ($v == 'email' && !preg_match($mailpattern, $_POST[$k])) {
+          $error ++;
+          $_SESSION['form'.$form_id]['error'][$k] = 'empty';
+        }
       }
       if ($form_privacy==1 && $_POST['privacy'] != 1) {
         $error ++;
@@ -210,6 +224,8 @@ EOSQL;
                 }*/
                 // - aggiungo allegato
                 $mail->AddAttachment( $file['tmp_name'], $file['name'] );
+              } else {
+                throw new Exception('File type ' . $file['type'] . ' is not admitted!', 1);
               }
             }
           }
