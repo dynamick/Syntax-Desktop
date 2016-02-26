@@ -219,7 +219,7 @@ function getFormFields($form_id, $lng='it', $params){
             t1.{$lng} AS label
        FROM form_fields f
   LEFT JOIN aa_translation t1 ON f.label = t1.id
- RIGHT JOIN form_fieldsets fs ON f.fieldset = fs.id
+  LEFT JOIN form_fieldsets fs ON f.fieldset = fs.id
       WHERE f.id_form = '{$form_id}'
    ORDER BY fs.ordine, f.ordine
 
