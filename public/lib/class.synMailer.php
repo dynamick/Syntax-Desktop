@@ -22,7 +22,7 @@ class synMailer extends PHPMailerLite {
     // dati destinatario
     if (is_array($multiple_recipients) && !empty($multiple_recipients)) {
       foreach ($multiple_recipients as $address) {
-        $ok = $this->AddAddress($address);
+        $ok = $this->AddAddress( trim($address) );
       }
     } else {
       $ok = $this->AddAddress($dest['mail'],
@@ -42,15 +42,15 @@ class synMailer extends PHPMailerLite {
     // subject della mail
     $this->Subject  = $subject;
 
-    // setta il charset a UTF-8 (non � il default!)
+    // setta il charset a UTF-8 (non è il default!)
     $this->CharSet  = 'UTF-8';
 
     // setta il ContentType della mail
     $this->IsHTML(true);
 
     // Method to send mail: ("mail", "sendmail", or "smtp")
-    //$this->Mailer = 'mail'; // metodo mail sembra non accettare 'to' multipli
-    $this->Mailer = 'mail';
+    $this->Mailer = 'mail'; // metodo mail sembra non accettare 'to' multipli
+    //$this->Mailer = 'sendmail';
 
     // path dei template
     $this->template_path = $_SERVER['DOCUMENT_ROOT'].'/public/templates/';

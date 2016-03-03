@@ -192,10 +192,16 @@ EOSQL;
           'name' => ($nome || $cognome) ? "$nome $cognome" : $synWebsiteTitle,
           'mail' => ($email) ? $email : $form_destinatario
           );
-        $to = array(
-          'name' => $synWebsiteTitle,
-          'mail' => $form_destinatario
-          );
+        $ar_destinatari = explode( ',', $form_destinatario );
+        if ( count($ar_destinatari)> 1 ) {
+          $to = null;
+        } else {
+          $ar_destinatari = null;
+          $to = array(
+            'name' => $synWebsiteTitle,
+            'mail' => $form_destinatario
+            );
+        }
         $subject = $form_titolo;
         $data = array(
           'site_name' => $synWebsiteTitle,
@@ -210,7 +216,7 @@ EOSQL;
 
         try {
           // - istanzio oggetto
-          $mail = new synMailer($sender, $to, $subject);
+          $mail = new synMailer( $sender, $to, $subject, $ar_destinatari );
           // - imposto template
           $mail->setTemplate($template, $data);
           if (!empty($_FILES)) {
