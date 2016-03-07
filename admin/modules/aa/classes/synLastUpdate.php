@@ -24,40 +24,46 @@ class synLastUpdate extends synElement {
 
   //private function
   function _html() {
-    if ($this->value=="") $ret="<img src=\"img/tree_delete.png\" alt=\"Not defined\" />";
-    else $ret=$this->value."\n";
-    
+    if ( empty($this->value) )
+      $ret = '<i class="fa fa-times-circle"></i> Not defined'; //"<img src=\"img/tree_delete.png\" alt=\"Not defined\" />";
+    else
+      $ret = "<div class=\"form-control-static\">{$this->value}</div>\n";
     return $ret;
   }
-  
+
   //return the sql values (i.e. 'gigi'). In this case none
   function getSQLValue() {
     return "NOW()";
   }
 
-  //return the sql field name (i.e. `name`). In this case none
-  //function getSQLName() {
-  //  return;
-  //}
 
-  
-  function configuration($i="",$k=99) {
-    global $synElmName,$synElmType,$synElmLabel,$synElmSize,$synElmHelp;
-    global $synElmSize;
+  function configuration( $i = '', $k = 99 ) {
+    global
+      $synElmName,
+      $synElmType,
+      $synElmLabel,
+      $synElmSize,
+      $synElmHelp,
+      $synElmSize,
+      $synChkKey,
+      $synChkVisible,
+      $synChkEditable;
+
     $synHtml = new synHtml();
     //parent::configuration();
-    $this->configuration[8]="<span style=\"color: darkblue;\">Current Date</span>";
+    $this->configuration[8] = "<span style=\"color: darkblue;\">Current Date</span>";
 
     //enable or disable the 3 check at the last configuration step
-    global $synChkKey, $synChkVisible, $synChkEditable;
-    $_SESSION["synChkKey"][$i]=0;
-    $_SESSION["synChkVisible"][$i]=1;
-    $_SESSION["synChkEditable"][$i]=0;
+    $_SESSION["synChkKey"][$i] = 0;
+    $_SESSION["synChkVisible"][$i] = 1;
+    $_SESSION["synChkEditable"][$i] = 0;
 
-    if ($k==99) return $this->configuration;
-    else return $this->configuration[$k];
+    if ( $k==99 )
+      return $this->configuration;
+    else
+      return $this->configuration[$k];
   }
-  
+
 } //end of class text
 
 ?>
