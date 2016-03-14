@@ -24,9 +24,9 @@ class synTextNumeric extends synElement {
 
   //private function
   function _html() {
-    return "<input type=\"text\" name=\"{$this->name}\" maxsize=\"{$this->size}\" value=\"{$this->value}\" class=\"form-control\"/>"; 
+    return "<input type=\"number\" class=\"form-control\" min=\"0\" step=\"1\" name=\"{$this->name}\" maxsize=\"{$this->size}\" value=\"{$this->value}\" class=\"form-control\"/>"; 
   }
-  
+
   //function for the auto-configuration
   function configuration($i="",$k=99) {
     global $synElmName,$synElmType,$synElmLabel,$synElmSize,$synElmHelp;
@@ -45,12 +45,12 @@ class synTextNumeric extends synElement {
     if ($k==99) return $this->configuration;
     else return $this->configuration[$k];
   }
-  
+
   function getSQLValue() {
     return intval($this->getValue());
-  } 
+  }
 
-  
+
 } //end of class text
 
 ?>

@@ -24,7 +24,7 @@ class synTextDecimal extends synElement {
 
   //private function
   function _html() {
-    return "<input type='text' name='".$this->name."' maxsize='".$this->size."' value='".$this->value."'/>";
+    return "<input type='number' class='form-control' min='0' step='0.1' name='{$this->name}' maxsize='{$this->size}' value='{$this->value}'/>";
   }
 
   //function for the auto-configuration

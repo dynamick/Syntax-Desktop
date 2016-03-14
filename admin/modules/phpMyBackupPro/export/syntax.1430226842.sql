@@ -1,5 +1,5 @@
 # MySQL dump of database 'syntax' on host 'localhost'
-# backup date and time: 01/08/16 18:29:42
+# backup date and time: 03/14/16 16:17:19
 # built by phpMyBackupPro v.2.1
 # http://www.phpMyBackupPro.net
 
@@ -16,7 +16,7 @@ CREATE TABLE `aa_element` (
   `order` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `id` (`classname`)
-) ENGINE=MyISAM AUTO_INCREMENT=33 DEFAULT CHARSET=utf8 COMMENT='Elementi che compongono un contenitore' AUTO_INCREMENT=33;
+) ENGINE=MyISAM AUTO_INCREMENT=34 DEFAULT CHARSET=utf8 COMMENT='Elementi che compongono un contenitore' AUTO_INCREMENT=34;
 
 
 ### data of table `aa_element` ###
@@ -52,6 +52,7 @@ insert into `aa_element` values ('29', 'Page Slug', 'synSlug', '170');
 insert into `aa_element` values ('30', 'Date and Time (read-only)', 'synDateTimeReadonly', '91');
 insert into `aa_element` values ('31', 'Icon picker', 'synIcon', '140');
 insert into `aa_element` values ('32', 'Address Picker', 'synAddressPicker', '180');
+insert into `aa_element` values ('33', 'Json Hash', 'synJsonHash', '190');
 
 
 ### structure of table `aa_group_services` ###
@@ -558,9 +559,9 @@ insert into `aa_services_element` values ('582', '157', 'id', '1', '1', '', '', 
 insert into `aa_services_element` values ('583', '157', 'social', '23', '', '1', '', '722', '0', '723', '', 'facebook|google-plus|linkedin|pinterest|twitter|flickr|youtube|instagram', '', '', '10', '', '');
 insert into `aa_services_element` values ('584', '157', 'url', '2', '', '', '', '724', '255', '725', '', '', '', '', '20', '', '');
 insert into `aa_services_element` values ('585', '157', 'visible', '9', '', '1', '', '726', '255', '727', '', '', '1', '', '30', '', '');
-insert into `aa_services_element` values ('586', '158', 'id', '1', '1', '', '', '731', '0', '732', '', '', '', '', '0', '', '');
+insert into `aa_services_element` values ('586', '158', 'id', '1', '1', '1', '', '731', '0', '732', '', '', '', '', '0', '', '');
 insert into `aa_services_element` values ('587', '158', 'id_form', '3', '', '1', '', '733', '11', '734', '', '', '', '', '10', '', '');
-insert into `aa_services_element` values ('588', '158', 'hash', '8', '', '', '', '735', '0', '736', '', '', '', '', '20', '', '');
+insert into `aa_services_element` values ('588', '158', 'hash', '33', '', '', '', '735', '0', '736', '', '', '', '', '20', '', '');
 insert into `aa_services_element` values ('589', '158', 'timestamp', '20', '', '1', '', '737', '0', '738', '', '', '', '', '30', '', '');
 insert into `aa_services_element` values ('590', '143', 'date', '30', '', '', '', '753', '0', '754', '', '', '', '', '50', '', '');
 insert into `aa_services_element` values ('591', '143', 'autore', '21', '', '', '', '755', '255', '756', '', '', '', '', '60', '', '');

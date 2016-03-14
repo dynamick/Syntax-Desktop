@@ -26,6 +26,10 @@
 
   $smarty = new synSmarty();
   $smarty->setPage($pageId);
+
+  // enable gzip compression
+  //ob_start( 'ob_gzhandler' );
   $smarty->display($smarty->synTemplate);
+  //ob_flush();
 
 // EOF index.php

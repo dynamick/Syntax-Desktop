@@ -34,24 +34,38 @@ class synJsonHash extends synElement {
   //private function
   function _html() {
     $value = json_decode( $this->translate( $this->value ), true );
-    //$contents = "<textarea name=\"{$this->name}\" class=\"{$class}\" rows=\"8\"{$maxlength}>{$value}</textarea>\n";
 
-    $contents = '<table class="table table-striped">';
+    $contents = '<table class="table table-striped table-bordered">';
     foreach( $value as $k => $v ) {
-      $contents .= "<tr><th>{$k}</th><td>{$v}</td></tr>\n";
+      if (is_array($v))
+        $v = implode( ', <br>', $v );
+      $contents .= "<tr><th width=\"15%\">{$k}</th><td>{$v}</td></tr>\n";
     }
     $contents .= '</table>';
 
     return $contents;
   }
 
-  //get the label of the element
+  // get the label of the element
   function getCell() {
     $value = json_decode( $this->translate( $this->value ), true );
     $ar_content = array();
-    foreach( $value as $k => $v )
-      $ar_content[] = "<span class=\"text-info\">{$k}:</span> {$v}";
-    return mb_substr( implode( '; ', $ar_content ), 0, 180, 'UTF-8' );
+    $max = 256;
+    $count = 0;
+    foreach( $value as $k => $v ) {
+      if ( is_array($v) )
+        $v = implode( ', ', $v );
+      $piece = "<span class=\"text-info\">{$k}:</span> {$v}";
+      $count += strlen( $piece );
+      // can't break an html string. truncate it carefully cut instead:
+      if ( $count > $max ) {
+        $ar_content[] = '...';
+        break;
+      }
+      $ar_content[] = $piece;
+    }
+    //return mb_substr( implode( '; ', $ar_content ), 0, 180, 'UTF-8' );
+    return implode( '; ', $ar_content );
   }
 
 

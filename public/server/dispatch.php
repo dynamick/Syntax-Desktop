@@ -157,19 +157,20 @@ EOSQL;
   // - tutto ok
       unset($_SESSION['form'.$form_id]['error']);
 
-      if($form_destinatario){
+      // elimino i campi irrilevanti
+      unset(
+        $_POST['MAX_FILE_SIZE'],
+        $_POST['captcha'],
+        $_POST['privacy'],
+        $_POST['action'],
+        $_POST['formId'],
+        $_POST['twitter_account']
+      );
+
+      if ( $form_destinatario ) {
       /* ========================================================================
        * - mail all'admin
        * ======================================================================== */
-        // elimino i campi irrilevanti
-        unset(
-          $_POST['MAX_FILE_SIZE'],
-          $_POST['captcha'],
-          $_POST['privacy'],
-          $_POST['action'],
-          $_POST['formId'],
-          $_POST['twitter_account']);
-
         $rows = '';
         foreach ($_POST as $k => $v) {
           $$k = addslashes(strip_tags($v));
