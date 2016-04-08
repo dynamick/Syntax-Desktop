@@ -124,14 +124,14 @@ EORET;
     $ext = $this->translate( $this->getValue() );
     $mat = $this->compileQry( $this->translatePath($this->mat) );
     $filename = $this->createFilename(false);
-    if ($this->multilang==1) {
-      $fileToBeRemoved = $synAbsolutePath . $mat . DIRECTORY_SEPARATOR . $filename . '_*';
+    if ($this->multilang == 1) {
+      $fileToBeRemoved = $synAbsolutePath . $mat . $filename . '_*';
     } else {
-      $fileToBeRemoved = $synAbsolutePath . $mat . DIRECTORY_SEPARATOR . $filename . '.*';
+      $fileToBeRemoved = $synAbsolutePath . $mat . $filename . '.*';
     }
-    foreach ( glob( $fileToBeRemoved ) as $filename ) {
-      unlink( $filename );
-    }
+    if ( $glob = glob( $fileToBeRemoved ) )
+      foreach ( $glob as $filename )
+        unlink( $filename );
   }
 
   //get the values of element

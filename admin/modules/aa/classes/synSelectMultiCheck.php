@@ -80,7 +80,7 @@ class synSelectMultiCheck extends synElement {
   function getValue() {
     if ( is_array($this->selected) )
       return implode( '|', $this->selected );
-    else 
+    else
       return;
   }
 
@@ -113,9 +113,9 @@ class synSelectMultiCheck extends synElement {
     global $db;
     $qry = $this->compileQry($qry);
     $res = $db->Execute($qry);
-    if ($null === true) 
+    if ($null === true)
       $ret['NULL'] = '';
-    while ($arr = $res->FetchRow()) 
+    while ($arr = $res->FetchRow())
       $ret[$arr[0]] = $arr[1];
     return $ret;
   }
@@ -124,12 +124,13 @@ class synSelectMultiCheck extends synElement {
     global $db;
     $qry = $this->compileQry($qry);
     $res = $db->Execute($qry);
-    if ( $null === true ) 
+    $ret = array();
+    if ( $null === true )
       $ret['NULL'] = '';
     while ( $arr = $res->FetchRow() ) {
       $r['id'] = $arr[0];
       $r['value'] = $arr[1];
-      if ( isset($arr[2]) && !empty($arr[2]) ) 
+      if ( isset($arr[2]) && !empty($arr[2]) )
         $r['group'] = $arr[2];
       $ret[] = $r;
     }
@@ -138,22 +139,22 @@ class synSelectMultiCheck extends synElement {
 
   //function for the auto-configuration
   function configuration( $i='', $k=99 ) {
-    global 
-      $synElmName, 
-      $synElmType, 
-      $synElmLabel, 
-      $synElmSize, 
-      $synElmHelp, 
+    global
+      $synElmName,
+      $synElmType,
+      $synElmLabel,
+      $synElmSize,
+      $synElmHelp,
       $synElmPath,
       $synElmQry,
-      $synChkKey, 
-      $synChkVisible, 
-      $synChkEditable, 
+      $synChkKey,
+      $synChkVisible,
+      $synChkEditable,
       $synChkMultilang;
-    
+
     $synHtml = new synHtml();
-    $tmp_val = isset($synElmQry[$i]) 
-             ? htmlentities($synElmQry[$i]) 
+    $tmp_val = isset($synElmQry[$i])
+             ? htmlentities($synElmQry[$i])
              : '';
     $this->configuration[4] = "Query: " . $synHtml->text(" name=\"synElmQry[{$i}]\" value=\"{$tmp_val}\"");
 
@@ -163,9 +164,9 @@ class synSelectMultiCheck extends synElement {
     $_SESSION['synChkEditable'][$i] = 0;
     $_SESSION['synChkMultilang'][$i] = 0;
 
-    if ($k==99) 
+    if ($k==99)
       return $this->configuration;
-    else 
+    else
       return $this->configuration[$k];
   }
 

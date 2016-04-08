@@ -34,38 +34,43 @@ class synJsonHash extends synElement {
   //private function
   function _html() {
     $value = json_decode( $this->translate( $this->value ), true );
+    if ( is_array($value) ) {
+      $contents = '<table class="table table-striped table-bordered">';
+      foreach( $value as $k => $v ) {
+        if (is_array($v))
+          $v = implode( ', <br>', $v );
+        $contents .= "<tr><th width=\"15%\">{$k}</th><td>{$v}</td></tr>\n";
+      }
+      $contents .= '</table>';
 
-    $contents = '<table class="table table-striped table-bordered">';
-    foreach( $value as $k => $v ) {
-      if (is_array($v))
-        $v = implode( ', <br>', $v );
-      $contents .= "<tr><th width=\"15%\">{$k}</th><td>{$v}</td></tr>\n";
+      return $contents;
     }
-    $contents .= '</table>';
-
-    return $contents;
+    return false;
   }
 
   // get the label of the element
   function getCell() {
     $value = json_decode( $this->translate( $this->value ), true );
     $ar_content = array();
-    $max = 256;
+    $max = 2048;
     $count = 0;
-    foreach( $value as $k => $v ) {
-      if ( is_array($v) )
-        $v = implode( ', ', $v );
-      $piece = "<span class=\"text-info\">{$k}:</span> {$v}";
-      $count += strlen( $piece );
-      // can't break an html string. truncate it carefully cut instead:
-      if ( $count > $max ) {
-        $ar_content[] = '...';
-        break;
+    if ( is_array($value) ) {
+      foreach( $value as $k => $v ) {
+        if ( is_array($v) )
+          $v = implode( ', ', $v );
+        $piece = "<span class=\"text-info\">{$k}:</span> {$v}";
+        $count += strlen( $piece );
+        // can't break an html string. truncate it carefully cut instead:
+        if ( $count > $max ) {
+          $ar_content[] = '...';
+          break;
+        }
+        $ar_content[] = $piece;
       }
-      $ar_content[] = $piece;
+      //return mb_substr( implode( '; ', $ar_content ), 0, 180, 'UTF-8' );
+      return implode( '; ', $ar_content );
     }
-    //return mb_substr( implode( '; ', $ar_content ), 0, 180, 'UTF-8' );
-    return implode( '; ', $ar_content );
+    return false;
   }
 
 

@@ -232,9 +232,9 @@ class formBuilder {
         $f .= "</{$this->container_element}>\n";
 
         if($fieldset){
-          $this->fieldset[$fieldset]['fields'][] = $f;
+          $this->fieldset[$fieldset]['fields'][ $this->field_key ] = $f;
         } else {
-          $this->fields[] = $f;
+          $this->fields[ $this->field_key ] = $f;
         }
       } // if (isset($this->group_fields[$name]))
     }
@@ -369,7 +369,12 @@ class formBuilder {
       $ret .= '<strong>'.$this->checkfields.'</strong>';
       $ret .= "<ul>\n";
       foreach($error as $k=>$v){
-        $ret .= "<li>{$this->hook[$k]}</li>\n";
+        if ($v == 'empty') {
+          $explanation = $this->error1;
+        } else {
+          $explanation = $v;
+        }
+        $ret .= "<li>{$this->hook[$k]}: {$explanation}</li>\n";
       }
       $ret .= "</ul>\n";
     } else {
@@ -413,7 +418,7 @@ class formBuilder {
     $index = $this->tabIndex();
     $ph    = ($this->hide_label) ? " placeholder=\"{$label}\"" : '';
 
-    $ret = "  <textarea name=\"{$name}\" id=\"{$identifier}\" class=\"{$class}\" rows=\"4\" cols=\"60\"{$ph} tabindex=\"{$index}\"></textarea>";
+    $ret = "  <textarea name=\"{$name}\" id=\"{$identifier}\" class=\"{$class}\" rows=\"4\" cols=\"60\"{$ph} tabindex=\"{$index}\">{$value}</textarea>";
     return $ret;
   }
 

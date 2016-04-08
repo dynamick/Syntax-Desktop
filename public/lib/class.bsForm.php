@@ -73,6 +73,8 @@ class bsForm extends formBuilder {
         break;
     }
 
+    $this->field_key ++;
+
     if ($input != '') {
       if (isset($this->group_fields[$name])) {
         // field is associated to a group
@@ -116,9 +118,9 @@ ENDOFFIELD;
         }
 
         if($fieldset){
-          $this->fieldset[$fieldset]['fields'][] = $f;
+          $this->fieldset[$fieldset]['fields'][ $this->field_key ] = $f;
         } else {
-          $this->fields[] = $f;
+          $this->fields[ $this->field_key ] = $f;
         }
       } // if (isset($this->group_fields[$name]))
     }
@@ -273,7 +275,7 @@ ENDOFFIELD;
     $index = $this->tabIndex();
     $ph    = ($this->hide_label) ? " placeholder=\"{$label}\"" : '';
 
-    $ret = "  <textarea name=\"{$name}\" id=\"{$identifier}\" class=\"form-control input-lg{$class}\" rows=\"5\" cols=\"60\" tabindex=\"{$index}\"{$ph}></textarea>";
+    $ret = "  <textarea name=\"{$name}\" id=\"{$identifier}\" class=\"form-control input-lg{$class}\" rows=\"5\" cols=\"60\" tabindex=\"{$index}\"{$ph}>{$value}</textarea>";
     return $ret;
   }
 

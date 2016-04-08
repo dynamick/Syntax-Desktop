@@ -4,38 +4,34 @@ function smarty_function_form($params, &$smarty) {
   global $db, $synWebsiteTitle, $synPublicPath;
 
   s_start(); // session_start
-
-  $page         = safe_get( $params['page'], NULL, 'intval' );
-  $formid       = safe_get( $params['id'], NULL );
+  $labels       = array(
+                  'informativa',
+                  'informativa_privacy',
+                  'informativa_privacy_link',
+                  'checkfields',
+                  'campo_obbligatorio',
+                  'email_non_valida',
+                  'verifica_valore',
+                  'cancella',
+                  'invia',
+                  'codice_sicurezza'
+                );
+  $t            = multiTranslateDictionary( $labels );
+  $form         = safe_get( $params['id'], NULL );
+  $page         = safe_get( $params['page'], $smarty->getTemplateVars('synPageId'), 'intval' );
   $lng          = getLangInitial();
   $ajax_submit  = TRUE;
-  $t            = multiTranslateDictionary(array(
-                'informativa',
-                'informativa_privacy',
-                'informativa_privacy_link',
-                'checkfields',
-                'campo_obbligatorio',
-                'email_non_valida',
-                'verifica_valore',
-                'cancella',
-                'invia',
-                'codice_sicurezza'
-                ));
 
-  if (!empty($page))
-    $form_var = getFormAttributesByPage($page, $lng); // vedi sotto
 
-  elseif (!empty($formid))
-    $form_var = getFormAttributesById($formid, $lng); // vedi sotto
-
+  if ( !empty($form) )
+    $form_var = getFormAttributes( $form, 'id', $lng); // vedi sotto
   else
-    return false;
+    $form_var = getFormAttributes( $page, 'pagina', $lng); // vedi sotto
 
-  $form_id  = $form_var['id'];
-
-  if (!$form_id)
+  if ( !$form_var )
     return false;  // nessun form trovato, esco
 
+  $form_id  = $form_var['id'];
   $fieldset = getFormFieldset( $form_id, $lng ); // vedi sotto
   $fields   = getFormFields( $form_id, $lng, $params ); // vedi sotto
   foreach( $fields as $field ) {
@@ -45,12 +41,11 @@ function smarty_function_form($params, &$smarty) {
 
   $form     = new bsForm( $form_id );
   //$form     = new formBuilder($form_id);
-
   $session  = safe_get( $_SESSION['form'.$form_id], FALSE );
   $html     = ''; //"<h2>{$form_var['titolo']}</h2>\n";
 
   if ( isset($session)
-    && $session['submitted']==true
+    && $session['submitted'] == true
     ){
     // - form sottomesso correttamente, presento il messaggio di conferma
     $html .= $form_var['risposta'];
@@ -60,16 +55,15 @@ function smarty_function_form($params, &$smarty) {
     // - errore/non ancora sottomesso, presento il form
     $html .= $form_var['descrizione'];
     if (isset($session['data'])) {
-      // se presenti, imposto i dati gi? inseriti
-      $dati = unserialize($session['data']);
-      foreach($dati as $k=>$v){
-        switch($fields[$k]['tipo']){
+      // se presenti, imposto i dati già inseriti
+      $dati = unserialize( $session['data'] );
+      foreach( $dati as $k => $v ) {
+        switch( $fields[$k]['tipo'] ) {
           case 'checkbox':
           case 'radio':
           case 'select':
-            foreach($fields[$k]['opzioni'] as $f=>$s){
-              $fields[$k]['opzioni'][$f]['selezionato'] = (in_array($f,$s)) ? 1 : 0;
-            }
+            foreach( $fields[$k]['opzioni'] as $f => $s )
+              $fields[$k]['opzioni'][$f]['selezionato'] = (in_array($f, $v)) ? 1 : 0;
             break;
           case 'text':
           case 'textarea':
@@ -89,16 +83,17 @@ function smarty_function_form($params, &$smarty) {
       'method'              => 'post',
       'class'               => 'synform',
       'hide_label'          => false,
-      'resetLabel'          => $t['cancella'],
-      'submitLabel'         => $t['invia'],
       'button_class'        => 'btn',
       'submit_button_class' => 'btn-primary',
       'reset_button_class'  => 'btn-default',
       'captcha'             => $form_var['captcha'],
       'captchaConfig'       => array( 'width' => 270, 'height' => 50 ),
-      'captchaLabel'        => $t['codice_sicurezza'],
       'privacy'             => $form_var['privacy'],
       'privacy_page'        => $privacy_page,
+
+      'resetLabel'          => $t['cancella'],
+      'submitLabel'         => $t['invia'],
+      'captchaLabel'        => $t['codice_sicurezza'],
       'informativa'         => nl2br($t['informativa_privacy']),
       'approvazione'        => $t['informativa'],
       'approvazione_link'   => $t['informativa_privacy_link'],
@@ -106,6 +101,7 @@ function smarty_function_form($params, &$smarty) {
       'error1'              => $t['campo_obbligatorio'],
       'error2'              => $t['email_non_valida'],
       'error3'              => $t['verifica_valore'],
+
       'include_script'      => false,
       'ajax_submit'         => $ajax_submit,
       'debug'               => false
@@ -116,7 +112,7 @@ function smarty_function_form($params, &$smarty) {
     foreach ($fieldset as $s => $l)
     	$form->addFieldset($s, $l);
 
-    // ============================ START GROUPs ============================ */
+    // ============================ START GROUPs ============================
     // special markup for custom fields
     // syntax: $form->addGroup( <group name>, <group html>, <array of field names>, <fieldset id> );
     /*
@@ -135,7 +131,7 @@ EOGROUP;
     $form->addGroup('name', $group0, $group_fields, 0);
 
     */
-    // ============================  END GROUPs ============================= */
+    // ============================  END GROUPs =============================
 
     foreach($fields as $f) {
     	$form->addField(
@@ -168,49 +164,32 @@ EOGROUP;
   return '<div id="form' . $form_id . '-wrapper">' . $html . '</div>';
 }
 
-
 // recupera dal db gli attributi del form
-function getFormAttributesByPage($req, $lng='it'){
+function getFormAttributes( $req, $identifier='id', $lng='it' ){
   global $db;
-  $qr1 = <<<EOSQL
-
+  $db->setFetchMode( ADODB_FETCH_ASSOC );
+  $where = "WHERE f.{$identifier} = '{$req}'";
+  $qry = <<<EOSQL
      SELECT f.id, f.destinatario, f.privacy, f.privacy_page, f.captcha,
             t1.{$lng} AS titolo, t2.{$lng} AS descrizione, t3.{$lng} AS risposta
        FROM forms f
   LEFT JOIN aa_translation t1 ON f.titolo=t1.id
   LEFT JOIN aa_translation t2 ON f.descrizione=t2.id
   LEFT JOIN aa_translation t3 ON f.risposta=t3.id
-      WHERE f.pagina = '{$req}'
+      {$where}
       LIMIT 0,1
-
 EOSQL;
-  $re1 = $db->execute($qr1);
-  $ar1 = $re1->fetchRow();
-  return $ar1;
-}
-
-
-function getFormAttributesById($req, $lng='it'){
-  global $db;
-  $qr1 = <<<EOSQL
-
-     SELECT f.id, f.destinatario, f.privacy, f.privacy_page, f.captcha,
-            t1.{$lng} AS titolo, t2.{$lng} AS descrizione, t3.{$lng} AS risposta
-       FROM forms f
-  LEFT JOIN aa_translation t1 ON f.titolo=t1.id
-  LEFT JOIN aa_translation t2 ON f.descrizione=t2.id
-  LEFT JOIN aa_translation t3 ON f.risposta=t3.id
-      WHERE f.id = '{$req}'
-
-EOSQL;
-  $re1 = $db->execute($qr1);
-  $ar1 = $re1->fetchRow();
-  return $ar1;
+  $res = $db->Execute( $qry );
+  if ( $arr = $res->FetchRow() ) {
+    return $arr;
+  } else {
+    return FALSE;
+  }
 }
 
 
 // recupera l'elenco dei campi
-function getFormFields($form_id, $lng='it', $params){
+function getFormFields( $form_id, $lng='it', $params ){
   global $db;
   $fields = array();
   $qr2 = <<<EOSQL
@@ -225,7 +204,7 @@ function getFormFields($form_id, $lng='it', $params){
 
 EOSQL;
   $re2 = $db->execute($qr2);
-  while ($ar2 = $re2->fetchRow()){
+  while ( $ar2 = $re2->fetchRow() ) {
     extract($ar2);
     $options =  array();
     if ( $tipo == 'select'
@@ -233,17 +212,29 @@ EOSQL;
       || $tipo == 'radio'
       ){
       // recupero le eventuali options
-      $qr3 = "SELECT o.value, o.selezionato, t.$lng AS label FROM field_options o LEFT JOIN aa_translation t ON o.label=t.id WHERE o.id_field = $id ORDER BY o.ordine";
+      $qr3 = <<<EOQ
+      SELECT o.value, o.selezionato, t.{$lng} AS label
+        FROM field_options o
+   LEFT JOIN aa_translation t ON o.label = t.id
+       WHERE o.id_field = '{$id}'
+    ORDER BY o.ordine
+EOQ;
       $re3 = $db->execute($qr3);
-      while ($ar3 = $re3->fetchRow()) {
-        $selezionato = (isset($params[$titolo]) && $params[$titolo] == $ar3['value'])
-                     ? true
-                     : $ar3['selezionato'];
-
-        $options[$ar3['value']] = array(
+      $sel = false;
+      while ( $ar3 = $re3->fetchRow() ) {
+        $options[ $ar3['value'] ] = array(
           'label'       => $ar3['label'],
-          'selezionato' => $selezionato
-          );
+          'selezionato' => $ar3['selezionato'] // default selection
+        );
+        if ($ar3['selezionato'])
+          $sel = $ar3['value'];
+      }
+      // parameter-driven selection
+      if ( isset($params[$titolo])
+        && array_key_exists( $params[$titolo], $options)
+        ){
+        $options[ $params[$titolo] ]['selezionato'] = true;
+        $options[ $sel ]['selezionato'] = false;
       }
     } else {
       // se impostato utilizzo il parametro smarty come value
@@ -269,7 +260,7 @@ EOSQL;
 
 
 // recupera l'elenco dei fieldset
-function getFormFieldset($form_id, $lng='it'){
+function getFormFieldset( $form_id, $lng='it' ) {
   global $db;
   $fieldset = array();
   $qr2 = <<<EOSQL

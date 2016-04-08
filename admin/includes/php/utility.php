@@ -724,18 +724,19 @@ function cleverThumbTag($path="", $filename, $foto, $suffix="", $alt="", $width=
 *******************************************************************************/
 
 if (!function_exists('glob')) {
-  function glob ($pattern) {
+  function glob($pattern) {
     $path_parts = pathinfo ($pattern);
     $pattern = '^' . str_replace (array ('*',  '?'), array ('(.+)', '(.)'), $path_parts['basename'] . '$');
     $dir = opendir (".{$path_parts['dirname']}/");
+    $result = array();
     while ($file = readdir ($dir)) {
-      if (ereg ($pattern, $file)) $result[] = "{$path_parts['dirname']}/$file";
+      if (ereg ($pattern, $file))
+        $result[] = $path_parts['dirname'] . DIRECTORY_SEPARATOR . $file;
     }
     closedir ($dir);
     return $result;
   }
 }
-
 
 if (!function_exists("file_put_contents")) {
   function file_put_contents($filename,$content,$mode="w+") {
