@@ -58,18 +58,20 @@ function sql2human($data, $format='%A %e %B %Y') {
   # http://it.php.net/manual/en/function.strftime.php
   # http://strftime.net/
   synSetLocale();
+  $date = "";
   if (!strpos($data,":")) {
     # converte la data da sql(aaaa-mm-gg) a $format
     $ar=explode("-",$data);
-    return strftime($format, mktime(0, 0, 0, $ar[1], $ar[2], $ar[0]));
+    $date = strftime($format, mktime(0, 0, 0, $ar[1], $ar[2], $ar[0]));
 
   } else {
     # converte la data da sql(aaaa-mm-gg hh:mm:ss) a $format
     $ar = explode(" ", $data);
     $dt = explode("-", $ar[0]);
     $tm = explode(":", $ar[1]);
-    return strftime($format, mktime($tm[0], $tm[1], $tm[2], $dt[1], $dt[2], $dt[0]));
+    $date = strftime($format, mktime($tm[0], $tm[1], $tm[2], $dt[1], $dt[2], $dt[0]));
   }
+  return utf8_encode($date);
 }
 
 
