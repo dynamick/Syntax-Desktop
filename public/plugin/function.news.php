@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 function smarty_function_news($params, &$smarty) {
   global $db, $synPublicPath;
 

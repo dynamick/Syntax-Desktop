@@ -1,4 +1,4 @@
-﻿{function name=render_main_menu level=1 parent=0}
+{function name=render_main_menu level=1 parent=0}
           <ul {if $level eq 1}class="nav navbar-nav"{else}class="dropdown-menu lv{$level}" aria-labelledby="drop{$parent}"{/if}>
 {foreach $items as $item}
   {if isset($item.child) and count($item.child) > 0}
