@@ -25,7 +25,7 @@ class synKey extends synElement {
   function _html() {
     $value = $this->value ? $this->value : '&nbsp;';
     $html = "<div class=\"form-control-static\">{$value}</div>"
-          . "<input type=\"hidden\" name=\"{$this->name}\" maxsize=\"{$this->size}\" value=\"{$this->value}\">";
+          . "<input type=\"hidden\" name=\"{$this->name}\" maxlength=\"{$this->size}\" value=\"{$this->value}\">";
     return $html;
   }
 

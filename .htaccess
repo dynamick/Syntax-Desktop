@@ -1,4 +1,4 @@
-php_flag magic_quotes_gpc off
+#php_flag magic_quotes_gpc off
 
 # exclude unauthorized HTTP verbs
 <LimitExcept POST GET HEAD OPTIONS>

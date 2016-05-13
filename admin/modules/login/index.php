@@ -54,7 +54,7 @@ EOALERT;
         <div class="account-wall">
           <img class="profile-img" src="assets/images/user.jpg" alt="">
           <form id="login-form" class="form-signin" action="" method="post" autocomplete="off">
-            <?= $alertBox ?>
+            <?php echo $alertBox ?>
             <input type="text" class="form-control" name="login" placeholder="Username" required autofocus tabindex="1">
             <input type="password" class="form-control" name="password" placeholder="Password" required tabindex="2">
             <input type="hidden" name="synCustomLang" value="user">
