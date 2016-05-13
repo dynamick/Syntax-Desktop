@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="{$synLangInitial}">
 {include file="partial/_head.tpl"}
 <body>

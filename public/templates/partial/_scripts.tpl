@@ -1,4 +1,4 @@
-﻿<!-- JS libraries -->
+<!-- JS libraries -->
 <script type="text/javascript" src="{$synPublicPath}/js/monolith.php"></script>
 <script type="text/javascript">
   $('.carousel').carousel({
