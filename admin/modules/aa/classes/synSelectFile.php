@@ -11,7 +11,7 @@ class synSelectFile extends synElement {
   var $path;
 
   //constructor(name, value, label, size, help)
-  function synSelectfile( $n='', $v='', $l='', $s=255, $h='') {
+  function __construct( $n='', $v='', $l='', $s=255, $h='') {
     global $$n;
 
     if (empty($n))

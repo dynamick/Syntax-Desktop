@@ -7,7 +7,7 @@
 class synSlug extends synElement {
 
   //constructor(name, value, label, size, help)
-  function synSlug( $n='', $v=null , $l=null, $s=1024, $h='' ) {
+  function __construct( $n='', $v=null , $l=null, $s=1024, $h='' ) {
     if ($n=='')
       $n = 'text' . date('his');
     if ($l=='')

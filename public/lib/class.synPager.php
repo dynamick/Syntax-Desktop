@@ -52,7 +52,7 @@ class synPager extends ADODB_Pager{
   //    $id should be only be [a-z0-9]*
   // $targetFile the file to be pointed in the page index
   // $targetFrame the frame to be pointed in the page index
-  function synPager(&$db, $id='adodb', $targetFile, $targetFrame, $showPageLinks=false, $use_session=false){
+  function __construct(&$db, $id='adodb', $targetFile, $targetFrame, $showPageLinks=false, $use_session=false){
     global $_SERVER, $PHP_SELF, $_SESSION, $_GET;
 
     $curr_page = $id.'_curr_page';

@@ -23,7 +23,7 @@ class synContainer {
   var $even;
 
   //constructor
-  function synContainer( $table, $buttons, $multidelete, $title = NULL, $description = NULL, $multilang ) {
+  function __construct( $table, $buttons, $multidelete, $title = NULL, $description = NULL, $multilang ) {
     $this->table = $table;
     $this->element = array();
     $this->buttons = $buttons;

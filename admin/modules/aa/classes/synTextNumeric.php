@@ -7,7 +7,7 @@
 class synTextNumeric extends synElement {
 
   //constructor(name, value, label, size, help)
-  function synTextNumeric($n="", $v=null , $l=null, $s=11, $h="") {
+  function __construct($n="", $v=null , $l=null, $s=11, $h="") {
     if ($n=="") $n =  "text".date("his");
     if ($l=="") $l =  ucfirst($n);
 
@@ -24,7 +24,7 @@ class synTextNumeric extends synElement {
 
   //private function
   function _html() {
-    return "<input type=\"number\" class=\"form-control\" min=\"0\" step=\"1\" name=\"{$this->name}\" maxsize=\"{$this->size}\" value=\"{$this->value}\" class=\"form-control\"/>"; 
+    return "<input type=\"number\" class=\"form-control\" min=\"0\" step=\"1\" name=\"{$this->name}\" maxsize=\"{$this->size}\" value=\"{$this->value}\" class=\"form-control\"/>";
   }
 
   //function for the auto-configuration

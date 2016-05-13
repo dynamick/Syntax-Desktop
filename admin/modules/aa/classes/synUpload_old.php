@@ -12,7 +12,7 @@ class synUpload extends synElement {
   var $pattern;
 
   //constructor(name, value, label, size, help, $mat)
-  function synUpload($n="", $v="", $l="", $s=255, $h="", $mat="/mat/") {
+  function __construct($n="", $v="", $l="", $s=255, $h="", $mat="/mat/") {
     if ($n=='')
       $n = 'text'.date("his");
     if ($l=='')

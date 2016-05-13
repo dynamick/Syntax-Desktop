@@ -8,15 +8,15 @@
 class synUserCreate extends synElement {
 
   //constructor(name, value, label, size, help)
-  function synUserCreate($n="", $v=null , $l=null, $s=255, $h="") {
+  function __construct($n="", $v=null , $l=null, $s=255, $h="") {
     if ($n=="") $n =  "text".date("his");
     if ($l=="") $l =  ucfirst($n);
 
     $this->type = "text";
     $this->name  = $n;
     if ($v==null) {
-      global $$n; 
-      if(isset($_REQUEST[$n])) $this->value = $_REQUEST[$n]; 
+      global $$n;
+      if(isset($_REQUEST[$n])) $this->value = $_REQUEST[$n];
     } else $this->value = $v;
     $this->label = $l;
     $this->size  = $s;

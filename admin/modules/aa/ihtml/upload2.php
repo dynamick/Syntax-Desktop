@@ -47,115 +47,117 @@ $date_field   = 'date';
 $user_field   = 'autore';
 $format_field = 'format';
 
-if ( empty($key) ) :
-  $errors[] = 'Key not received!';
-  break;
+do {
+  if ( empty($key) ) :
+    $errors[] = 'Key not received!';
+    break;
 
-else :
-  $user       = $_SESSION['synUser'];
-  $order      = getMaxOrder($table, $order_field, $foreign_key, $key);
-  // TODO: make sub-directory storage optional
-  $targetDir  = $synAbsolutePath . $path . $key . '/';
+  else :
+    $user       = $_SESSION['synUser'];
+    $order      = getMaxOrder($table, $order_field, $foreign_key, $key);
+    // TODO: make sub-directory storage optional
+    $targetDir  = $synAbsolutePath . $path . $key . '/';
 
-  if ( !is_dir($targetDir) ) {
-    try {
-      mkdir($targetDir);
-    } catch (Exception $e) {
-      $errors[] = 'Cannot create directory: ' . $targetDir;
+    if ( !is_dir($targetDir) ) {
+      try {
+        mkdir($targetDir);
+      } catch (Exception $e) {
+        $errors[] = 'Cannot create directory: ' . $targetDir;
+        break;
+      }
+    } elseif ( !is_writable($targetDir) ) {
+      $errors[] = 'Directory ' . $targetDir . ' is not writable!';
       break;
     }
-  } elseif ( !is_writable($targetDir) ) {
-    $errors[] = 'Directory ' . $targetDir . ' is not writable!';
-    break;
-  }
 
-  // a flag to see if everything is ok
-  $success = null;
+    // a flag to see if everything is ok
+    $success = null;
 
-  // file paths to store
-  $paths = array();
-  $output = array();
+    // file paths to store
+    $paths = array();
+    $output = array();
 
-  if ( empty($_FILES) ) {
-    $errors[] = 'No files sent for upload.';
-    break;
-  }
+    if ( empty($_FILES) ) {
+      $errors[] = 'No files sent for upload.';
+      break;
+    }
 
-  foreach ( $_FILES AS $fileArray ) :
-    // get file names
-    $filenames = $fileArray['name'];
+    foreach ( $_FILES AS $fileArray ) :
+      // get file names
+      $filenames = $fileArray['name'];
 
-    // loop and process files
-    for ( $i = 0; $i < count($filenames); $i++ ) :
-      $fileName = $fileArray['name'][$i];
-      $fileName = preg_replace('/[^\w\._]+/', '_', $fileName); // Clean the fileName for security reasons
-      $target   = $targetDir . $fileName;
-      
-      // see http://php.net/manual/en/features.file-upload.errors.php
-      switch ( $fileArray['error'][$i] ) {
-        case UPLOAD_ERR_OK: // 0
-          // everything ok
-          break;
-        case UPLOAD_ERR_INI_SIZE: // 1
-        case UPLOAD_ERR_FORM_SIZE: // 2
-          $errors[] = 'Exceeded filesize limit.';
-          break;
-        case UPLOAD_ERR_NO_FILE: // 4
-          $errors[] = 'No file sent.';
-          break;
-        default:
-          $errors[] = 'Unknown errors.';
-      }
+      // loop and process files
+      for ( $i = 0; $i < count($filenames); $i++ ) :
+        $fileName = $fileArray['name'][$i];
+        $fileName = preg_replace('/[^\w\._]+/', '_', $fileName); // Clean the fileName for security reasons
+        $target   = $targetDir . $fileName;
 
-      if ( $fileArray['error'][$i] == 0 ) :
-        $success = move_uploaded_file( $fileArray['tmp_name'][$i], $target );
-        // check and process based on successful status
-        if ( $success === true ) {
-            $paths[]      = $target;
-            $info         = pathinfo( $target );
-            $fileName     = $info['filename'];
-            $ext          = strtolower( $info['extension'] );
-            $order        += 10;
-            list($w, $h)  = getimagesize( $target );
-            $format       = ($h > $w) ? 'portrait' : 'landscape';
-            $data         = array(
-              $description  => $fileName,
-              $file_field   => $ext,
-              $foreign_key  => $key,
-              $order_field  => $order,
-              $date_field   => date('Y-m-d H:i:s'),
-              $user_field   => $user,
-              $format_field => $format
-            );
-            $row_id = saveData( $table, $data );
-
-            if ($row_id) {
-              $newFileName = strtolower( "{$table}_{$file_field}_id{$row_id}.{$ext}" );
-              rename( $target, $targetDir . DIRECTORY_SEPARATOR . $newFileName);
-              $uploaded[] = $newFileName;
-            } else {
-              $errors[] =  'Error while saving data to DB';
-            }
-
-        } else { //if ($success === false) {
-          if ( $error = error_get_last() ) // due to max_input_vars or similar...
-            $errors[] = $error['message'] ;
-          else
-            $errors[] = 'File ' . $target . ' could not be uploaded.';
-
-          // delete any uploaded files
-          foreach ( $paths as $file )
-            unlink( $file );
+        // see http://php.net/manual/en/features.file-upload.errors.php
+        switch ( $fileArray['error'][$i] ) {
+          case UPLOAD_ERR_OK: // 0
+            // everything ok
+            break;
+          case UPLOAD_ERR_INI_SIZE: // 1
+          case UPLOAD_ERR_FORM_SIZE: // 2
+            $errors[] = 'Exceeded filesize limit.';
+            break;
+          case UPLOAD_ERR_NO_FILE: // 4
+            $errors[] = 'No file sent.';
+            break;
+          default:
+            $errors[] = 'Unknown errors.';
         }
-      endif; // if $fileArray['error'][$i] == 1
 
-      if ( !empty($errors) )
-        $errorkeys[] = $i;        
-    endfor; // $i < count($filenames)
-  
-  endforeach; // $_FILES AS $fileArray
+        if ( $fileArray['error'][$i] == 0 ) :
+          $success = move_uploaded_file( $fileArray['tmp_name'][$i], $target );
+          // check and process based on successful status
+          if ( $success === true ) {
+              $paths[]      = $target;
+              $info         = pathinfo( $target );
+              $fileName     = $info['filename'];
+              $ext          = strtolower( $info['extension'] );
+              $order        += 10;
+              list($w, $h)  = getimagesize( $target );
+              $format       = ($h > $w) ? 'portrait' : 'landscape';
+              $data         = array(
+                $description  => $fileName,
+                $file_field   => $ext,
+                $foreign_key  => $key,
+                $order_field  => $order,
+                $date_field   => date('Y-m-d H:i:s'),
+                $user_field   => $user,
+                $format_field => $format
+              );
+              $row_id = saveData( $table, $data );
 
-endif; // empty($key)
+              if ($row_id) {
+                $newFileName = strtolower( "{$table}_{$file_field}_id{$row_id}.{$ext}" );
+                rename( $target, $targetDir . DIRECTORY_SEPARATOR . $newFileName);
+                $uploaded[] = $newFileName;
+              } else {
+                $errors[] =  'Error while saving data to DB';
+              }
+
+          } else { //if ($success === false) {
+            if ( $error = error_get_last() ) // due to max_input_vars or similar...
+              $errors[] = $error['message'] ;
+            else
+              $errors[] = 'File ' . $target . ' could not be uploaded.';
+
+            // delete any uploaded files
+            foreach ( $paths as $file )
+              unlink( $file );
+          }
+        endif; // if $fileArray['error'][$i] == 1
+
+        if ( !empty($errors) )
+          $errorkeys[] = $i;
+      endfor; // $i < count($filenames)
+
+    endforeach; // $_FILES AS $fileArray
+
+  endif; // empty($key)
+} while (0);
 
 if ( empty($uploaded) && empty($errors) ) {
   $errors[] = 'Unknown error. No files were processed.';
@@ -185,8 +187,8 @@ function saveData( $table, $data ){
       unset( $data[$column] );
   }
 
-  if ( !empty($fields) 
-    && !empty($params) 
+  if ( !empty($fields)
+    && !empty($params)
     ){
     $qry = 'INSERT INTO ' . $table . ' (`' . implode( '`,`', $fields ) . '`) VALUES (' . implode( ', ', $params ) . ')';
     if ( $res = $db->Execute( $qry, array_values($data) ) )

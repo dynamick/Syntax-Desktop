@@ -11,7 +11,7 @@ class synSelectQry extends synElement {
   var $path;
 
   //constructor(name, value, label, size, help)
-  function synSelectQry($n="", $v="0", $l="", $s=11, $h="") {
+  function __construct($n="", $v="0", $l="", $s=11, $h="") {
     global $$n;
 
     if ($n=="") $n = "text".date("his");

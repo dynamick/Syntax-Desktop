@@ -6,7 +6,7 @@
 class synHtml {
 
   //constructor
-  function html() {
+  function __construct() {
   }
 
   //add a form tag

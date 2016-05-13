@@ -11,7 +11,7 @@ class synSelectMultiCheck extends synElement {
   var $path;
 
   //constructor(name, value, label, size, help)
-  function synSelectMultiCheck( $n = '', $v = '', $l = '', $s = 255, $h = '' ) {
+  function __construct( $n = '', $v = '', $l = '', $s = 255, $h = '' ) {
     global $$n;
 
     if ($n=='')

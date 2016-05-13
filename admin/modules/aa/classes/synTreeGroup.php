@@ -11,9 +11,9 @@ class synTreeGroup extends synElement {
   var $path;
 
   //constructor(name, value, label, size, help)
-  function synTreeGroup($n="", $v="", $l="", $s=255, $h="") {
+  function __construct($n="", $v="", $l="", $s=255, $h="") {
     global $$n;
-    
+
     if ($n=="") $n =  "text".date("his");
     if ($l=="") $l =  ucfirst($n);
     $this->type = "file";
@@ -38,58 +38,58 @@ class synTreeGroup extends synElement {
         if ($this->selected==$k) $selected="selected=\"selected\""; else $selected="";
         $txt.="<OPTION VALUE=\"".$k."\" $selected>".$v."</option>";
       }
-      reset($this->value);  
+      reset($this->value);
     }
 
     $txt.="</select>\n";
-    return $txt; 
+    return $txt;
   }
-  
+
   //sets the value of the element
   function setValue($v) {
     //if (is_array($v)) $this->value = $v;
     if (!isset($_REQUEST[$$n])) $this->value = $this->createArray($this->qry,$this->path);
     $this->selected = $v;
-  }  
+  }
 
   //sets the value of the element
   function getValue() {
     return $this->selected;
-  }  
+  }
 
   //get the label of the element
   function getCell() {
     if (is_array($this->value)) {
-      if (array_key_exists($this->selected, $this->value)) 
+      if (array_key_exists($this->selected, $this->value))
         return $this->value[$this->selected];
       else return "<font color='red'>x</font>";
     } else return $this->selected;
   }
-  
-  
+
+
   function setPath($path) {$this->path=$path;}
   function setQry($qry) {$this->qry=$qry;}
   function createArray($qry,$null=false) {
     global $db;
     $res=$db->Execute($qry);
     if ($null==true) $ret['NULL']="";
-    while ($arr=$res->FetchRow())  
+    while ($arr=$res->FetchRow())
       $ret[$arr[0]]=$arr[1];
     return $ret;
   }
-  
+
   //function for the auto-configuration
   function configuration($i="",$k=99) {
     global $synElmName,$synElmType,$synElmLabel,$synElmSize,$synElmHelp, $synElmQry;
     global $synElmQry;
     $synHtml = new synHtml();
-    
-    
+
+
     global $db;
     $res=$db->Execute("SELECT * FROM aa_services WHERE id=3 order by name");
     $txt="<select name=\"synElmQry[$i]\" >";
     while ($arr=$res->FetchRow()) {
-      if (strpos($synElmQry[$i],$arr["syntable"])===false ) $selected=""; else $selected="selected=\"selected\""; 
+      if (strpos($synElmQry[$i],$arr["syntable"])===false ) $selected=""; else $selected="selected=\"selected\"";
       if ($arr["syntable"]!="") $txt.="<OPTION VALUE=\"SELECT * FROM ".$arr["syntable"]."\" $selected>".$arr["name"]."</option>";
     }
     $txt.="</select>\n";
@@ -108,8 +108,8 @@ class synTreeGroup extends synElement {
     if ($k==99) return $this->configuration;
     else return $this->configuration[$k];
   }
-  
-  
+
+
 } //end of class inputfile
 
 ?>

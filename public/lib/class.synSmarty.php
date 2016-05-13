@@ -16,7 +16,7 @@ class synSmarty extends Smarty {
    public $synPageNode = array();
    public $synPageScript = array();
 
-   function synSmarty() {
+   function __construct() {
       global $synAbsolutePath, $synPublicPath, $synPluginPath, $synWebsiteTitle;
       // Class Constructor. These automatically get set with each new instance.
       parent::__construct();

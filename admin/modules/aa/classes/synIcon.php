@@ -7,7 +7,7 @@
 class synIcon extends synElement {
 
   //constructor(name, value, label, size, help)
-  function synIcon( $n = '', $v = null , $l = null, $s = 30, $h = '' ) {
+  function __construct( $n = '', $v = null , $l = null, $s = 30, $h = '' ) {
     if ($n == '')
       $n = 'text'.date('his');
     if ($l == '')

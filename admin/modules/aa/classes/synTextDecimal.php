@@ -7,7 +7,7 @@
 class synTextDecimal extends synElement {
 
   //constructor(name, value, label, size, help)
-  function synTextDecimal($n="", $v=null , $l=null, $s=8, $h="") {
+  function __construct($n="", $v=null , $l=null, $s=8, $h="") {
     if ($n=="") $n =  "text".date("his");
     if ($l=="") $l =  ucfirst($n);
 

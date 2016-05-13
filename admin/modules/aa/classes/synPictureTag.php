@@ -8,7 +8,7 @@ class synPictureTag extends synElement {
   var $mat;
 
   //constructor(name, value, label, size, help)
-  function synPictureTag($n="", $v=null , $l=null, $s=255, $h="") {
+  function __construct($n="", $v=null , $l=null, $s=255, $h="") {
     if ($n=="") $n =  "text".date("his");
     if ($l=="") $l =  ucfirst($n);
 
@@ -16,7 +16,7 @@ class synPictureTag extends synElement {
     $this->name  = $n;
     if ($v==null) {
       global $$n;
-      if(isset($_REQUEST[$n])) $this->value = $_REQUEST[$n]; 
+      if(isset($_REQUEST[$n])) $this->value = $_REQUEST[$n];
     } else $this->value = $v;
     $this->label = $l;
     $this->size  = $s;

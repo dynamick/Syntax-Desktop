@@ -8,7 +8,7 @@ class synJsonHash extends synElement {
   var $type;
 
   //constructor(name, value, label, size, help)
-  function synJsonHash( $n='', $v=null , $l=null, $s=0, $h='' ) {
+  function __construct( $n='', $v=null , $l=null, $s=0, $h='' ) {
     if ($n=="")
       $n = 'json' . date( 'his' );
     if ($l=="")

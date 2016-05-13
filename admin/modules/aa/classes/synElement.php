@@ -66,7 +66,7 @@ class synElement {
     );
 
   //constructor
-  function synElement() {
+  function __construct() {
     $this->configuration();
   }
 
@@ -207,7 +207,7 @@ class synElement {
   function setQry($qry) {
     $this->qry = $qry;
   }
-  
+
   function insert() {
     return true;
   }
@@ -338,25 +338,25 @@ class synElement {
     global $db, $synElmName, $synElmType, $synElmLabel, $synElmLabelLang, $synElmSize, $synElmHelp, $synElmHelpLang, $synElmJoinsItem, $synElmOrder, $synElmFilter, $synInitOrder;
     $initOrderChk = "";
     $initOrder = $i+1;
-    if ($synInitOrder==0) 
+    if ($synInitOrder==0)
       $synInitOrder=1;
     if (abs($synInitOrder)==$initOrder) {
       $initOrderChk = " checked=\"checked\" ";
       $initOrder = $synInitOrder;
     }
-    if (!isset($synElmName[$i]))  
+    if (!isset($synElmName[$i]))
       $synElmName[$i] = '';
-    if (!isset($synElmType[$i]))  
+    if (!isset($synElmType[$i]))
       $synElmType[$i] = '';
-    if (!isset($synElmOrder[$i])) 
+    if (!isset($synElmOrder[$i]))
       $synElmOrder[$i] = '';
-    if (!isset($synElmLabel[$i])) 
+    if (!isset($synElmLabel[$i]))
       $synElmLabel[$i] = '';
-    if (!isset($synElmHelp[$i]))  
+    if (!isset($synElmHelp[$i]))
       $synElmHelp[$i] = '';
-    if (!isset($synElmLabelLang[$i]) || $synElmLabelLang[$i]=='') 
+    if (!isset($synElmLabelLang[$i]) || $synElmLabelLang[$i]=='')
       $synElmLabelLang[$i] = translate($synElmLabel[$i]);
-    if (!isset($synElmHelpLang[$i])  || $synElmHelpLang[$i]=='')  
+    if (!isset($synElmHelpLang[$i])  || $synElmHelpLang[$i]=='')
       $synElmHelpLang[$i]  = translate($synElmHelp[$i]);
 
     $synHtml = new synHtml();
@@ -366,13 +366,13 @@ class synElement {
     $this->configuration[3] = $synHtml->text(" name=\"synElmLabelLang[$i]\" value=\"$synElmLabelLang[$i]\" ");
   //$this->configuration[4] = $synHtml->text(" name=\"synElmHelp[$i]\" value=\"$synElmHelp[$i]\" ");
     $this->configuration[4] = $synHtml->text(" name=\"synElmHelpLang[$i]\" value=\"$synElmHelpLang[$i]\" ");
-    if ($synElmOrder[$i]==0) 
+    if ($synElmOrder[$i]==0)
       $synElmOrder[$i] = $i*10;
     $this->configuration[6] = $synHtml->text(" name=\"synElmOrder[$i]\" value=\"$synElmOrder[$i]\" size=\"2\" ");
     $this->configuration[7] = $synHtml->radio(" name=\"synInitOrder\" value=\"$initOrder\" $initOrderChk ");
-    if ($k==99) 
+    if ($k==99)
       return $this->configuration;
-    else 
+    else
       return $this->configuration[$k];
   }
 

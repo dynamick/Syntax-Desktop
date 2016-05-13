@@ -7,7 +7,7 @@
 class synDateTime extends synElement {
 
   //constructor(name, value, label, size, help)
-  function synDateTime($n = '', $v = null, $l = null, $s = null, $h = '') {
+  function __construct($n = '', $v = null, $l = null, $s = null, $h = '') {
     if ($n == '')
       $n = 'text'.date('his');
     if ($l == '')

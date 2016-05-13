@@ -7,7 +7,7 @@
 class synPassword extends synElement {
 
   //constructor(name, value, label, size, help)
-  function synPassword( $n = '', $v = null, $l = null, $s = 255, $h = '' ) {
+  function __construct( $n = '', $v = null, $l = null, $s = 255, $h = '' ) {
     if ($n == '')
       $n = 'pass'.date('his');
     if ($l == '')

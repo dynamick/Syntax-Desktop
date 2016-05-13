@@ -10,7 +10,7 @@ class synRadio extends synElement {
   var $path;
 
   //constructor(name, value, label, size, help)
-  function synRadio( $n = '', $v = '', $l = '', $s = '', $h = '' ) {
+  function __construct( $n = '', $v = '', $l = '', $s = '', $h = '' ) {
     global $$n;
 
     if ($n == '')

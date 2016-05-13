@@ -11,7 +11,7 @@ class synUploadPictures extends synElement {
   var $mat;
 
   //constructor(name, value, label, size, help, $mat)
-  function synUploadPictures($n="", $v="", $l="", $s=255, $h="", $mat="/mat/") {
+  function __construct($n="", $v="", $l="", $s=255, $h="", $mat="/mat/") {
     if ($n=='')
       $n = "text".date("his");
     if ($l=='')
@@ -110,7 +110,7 @@ EOC;
     if(!isset($_SESSION))
       session_start();
     $aa_CurrentLang = $_SESSION['aa_CurrentLang'];
-    
+
     $container=$this->container;
     $key=$container->getKey();
     $table=$container->table;

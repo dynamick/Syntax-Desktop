@@ -8,7 +8,7 @@ class synTree extends synElement {
   var $caption;
 
   //constructor(name, value, label, size, help)
-  function synTree($n='', $v=null , $l=null, $s=11, $h='') {
+  function __construct($n='', $v=null , $l=null, $s=11, $h='') {
     if ($n=='')
       $n = "text".date('his');
 

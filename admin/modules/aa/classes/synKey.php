@@ -7,7 +7,7 @@
 class synKey extends synElement {
 
   //constructor(name, value, label, size, help)
-  function synKey($n="", $v=null , $l=null, $s=11, $h="") {
+  function __construct($n="", $v=null , $l=null, $s=11, $h="") {
     if ($n=="") $n =  "text".date("his");
     if ($l=="") $l =  ucfirst($n);
 

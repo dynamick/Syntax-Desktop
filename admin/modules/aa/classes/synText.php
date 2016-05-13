@@ -7,7 +7,7 @@
 class synText extends synElement {
 
   //constructor(name, value, label, size, help)
-  function synText($n="", $v=null , $l=null, $s=255, $h="") {
+  function __construct($n="", $v=null , $l=null, $s=255, $h="") {
     if ($n=="") $n =  "text".date("his");
     if ($l=="") $l =  ucfirst($n);
 
@@ -25,14 +25,14 @@ class synText extends synElement {
     $this->configuration();
   }
 
-  
-  
+
+
   //private function
   function _html() {
-    $value = str_replace("\"", "&quot;", ($this->translate($this->getValue()))); 
-    return "<input type='text' name='".$this->name."' maxsize='".$this->size."' value=\"".$value."\" class=\"form-control\"/>"; 
+    $value = str_replace("\"", "&quot;", ($this->translate($this->getValue())));
+    return "<input type='text' name='".$this->name."' maxsize='".$this->size."' value=\"".$value."\" class=\"form-control\"/>";
   }
-  
+
   //function for the auto-configuration
   function configuration($i="",$k=99) {
     global $synElmName,$synElmType,$synElmLabel,$synElmSize,$synElmHelp;
@@ -41,7 +41,7 @@ class synText extends synElement {
     //parent::configuration();
     if (!isset($synElmSize[$i]) or $synElmSize[$i]=="") $synElmSize[$i]=$this->size;
     $this->configuration[4]="Dimensione: ".$synHtml->text(" name=\"synElmSize[$i]\" value=\"$synElmSize[$i]\"");
-    
+
     //enable or disable the 3 check at the last configuration step
     global $synChkKey, $synChkVisible, $synChkEditable,$synChkMultilang;
     $_SESSION["synChkKey"][$i]=1;
@@ -52,8 +52,8 @@ class synText extends synElement {
     if ($k==99) return $this->configuration;
     else return $this->configuration[$k];
   }
-  
-  
+
+
 } //end of class text
 
 ?>

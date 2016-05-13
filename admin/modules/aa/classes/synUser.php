@@ -7,7 +7,7 @@
     var $canModify=1;
     var $canDelete=1;
 
-    function synUser() {
+    function __construct() {
       global $db;
       //check if user session is active
       $this->userId=getSynUser();

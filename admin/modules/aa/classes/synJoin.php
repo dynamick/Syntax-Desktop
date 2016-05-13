@@ -15,7 +15,7 @@ var $name;
 var $icon;
 
   //constructor(from_element_id, to_element_id, service_name)
-  function synJoin($id) {
+  function __construct($id) {
     global $db;
 
     $qry="SELECT * FROM aa_service_joins WHERE `id` ='$id'";

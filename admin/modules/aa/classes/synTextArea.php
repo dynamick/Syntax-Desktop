@@ -8,7 +8,7 @@ class synTextArea extends synElement {
   var $big;
 
   //constructor(name, value, label, size, help)
-  function synTextArea($n='', $v=null , $l=null, $s=150, $h='') {
+  function __construct($n='', $v=null , $l=null, $s=150, $h='') {
     if ($n=='')
       $n            = 'textarea'.date('his');
     if ($l=='')

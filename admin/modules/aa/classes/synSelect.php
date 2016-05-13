@@ -11,7 +11,7 @@ class synSelect extends synElement {
   var $path;
 
   //constructor(name, value, label, size, help)
-  function synSelect($n="", $v="", $l="", $s=11, $h="") {
+  function __construct($n="", $v="", $l="", $s=11, $h="") {
     global $$n;
 
     if ($n=="")

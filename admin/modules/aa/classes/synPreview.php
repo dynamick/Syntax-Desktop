@@ -1,9 +1,9 @@
-<?
+<?php
 
 /******************************************
 * class synPreview                        *
 * Create a preview button obj             *
-* PS: remember to insert an attribute 
+* PS: remember to insert an attribute
 * preview="fieldname" in the pubblic site
 * page where the preview must work.
 * fieldname=the name of field the content of
@@ -18,7 +18,7 @@ class synPreview extends synElement {
   var $mat;
 
   //constructor(name, value, label, size, help)
-  function synPreview($n="", $v=null , $l=null, $s=255, $h="") {
+  function __construct($n="", $v=null , $l=null, $s=255, $h="") {
     if ($n=="") $n =  "text".date("his");
     if ($l=="") $l =  ucfirst($n);
 
@@ -35,10 +35,10 @@ class synPreview extends synElement {
 
   //private function
   function _html() {
-    //return "<input type='submit' value='".$this->name."' onclick=\"window.open('preview','preview','width=800,height=600'); document.forms[0].target='preview'; document.forms[0].action='preview.php'; \"/>"; 
-    return "<a onclick=\"window.open('blank.html','preview','width=830,height=600,scrollbars=yes,left=20,top=20'); document.forms[0].target='preview'; document.forms[0].oldaction=document.forms[0].action; document.forms[0].action='preview.php?synTarget=$this->mat'; document.forms[0].submit(); document.forms[0].target='_self'; document.forms[0].action=document.forms[0].oldaction;\"/><img src=\"images/preview.gif\" alt=\"preview\" style=\"cursor: pointer; margin-left: 20px;\" onmouseover=\"this.src='images/preview_over.gif';\" onmouseout=\"this.src='images/preview.gif';\" ></a>"; 
+    //return "<input type='submit' value='".$this->name."' onclick=\"window.open('preview','preview','width=800,height=600'); document.forms[0].target='preview'; document.forms[0].action='preview.php'; \"/>";
+    return "<a onclick=\"window.open('blank.html','preview','width=830,height=600,scrollbars=yes,left=20,top=20'); document.forms[0].target='preview'; document.forms[0].oldaction=document.forms[0].action; document.forms[0].action='preview.php?synTarget=$this->mat'; document.forms[0].submit(); document.forms[0].target='_self'; document.forms[0].action=document.forms[0].oldaction;\"/><img src=\"images/preview.gif\" alt=\"preview\" style=\"cursor: pointer; margin-left: 20px;\" onmouseover=\"this.src='images/preview_over.gif';\" onmouseout=\"this.src='images/preview.gif';\" ></a>";
   }
-  
+
   //set the target path
   function setPath($path) {
     $this->mat = $path;
@@ -54,8 +54,8 @@ class synPreview extends synElement {
   function getSQLName() {
     return;
   }
-  
-  
+
+
   //function for the auto-configuration
   function configuration($i="",$k=99) {
     global $synElmName,$synElmType,$synElmLabel,$synElmSize,$synElmHelp,$synElmPath;
@@ -78,8 +78,8 @@ class synPreview extends synElement {
     if ($k==99) return $this->configuration;
     else return $this->configuration[$k];
   }
-  
-  
+
+
 } //end of class text
 
 ?>

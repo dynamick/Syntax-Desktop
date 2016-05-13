@@ -7,7 +7,7 @@
 class synLastUpdate extends synElement {
 
   //constructor(name, value, label, size, help)
-  function synLastUpdate($n="", $v=null , $l=null, $s=255, $h="") {
+  function __construct($n="", $v=null , $l=null, $s=255, $h="") {
     if ($n=="") $n = "text".date("his");
     if ($l=="") $l = ucfirst($n);
 

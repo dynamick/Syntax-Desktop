@@ -11,9 +11,9 @@ class synOwner extends synElement {
   var $path;
 
   //constructor(name, value, label, size, help)
-  function synOwner($n="", $v="", $l="", $s=11, $h="") {
+  function __construct($n="", $v="", $l="", $s=11, $h="") {
     global $$n;
-    
+
     if ($n=="") $n =  "text".date("his");
     if ($l=="") $l =  ucfirst($n);
     $this->type = "file";
@@ -52,13 +52,13 @@ class synOwner extends synElement {
     //if (is_array($v)) $this->value = $v;
     if (!isset($_REQUEST[$$n])) $this->value = $_SESSION["synGroupChild"];
     $this->selected = $v;
-  }  
+  }
 
   //sets the value of the element
   function getValue() {
     if ($this->selected=="") return $_SESSION["synGroup"];
     return $this->selected;
-  }  
+  }
 
   //get the label of the element
   function getCell() {
@@ -67,12 +67,12 @@ class synOwner extends synElement {
     if ($res=$db->Execute($qry)) {
       $arr=$res->FetchRow();
       $ret="<em>".$arr["name"]."</em>";
-      if ($arr["id"]==$_SESSION["synGroup"]) $ret="me"; 
+      if ($arr["id"]==$_SESSION["synGroup"]) $ret="me";
     } else $ret="";
     return $ret;
   }
-  
-  
+
+
   function setPath($path) {$this->path=$path;}
 
   function setQry($qry) {
@@ -85,12 +85,12 @@ class synOwner extends synElement {
     global $synElmQry;
     $synHtml = new synHtml();
     $this->configuration=array();
-    
+
     global $db;
     //$res=$db->Execute("SELECT * FROM aa_services order by name");
     //$txt="<select name=\"synElmQry[$i]\" >";
     //while ($arr=$res->FetchRow()) {
-    //  if (strpos($synElmQry[$i],$arr["syntable"])===false ) $selected=""; else $selected="selected=\"selected\""; 
+    //  if (strpos($synElmQry[$i],$arr["syntable"])===false ) $selected=""; else $selected="selected=\"selected\"";
     //  if ($arr["syntable"]!="") $txt.="<OPTION VALUE=\"SELECT * FROM ".$arr["syntable"]."\" $selected>".translate($arr["name"])."</option>";
     //}
     //$txt.="</select>\n";
@@ -110,8 +110,8 @@ class synOwner extends synElement {
     if ($k==99) return $this->configuration;
     else return $this->configuration[$k];
   }
-  
-  
+
+
 } //end of class inputfile
 
 ?>

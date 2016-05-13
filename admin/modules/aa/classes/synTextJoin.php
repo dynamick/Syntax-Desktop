@@ -17,9 +17,9 @@ class synTextJoin extends synElement {
   var $table_join;
 
   //constructor(name, value, label, size, help)
-  function synTextJoin($n="", $v="", $l="", $s=255, $h="") {
+  function __construct($n="", $v="", $l="", $s=255, $h="") {
     global $$n;
-    
+
     if ($n=="") $n =  "text".date("his");
     if ($l=="") $l =  ucfirst($n);
     $this->type = "text";
@@ -38,7 +38,7 @@ class synTextJoin extends synElement {
   function _html() {
     $txt = "";
     $value = $this->createArray();
-    if (is_array($value)) { 
+    if (is_array($value)) {
       $txt .= '<table>'.PHP_EOL;
       foreach($value as $v) {
         $id = $v['key'];
@@ -47,17 +47,17 @@ class synTextJoin extends synElement {
         $txt .= '<tr><th>'.translateDesktop($name).'</th><td><input type="text" name="'.$this->name.'_value['.$id.']" value="'.$value.'"/></td></tr>'.PHP_EOL;
       }
       $txt .= '</table>'.PHP_EOL;
-    }  
-    return $txt; 
+    }
+    return $txt;
   }
-  
+
   //sets the value of the element
   function setValue($v) {
     global $$n;
     if (!isset($_REQUEST[$$n])) $this->value = $this->createArray($this->qry, $this->path);
     $this->selected = $v;
     return;
-  }  
+  }
 
   //get the label of the element
   function getCell() {
@@ -69,8 +69,8 @@ class synTextJoin extends synElement {
     }
     return implode(', ', $ret);
   }
-  
-  
+
+
   function setQry($qry) {
     $this->qry = $qry;
     #$this->table_join = array_pop(explode(" ",$this->qry));
@@ -82,7 +82,7 @@ class synTextJoin extends synElement {
   function setPath($path) {
     $this->path=$path;
   }
-  
+
   function createArray() {
     global $db;
     $container = $this->container; //synContainer::getInstance();
@@ -94,7 +94,7 @@ class synTextJoin extends synElement {
 
     $res = $db->execute("SELECT id_{$table2} AS k, `{$field}` FROM `{$table1}-{$table2}` WHERE `id_{$table1}`={$key}");
     while($val=$res->fetchrow()){
-      $values[$val['k']] = $val[$field]; 
+      $values[$val['k']] = $val[$field];
     }
 
 
@@ -106,7 +106,7 @@ class synTextJoin extends synElement {
     return $ret;
   }
 
-  function initCallback() {  
+  function initCallback() {
     $container = synContainer::getInstance();
     $container->add_callback('update', array($this, 'update'));
     $container->add_callback('insert', array($this, 'insert'));
@@ -117,7 +117,7 @@ class synTextJoin extends synElement {
 
   function update() {
     global $db;
-    $container = $this->container;     
+    $container = $this->container;
     $key    = $container->getKeyValue();
     $table1 = $container->table;
     $table2 = $this->table_join;
@@ -135,19 +135,19 @@ class synTextJoin extends synElement {
         $upd = $db->execute("UPDATE `{$table1}-{$table2}` SET `{$field}` = '$v' WHERE (`id_{$table1}`={$key} AND `id_{$table2}` = '{$k}')");
         $ret = $ret && $upd;
       } else {
-        // nope, insert it      
+        // nope, insert it
         $ins = $db->execute("INSERT INTO `{$table1}-{$table2}` (`id_{$table1}`, `id_{$table2}`, `{$field}`) VALUES ('{$key}','{$k}','{$v}')");
         $ret = $ret && $ins;
       }
     }
     return $ret;
   }
-  
+
 
 
   function insert() {
     global $db;
-    $container = $this->container;     
+    $container = $this->container;
     $key    = $container->getKeyValue();
     $table1 = $container->table;
     $table2 = $this->table_join;
@@ -158,18 +158,18 @@ class synTextJoin extends synElement {
     $qry  = "INSERT INTO `{$table1}-{$table2}` (`id_{$table1}`, `id_{$table2}`, `{$field}`) VALUES ";
     //foreach($_POST[$this->table_join.'_value'] as $k=>$v){
     foreach($post as $k=>$v){
-      $values[] = "({$key}, {$k}, '{$v}')";      
+      $values[] = "({$key}, {$k}, '{$v}')";
     }
     $qry .= implode(', ', $values).";";
 
     return $db->execute($qry);
   }
 
-  
+
   function delete() {
     global $db;
 
-    $container = $this->container;    
+    $container = $this->container;
     $key    = $container->getKeyValue();
     $table1 = $container->table;
     $table2 = $this->table_join;
@@ -180,7 +180,7 @@ class synTextJoin extends synElement {
     return $del;
   }
 
-    
+
   //function for the auto-configuration
   function configuration($i="",$k=99) {
     global $synElmName,$synElmType,$synElmLabel,$synElmSize,$synElmHelp, $synElmQry;
@@ -189,12 +189,12 @@ class synTextJoin extends synElement {
     global $synChkKey, $synChkVisible, $synChkEditable,$synChkMultilang;
 
     $synHtml = new synHtml();
-    
-    
+
+
     $res=$db->Execute("SELECT * FROM aa_services order by name");
     $txt="<select name=\"synElmQry[$i]\" >";
     while ($arr=$res->FetchRow()) {
-      if (isset($synElmQry[$i]) and strpos($synElmQry[$i]." ","FROM ".$arr["syntable"]." ")===false ) $selected=""; else $selected="selected=\"selected\""; 
+      if (isset($synElmQry[$i]) and strpos($synElmQry[$i]." ","FROM ".$arr["syntable"]." ")===false ) $selected=""; else $selected="selected=\"selected\"";
       if ($arr["syntable"]!="") $txt.="<OPTION VALUE=\"SELECT * FROM ".$arr["syntable"]."\" $selected>".translate($arr["name"])."</option>";
     }
     $txt.="</select>\n";
@@ -206,7 +206,7 @@ class synTextJoin extends synElement {
 
 #    if (!isset($synElmPath[$i]) or $synElmPath[$i]=="") $checked=""; else $checked=" checked='checked' ";
 #    $this->configuration[6]="NULL: ".$synHtml->check(" name=\"synElmPath[$i]\" value=\"1\" $checked");
-    
+
     //enable or disable the 3 check at the last configuration step
     $_SESSION["synChkKey"][$i]=1;
     $_SESSION["synChkVisible"][$i]=1;
@@ -216,6 +216,6 @@ class synTextJoin extends synElement {
     if ($k==99) return $this->configuration;
     else return $this->configuration[$k];
   }
-  
+
 } //end of class inputfile
 ?>

@@ -9,7 +9,7 @@ class synInputfile extends synElement {
   var $mat;
 
   //constructor(name, value, label, size, help, $mat)
-  function synInputfile( $n = '', $v = '', $l = '', $s = 255, $h = '', $mat = '/mat/') {
+  function __construct( $n = '', $v = '', $l = '', $s = 255, $h = '', $mat = '/mat/') {
     if (empty($n))
       $n = 'text' . date('his');
     if (empty($l))
