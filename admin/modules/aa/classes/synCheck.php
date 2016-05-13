@@ -10,7 +10,7 @@ class synCheck extends synElement {
   //var $container;
 
   //constructor(name, value, label, size, help)
-  function _construct($n="", $v="", $l="", $s=255, $h="") {
+  function __construct($n="", $v="", $l="", $s=255, $h="") {
     global $$n;
     if ($n=="") $n =  "text".date("his");
     if ($l=="") $l =  ucfirst($n);
