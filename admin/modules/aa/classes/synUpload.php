@@ -8,16 +8,16 @@ class synUpload extends synElement {
   var $pattern;
 
   //constructor(name, value, label, size, help, $mat)
-  function __construct($n='', $v='', $l='', $s=255, $h='', $mat='/mat/') {
-    if ($n=='')
-      $n = 'text'.date("his");
+  function __construct( $n = '', $v = '', $l = '', $s = 255, $h = '', $mat = '/mat/' ) {
+    if ( $n == '' )
+      $n = 'text' . date("his");
 
-    if ($l=='')
+    if ( $l == '' )
       $l = ucfirst($n);
 
     $this->type    = 'file';
     $this->name    = $n;
-    if ($v==null) {
+    if ( $v == null ) {
       global $$n;
       $this->value = $$n;
     } else {
@@ -36,25 +36,28 @@ class synUpload extends synElement {
   public function _html() {
     global ${$this->name}, $PHP_SELF;
 
-    if(!isset($_SESSION))
+    if ( !isset($_SESSION) )
       session_start();
 
-    if (isset($_REQUEST['cmd']))
+    if ( isset($_REQUEST['cmd']) )
       $cmd = $_REQUEST['cmd'];
     else
       $cmd = '';
 
-    if($cmd == 'modifyrow') {
+    if ( $cmd == 'modifyrow' ) {
       $container = $this->container;
-      $keyArr = explode('=', str_replace("'", '', str_replace('`', '', trim(urldecode($container->getKey())))));
+      $keyArr    = explode('=', str_replace("'", '', str_replace( '`', '', trim( urldecode($container->getKey()) ) ) ) );
       $app_title = $app_order = $app_table = $app_field = $app_linkfield = '';
-      if (isset($this->pattern)) {
-        $arr_tmp = explode('|', $this->pattern);
+      if ( isset($this->pattern) ) {
+        $arr_tmp = explode( '|', $this->pattern );
         if ( is_array( $arr_tmp )
-          && count($arr_tmp) == 5
+          && count( $arr_tmp ) == 5
           ) list($app_title, $app_order, $app_table, $app_field, $app_linkfield) = $arr_tmp;
       }
-      if (isset($this->qry) && preg_match( '/(\d+)x(\d+)/', $this->qry, $match )) {
+      $resize_props = '';
+      if ( isset( $this->qry )
+        && preg_match( '/(\d+)x(\d+)/', $this->qry, $match )
+        ){
         //echo print_r($match); die();
         $resize_props = 'resizeImage: true, '
                       . "maxImageWidth: {$match[1]}, "
@@ -113,7 +116,7 @@ EOC;
   //create the file name
   function createFilename($withLang=true) {
     //global $aa_CurrentLang;
-    if(!isset($_SESSION))
+    if ( !isset($_SESSION) )
       session_start();
     $aa_CurrentLang = $_SESSION['aa_CurrentLang'];
 
@@ -132,25 +135,25 @@ EOC;
   //upload the document...
   function uploadDocument() {
     global $synAbsolutePath, ${$this->name}, ${$this->name.'_name'};
-    $documentRoot = $synAbsolutePath.'/';
-    $mat = $this->translatePath($this->mat);
-    $ext = $this->translate(substr(${$this->name.'_name'}, -3));
-    $filename = $this->createFilename().'.'.$ext;
+    $documentRoot = $synAbsolutePath . '/';
+    $mat = $this->translatePath( $this->mat );
+    $ext = $this->translate( substr( ${$this->name . '_name'}, -3));
+    $filename = $this->createFilename() . '.' . $ext;
     $file = ${$this->name};
-    $original_filename = ${$this->name.'_name'};
+    $original_filename = ${$this->name . '_name'};
     if ( $file != 'none'
       && $original_filename != ''
       && $file != ''
       ){
-      if (!file_exists($documentRoot.$mat))
-        mkdir($documentRoot.$mat);
-      move_uploaded_file($file,$documentRoot.$mat.$filename);
-      @chmod($documentRoot.$mat.$filename, 0777);
+      if ( !file_exists($documentRoot . $mat) )
+        mkdir( $documentRoot . $mat );
+      move_uploaded_file( $file, $documentRoot . $mat . $filename );
+      @chmod( $documentRoot . $mat . $filename, 0777 );
     }
 
     $save_path = '';
     $file = '';
-    if(isset($_FILES['userfile'])) {
+    if ( isset($_FILES['userfile']) ) {
       $file = $_FILES['userfile'];
 
       $k = count($file['name']);
@@ -173,8 +176,8 @@ EOC;
     $ext = $this->translate($this->getValue());
     $mat = $this->translatePath($this->mat);
     $filename = $this->createFilename(false);
-    $documentRoot = $synAbsolutePath.'/';
-    $fileToBeRemoved = $documentRoot.$mat.$filename.'*';
+    $documentRoot = $synAbsolutePath . '/';
+    $fileToBeRemoved = $documentRoot . $mat . $filename . '*';
     foreach (glob($fileToBeRemoved) as $filename){
       unlink($filename);
     }
@@ -182,10 +185,10 @@ EOC;
 
   //get the values of element
   function getValue() {
-    global ${$this->name}, ${$this->name."_name"}, ${$this->name."_old"};
-    $ext = substr(${$this->name."_name"},-3);
+    global ${$this->name}, ${$this->name . '_name'}, ${$this->name . '_old'};
+    $ext = substr(${$this->name . '_name'},-3);
     if ($ext == '')
-      $ext = ${$this->name."_old"};
+      $ext = ${$this->name . '_old'};
     if ($ext == '')
       $ext = $this->value;
 
@@ -197,39 +200,39 @@ EOC;
     global $synAbsolutePath;
     $ext = $this->translate($this->value);
     $mat = $this->translatePath($this->mat);
-    $filename = $mat.$this->createFilename().'.'.$ext;
-    $file_exists = file_exists($synAbsolutePath.$filename);
+    $filename = $mat . $this->createFilename() . '.' . $ext;
+    $file_exists = file_exists( $synAbsolutePath . $filename );
     $isImg = $this->isImage($filename);
-    if ($ext and $file_exists and $isImg)
-      $ret = "<div style='overflow: hidden; height: 25px; display:inline;background: url($filename) no-repeat center;width: 100%' onMouseOver=\"openbox('$filename')\" onMouseOut=\"closebox()\"></div>";
-    elseif ($ext and $file_exists and !$isImg)
-      $ret="<span style='color: gray'>Document $ext</span>";
-    elseif ($ext and !$file_exists)
-      $ret="<span style='color: gray'>Error $ext</span>";
+    if ( $ext && $file_exists && $isImg )
+      $ret = "<div style='overflow:hidden; height:25px; display:inline; background:url({$filename}) no-repeat center;'></div>";
+    elseif ( $ext && $file_exists && !$isImg )
+      $ret = "<span style='color: gray'>Document {$ext}</span>";
+    elseif ( $ext && !$file_exists )
+      $ret = "<span style='color: gray'>Error {$ext}</span>";
     else
-      $ret="<span style='color: gray'>Empty</span>";
+      $ret = "<span style='color: gray'>Empty</span>";
 
     return $ret;
-    //die;
   }
 
   //check if it is an image or a document
   function isImage($filename) {
     global $synAbsolutePath;
-    if (file_exists($synAbsolutePath.$filename)) {
-      if (getimagesize($synAbsolutePath.$filename)!==false)
-        $ret=true;
+    if ( file_exists( $synAbsolutePath . $filename ) ) {
+      if ( getimagesize( $synAbsolutePath . $filename )!==false)
+        $ret = true;
       else
-        $ret=false;
+        $ret = false;
     } else {
-      $ret=false;
+      $ret = false;
     }
     return $ret;
   }
 
   //set the upload path of the element
   function setPath($path) {
-    if (substr($path,-1)!="/") $path.="/";
+    if ( substr( $path, -1) != '/' )
+      $path .= '/';
     //if (!file_exists($path)) echo "<div>Path $path not found</div>";
     $this->mat = $path;
     return true;
@@ -238,36 +241,43 @@ EOC;
   //translate path and insert dynamic content
   function translatePath($path) {
     global $synAdminPath;
-    if (strpos($path,"§syntaxRelativePath§")!==false) $path=str_replace("§syntaxRelativePath§",$synAdminPath,$path);
+    if ( strpos( $path, "§syntaxRelativePath§" ) !== false )
+      $path = str_replace( "§syntaxRelativePath§", $synAdminPath, $path );
     return $path;
   }
 
   //function for the auto-configuration
-  function configuration($i='', $k=99) {
+  function configuration( $i = '', $k = 99 ) {
     global
       $synAbsolutePath, $synElmLabel, $synElmName, $synElmSize, $synElmPath, $synChkVisible,
       $synChkMultilang, $synElmValue, $synElmType, $synElmHelp, $synChkEditable, $synChkKey;
 
-
     $synHtml = new synHtml();
 
     //Calculate the correct path
-    $syntaxPath = str_replace("\\", "/", realpath('../../../'));
-    $documentRoot = str_replace("\\", "/", $synAbsolutePath);
-    $pathinfo = substr($syntaxPath, strlen($documentRoot));
+    $syntaxPath   = str_replace( "\\", '/', realpath( '../../../' ) );
+    $documentRoot = str_replace( "\\", '/', $synAbsolutePath );
+    $pathinfo     = substr( $syntaxPath, strlen( $documentRoot ) );
 
     if ( !isset($synElmPath[$i])
       || $synElmPath[$i] == ''
       )
-      $synElmPath[$i] = $pathinfo.'/mat';
+      $synElmPath[$i] = $pathinfo . '/mat';
 
-    if ( !isset($synElmValue[$i])
+    if ( !isset($synElmValue[$i] )
       || $synElmValue[$i] == ''
       ) $synElmValue[$i] = 'title|ordine|photos|photo|album';
 
     //parent::configuration();
-    $this->configuration[8] = "Path: ".$synHtml->text(" name=\"synElmPath[$i]\" value=\"$synElmPath[$i]\"")."<br><span style='color: gray'>Insert directory path without DOCUMENT ROOT.<br />I.e. <strong>/mysite/syntax/public/templates/</strong> <br> Use <strong>§syntaxRelativePath§</strong><br />for dynamically insert Syntax Desktop relative path.</span>";
-    $this->configuration[9] = "Join: ".$synHtml->text(" name=\"synElmValue[$i]\" value=\"$synElmValue[$i]\"")."<br><span style='color: gray'>Usage: title field|order field|table name|field|foreign key field</span>";
+    $this->configuration[8] = "Path: "
+                            . $synHtml->text(" name=\"synElmPath[{$i}]\" value=\"{$synElmPath[$i]}\"")
+                            . '<span class="help-block">Insert directory path without DOCUMENT ROOT.<br />'
+                            . 'I.e. <strong>/mysite/syntax/public/templates/</strong><br>'
+                            . 'Use <strong>§syntaxRelativePath§</strong><br />'
+                            . 'to insert dynamically Syntax Desktop\'s relative path.</span>';
+    $this->configuration[9] = "Join: "
+                            . $synHtml->text(" name=\"synElmValue[{$i}]\" value=\"{$synElmValue[$i]}\"")
+                            . '<span class="help-block">Usage: title field|order field|table name|field|foreign key field</span>';
 
     //enable or disable the 3 check at the last configuration step
     $synChkKey[$i]       = 0;
@@ -280,8 +290,5 @@ EOC;
     else
       return $this->configuration[$k];
   }
-
-
-} //end of class inputfile
-
-?>
+}
+//end of class inputfile
