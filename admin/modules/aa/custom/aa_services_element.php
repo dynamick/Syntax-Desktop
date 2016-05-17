@@ -314,7 +314,7 @@ global $cmd;
          . "<th><span data-toggle=\"tooltip\" data-placement=\"top\" title=\"{$str["alt_fieldindex"]}\"><i class=\"fa fa-list\"></i></span></th>"
          . "<th><span data-toggle=\"tooltip\" data-placement=\"top\" title=\"{$str["alt_fieldeditable"]}\"><i class=\"fa fa-pencil-square-o\"></i></span></th>"
          . "<th><span data-toggle=\"tooltip\" data-placement=\"top\" title=\"{$str["alt_fieldmultilang"]}\"><i class=\"fa fa-language\"></i></span></th>"
-         . "<th colspan=\"30\"></th>"
+         . "<th colspan=\"30\" width=\"60%\"></th>"
          . "</tr></thead>\n";
       echo "<tbody>\n";
       for ($i=0; $i<$_SESSION["synNElement"]; $i++) {
