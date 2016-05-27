@@ -21,7 +21,7 @@
 
 */
 
-define (CAPTION_FIELD_NAME, "title");
+define ('CAPTION_FIELD_NAME', "title");
 
 // ----------------------------------
 // Below this, edit at your own risk!
