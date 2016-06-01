@@ -338,6 +338,10 @@ function getPageId( $test = false ) {
   if (strpos($uri, '?'))
     $uri = strstr($uri, '?', true);
 
+  // url decode
+  if ( strpos($uri, '%') )
+    $uri = urldecode( $uri );
+
   if (empty($languages))
     $languages = getLangList();
 
