@@ -1,11 +1,9 @@
 (function ($) {
     $.fn.alphanumeric = function (p) {
         var input = $(this),
-            //add new letter (ñ, for spanish keyboard) (Felipe Pincheira A.)
-            az = "abcdefghijklmnñopqrstuvwxyz",
+            az = "abcdefghijklmnopqrstuvwxyz",
             options = $.extend({
-                //add new characters (¡°¬´¨) (Felipe Pincheira A.)
-                ichars: '!@#$%^&*()+=[]\\\';,/{}|":<>?~`.- _¡°¬´¨',
+                ichars: '!@#$%^&*()+=[]\\\';,/{}|":<>?~`.- _',
                 nchars: '',
                 allow: ''
             }, p),
@@ -57,8 +55,7 @@
     };
 
     $.fn.numeric = function (p) {
-        //add new letter (ñ, for spanish keyboard) (Felipe Pincheira A.)
-        var az = 'abcdefghijklmnñopqrstuvwxyz',
+        var az = 'abcdefghijklmnopqrstuvwxyz',
             aZ = az.toUpperCase();
 
         return this.each(function () {

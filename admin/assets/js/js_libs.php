@@ -95,7 +95,8 @@ $single = array(
 // sometimes minification can break things!!
 $do_not_minify = array(
   'vendor/jquery.js',
-  'vendor/ckeditor/ckeditor.js'
+  'vendor/ckeditor/ckeditor.js',
+  'vendor/moment-with-locales.min.js',
   );
 
 switch ($scope) {
