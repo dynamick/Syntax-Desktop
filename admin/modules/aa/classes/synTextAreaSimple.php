@@ -66,7 +66,16 @@ class synTextAreaSimple extends synElement {
       || $synElmSize[$i] == ''
        )
       $synElmSize[$i] = $this->size;
-    $this->configuration[4] = 'Max Size: ' . $synHtml->text(" name=\"synElmSize[{$i}]\" value=\"{$synElmSize[$i]}\"") . ' (0 if unlimited text size)';
+
+    $params = array(
+      'name' => "synElmSize[{$i}]",
+      'value' => $synElmSize[$i],
+      'min' => 0,
+      'step' => 1
+    );
+    $this->configuration[4] = 'Max Size: '
+                            . $synHtml->number( $params )
+                            . '<span class="help-block">(0 for unlimited text size)</span>';
     //$array=array("Default" => "Default", "Basic" => "Basic", "Accessibility" => "Accessibility", "Source" => "Source");
     //$this->configuration[5]="Tipo: ".$synHtml->select(" name=\"synElmPath[$i]\" value=\"$synElmPath[$i]\"",$array,$synElmPath[$i]);
     //enable or disable the 3 check at the last configuration step
@@ -76,7 +85,7 @@ class synTextAreaSimple extends synElement {
     $_SESSION['synChkEditable'][$i]   = 1;
     $_SESSION['synChkMultilang'][$i]  = 1;
 
-    if ($k==99)
+    if ( $k == 99 )
       return $this->configuration;
     else
       return $this->configuration[$k];

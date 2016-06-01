@@ -76,13 +76,14 @@ EOINPUT;
 
   //function for the auto-configuration
   function configuration($i="",$k=99) {
-    global $synElmName, $synElmType, $synElmLabel, $synElmSize, $synElmHelp, $synElmSize;
+    global $synElmName, $synElmType, $synElmLabel, $synElmSize, $synElmHelp, $synElmSize, $synChkKey, $synChkVisible, $synChkEditable;
+
     $synHtml = new synHtml();
     //parent::configuration();
-    $this->configuration[8] = "<span style=\"color: darkblue;\">Data Corrente</span>";
+    $this->configuration[8] = '<span class="form-control form-control-static">Data Corrente</span>';
 
     //enable or disable the 3 check at the last configuration step
-    global $synChkKey, $synChkVisible, $synChkEditable;
+
     $_SESSION["synChkKey"][$i] = 1;
     $_SESSION["synChkVisible"][$i] = 1;
     $_SESSION["synChkEditable"][$i] = 0;

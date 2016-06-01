@@ -8,17 +8,23 @@ class synKey extends synElement {
 
   //constructor(name, value, label, size, help)
   function __construct($n="", $v=null , $l=null, $s=11, $h="") {
-    if ($n=="") $n =  "text".date("his");
-    if ($l=="") $l =  ucfirst($n);
+    if ($n=="")
+      $n =  "text".date("his");
+    if ($l=="")
+      $l =  ucfirst($n);
 
     $this->type = "key";
     $this->name  = $n;
-    if ($v==null) { global $$n; $this->value = $$n; } else $this->value = $v;
+    if ($v==null) {
+      global $$n;
+      $this->value = $$n;
+    } else
+      $this->value = $v;
     $this->label = $l;
     $this->size  = 11;
     $this->help  = $h;
     $this->db    = " int(".$this->size.") NOT NULL AUTO_INCREMENT ";
-    $this->is_key=true;
+    $this->is_key = true;
   }
 
   //private function
@@ -42,32 +48,35 @@ class synKey extends synElement {
     //echo "<hr>";
 
     //calculate the next key
-    $res=$db->Execute("SHOW TABLE STATUS LIKE \"$table\"");
-    $arr=$res->FetchRow();
-    $nextKey=$arr["Auto_increment"];
+    $res = $db->Execute( "SHOW TABLE STATUS LIKE \"{$table}\"" );
+    $arr = $res->FetchRow();
+    $nextKey = $arr[ "Auto_increment" ];
     //echo $nextKey." .nextKey<br>";
 
-    if ($this->value=="") return $nextKey;
-    else return $this->value;
-
+    if ( $this->value == '' )
+      return $nextKey;
+    else
+      return $this->value;
   }
 
 
   //function for the auto-configuration
   function configuration($i="",$k=99) {
-    global $synElmName,$synElmType,$synElmLabel,$synElmSize,$synElmHelp;
+    global $synElmName, $synElmType, $synElmLabel, $synElmSize, $synElmHelp, $synChkKey, $synChkVisible, $synChkEditable;
+
     $synHtml = new synHtml();
-    $synElmSize[$i]=11;
-    $this->configuration[8]="<span style=\"color: darkgreen;\">Auto incrementante (size: ".$synElmSize[$i].")</span>";
+    $synElmSize[$i] = 11;
+    $this->configuration[8] = "<span class=\"form-control form-control-static\">Auto incrementante (size: {$synElmSize[$i]})</span>";
 
     //enable or disable the 3 check at the last configuration step
-    global $synChkKey, $synChkVisible, $synChkEditable;
-    $_SESSION["synChkKey"][$i]=1;
-    $_SESSION["synChkVisible"][$i]=1;
-    $_SESSION["synChkEditable"][$i]=0;
+    $_SESSION["synChkKey"][$i]      = 1;
+    $_SESSION["synChkVisible"][$i]  = 1;
+    $_SESSION["synChkEditable"][$i] = 0;
 
-    if ($k==99) return $this->configuration;
-    else return $this->configuration[$k];
+    if ( $k == 99 )
+      return $this->configuration;
+    else
+      return $this->configuration[$k];
   }
 
 

@@ -367,7 +367,9 @@ global $cmd;
             );
             $dir = ($_SESSION['synInitOrder'] > 0) ? 'ASC' : 'DESC';
             //echo "<td><i class=\"fa fa-chevron-circle-right\"></i> Order By: ASC".$synHtml->radio(" name=\"synInitOrder\" value=\"".abs($_SESSION["synInitOrder"])."\" $posCheck ")." - DESC ".$synHtml->radio(" name=\"synInitOrder\" value=\"-".abs($_SESSION["synInitOrder"])."\" $negCheck ")."</td>";
-            echo "<td><i class=\"fa fa-chevron-circle-right\"></i> Order By:<br>".$synHtml->select( 'name="synInitOrder"', $options, $dir )."</td>";
+            echo "<td><i class=\"fa fa-chevron-circle-right\"></i> Order By:<br>",
+                $synHtml->select( 'name="synInitOrder"', $options, $dir ),
+                "</td>";
           }
           echo "<td colspan=\"30\"></td>";
 
