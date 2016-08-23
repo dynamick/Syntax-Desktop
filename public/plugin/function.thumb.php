@@ -14,7 +14,7 @@ function smarty_function_thumb($params, &$smarty){
   global $synAbsolutePath, $synPublicPath;
 
   if (!isset($params['src']))
-    $params['src'] = $synPublicPath . 'mat/default.png';
+    $params['src'] = $synPublicPath . '/mat/default.png';
 
   $paramArray = array();
   foreach( $params as $key => $value )
