@@ -324,7 +324,7 @@ if(!function_exists('byteConvert')) {
 if (!function_exists('hash')) {
   function hash($str){
     global $synRootPasswordSalt;
-    return md5($str.$synRootPasswordSalt);
+    return md5( $str . $synRootPasswordSalt );
   }
 }
 
@@ -390,8 +390,7 @@ if (!function_exists('social_share')) {
 // puts message in session
 if(!function_exists('set_flash_message')) {
   function set_flash_message($message, $type=null){
-    if (!isset($_SESSION))
-      session_start();
+    s_start(); // session_start
 
     $_SESSION['flash_message'] = array('text' => $message, 'type' => $type);
   }
@@ -401,8 +400,7 @@ if(!function_exists('set_flash_message')) {
 // reads message from session (and optionally deletes it)
 if(!function_exists('get_flash_message')) {
   function get_flash_message($clean = TRUE) {
-    if (!isset($_SESSION))
-      session_start();
+    s_start(); // session_start
 
     $ret = null;
     if ( isset($_SESSION['flash_message'])

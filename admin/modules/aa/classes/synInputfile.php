@@ -43,7 +43,7 @@ class synInputfile extends synElement {
       $thumb = "{$synPublicPath}/thumb.php?src={$filepath}&amp;w=250&amp;h=250&amp;far=1";
       $src = "'<img src=\"{$thumb}\" class=\"file-preview-image\">'";
     } else
-      $src = "'<a href=\"/{$filepath}\">{$filename}</a>'";
+      $src = "'<a href=\"{$filepath}\" target=\"_blank\">{$filename}</a>'";
 
     if (!empty($filext)) {
       $preview = $src;

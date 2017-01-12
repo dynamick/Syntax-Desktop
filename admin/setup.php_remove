@@ -34,7 +34,7 @@ function page_contents(&$page) {
         'synRootPassword'     => isset($_SESSION['synRootPassword'])  ? $_SESSION['synRootPassword']  : $synRootPassword,
         'synAdministrator'    => isset($_SESSION['synAdministrator']) ? $_SESSION['synAdministrator'] : $synAdministrator,
         'synWebsiteTitle'     => isset($_SESSION['synWebsiteTitle'])  ? $_SESSION['synWebsiteTitle']  : $synWebsiteTitle,
-        'synRootPasswordSalt' => md5(time()),        
+        'synRootPasswordSalt' => md5(time()),
         'synRowsPerPage'      => $synRowsPerPage,
         'synWebsite'          => $synWebsite,
         'synVersion'          => $synVersion,
@@ -429,7 +429,7 @@ function checkfeatures(){
   }
 
 	$version = explode(".",phpversion());
- 	if ($version[0] == "5" && $version[1] >= "2") {
+ 	if ( ($version[0] == "5" && $version[1] >= "2") || $version[0] > 5 ) {
 	} else {
 		$errors[] = array("PHP Version Error","The PHP version needs to be 5.2 or higher.");
 		$allok = false;
@@ -484,7 +484,7 @@ function checkfeatures(){
 		  $errors[] = array("TEMPLATES_C not writeable","The <em>{$templates_c}</em> directory permissions must be set to 777.");
 		  $allok = false;
     }
-*/   
+*/
 
     $cache = "../cache/";
     $p = fileperms($cache);
@@ -492,7 +492,7 @@ function checkfeatures(){
     if (!$canWrite){
 		  $errors[] = array("CACHE not writeable","The <em>{$cache}</em> directory permissions must be set to 777.");
 		  $allok = false;
-    } 
+    }
   }
 
 	$error_reporting = ini_get('error_reporting');

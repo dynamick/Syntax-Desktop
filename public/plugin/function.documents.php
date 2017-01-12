@@ -2,12 +2,11 @@
 function smarty_function_documents($params, &$smarty) {
   global $db, $synPublicPath, $synAbsolutePath, $synRootPasswordSalt;
 
-  if(!isset($_SESSION))
-    session_start();
+  s_start(); // session_start
 
   $cat       = isset($params['cat']) ? $params['cat'] : '';
   $lng       = getLangInitial();
-  $document_count = 0;
+  $doc_count = 0;
   $userid    = '';
   $usergroup = '';
 
@@ -32,7 +31,7 @@ function smarty_function_documents($params, &$smarty) {
 LEFT JOIN aa_translation t1 ON d.title = t1.id
 LEFT JOIN aa_translation t2 ON c.category = t2.id
 LEFT JOIN aa_translation t3 ON d.description = t3.id
- ORDER BY c.`order`,
+ ORDER BY c.`order`, c.id,
           d.`date` DESC,
           d.title
 EOQ;
@@ -40,53 +39,53 @@ EOQ;
   $documents = array();
   $res = $db->execute($qry);
 
-  if($arr=$res->FetchRow()) {
-    $t = multiTranslateDictionary(array('doc_riservato','doc_no_abilitazione'));
+  if ( $arr = $res->FetchRow() ) {
+    $t = multiTranslateDictionary( array('doc_riservato', 'doc_no_abilitazione') );
     do {
-      $documents[$arr['category_id']] = array('name' => $arr['category'], 'documents' => array());
+      $documents[$arr['category_id']] = array(
+        'name' => $arr['category'],
+        'documents' => array()
+      );
       $catid = $arr['category_id'];
       do {
-        $ext        = $arr['file'];
-        $file       = "{$synPublicPath}/mat/documents/documents_file_id{$arr['id']}.{$ext}";
-        $size       = byteConvert(@filesize($synAbsolutePath.$file));
-        $date       = sql2human($arr['date']);
-        $status     = $arr['status'];
+        $ext    = $arr['file'];
+        $file   = "{$synPublicPath}/mat/documents/documents_file_id{$arr['id']}.{$ext}";
+        $size   = byteConvert( @filesize( $synAbsolutePath . $file ) );
+        $date   = sql2human( $arr['date'] );
+        $status = $arr['status'];
 
-        if ($arr['enabled_groups'])
-          $owner = explode('|', $arr['enabled_groups']);
+        if ( $arr['enabled_groups'] )
+          $owner = explode( '|', $arr['enabled_groups'] );
         else
           $owner = array();
 
-        switch(strtolower($ext)) {
-          case "xlsx" :
-          case "xls" :
-            $class= "xls"; break;
-          case "pdf" :
-            $class= "pdf"; break;
-          case "zip" :
-            $class= "zip"; break;
+        switch( strtolower($ext) ) {
+          case 'xlsx' :
+          case 'xls' :
+            $class = 'xls'; break;
+          case 'zip' :
+            $class = 'zip'; break;
+          case 'pdf' :
           default :
-            $class= "pdf"; break;
+            $class = 'pdf'; break;
         }
 
         $intersect = array_intersect($usergroup, $owner);
 
-        if (is_array($intersect) && count($intersect) > 0)
+        if ( is_array($intersect) && count($intersect) > 0 )
           $have_same_group = true;
         else
           $have_same_group = false;
 
-        if (
-            ($status == 'secret' && ($have_same_group && $userid != '') ) ||
-            ($status == 'private' && $userid != '' ) ||
-            ($status == 'public') ||
-            ($status == 'protected')
+        if ( ( $status == 'secret' && ($have_same_group && $userid != '') )
+          || ( $status == 'private' && $userid != '' )
+          || $status == 'public'
+          || $status == 'protected'
           ){
           // file pubblico o autorizzato per l'utente o visibile
-          if(
-            ($status == 'public') ||
-            ($status == 'protected' && $userid != '') ||
-            (($status == 'private' || $status == 'secret') && ($have_same_group && $userid != '') )
+          if ( $status == 'public'
+            || ( $status == 'protected' && $userid != '' )
+            || ( ($status == 'private' || $status == 'secret') && ($have_same_group && $userid != '') )
             ){
             // file pubblico o autorizzato per l'utente
             $link  = $file;
@@ -95,8 +94,8 @@ EOQ;
             $alert = ($userid ? $t['doc_no_abilitazione'] : $t['doc_riservato']);
             $link  = "javascript:alert('{$alert}')";
           }
-          $document_count++;
-          $documents[$arr['category_id']]['documents'][] = array(
+          $doc_count ++;
+          $documents[ $arr['category_id'] ]['documents'][] = array(
             'link'        => $link,
             'title'       => $arr['title'],
             'description' => $arr['description'],
@@ -106,13 +105,12 @@ EOQ;
             'class'       => $class
           );
         }
-        $next = ($arr=$res->FetchRow());
-      } while ($next && $catid==$arr['category_id']);
-
+        $next = ($arr = $res->FetchRow());
+      } while ($next && $catid == $arr['category_id']);
     } while ($next);
-
   }
-  $documents['document_count'] = $document_count;
+
+  $documents['document_count'] = $doc_count;
   $smarty->assign('documents', $documents);
 }
 

@@ -4,8 +4,7 @@ function smarty_function_account($params, &$smarty) {
 
   include('_user_labels.php');
 
-  if(!isset($_SESSION))
-    session_start();
+  s_start(); // session_start
 
   if ( empty($_SESSION['synSiteLang'])
     || !isset($_SESSION['synSiteLang'])

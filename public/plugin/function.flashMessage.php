@@ -1,7 +1,6 @@
 <?php
 function smarty_function_flashMessage($params, &$smarty){
-  if(!isset($_SESSION))
-    session_start();
+  s_start(); // session_start
 
   $message = null;
   $type = null;
