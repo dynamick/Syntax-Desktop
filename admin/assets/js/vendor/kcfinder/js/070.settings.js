@@ -2,7 +2,7 @@
   *
   *      @desc Settings panel functionality
   *   @package KCFinder
-  *   @version 3.10
+  *   @version 3.12
   *    @author Pavel Tzonkov <sunhater@sunhater.com>
   * @copyright 2010-2014 KCFinder Project
   *   @license http://opensource.org/licenses/GPL-3.0 GPLv3
@@ -11,8 +11,7 @@
   */
 
 _.initSettings = function() {
-    $('#settings').disableTextSelect();
-    $('#settings fieldset, #settings input, #settings label').uniform();
+    $('#settings fieldset').disableTextSelect();
 
     if (!_.shows.length)
         $('#show input[type="checkbox"]').each(function(i) {
@@ -83,4 +82,20 @@ _.initSettings = function() {
         _.fixFilesHeight();
         _.refresh();
     });
+    $('#settings fieldset, #settings input, #settings label').transForm();
+    _.initLangs();
 };
+
+
+_.initLangs = function() {
+    $.each(_.langs, function(id, lng) {
+        var opt = $('<option></option>');
+        opt.val(id).text(lng);
+        if (id == _.lang)
+            opt.attr({selected: true});
+        $('#lang').append(opt);
+    });
+    $('#lang').change(function() {
+        window.location = _.getURL("browser", this.value) + "&theme=" + encodeURIComponent(_.theme);
+    });
+}

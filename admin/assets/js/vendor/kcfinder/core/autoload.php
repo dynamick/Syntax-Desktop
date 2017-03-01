@@ -4,7 +4,7 @@
   *
   *      @desc Autoload Classes
   *   @package KCFinder
-  *   @version 3.10
+  *   @version 3.12
   *    @author Pavel Tzonkov <sunhater@sunhater.com>
   * @copyright 2010-2014 KCFinder Project
   *   @license http://opensource.org/licenses/GPL-3.0 GPLv3
@@ -12,7 +12,7 @@
   *      @link http://kcfinder.sunhater.com
   */
 
-function kcfinder_autoload($path) {
+spl_autoload_register(function($path) {
     $path = explode("\\", $path);
 
     if (count($path) == 1)
@@ -21,14 +21,8 @@ function kcfinder_autoload($path) {
     list($ns, $class) = $path;
 
     if ($ns == "kcfinder") {
-
-        if ($class == "uploader")
-            require "core/class/uploader.php";
-        elseif ($class == "browser")
-            require "core/class/browser.php";
-        elseif ($class == "minifier")
-            require "core/class/minifier.php";
-
+        if (in_array($class, array("uploader", "browser", "minifier", "session")))
+            require "core/class/$class.php";
         elseif (file_exists("core/types/$class.php"))
             require "core/types/$class.php";
         elseif (file_exists("lib/class_$class.php"))
@@ -36,7 +30,4 @@ function kcfinder_autoload($path) {
         elseif (file_exists("lib/helper_$class.php"))
             require "lib/helper_$class.php";
     }
-}
-spl_autoload_register("kcfinder_autoload");
-
-?>
+});

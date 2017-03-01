@@ -386,11 +386,15 @@ EORF;
 
 
   function linkedDisclaimer() {
-    $disclaimer = sprintf( $this->approvazione_link, $this->submitLabel, $this->privacy_page );
+    $disclaimer = sprintf( $this->approvazione_link, $this->privacy_page );
     $ret = <<<EOPD
     <div class="control-group">
-      <input type="hidden" name="privacy" id="fprivacy" value="1" {$this->tagClosure()}>
-      <p class="text-muted"><small>{$disclaimer}</small></p>
+      <div class="controls">
+        <label class="checkbox privacy">
+          <input type="checkbox" name="privacy" id="fprivacy" class="checkbox required" value="1" tabindex="{$this->tabIndex()}"{$this->tagClosure()}>
+          <p class="text-muted"><small>{$disclaimer}</small></p>
+        </label>
+      </div>
     </div>
 EOPD;
     return $ret;

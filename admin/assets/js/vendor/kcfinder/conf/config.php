@@ -4,7 +4,7 @@
   *
   *      @desc Base configuration file
   *   @package KCFinder
-  *   @version 3.10
+  *   @version 3.12
   *    @author Pavel Tzonkov <sunhater@sunhater.com>
   * @copyright 2010-2014 KCFinder Project
   *   @license http://opensource.org/licenses/GPL-3.0 GPLv3
@@ -16,7 +16,7 @@
    even if you are using session configuration.
    See http://kcfinder.sunhater.com/install for setting descriptions */
 
-$_CONFIG = array(
+return array(
 
 
 // GENERAL SETTINGS
@@ -109,19 +109,11 @@ $_CONFIG = array(
 
 // THE FOLLOWING SETTINGS CANNOT BE OVERRIDED WITH SESSION SETTINGS
 
-    '_normalizeFilenames' => false,
-    '_check4htaccess' => true,
-    //'_tinyMCEPath' => "/tiny_mce",
-
     '_sessionVar' => "KCFINDER",
-    //'_sessionLifetime' => 30,
-    //'_sessionDir' => "/full/directory/path",
-    //'_sessionDomain' => ".mysite.com",
-    //'_sessionPath' => "/my/path",
-
+    '_check4htaccess' => true,
+    '_normalizeFilenames' => false,
+    '_dropUploadMaxFilesize' => 10485760,
+    //'_tinyMCEPath' => "/tiny_mce",
     //'_cssMinCmd' => "java -jar /path/to/yuicompressor.jar --type css {file}",
     //'_jsMinCmd' => "java -jar /path/to/yuicompressor.jar --type js {file}",
-
 );
-
-?>

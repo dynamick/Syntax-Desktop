@@ -4,7 +4,7 @@
   *
   *      @desc Minify JS & CSS
   *   @package KCFinder
-  *   @version 3.10
+  *   @version 3.12
   *    @author Pavel Tzonkov <sunhater@sunhater.com>
   * @copyright 2010-2014 KCFinder Project
   *   @license http://opensource.org/licenses/GPL-3.0 GPLv3
@@ -25,13 +25,12 @@ class minifier {
     );
 
     public function __construct($type=null) {
-        require "config.php";
-        $this->config = $_CONFIG;
+        $this->config = require("conf/config.php");
         $type = strtolower($type);
         if (isset($this->mime[$type]))
             $this->type = $type;
-        if (isset($_CONFIG["_{$this->type}MinCmd"]))
-            $this->minCmd = $_CONFIG["_{$this->type}MinCmd"];
+        if (isset($this->config["_{$this->type}MinCmd"]))
+            $this->minCmd = $this->config["_{$this->type}MinCmd"];
     }
 
     public function minify($cacheFile=null, $dir=null) {
@@ -42,7 +41,7 @@ class minifier {
         $mtFiles = array(
             __FILE__,
             $_SERVER['SCRIPT_FILENAME'],
-            "config.php"
+            "conf/config.php"
         );
 
         // GET SOURCE CODE FILES
@@ -110,5 +109,3 @@ class minifier {
 
     }
 }
-
-?>

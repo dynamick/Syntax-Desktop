@@ -2,7 +2,7 @@
   *
   *      @desc Object initializations
   *   @package KCFinder
-  *   @version 3.10
+  *   @version 3.12
   *    @author Pavel Tzonkov <sunhater@sunhater.com>
   * @copyright 2010-2014 KCFinder Project
   *   @license http://opensource.org/licenses/GPL-3.0 GPLv3
@@ -43,6 +43,9 @@ _.init = function() {
         $.each($.agent.platform, function(i) {
             $('body').addClass(i)
         });
+
+    if ($.mobile)
+        $('body').addClass("mobile");
 };
 
 _.checkAgent = function() {
@@ -194,6 +197,7 @@ _.initResizer = function() {
             });
 
             _.fixFilesHeight();
+            _.fixScrollRadius();
         }
     });
 };
@@ -221,17 +225,13 @@ _.resize = function() {
 
     jFolders.css('height', jLeft.outerHeight() - jFolders.outerVSpace());
     _.fixFilesHeight();
-    var width = jLeft.outerWidth() + jRight.outerWidth();
-    jStatus.css('width', width);
-    while (jStatus.outerWidth() > width)
-        jStatus.css('width', parseInt(jStatus.css('width')) - 1);
-    while (jStatus.outerWidth() < width)
-        jStatus.css('width', parseInt(jStatus.css('width')) + 1);
+    jStatus.css('width', jLeft.outerWidth() + jRight.outerWidth() - jStatus.outerHSpace('p'));
     jFiles.css('width', jRight.innerWidth() - jFiles.outerHSpace());
     jResizer.css({
         left: jLeft.outerWidth() - jFolders.outerRightSpace('m'),
         width: jFolders.outerRightSpace('m') + jFiles.outerLeftSpace('m')
     });
+    _.fixScrollRadius();
 };
 
 _.setTitle = function(title) {
@@ -253,4 +253,9 @@ _.fixFilesHeight = function() {
         $('#left').outerHeight() - $('#toolbar').outerHeight() - jFiles.outerVSpace() -
         ((jSettings.css('display') != "none") ? jSettings.outerHeight() : 0)
     );
+};
+
+_.fixScrollRadius = function() {
+    $('#folders').fixScrollbarRadius();
+    $('#files').fixScrollbarRadius();
 };

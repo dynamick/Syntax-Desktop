@@ -4,7 +4,7 @@
   *
   *      @desc Browser actions class
   *   @package KCFinder
-  *   @version 3.10
+  *   @version 3.12
   *    @author Pavel Tzonkov <sunhater@sunhater.com>
   * @copyright 2010-2014 KCFinder Project
   *   @license http://opensource.org/licenses/GPL-3.0 GPLv3
@@ -107,9 +107,12 @@ class browser extends uploader {
         }
         $this->session['dir'] = path::normalize($this->session['dir']);
 
+        // Render the browser
         if ($act == "browser") {
             header("X-UA-Compatible: chrome=1");
             header("Content-Type: text/html; charset={$this->charset}");
+
+        // Ajax requests
         } elseif (
             (substr($act, 0, 8) != "download") &&
             !in_array($act, array("thumb", "upload"))
@@ -220,7 +223,7 @@ class browser extends uploader {
         if (file_exists("$dir/$newDir"))
             $this->errorMsg("A file or folder with that name already exists.");
         if (!@mkdir("$dir/$newDir", $this->config['dirPerms']))
-            $this->errorMsg("Cannot create {dir} folder.", array('dir' => $newDir));
+            $this->errorMsg("Cannot create {dir} folder.", array('dir' => $this->htmlData($newDir)));
         return true;
     }
 
@@ -270,12 +273,14 @@ class browser extends uploader {
     }
 
     protected function act_upload() {
+        header("Content-Type: text/plain; charset={$this->charset}");
+
         if (!$this->config['access']['files']['upload'] ||
-            !isset($_POST['dir'])
+            (!isset($_POST['dir']) && !isset($_GET['dir']))
         )
             $this->errorMsg("Unknown error.");
 
-        $dir = $this->postDir();
+        $dir = isset($_GET['dir']) ? $this->getDir() : $this->postDir();
 
         if (!dir::isWritable($dir))
             $this->errorMsg("Cannot access or write to upload folder.");
@@ -294,6 +299,28 @@ class browser extends uploader {
             return $this->moveUploadFile($this->file, $dir);
     }
 
+    protected function act_dragUrl() {
+        if (!$this->config['access']['files']['upload'] ||
+            !isset($_GET['dir']) ||
+            !isset($_POST['url']) ||
+            !isset($_POST['type'])
+        )
+            $this->errorMsg("Unknown error.");
+
+        $dir = $this->getDir();
+
+        if (!dir::isWritable($dir))
+            $this->errorMsg("Cannot access or write to upload folder.");
+
+        if (is_array($_POST['url']))
+            foreach ($_POST['url'] as $url)
+                $this->downloadURL($url, $dir);
+        else
+            $this->downloadURL($_POST['url'], $dir);
+
+        return true;
+    }
+
     protected function act_download() {
         $dir = $this->postDir();
         if (!isset($_POST['dir']) ||
@@ -310,7 +337,7 @@ class browser extends uploader {
         header("Cache-Control: private", false);
         header("Content-Type: application/octet-stream");
         header('Content-Disposition: attachment; filename="' . str_replace('"', "_", $_POST['file']) . '"');
-        header("Content-Transfer-Encoding:­ binary");
+        header("Content-Transfer-Encoding: binary");
         header("Content-Length: " . filesize($file));
         readfile($file);
         die;
@@ -398,16 +425,16 @@ class browser extends uploader {
             $path = "{$this->config['uploadDir']}/$file";
             if (!$this->checkFilePath($path)) continue;
             $base = basename($file);
-            $replace = array('file' => $base);
+            $replace = array('file' => $this->htmlData($base));
             $ext = file::getExtension($base);
             if (!file_exists($path))
                 $error[] = $this->label("The file '{file}' does not exist.", $replace);
             elseif (substr($base, 0, 1) == ".")
-                $error[] = "$base: " . $this->label("File name shouldn't begins with '.'");
+                $error[] = $this->htmlData($base) . ": " . $this->label("File name shouldn't begins with '.'");
             elseif (!$this->validateExtension($ext, $type))
-                $error[] = "$base: " . $this->label("Denied file extension.");
+                $error[] = $this->htmlData($base) . ": " . $this->label("Denied file extension.");
             elseif (file_exists("$dir/$base"))
-                $error[] = "$base: " . $this->label("A file or folder with that name already exists.");
+                $error[] = $this->htmlData($base) . ": " . $this->label("A file or folder with that name already exists.");
             elseif (!is_readable($path) || !is_file($path))
                 $error[] = $this->label("Cannot read '{file}'.", $replace);
             elseif (!@copy($path, "$dir/$base"))
@@ -450,16 +477,16 @@ class browser extends uploader {
             $path = "{$this->config['uploadDir']}/$file";
             if (!$this->checkFilePath($path)) continue;
             $base = basename($file);
-            $replace = array('file' => $base);
+            $replace = array('file' => $this->htmlData($base));
             $ext = file::getExtension($base);
             if (!file_exists($path))
                 $error[] = $this->label("The file '{file}' does not exist.", $replace);
             elseif (substr($base, 0, 1) == ".")
-                $error[] = "$base: " . $this->label("File name shouldn't begins with '.'");
+                $error[] = $this->htmlData($base) . ": " . $this->label("File name shouldn't begins with '.'");
             elseif (!$this->validateExtension($ext, $type))
-                $error[] = "$base: " . $this->label("Denied file extension.");
+                $error[] = $this->htmlData($base) . ": " . $this->label("Denied file extension.");
             elseif (file_exists("$dir/$base"))
-                $error[] = "$base: " . $this->label("A file or folder with that name already exists.");
+                $error[] = $this->htmlData($base) . ": " . $this->label("A file or folder with that name already exists.");
             elseif (!is_readable($path) || !is_file($path))
                 $error[] = $this->label("Cannot read '{file}'.", $replace);
             elseif (!file::isWritable($path) || !@rename($path, "$dir/$base"))
@@ -500,7 +527,7 @@ class browser extends uploader {
             $path = "{$this->config['uploadDir']}/$file";
             if (!$this->checkFilePath($path)) continue;
             $base = basename($file);
-            $replace = array('file' => $base);
+            $replace = array('file' => $this->htmlData($base));
             if (!is_file($path))
                 $error[] = $this->label("The file '{file}' does not exist.", $replace);
             elseif (!@unlink($path))
@@ -626,62 +653,9 @@ class browser extends uploader {
         )
             return json_encode(array('version' => $this->session['checkVersion']));
 
-        $protocol = "http";
-        $host = "kcfinder.sunhater.com";
-        $port = 80;
-        $path = "/checkVersion.php";
+        $ver = phpGet::get("http://kcfinder.sunhater.com/checkVersion.php");
 
-        $url = "$protocol://$host:$port$path";
-        $pattern = '/^\d+\.\d+$/';
-        $responsePattern = '/^[A-Z]+\/\d+\.\d+\s+\d+\s+OK\s*([a-zA-Z0-9\-]+\:\s*[^\n]*\n)*\s*(.*)\s*$/';
-
-        // file_get_contents()
-        if (ini_get("allow_url_fopen") &&
-            (false !== ($ver = file_get_contents($url))) &&
-            preg_match($pattern, $ver)
-
-        // HTTP extension
-        ) {} elseif (
-            function_exists("http_get") &&
-            (false !== ($ver = @http_get($url))) &&
-            (
-                (
-                    preg_match($responsePattern, $ver, $match) &&
-                    false !== ($ver = $match[2])
-                ) || true
-            ) &&
-            preg_match($pattern, $ver)
-
-        // Curl extension
-        ) {} elseif (
-            function_exists("curl_init") &&
-            (false !== (   $curl = @curl_init($url)                                    )) &&
-            (              @ob_start()                 ||  (@curl_close($curl) && false)) &&
-            (              @curl_exec($curl)           ||  (@curl_close($curl) && false)) &&
-            ((false !== (  $ver = @ob_get_clean()   )) ||  (@curl_close($curl) && false)) &&
-            (              @curl_close($curl)          ||  true                         ) &&
-            preg_match($pattern, $ver)
-
-        // Socket extension
-        ) {} elseif (function_exists('socket_create')) {
-            $cmd =
-                "GET $path " . strtoupper($protocol) . "/1.1\r\n" .
-                "Host: $host\r\n" .
-                "Connection: Close\r\n\r\n";
-
-            if ((false !== (  $socket = @socket_create(AF_INET, SOCK_STREAM, SOL_TCP)  )) &&
-                (false !==    @socket_connect($socket, $host, $port)                    ) &&
-                (false !==    @socket_write($socket, $cmd, strlen($cmd))                ) &&
-                (false !== (  $ver = @socket_read($socket, 2048)                       )) &&
-                preg_match($responsePattern, $ver, $match)
-            )
-                $ver = $match[2];
-
-            if (isset($socket) && is_resource($socket))
-                @socket_close($socket);
-        }
-
-        if (isset($ver) && preg_match($pattern, $ver)) {
+        if (isset($ver) && preg_match('/^\d+\.\d+$/', $ver)) {
             $this->session['checkVersion'] = $ver;
             $this->session['checkVersionTime'] = time();
             return json_encode(array('version' => $ver));
@@ -706,7 +680,7 @@ class browser extends uploader {
             !@copy($file['tmp_name'], $target)
         ) {
             @unlink($file['tmp_name']);
-            return "{$file['name']}: " . $this->label("Cannot move uploaded file to target folder.");
+            return $this->htmlData($file['name']) . ": " . $this->label("Cannot move uploaded file to target folder.");
         } elseif (function_exists('chmod'))
             chmod($target, $this->config['filePerms']);
 
@@ -908,6 +882,57 @@ class browser extends uploader {
             die(json_encode(array('error' => $message)));
         }
     }
-}
 
-?>
+    protected function htmlData($str) {
+        return htmlentities($str, null, strtoupper($this->charset));
+    }
+
+    protected function downloadURL($url, $dir) {
+
+        if (!preg_match(phpGet::$urlExpr, $url, $match))
+            return;
+
+        if ((isset($match[7]) && strlen($match[7])))
+            $furl = explode("&", $match[7]);
+
+        $filename = isset($furl)
+            ? basename($furl[0])
+            : "web_image.jpg";
+
+        $file = tempnam(sys_get_temp_dir(), $filename);
+
+        if (phpGet::get($url, $file))
+            $this->moveUploadFile(array(
+                'name' => $filename,
+                'tmp_name' => $file,
+                'error' => UPLOAD_ERR_OK
+            ), $dir);
+        else
+            @unlink($file);
+    }
+
+    protected function getLangs() {
+        if (isset($this->session['langs']))
+            return $this->session['langs'];
+
+        $files = dir::content("lang", array(
+            'pattern' => '/^[a-z]{2,3}(\-[a-z]{2})?\.php$/',
+            'types' => "file"
+        ));
+
+        $langs = array();
+        if (is_array($files))
+            foreach ($files as $file) {
+                include $file;
+                $id = substr(basename($file), 0, -4);
+                $langs[$id] = isset($lang['_native'])
+                    ? $lang['_native']
+                    : (isset($lang['_lang'])
+                        ? $lang['_lang']
+                        : $id);
+            }
+
+        $this->session['langs'] = $langs;
+        return $langs;
+    }
+}

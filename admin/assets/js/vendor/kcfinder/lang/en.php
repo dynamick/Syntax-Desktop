@@ -4,7 +4,7 @@
   *
   *      @desc Default English localization
   *   @package KCFinder
-  *   @version 3.10
+  *   @version 3.12
   *    @author Pavel Tzonkov <sunhater@sunhater.com>
   * @copyright 2010-2014 KCFinder Project
   *   @license http://opensource.org/licenses/GPL-3.0 GPLv3
@@ -13,6 +13,8 @@
   */
 
 $lang = array(
+    '_lang' => "English",
+    '_native' => "English",
     '_locale' => "en_US.UTF-8",
     '_charset' => "utf-8",
 
@@ -21,5 +23,3 @@ $lang = array(
     '_dateTimeMid' => "%a %b %e %Y %I:%M %p",
     '_dateTimeSmall' => "%m/%d/%Y %I:%M %p",
 );
-
-?>

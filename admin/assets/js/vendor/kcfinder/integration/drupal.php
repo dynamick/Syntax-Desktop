@@ -4,7 +4,7 @@
   *
   *      @desc CMS integration code: Drupal
   *   @package KCFinder
-  *   @version 3.10
+  *   @version 3.12
   *    @author Dany Alejandro Cabrera <otello2040@gmail.com>
   * @copyright 2010-2014 KCFinder Project
   *   @license http://opensource.org/licenses/GPL-3.0 GPLv3
@@ -92,7 +92,7 @@ function CheckAuthentication($drupal_path) {
                 global $user;
                 $_SESSION['KCFINDER']['uploadURL'] = strtr(variable_get('kcfinder_upload_url', 'sites/default/files/kcfinder'), array('%u' => $user->uid, '%n' => $user->name));
                 $_SESSION['KCFINDER']['uploadDir'] = strtr(variable_get('kcfinder_upload_dir', ''), array('%u' => $user->uid, '%n' => $user->name));
-                $_SESSION['KCFINDER']['theme'] = variable_get('kcfinder_theme', 'oxygen');
+                $_SESSION['KCFINDER']['theme'] = variable_get('kcfinder_theme', 'default');
 
                 //echo '<br />uploadURL: ' . $_SESSION['KCFINDER']['uploadURL']<br />;
                 //echo '<br />uploadDir: ' . $_SESSION['KCFINDER']['uploadDir']<br />;
@@ -109,5 +109,3 @@ function CheckAuthentication($drupal_path) {
 }
 
 CheckAuthentication(get_drupal_path());
-
-?>
