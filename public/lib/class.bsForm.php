@@ -96,9 +96,9 @@ class bsForm extends formBuilder {
         $f = '';
         $span = null;
         if ($this->class=='form-vertical') {
-          $span = ($split_column) ? 'span6 ' : 'span12 clearfix ';
+          $span = ($split_column) ? 'col-md-6 ' : 'col-md-12 ';
           if ($this->counter==1) {
-            $f .= '<div class="row-fluid">';
+            $f .= '<div class="row">';
           }
         }
 

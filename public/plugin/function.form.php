@@ -131,6 +131,7 @@ EOGROUP;
     $form->addGroup('name', $group0, $group_fields, 0);
 
     */
+
     // ============================  END GROUPs =============================
 
     foreach($fields as $f) {
@@ -211,33 +212,46 @@ EOSQL;
       || $tipo == 'checkbox'
       || $tipo == 'radio'
       ){
-      // recupero le eventuali options
-      $qr3 = <<<EOQ
-      SELECT o.value, o.selezionato, t.{$lng} AS label
-        FROM field_options o
-   LEFT JOIN aa_translation t ON o.label = t.id
-       WHERE o.id_field = '{$id}'
-    ORDER BY o.ordine
+      // get input options
+      if ( isset( $params[$titolo]['options'] )
+        && is_array( $params[$titolo]['options'] )
+        ){ // something has been passed via smarty parameters
+        /* 
+        template example (replace 'myfield' with the field's name): 
+        {$options = ['options' => ['1' => ['label'=>'Uno', 'selezionato'=>false], '2' => ['label'=>'Due', 'selezionato'=>true ]]] }
+        {form page=$synPageId myfield=$options}
+        */
+        $options = $params[$titolo]['options'];
+
+      } else {
+        // get options from database
+        $qr3 = <<<EOQ
+        SELECT o.value, o.selezionato, t.{$lng} AS label
+          FROM field_options o
+     LEFT JOIN aa_translation t ON o.label = t.id
+         WHERE o.id_field = '{$id}'
+      ORDER BY o.ordine
 EOQ;
-      $re3 = $db->execute($qr3);
-      $sel = false;
-      while ( $ar3 = $re3->fetchRow() ) {
-        $options[ $ar3['value'] ] = array(
-          'label'       => $ar3['label'],
-          'selezionato' => $ar3['selezionato'] // default selection
-        );
-        if ($ar3['selezionato'])
-          $sel = $ar3['value'];
-      }
-      // parameter-driven selection
-      if ( isset($params[$titolo])
-        && array_key_exists( $params[$titolo], $options)
-        ){
-        $options[ $params[$titolo] ]['selezionato'] = true;
-        $options[ $sel ]['selezionato'] = false;
+        $re3 = $db->execute($qr3);
+        $sel = false;
+        while ( $ar3 = $re3->fetchRow() ) {
+          $options[ $ar3['value'] ] = array(
+            'label'       => $ar3['label'],
+            'selezionato' => $ar3['selezionato'] // default selection
+          );
+          if ($ar3['selezionato'])
+            $sel = $ar3['value'];
+        }
+        // parameter-driven selection
+        if ( isset( $params[$titolo] )
+          && array_key_exists( $params[$titolo], $options)
+          ){
+          $options[ $params[$titolo] ]['selezionato'] = true;
+          $options[ $sel ]['selezionato'] = false;
+        }
       }
     } else {
-      // se impostato utilizzo il parametro smarty come value
+      // if set, use smarty parameter as seletcted value
       if ( $value == ''
         && isset($params[$titolo])
         ){
