@@ -1,5 +1,5 @@
 # MySQL dump of database 'syntax' on host 'localhost'
-# backup date and time: 03/14/16 16:17:19
+# backup date and time: 03/01/17 11:27:07
 # built by phpMyBackupPro v.2.1
 # http://www.phpMyBackupPro.net
 
@@ -75,7 +75,7 @@ CREATE TABLE `aa_group_services` (
   `ip` varchar(30) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `group` (`group`)
-) ENGINE=MyISAM AUTO_INCREMENT=237 DEFAULT CHARSET=utf8 AUTO_INCREMENT=237;
+) ENGINE=MyISAM AUTO_INCREMENT=238 DEFAULT CHARSET=utf8 AUTO_INCREMENT=238;
 
 
 ### data of table `aa_group_services` ###
@@ -201,11 +201,12 @@ CREATE TABLE `aa_logs` (
   `dispatched` varchar(255) NOT NULL,
   `referer` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 AUTO_INCREMENT=3;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 AUTO_INCREMENT=4;
 
 
 ### data of table `aa_logs` ###
 
+insert into `aa_logs` values ('3', '2017-03-01 10:26:37', '::1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36', '', '/public/mat/marchi_logo_id1./public/mat/marchi_logo_id1.pdf not found, 404', '0', '0', 'http://www.syntax.local/');
 
 
 ### structure of table `aa_page` ###
@@ -299,7 +300,7 @@ CREATE TABLE `aa_services` (
   `initOrder` int(8) NOT NULL DEFAULT '0',
   `multilang` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=161 DEFAULT CHARSET=utf8 PACK_KEYS=1 AUTO_INCREMENT=161;
+) ENGINE=MyISAM AUTO_INCREMENT=162 DEFAULT CHARSET=utf8 PACK_KEYS=1 AUTO_INCREMENT=162;
 
 
 ### data of table `aa_services` ###
@@ -360,7 +361,7 @@ CREATE TABLE `aa_services_element` (
   `ismultilang` varchar(1) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `container` (`container`)
-) ENGINE=MyISAM AUTO_INCREMENT=611 DEFAULT CHARSET=utf8 COMMENT='Containers' AUTO_INCREMENT=611;
+) ENGINE=MyISAM AUTO_INCREMENT=617 DEFAULT CHARSET=utf8 COMMENT='Containers' AUTO_INCREMENT=617;
 
 
 ### data of table `aa_services_element` ###
@@ -583,6 +584,12 @@ insert into `aa_services_element` values ('607', '160', 'response', '8', '', '',
 insert into `aa_services_element` values ('608', '160', 'redirect_id', '3', '', '', '', '797', '11', '798', '', '', '', '', '60', '', '');
 insert into `aa_services_element` values ('609', '160', 'dispatched', '9', '', '1', '', '799', '255', '800', '', '', '1', '', '70', '', '');
 insert into `aa_services_element` values ('610', '160', 'referer', '2', '', '', '', '804', '255', '805', '', '', '', '', '45', '', '');
+insert into `aa_services_element` values ('611', '161', 'id', '1', '1', '1', '', '810', '0', '811', '', '', '', '', '0', '', '');
+insert into `aa_services_element` values ('612', '161', 'titolo', '2', '', '', '', '812', '255', '813', '', '', '', '', '10', '', '');
+insert into `aa_services_element` values ('613', '161', 'logo', '5', '', '1', '', '814', '0', '815', '/public/mat', '', '', '', '20', '', '');
+insert into `aa_services_element` values ('614', '161', 'url', '2', '', '', '', '816', '255', '817', '', '', '', '', '30', '', '');
+insert into `aa_services_element` values ('615', '161', 'visibile', '9', '', '1', '', '818', '255', '819', '', '', '1', '', '40', '', '');
+insert into `aa_services_element` values ('616', '161', 'ordine', '3', '', '1', '1', '820', '11', '821', '', '', '', '', '50', '', '');
 
 
 ### structure of table `aa_template` ###
@@ -620,7 +627,7 @@ CREATE TABLE `aa_translation` (
   `it` text NOT NULL,
   `en` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=806 DEFAULT CHARSET=utf8 AUTO_INCREMENT=806;
+) ENGINE=MyISAM AUTO_INCREMENT=823 DEFAULT CHARSET=utf8 AUTO_INCREMENT=823;
 
 
 ### data of table `aa_translation` ###
@@ -1395,7 +1402,7 @@ insert into `aa_translation` values ('766', 'Domain', 'Domain');
 insert into `aa_translation` values ('767', 'imposta il dominio su cui impostare la lingua (es. www.dominio.it). Lascia vuoto per abilitarla su qualsiasi dominio.', 'imposta il dominio su cui impostare la lingua (es. www.dominio.it). Lascia vuoto per abilitarla su qualsiasi dominio.');
 insert into `aa_translation` values ('768', 'Area riservata', 'Private Area');
 insert into `aa_translation` values ('770', 'Se non selezionata, usa il testo standard del dizionario', 'Se non selezionata, usa il testo standard del dizionario');
-insert into `aa_translation` values ('771', 'Cliccando su <b>%s</b>, confermi di aver letto e accettato la nostra  <a href=\"%s\">privacy policy</a>.', 'By clicking on <b>\"%s\"</b>, you are agreeing to our <a href=\"%s\">privacy policy</a>.');
+insert into `aa_translation` values ('771', 'Confermo di aver letto e accettato la <a href=\"%s\" target=\"_blank\">privacy policy</a>.', 'I have read and accepted the <a href=\"%s\">privacy policy</a>.');
 insert into `aa_translation` values ('772', 'Redirects', 'Redirects');
 insert into `aa_translation` values ('773', 'URL da reindirizzare', 'URL da reindirizzare');
 insert into `aa_translation` values ('774', 'Id', 'Id');
@@ -1430,6 +1437,23 @@ insert into `aa_translation` values ('802', 'Redirects', 'Redirects');
 insert into `aa_translation` values ('803', 'Logs', 'Logs');
 insert into `aa_translation` values ('804', 'Referer', 'Referer');
 insert into `aa_translation` values ('805', '', '');
+insert into `aa_translation` values ('806', 'Test', 'Test');
+insert into `aa_translation` values ('807', 'Desc', 'Desc');
+insert into `aa_translation` values ('808', 'Marchi', 'Marchi');
+insert into `aa_translation` values ('809', '', '');
+insert into `aa_translation` values ('810', 'Id', 'Id');
+insert into `aa_translation` values ('811', '', '');
+insert into `aa_translation` values ('812', 'Titolo', 'Titolo');
+insert into `aa_translation` values ('813', '', '');
+insert into `aa_translation` values ('814', 'Logo', 'Logo');
+insert into `aa_translation` values ('815', '', '');
+insert into `aa_translation` values ('816', 'Url', 'Url');
+insert into `aa_translation` values ('817', '', '');
+insert into `aa_translation` values ('818', 'Visibile', 'Visibile');
+insert into `aa_translation` values ('819', '', '');
+insert into `aa_translation` values ('820', 'Ordine', 'Ordine');
+insert into `aa_translation` values ('821', '', '');
+insert into `aa_translation` values ('822', 'Marchi', 'Marchi');
 
 
 ### structure of table `aa_users` ###
@@ -1444,12 +1468,12 @@ CREATE TABLE `aa_users` (
   `lang` int(11) NOT NULL,
   `owner` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=8686 DEFAULT CHARSET=utf8 AUTO_INCREMENT=8686;
+) ENGINE=MyISAM AUTO_INCREMENT=3348 DEFAULT CHARSET=utf8 AUTO_INCREMENT=3348;
 
 
 ### data of table `aa_users` ###
 
-insert into `aa_users` values ('8685', 'root', '2e51c0895c310b11347dc020caffa0ab', '1', '1', '1');
+insert into `aa_users` values ('3347', 'root', '13b536fa58f13746adcb73fbd83b3772', '1', '1', '1');
 
 
 ### structure of table `album` ###
@@ -1677,7 +1701,7 @@ CREATE TABLE `documents` (
   `enabled_groups` varchar(255) NOT NULL,
   `status` enum('public','protected','private','secret','suspended') NOT NULL DEFAULT 'public',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 AUTO_INCREMENT=2;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 AUTO_INCREMENT=3;
 
 
 ### data of table `documents` ###

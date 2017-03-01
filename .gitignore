@@ -8,3 +8,4 @@ _gulp/*
 *.db
 *.DS_Store
 .project
+.idea

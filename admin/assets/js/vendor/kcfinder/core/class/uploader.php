@@ -4,7 +4,7 @@
   *
   *      @desc Uploader class
   *   @package KCFinder
-  *   @version 3.10
+  *   @version 3.12
   *    @author Pavel Tzonkov <sunhater@sunhater.com>
   * @copyright 2010-2014 KCFinder Project
   *   @license http://opensource.org/licenses/GPL-3.0 GPLv3
@@ -17,7 +17,7 @@ namespace kcfinder;
 class uploader {
 
 /** Release version */
-    const VERSION = "3.11";
+    const VERSION = "3.20-test2";
 
 /** Config session-overrided settings
   * @var array */
@@ -107,58 +107,10 @@ class uploader {
         if (count($_FILES))
             $this->file = &$_FILES[key($_FILES)];
 
-        // LOAD DEFAULT CONFIGURATION
-        require "config.php";
-
-        // SETTING UP SESSION
-        if (!session_id()) {
-            if (isset($_CONFIG['_sessionLifetime']))
-                ini_set('session.gc_maxlifetime', $_CONFIG['_sessionLifetime'] * 60);
-            if (isset($_CONFIG['_sessionDir']))
-                ini_set('session.save_path', $_CONFIG['_sessionDir']);
-            if (isset($_CONFIG['_sessionDomain']))
-                ini_set('session.cookie_domain', $_CONFIG['_sessionDomain']);
-            session_start();
-        }
-
-        // LOAD SESSION CONFIGURATION IF EXISTS
-        $this->config = $_CONFIG;
-        $sessVar = "_sessionVar";
-        if (isset($_CONFIG[$sessVar])) {
-
-            $sessVar = $_CONFIG[$sessVar];
-
-            if (!isset($_SESSION[$sessVar]))
-                $_SESSION[$sessVar] = array();
-
-            $sessVar = &$_SESSION[$sessVar];
-
-            if (!is_array($sessVar))
-                $sessVar = array();
-
-            foreach ($sessVar as $key => $val)
-                if ((substr($key, 0, 1) != "_") && isset($_CONFIG[$key]))
-                    $this->config[$key] = $val;
-
-            if (!isset($sessVar['self']))
-                $sessVar['self'] = array();
-
-            $this->session = &$sessVar['self'];
-
-        } else
-            $this->session = &$_SESSION;
-
-        // SECURING THE SESSION
-        $stamp = md5(
-            $_SERVER['HTTP_USER_AGENT'] .
-            $_SERVER['REMOTE_ADDR']
-        );
-        if (!isset($this->session['stamp']))
-            $this->session['stamp'] = $stamp;
-        elseif ($this->session['stamp'] != $stamp) {
-            //session_destroy();
-            die;
-        }
+        // CONFIG & SESSION SETUP
+        $session = new session("conf/config.php");
+        $this->config = $session->getConfig();
+        $this->session = &$session->values;
 
         // IMAGE DRIVER INIT
         if (isset($this->config['imageDriversPriority'])) {
@@ -171,7 +123,7 @@ class uploader {
         if ((!isset($driver) || ($driver === false)) &&
             (image::getDriver(array($this->imageDriver)) === false)
         )
-            die("Cannot find any of the supported PHP image extensions!");
+            $this->backMsg("Cannot find any of the supported PHP image extensions!");
 
         // WATERMARK INIT
         if (isset($this->config['watermark']) && is_string($this->config['watermark']))
@@ -227,7 +179,7 @@ class uploader {
         } elseif ($this->config['uploadURL'] == "/") {
             $this->config['uploadDir'] = strlen($this->config['uploadDir'])
                 ? path::normalize($this->config['uploadDir'])
-                : path::normalize($_SERVER['DOCUMENT_ROOT']);
+                : path::normalize(realpath($_SERVER['DOCUMENT_ROOT']));
             $this->typeDir = "{$this->config['uploadDir']}/{$this->type}";
             $this->typeURL = "/{$this->type}";
 
@@ -412,8 +364,6 @@ class uploader {
     protected function checkFilename($file) {
 
         if ((basename($file) !== $file) ||
-
-            preg_match('/[\<\>\|\/\:\\\\]/s', $file) ||
             (
                 isset($this->config['_normalizeFilenames']) &&
                 $this->config['_normalizeFilenames'] &&
@@ -729,14 +679,25 @@ class uploader {
 
     protected function backMsg($message, array $data=null) {
         $message = $this->label($message, $data);
-        if (isset($this->file['tmp_name']) && file_exists($this->file['tmp_name']))
-            @unlink($this->file['tmp_name']);
+        $tmp_name = isset($this->file['tmp_name']) ? $this->file['tmp_name'] : false;
+
+        if ($tmp_name) {
+            $tmp_name = (is_array($tmp_name) && isset($tmp_name[0]))
+                ? $tmp_name[0]
+                : $tmp_name;
+
+            if (file_exists($tmp_name))
+                @unlink($tmp_name);
+        }
         $this->callBack("", $message);
         die;
     }
 
     protected function callBack($url, $message="") {
         $message = text::jsValue($message);
+
+        if ((get_class($this) == "kcfinder\\browser") && ($this->action != "browser"))
+            return;
 
         if (isset($this->opener['name'])) {
             $method = "callBack_{$this->opener['name']}";
@@ -800,8 +761,6 @@ if (window.opener) window.close();
     }
 
     protected function get_htaccess() {
-        return file_get_contents("core/upload.htaccess");
+        return file_get_contents("conf/upload.htaccess");
     }
 }
-
-?>
