@@ -110,7 +110,7 @@ return array(
 // THE FOLLOWING SETTINGS CANNOT BE OVERRIDED WITH SESSION SETTINGS
 
     '_sessionVar' => "KCFINDER",
-    '_check4htaccess' => true,
+    '_check4htaccess' => false,
     '_normalizeFilenames' => false,
     '_dropUploadMaxFilesize' => 10485760,
     //'_tinyMCEPath' => "/tiny_mce",
