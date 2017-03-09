@@ -19,7 +19,26 @@ if (!file_exists(dirname(__FILE__).'/phpthumb.functions.php') || !include_once(d
 }
 ob_end_clean();
 
+function getAllowedDomains() {
+	$domains = array(); // add here custom domains;
+  $third_level_domains =  array('www'); // add here custom third-level domains;
 
+	$host = @$_SERVER['HTTP_HOST'];
+	if ( empty( $host ) )
+		$host = @$_SERVER['SERVER_NAME'];
+	if ( !empty( $host ) ) {
+		$domains[] = $host;
+		// adds variants of the domain (i.e., with and without www.)
+    foreach( $third_level_domains AS $tld ) {
+      if (strpos( $host, $tld ) === FALSE ) {
+        $domains[] = $tld . '.' . $host;
+      } else {
+        $domains[] = str_replace( $tld . '.', null, $host );
+      }
+    }
+	}
+	return $domains;
+}
 
 /****************************************************************************************/
 /* START USER CONFIGURATION SECTION: */
@@ -163,13 +182,13 @@ $PHPTHUMB_CONFIG['error_die_on_source_failure'] = true;     // die with error me
 
 // * Off-server Thumbnailing Configuration:
 $PHPTHUMB_CONFIG['nohotlink_enabled']           = true;                                     // If false will allow thumbnailing from any source domain, if true then only domains in 'nohotlink_valid_domains' will be accepted
-$PHPTHUMB_CONFIG['nohotlink_valid_domains']     = array(@$_SERVER['HTTP_HOST']);            // This is the list of domains for which thumbnails are allowed to be created. Note: domain only, do not include port numbers. The default value of the current domain should be fine in most cases, but if neccesary you can add more domains in here, in the format "www.example.com"
+$PHPTHUMB_CONFIG['nohotlink_valid_domains']     = getAllowedDomains(); //array(@$_SERVER['HTTP_HOST'], str_replace('www.', null, @$_SERVER['HTTP_HOST']) );            // This is the list of domains for which thumbnails are allowed to be created. Note: domain only, do not include port numbers. The default value of the current domain should be fine in most cases, but if neccesary you can add more domains in here, in the format "www.example.com"
 $PHPTHUMB_CONFIG['nohotlink_erase_image']       = true;                                     // if true thumbnail is covered up with $PHPTHUMB_CONFIG['nohotlink_fill_color'] before text is applied, if false text is written over top of thumbnail
 $PHPTHUMB_CONFIG['nohotlink_text_message']      = 'Off-server thumbnailing is not allowed'; // text of error message
 
 // * Off-server Linking Configuration:
 $PHPTHUMB_CONFIG['nooffsitelink_enabled']       = true;                                       // If false will allow thumbnails to be linked to from any domain, if true only domains listed below in 'nooffsitelink_valid_domains' will be allowed.
-$PHPTHUMB_CONFIG['nooffsitelink_valid_domains'] = array(@$_SERVER['HTTP_HOST']);              // This is the list of domains for which thumbnails are allowed to be created. The default value of the current domain should be fine in most cases, but if neccesary you can add more domains in here, in the format 'www.example.com'
+$PHPTHUMB_CONFIG['nooffsitelink_valid_domains'] = getAllowedDomains(); //array(@$_SERVER['HTTP_HOST'], str_replace('www.', null, @$_SERVER['HTTP_HOST']));              // This is the list of domains for which thumbnails are allowed to be created. The default value of the current domain should be fine in most cases, but if neccesary you can add more domains in here, in the format 'www.example.com'
 $PHPTHUMB_CONFIG['nooffsitelink_require_refer'] = false;                                      // If false will allow standalone calls to phpThumb(). If true then only requests with a $_SERVER['HTTP_REFERER'] value in 'nooffsitelink_valid_domains' are allowed.
 $PHPTHUMB_CONFIG['nooffsitelink_erase_image']   = false;                                      // if true thumbnail is covered up with $PHPTHUMB_CONFIG['nohotlink_fill_color'] before text is applied, if false text is written over top of thumbnail
 $PHPTHUMB_CONFIG['nooffsitelink_watermark_src'] = '/demo/images/watermark.png';                // webroot-relative image to overlay on hotlinked images

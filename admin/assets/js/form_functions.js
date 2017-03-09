@@ -121,4 +121,33 @@ $(function() {
     }
   });
   $('.triggerable-group').triggerify();
+
+  var $synpicture = $('.synpicture'); 
+  if ($synpicture.length > 0) {
+    $synpicture.each( function(){
+      var _this = $(this), _input = _this.find('input[type="text"]'), 
+        _preview = _this.find('.preview'), _clean = _this.find('.btn-clean'), 
+        _trigger = _this.find('.btn-browse'), _modal = _this.find('.modal'), 
+        tmb_url = _this.data('tmb-url'), kc_url = _this.data('kc-url');
+      _clean.click(function(){
+        _input.val('');
+        _preview.empty();
+      });
+      _trigger.click(function(){
+        window.KCFinder = {
+          callBack: function(url) {
+            window.KCFinder = null;
+            _modal.modal('hide');
+            _input.val( url );
+            var src = tmb_url.replace('%s', url);
+            _preview.html('<img src="' + src +'" width="250" height="250" class="thumbnail" alt="' + url + '">');
+          }
+        };
+        _modal.removeData('bs.modal');
+        _modal.find('.modal-body').html( '<iframe name="kcfinder_iframe" src="' + kc_url + '"' +
+          ' frameborder="0" width="100%" height="100%" marginwidth="0" marginheight="0" scrolling="no" />' );
+        _modal.modal('show');
+      });
+    });
+  }
 });
