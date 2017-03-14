@@ -1,9 +1,9 @@
 <?php
+/* ------------------------------------------------ *
+ * class synPICTURE                                 *
+ * Creates an image selector powered by KCfinder    *
+ * ------------------------------------------------ */
 
-/*************************************
-* class PICTURE                      *
-* Create a input type="file" obj     *
-**************************************/
 class synPicture extends synElement {
   var $mat;
 
@@ -30,7 +30,6 @@ class synPicture extends synElement {
     $this->mat   = $mat;
     $this->thumb = "{$synPublicPath}/thumb.php?src=%s&amp;w=250&amp;h=250&amp;far=1";
   }
-
 
   //private function
   function _html() {
@@ -69,14 +68,13 @@ class synPicture extends synElement {
           </div>
         </div>
       </div>
-  </div>
+    </div>
 EORET;
     $_SESSION['KCFINDER']['disabled'] = false;
     $_SESSION['KCFINDER']['uploadURL'] = $synPublicPath . $mat . DIRECTORY_SEPARATOR;
 
     return $ret;    
   }
-
 
   //get the label of the element
   function getCell() {
@@ -118,16 +116,16 @@ EORET;
   }
  
   //function for the auto-configuration
-  function configuration( $i='', $k=99 ) {
+  function configuration( $i = '', $k = 99 ) {
     global
-      $synAbsolutePath, $synElmName, $synElmType, $synElmLabel, $synElmSize, $synElmHelp,
-      $synElmPath, $synChkKey, $synChkVisible, $synChkEditable, $synChkMultilang;
+      $synElmName, $synElmType, $synElmLabel, $synElmSize, $synElmHelp, $synElmPath, 
+      $synChkKey, $synChkVisible, $synChkEditable, $synChkMultilang;    
 
     $synHtml = new synHtml();
 
-    if (!isset($synElmSize[$i]) or $synElmSize[$i]=="") 
+    if ( !isset($synElmSize[$i]) || empty($synElmSize[$i]) ) 
       $synElmSize[$i] = $this->size;
-    $this->configuration[4] = "Dimensione: " . $synHtml->text(" name=\"synElmSize[$i]\" value=\"$synElmSize[$i]\"");
+    $this->configuration[4] = "Dimensione: " . $synHtml->text(" name=\"synElmSize[{$i}]\" value=\"{$synElmSize[$i]}\"");
 
     //enable or disable the 3 check at the last configuration step
     $_SESSION['synChkKey'][$i]        = 0;
