@@ -64,11 +64,7 @@ $(function() {
       previewFileType: 'any',
       initialPreview: [ initial['src'] ],
       initialCaption: initial['label'],
-      browseIcon: '<i class="fa fa-folder-open-o"></i> ',
-      removeIcon: '<i class="fa fa-trash"></i> ',
-      layoutTemplates: {
-        icon: '<span class="fa fa-file kv-caption-icon"></span> '
-      }
+      theme: 'fa'
     }).on( 'fileloaded', function() {
       $this.attr('name', name);
     }).on('filecleared', function() {
