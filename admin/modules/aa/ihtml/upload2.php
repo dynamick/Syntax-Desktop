@@ -2,23 +2,25 @@
 error_reporting( E_ALL);// & ~(E_NOTICE | E_DEPRECATED | E_WARNING)) ;
 ini_set( 'display_errors', 'off' );
 
+// start session & check authorization
+if (!isset($_SESSION))
+  session_start();
+if ( !isset($_SESSION['synUser']) || empty($_SESSION['synUser'])) {
+  header('HTTP/1.1 401 Unauthorized');
+  die('Unauthorized');
+}
+
 $xhr = isset($_SERVER['HTTP_X_REQUESTED_WITH']) and (strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
 header('Content-Type: ' . ($xhr ? 'application/json' : 'text/plain'));
 
 include_once ('../../../config/cfg.php');
 
-if (!isset($_SESSION))
-  session_start();
-
-//echo '<pre>', print_r($_FILES), '</pre>';
-//echo '<pre>', print_r($_POST), '</pre>';
 $uploaded   = array();
 $errors     = array();
 $errorkeys  = array();
 
 // get the files posted
 //$images = $_FILES['images'];
-
 $path         = isset($_POST['path'])
                 ? sanitize( $_POST['path'] ) //trim(addslashes($_POST['path']))
                 : $synPublicPath.$mat;
@@ -43,9 +45,12 @@ $order_field  = isset($_POST['order'])
                 ? sanitize( $_POST['order'] ) //trim(addslashes($_POST['order']))
                 : 'ordine';
 
-$date_field   = 'date';
-$user_field   = 'autore';
-$format_field = 'format';
+$date_field     = 'date';
+$user_field     = 'autore';
+$format_field   = 'format';
+$preview        = array();
+$preview_config = array();
+$thumb_url      = "{$synPublicPath}/thumb.php?w=250&amp;h=250&amp;far=1&amp;src=%s";
 
 do {
   if ( empty($key) ) :
@@ -56,7 +61,7 @@ do {
     $user       = $_SESSION['synUser'];
     $order      = getMaxOrder($table, $order_field, $foreign_key, $key);
     // TODO: make sub-directory storage optional
-    $targetDir  = $synAbsolutePath . $path . $key . '/';
+    $targetDir  = $synAbsolutePath . $path . $key . DIRECTORY_SEPARATOR;
 
     if ( !is_dir($targetDir) ) {
       try {
@@ -117,6 +122,7 @@ do {
               $fileName     = $info['filename'];
               $ext          = strtolower( $info['extension'] );
               $order        += 10;
+              $size         = filesize( $target );
               list($w, $h)  = getimagesize( $target );
               $format       = ($h > $w) ? 'portrait' : 'landscape';
               $data         = array(
@@ -134,6 +140,20 @@ do {
                 $newFileName = strtolower( "{$table}_{$file_field}_id{$row_id}.{$ext}" );
                 rename( $target, $targetDir . DIRECTORY_SEPARATOR . $newFileName);
                 $uploaded[] = $newFileName;
+                $preview[] = sprintf( $thumb_url, $targetDir . $newFileName );
+                $preview_config[] = array(
+                  'caption' => $fileName,
+                  'size'    => $size,
+                  'width'   => '250px',
+                  'heigth'  => '250px',
+                  'key'     => $row_id,
+                  'extra'   => array(
+                    'table' => $table,
+                    'field' => $field,
+                    'ext'   => $ext,
+                    'path'  => $path . $key . DIRECTORY_SEPARATOR
+                  )                  
+                );
               } else {
                 $errors[] =  'Error while saving data to DB';
               }
@@ -163,10 +183,17 @@ if ( empty($uploaded) && empty($errors) ) {
   $errors[] = 'Unknown error. No files were processed.';
 }
 
-$output = array_filter( array( 'uploaded' => $uploaded, 'error' => $errors, 'errorkeys' => $errorkeys ) );
-
+if ( !empty($errors) ) {
+  $output = array_filter( array( 'uploaded' => $uploaded, 'error' => $errors, 'errorkeys' => $errorkeys ) );
+} else {
+  $output = array(
+    'initialPreview' => $preview,
+    'initialPreviewConfig' => $preview_config
+  );
+}
 // return a json encoded response for plugin to process successfully
 echo json_encode( $output );
+
 
 
 // ========================================================================= //

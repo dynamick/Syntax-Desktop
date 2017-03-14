@@ -1,6 +1,11 @@
 <?php
-// VERSIONE BETA
-// Marco 2012.09.18
+
+/* ------------------------------------------------ *
+ * class synUpload                                  *
+ * Handles image galleries: multiple upload, sort   *
+ * and delete.                                      *
+ * v1.0.0                                           *
+ * ------------------------------------------------ */
 
 class synUpload extends synElement {
 
@@ -9,6 +14,8 @@ class synUpload extends synElement {
 
   //constructor(name, value, label, size, help, $mat)
   function __construct( $n = '', $v = '', $l = '', $s = 255, $h = '', $mat = '/mat/' ) {
+    global $synPublicPath;
+
     if ( $n == '' )
       $n = 'text' . date("his");
 
@@ -29,12 +36,13 @@ class synUpload extends synElement {
     $this->help    = $h;
     $this->db      = ' varchar(255) NOT NULL ';
     $this->mat     = $mat;
+    $this->thumb   = "{$synPublicPath}/thumb.php?w=250&amp;h=250&amp;far=1&amp;src=%s"; // TODO: move this elsewere
   }
 
 
   //private function
   public function _html() {
-    global ${$this->name}, $PHP_SELF;
+    global ${$this->name}, $PHP_SELF, $db, $synAbsolutePath;
 
     if ( !isset($_SESSION) )
       session_start();
@@ -47,87 +55,147 @@ class synUpload extends synElement {
     if ( $cmd == 'modifyrow' ) {
       $container = $this->container;
       $keyArr    = explode('=', str_replace("'", '', str_replace( '`', '', trim( urldecode($container->getKey()) ) ) ) );
-      $app_title = $app_order = $app_table = $app_field = $app_linkfield = '';
+      $app_title = $app_order = $app_table = $app_field = $app_linkfield = $preview_props = '';
+      $thumb_arr = $thumb_cfg = $preview_arr = array();
+
       if ( isset($this->pattern) ) {
         $arr_tmp = explode( '|', $this->pattern );
         if ( is_array( $arr_tmp )
           && count( $arr_tmp ) == 5
           ) list($app_title, $app_order, $app_table, $app_field, $app_linkfield) = $arr_tmp;
+        if ($app_table) {
+          $qry = "SELECT * FROM `{$app_table}` WHERE `{$app_linkfield}` = '{$keyArr[1]}' ORDER BY `{$app_order}` ASC";
+          $res = $db->Execute( $qry );
+          $path = $this->mat . $keyArr[1] . DIRECTORY_SEPARATOR;
+          while( $row = $res->fetchRow() ) {
+            $filename =  $app_table . '_' . $app_field . '_id' . $row['id'] . '.' . $row[$app_field];
+            $thumb_arr[] = sprintf( $this->thumb, $path . $filename );
+            $size        = @filesize( $synAbsolutePath . $path . $filename );
+            $thumb_cfg[] = array(
+              'caption' => $row['title'],
+              'size'    => $size,
+              'width'   => '250px',
+              'heigth'  => '250px',
+              'key'     => $row['id'],
+              'extra'   => array(
+                'table' => $app_table,
+                'field' => $app_field,
+                'ext'   => $row[$app_field],
+                'path'  => $path
+              )
+            );
+          }
+          $preview_props = 'initialPreview: ' . json_encode( $thumb_arr ) . ', '
+                         . 'initialPreviewConfig: ' . json_encode( $thumb_cfg ) . ', '
+                         . 'initialPreviewAsData: true, '
+                         . 'initialPreviewFileType: "image", '
+                         . PHP_EOL;
+        }
       }
+      $warning = '';
       $resize_props = '';
       if ( isset( $this->qry )
-        && preg_match( '/(\d+)x(\d+)/', $this->qry, $match )
+        && preg_match( '/(\d+)(?:[\s\D]+)(\d+)/', $this->qry, $match )
         ){
-        //echo print_r($match); die();
         $resize_props = 'resizeImage: true, '
                       . "maxImageWidth: {$match[1]}, "
                       . "maxImageHeight: {$match[2]}, "
                       . 'resizeImageQuality: 1.00, ' //. "resizePreference: 'width', "
                       . PHP_EOL;
+      } else {
+        $warning  = '<div class="alert alert-warning">'
+                  . '<h4>Attenzione: dimensioni massime non impostate</h4>'
+                  . 'Potresti avvertire dei rallentamenti, inoltre il server potrebbe rifiutare file troppo grandi.'
+                  . '</div>';
       }
 
-      $ret = "<input id=\"{$this->name}\" name=\"{$this->name}[]\" type=\"file\" multiple=true>";
-      $nocache = rand();
-      $script = <<<EOC
-        $("#{$this->name}").fileinput({
-          allowedFileTypes: ['image'],
-          {$resize_props}
-          browseIcon: '<i class="fa fa-folder-open-o"></i> ',
-          removeIcon: '<i class="fa fa-trash"></i> ',
-          uploadIcon: '<i class="fa fa-upload"></i> ',
-          previewFileIcon: '<i class="fa fa-file-o"></i> &nbsp;',
-          msgValidationErrorIcon: '<i class="fa fa-exclamation-circle"></i> &nbsp;',
-          uploadClass: 'btn btn-warning',
-          layoutTemplates: {
-            icon: '<span class="fa fa-file kv-caption-icon"></span> '
-          },
-          fileActionSettings: {
-            removeIcon:       '<i class="fa fa-trash text-danger"></i>',
-            uploadIcon:       '<i class="fa fa-upload text-info"></i>',
-            indicatorNew:     '<i class="fa fa-hand-o-down text-warning"></i>',
-            indicatorSuccess: '<i class="fa fa-check-circle file-icon-large text-success"></i>',
-            indicatorError:   '<i class="fa fa-exclamation-circle text-danger"></i>',
-            indicatorLoading: '<i class="fa fa-hand-o-up text-muted"></i>'
-          },
-          uploadUrl: "ihtml/upload2.php?r={$nocache}",
-          uploadAsync: false,
-          uploadExtraData: function() {
-            return {
-              key         : '{$keyArr[1]}',
-              description : '{$app_title}',
-              order       : '{$app_order}',
-              table       : '{$app_table}',
-              field       : '{$app_field}',
-              linkfield   : '{$app_linkfield}',
-              path        : '{$this->mat}'
-            };
-          }
-        });
-EOC;
+      $ret      = "<input id=\"{$this->name}\" name=\"{$this->name}[]\" type=\"file\" multiple=true>" . $warning;
+      $nocache  = rand();
+      $lang     = $_SESSION['aa_CurrentLangInitial'];
+      //maxFileSize: '{$max_size}', $max_size = ini_get('upload_max_filesize');
 
+      $script   = <<<EOC
+        function thumbToOriginal( e, params ) {
+          var _filePreviewImage = params.modal.find( '.file-preview-image' ),
+              src = _filePreviewImage.prop( 'src' );
+          if ( !_filePreviewImage.length )
+            return;
+          src = src.replace( '/public/thumb.php?w=250&h=250&far=1&src=', '' );
+          _filePreviewImage.prop( 'src', src );
+        };      
+
+        var extra = {
+          key         : '{$keyArr[1]}',
+          description : '{$app_title}',
+          order       : '{$app_order}',
+          table       : '{$app_table}',
+          field       : '{$app_field}',
+          linkfield   : '{$app_linkfield}',
+          path        : '{$this->mat}'
+        };
+
+        $("#{$this->name}").fileinput({
+          theme: 'fa',
+          language: '{$lang}',
+          allowedFileExtensions: ['jpg', 'jpeg', 'gif', 'png'],
+          {$resize_props}
+          {$preview_props}
+          overwriteInitial: false,
+          uploadUrl: "ihtml/upload2.php?r={$nocache}",
+          deleteUrl: "ihtml/delete_photo.php",
+          uploadAsync: true,
+          uploadExtraData: function() {
+            return extra;
+          }
+        }).on( 'filesorted', function(e, params) {
+          var stack = new Array();
+          for( var i in params.stack) {
+            stack.push( params.stack[i].key );
+          }  
+          $.post('ihtml/sort_photos.php', { data: extra, stack: stack } )
+          .done( function(data) {
+            sendNotify({ type:3, message: 'Foto riordinate' });
+          }).fail( function(e){
+            sendNotify({ type:1, message: e });            
+          });
+        }).on( 'filedeleted', function(e, key) {
+          sendNotify({ type:3, message: 'Foto ' + key +' eliminata.' });
+        }).on( 'fileuploaded', function(e, data) {
+          var uploaded = data.response.initialPreviewConfig[0];
+          sendNotify({ type:3, message: uploaded.caption + ' caricato sul server.' });
+        }).on( 'filezoomshow filezoomnext filezoomprev', thumbToOriginal );
+EOC;
+      // bugged, as of 2017-03-13 
+      // http://plugins.krajee.com/file-input#event-fileimageresized
+      /*.on('fileimagesresized', function(event) {
+        sendNotify({ type:2, message: 'Le foto più grandi di {$this->qry} sono state ridimensionate.' });
+      });*/
       enqueue_js($script);
 
     } else {
-      $ret = "This field is disabled in insert mode. Save and modify this entry to upload files.";
+      $ret  = '<div class="alert alert-warning">'
+            .   '<h4>This field is disabled in insert mode</h4>'
+            .   'Save and modify this entry to upload files.'
+            . '</div>';
     }
     return  $ret;
   }
 
   //create the file name
-  function createFilename($withLang=true) {
+  function createFilename( $withLang = true ) {
     //global $aa_CurrentLang;
     if ( !isset($_SESSION) )
       session_start();
     $aa_CurrentLang = $_SESSION['aa_CurrentLang'];
 
-    $container = $this->container;
-    $key       = $container->getKey();
-    $table     = $container->table;
-    $multilang = ($this->multilang==1 && $withLang) ? "_".$this->getLang() : '';
+    $container  = $this->container;
+    $key        = $container->getKey();
+    $table      = $container->table;
+    $multilang  = ($this->multilang == 1 && $withLang) ? "_" . $this->getLang() : '';
 
-    //$filename = $table."_".$this->name."_".str_replace("'", '', str_replace('`', '', str_replace('=', '', trim(urldecode($key))))).$multilang;
-
-    $filename = "{$table}_{$this->name}_".str_replace(array("'", '`', '='), '', trim(urldecode($key))).$multilang;
+    $filename   = "{$table}_{$this->name}_" 
+                . str_replace( array("'", '`', '='), '', trim( urldecode($key) ) ) 
+                . $multilang;
 
     return $filename;
   }
@@ -135,17 +203,17 @@ EOC;
   //upload the document...
   function uploadDocument() {
     global $synAbsolutePath, ${$this->name}, ${$this->name.'_name'};
-    $documentRoot = $synAbsolutePath . '/';
-    $mat = $this->translatePath( $this->mat );
-    $ext = $this->translate( substr( ${$this->name . '_name'}, -3));
-    $filename = $this->createFilename() . '.' . $ext;
-    $file = ${$this->name};
-    $original_filename = ${$this->name . '_name'};
+    $documentRoot       = $synAbsolutePath . DIRECTORY_SEPARATOR;
+    $mat                = $this->translatePath( $this->mat );
+    $ext                = $this->translate( substr( ${$this->name . '_name'}, -3));
+    $filename           = $this->createFilename() . '.' . $ext;
+    $file               = ${$this->name};
+    $original_filename  = ${$this->name . '_name'};
     if ( $file != 'none'
       && $original_filename != ''
       && $file != ''
       ){
-      if ( !file_exists($documentRoot . $mat) )
+      if ( !file_exists( $documentRoot . $mat ) )
         mkdir( $documentRoot . $mat );
       move_uploaded_file( $file, $documentRoot . $mat . $filename );
       @chmod( $documentRoot . $mat . $filename, 0777 );
@@ -155,14 +223,13 @@ EOC;
     $file = '';
     if ( isset($_FILES['userfile']) ) {
       $file = $_FILES['userfile'];
-
       $k = count($file['name']);
-      for($i=0 ; $i < $k ; $i++){
+      for( $i = 0; $i < $k; $i++ ) {
         if ( isset($save_path)
           && $save_path != ''
           ){
           $name = explode('/', $file['name'][$i]);
-          move_uploaded_file($file['tmp_name'][$i], $save_path.$name[count($name)-1]);
+          move_uploaded_file( $file['tmp_name'][$i], $save_path . $name[count($name)-1] );
         }
       }
     }
@@ -249,8 +316,8 @@ EOC;
   //function for the auto-configuration
   function configuration( $i = '', $k = 99 ) {
     global
-      $synAbsolutePath, $synElmLabel, $synElmName, $synElmSize, $synElmPath, $synChkVisible,
-      $synChkMultilang, $synElmValue, $synElmType, $synElmHelp, $synChkEditable, $synChkKey;
+      $synAbsolutePath, $synChkEditable, $synChkKey, $synChkMultilang, $synChkVisible, 
+      $synElmHelp, $synElmLabel, $synElmName, $synElmPath, $synElmQry, $synElmSize, $synElmType, $synElmValue;
 
     $synHtml = new synHtml();
 
@@ -261,8 +328,7 @@ EOC;
 
     if ( !isset($synElmPath[$i])
       || $synElmPath[$i] == ''
-      )
-      $synElmPath[$i] = $pathinfo . '/mat';
+      ) $synElmPath[$i] = $pathinfo . '/mat';
 
     if ( !isset($synElmValue[$i] )
       || $synElmValue[$i] == ''
@@ -278,6 +344,22 @@ EOC;
     $this->configuration[9] = "Join: "
                             . $synHtml->text(" name=\"synElmValue[{$i}]\" value=\"{$synElmValue[$i]}\"")
                             . '<span class="help-block">Usage: title field|order field|table name|field|foreign key field</span>';
+
+    $value = (isset($synElmQry[$i])) ? htmlentities($synElmQry[$i]) : '';
+
+    $options = array(
+      'null'      => 'No resize',
+      '1024×768'  => '1024×768 (format 1:33, 0.78 Megapixel)',
+      '1280×1024' => '1280×1024 (format 1:25, 1.31 Megapixel)',
+      '1440×900'  => '1440×900 (format 1:60, 1.6 Megapixel)',
+      '1680×1200' => '1680×1200 (format 1:40, 2.0 Megapixel)',
+      '1920×1200' => '1920×1200 (format 1:60, 2.2 Megapixel)',
+      '2560×1440' => '2560×1440 (format 1:78, 3.6 Megapixel)',
+    );
+    if ( isset($synElmQry[$i]) || empty($synElmQry[$i]) )
+      $synElmQry[$i] = '1280x1024';
+    $this->configuration[10]  = 'Resize: ' . $synHtml->select( "name=\"synElmQry[{$i}]\"", $options, $synElmQry[$i], FALSE ) 
+                              . '<span class="help-block">Sets the maximum dimensions for uploaded images.</span>';
 
     //enable or disable the 3 check at the last configuration step
     $synChkKey[$i]       = 0;

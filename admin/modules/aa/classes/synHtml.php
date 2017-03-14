@@ -44,7 +44,7 @@ class synHtml {
     return "<input type='radio' $attribute />\n";
   }
 
-  function select( $attributes, $qry, $value='', $blank=false) {
+  function select( $attributes, $qry, $value='', $blank = false) {
     global $db;
     //$db->debug=true;
     $attribute = $this->implodeAttributes( $attributes );

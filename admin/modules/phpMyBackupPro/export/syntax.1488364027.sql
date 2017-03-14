@@ -53,6 +53,7 @@ insert into `aa_element` values ('30', 'Date and Time (read-only)', 'synDateTime
 insert into `aa_element` values ('31', 'Icon picker', 'synIcon', '140');
 insert into `aa_element` values ('32', 'Address Picker', 'synAddressPicker', '180');
 insert into `aa_element` values ('33', 'Json Hash', 'synJsonHash', '190');
+insert into `aa_element` values ('34', 'Picture Selector', 'synPicture', '200');
 
 
 ### structure of table `aa_group_services` ###
@@ -300,7 +301,7 @@ CREATE TABLE `aa_services` (
   `initOrder` int(8) NOT NULL DEFAULT '0',
   `multilang` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=162 DEFAULT CHARSET=utf8 PACK_KEYS=1 AUTO_INCREMENT=162;
+) ENGINE=MyISAM AUTO_INCREMENT=161 DEFAULT CHARSET=utf8 PACK_KEYS=1 AUTO_INCREMENT=161;
 
 
 ### data of table `aa_services` ###
@@ -452,7 +453,7 @@ insert into `aa_services_element` values ('466', '141', 'id', '1', '1', '', '', 
 insert into `aa_services_element` values ('467', '142', 'id', '1', '1', '', '', '243', '0', '244', '', '', '', '', '0', '', '');
 insert into `aa_services_element` values ('468', '142', 'title', '2', '', '1', '', '245', '255', '246', '', '', '', '', '10', '', '1');
 insert into `aa_services_element` values ('469', '142', 'date', '15', '', '1', '', '247', '0', '248', '', '', '', '', '20', '', '');
-insert into `aa_services_element` values ('470', '142', 'photo', '10', '', '', '', '249', '0', '250', '/public/mat/album', '', 'title|ordine|photos|photo|album', '', '30', '', '');
+insert into `aa_services_element` values ('470', '142', 'photo', '10', '', '', '', '249', '0', '250', '/public/mat/album', '1280×1024', 'title|ordine|photos|photo|album', '', '30', '', '');
 insert into `aa_services_element` values ('471', '143', 'id', '1', '1', '', '', '254', '0', '255', '', '', '', '', '0', '', '');
 insert into `aa_services_element` values ('472', '143', 'title', '2', '', '1', '', '256', '255', '257', '', '', '', '', '10', '', '');
 insert into `aa_services_element` values ('474', '143', 'photo', '5', '', '1', '', '258', '0', '259', '/public/mat/album/#{join|value|id_join=20}', '', '', '', '30', '', '');
@@ -584,12 +585,6 @@ insert into `aa_services_element` values ('607', '160', 'response', '8', '', '',
 insert into `aa_services_element` values ('608', '160', 'redirect_id', '3', '', '', '', '797', '11', '798', '', '', '', '', '60', '', '');
 insert into `aa_services_element` values ('609', '160', 'dispatched', '9', '', '1', '', '799', '255', '800', '', '', '1', '', '70', '', '');
 insert into `aa_services_element` values ('610', '160', 'referer', '2', '', '', '', '804', '255', '805', '', '', '', '', '45', '', '');
-insert into `aa_services_element` values ('611', '161', 'id', '1', '1', '1', '', '810', '0', '811', '', '', '', '', '0', '', '');
-insert into `aa_services_element` values ('612', '161', 'titolo', '2', '', '', '', '812', '255', '813', '', '', '', '', '10', '', '');
-insert into `aa_services_element` values ('613', '161', 'logo', '5', '', '1', '', '814', '0', '815', '/public/mat', '', '', '', '20', '', '');
-insert into `aa_services_element` values ('614', '161', 'url', '2', '', '', '', '816', '255', '817', '', '', '', '', '30', '', '');
-insert into `aa_services_element` values ('615', '161', 'visibile', '9', '', '1', '', '818', '255', '819', '', '', '1', '', '40', '', '');
-insert into `aa_services_element` values ('616', '161', 'ordine', '3', '', '1', '1', '820', '11', '821', '', '', '', '', '50', '', '');
 
 
 ### structure of table `aa_template` ###
