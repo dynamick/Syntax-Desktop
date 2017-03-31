@@ -1,19 +1,6 @@
-CKEDITOR.editorConfig = function(config) {
-  config.uiColor            = '#f6f6f6';
-  config.width              = '100%';
-  config.resize_enabled     = false;
-  config.toolbarCanCollapse = false;
-  config.entities           = false;
-  config.entities_latin     = false;
-  config.youtube_width      = '640';
-  config.youtube_height     = '480';
-  config.youtube_related    = true;
-  config.youtube_older      = false;
-  config.youtube_privacy    = false;
-  config.extraPlugins       = 'youtube,justify,colorbutton,magicline,showblocks';
-  config.allowedContent     = true;
-
-  //http://docs.cksource.com/CKEditor_3.x/Developers_Guide/Toolbar
+CKEDITOR.editorConfig = function( config ) {
+	// http://docs.ckeditor.com/#!/api/CKEDITOR.config
+  // http://docs.cksource.com/CKEditor_3.x/Developers_Guide/Toolbar
   config.toolbar = 'Basic';
   config.toolbar_Basic = [
     ['Bold','Italic','-','NumberedList','BulletedList','-','Link','Unlink','-','SelectAll','RemoveFormat','ShowBlocks','Source','-','About']
@@ -31,9 +18,9 @@ CKEDITOR.editorConfig = function(config) {
     ['Bold','Italic','Strike','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
     ['NumberedList','BulletedList','-','Outdent','Indent','Blockquote'],
     ['Link','Unlink','Anchor'],
+    ['Youtube','ckawesome'],
     ['About']
-  ] ;
-
+  ];
   config.toolbar = 'Deluxe';
   config.toolbar_Deluxe = [
     { name: 'document',     items : [ 'Source','-','Save','NewPage','DocProps','Preview','Print','-','Templates' ] },
@@ -49,7 +36,27 @@ CKEDITOR.editorConfig = function(config) {
     { name: 'styles',       items : [ 'Styles','Format','Font','FontSize' ] },
     { name: 'colors',       items : [ 'TextColor','BGColor' ] },
     { name: 'tools',        items : [ 'Maximize', 'ShowBlocks','-','About' ] }
-  ];
+  ];  
+
+  config.width = '100%';
+	// Remove some buttons provided by the standard plugins, which are
+	// not needed in the Standard(s) toolbar.
+	//config.removeButtons = 'Underline,Subscript,Superscript';
+
+	// Set the most common block elements.
+	//config.format_tags = 'p;h1;h2;h3;pre';
+
+	// Simplify the dialog windows.
+	config.removeDialogTabs = 'image:advanced;link:advanced';
+  config.extraPlugins = 'youtube,ckawesome';
+  config.fontawesomePath = '/admin/assets/css/font-awesome.min.css';
+
+  config.youtube_width = '640';
+  config.youtube_height = '480';
+  config.youtube_responsive = false;
+  config.youtube_related = false;
+  config.youtube_older = false;
+  config.youtube_autoplay = false;
 
   // kcfinder integration
   var kcPath = '/admin/assets/js/vendor/kcfinder/';
