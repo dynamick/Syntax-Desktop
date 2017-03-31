@@ -53,9 +53,7 @@ EOHTML;
   protected function _html() {
     $value = str_replace( "\"", "&quot;", ( $this->translate( $this->getValue() ) ) );
     $ret = <<<EOHTML
-    <div class="input-group">
-      <input type="text" class="form-control" name="{$this->name}" maxsize="{$this->size}" value="{$value}" readonly="readonly" data-oldvalue="{$value}" />
-    </div>
+    <input type="text" class="form-control" name="{$this->name}" maxsize="{$this->size}" value="{$value}" readonly="readonly" data-oldvalue="{$value}" />
 EOHTML;
     return $ret;
   }
