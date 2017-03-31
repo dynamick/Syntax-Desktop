@@ -21,7 +21,7 @@ class synUserCreate extends synElement {
     $this->label = $l;
     $this->size  = $s;
     $this->help  = $h;
-    $this->db    = " VARCHAR(".$this->size.") NOT NULL";
+    $this->db    = " VARCHAR({$this->size}) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;";
 
     $this->configuration();
   }
@@ -35,8 +35,11 @@ class synUserCreate extends synElement {
     } else{
        $value = $this->value;
     }
-      //$value = ($this->value!="" ? $this->value : getSynUser());
-    if ($value) return "<input type='hidden' name='".$this->name."' maxsize='".$this->size."' value='".$value."'".$disabled."/> <strong>".username($value)." (".groupname($value).")</strong>\n";
+    if ($value) {
+      $html  = "<input type='hidden' name='{$this->name}' maxsize='{$this->size}' value='{$value}'{$disabled}/>";
+      $html .= "<p class='form-control-static'>" . username($value) . "&nbsp;<span class='badge'>" . groupname($value) . "</span></p>\n";
+      return $html;
+    }
   }
 
   //return the sql statement (i.e. `name`='gigi')

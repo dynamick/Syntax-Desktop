@@ -40,7 +40,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Tree Frame</title>
-    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:700,300,600,400&amp;subset=latin,cyrillic">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:700,300,600,400&amp;subset=latin,cyrillic">
     <link rel="stylesheet" type="text/css" href="../../assets/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="../../assets/css/font-awesome.min.css" />
     <link rel="stylesheet" type="text/css" href="../../assets/css/syntax.css" />
