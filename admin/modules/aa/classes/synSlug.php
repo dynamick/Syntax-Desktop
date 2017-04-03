@@ -35,8 +35,9 @@ class synSlug extends synElement {
     return "<input disabled type='text' name='{$this->name}' maxsize='{$this->size}' value=\"{$value}\" class=\"form-control\"/>";
   }
 
-  protected function _html() {
+  protected function _html_TRIGGERABLE() {
     $value = str_replace( "\"", "&quot;", ( $this->translate( $this->getValue() ) ) );
+    // editable on request. Brings a lot of consistency problems, so for now we'll turn this off.
     $ret = <<<EOHTML
     <div class="input-group triggerable-group">
       <input type="text" class="form-control" name="{$this->name}" maxsize="{$this->size}" value="{$value}" readonly="readonly" data-oldvalue="{$value}" />
@@ -46,7 +47,14 @@ class synSlug extends synElement {
       </span>
     </div>
 EOHTML;
+    return $ret;
+  }
 
+  protected function _html() {
+    $value = str_replace( "\"", "&quot;", ( $this->translate( $this->getValue() ) ) );
+    $ret = <<<EOHTML
+    <input type="text" class="form-control" name="{$this->name}" maxsize="{$this->size}" value="{$value}" readonly="readonly" data-oldvalue="{$value}" />
+EOHTML;
     return $ret;
   }
 

@@ -21,17 +21,20 @@ class synUserModified extends synElement {
     $this->label = $l;
     $this->size  = $s;
     $this->help  = $h;
-    $this->db    = " VARCHAR(".$this->size.") NOT NULL";
+    $this->db    = " VARCHAR({$this->size}) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;";
 
     $this->configuration();
   }
 
   //private function
   function _html() {
+    $html = '';
     //if primaryKey is not empty it means we're modifying an exisiting record: put the editing user's id
-    if(!isset($_REQUEST["synPrimaryKey"]) or $_REQUEST["synPrimaryKey"]=="") {
-      return "<input type='hidden' name='".$this->name."' maxsize='".$this->size."' value='".getSynUser()."'/> <strong>".username(getSynUser())." (".groupname(getSynUser()).")</strong>\n";
+    if ( isset($_REQUEST["synPrimaryKey"]) ) {
+      $html .= "<input type='hidden' name='{$this->name}' maxsize='{$this->size}' value='".getSynUser()."'/>";
     }
+    $html .= "<p class='form-control-static'>" . username($this->value) . "&nbsp;<span class='badge'>" . groupname($this->value) . "</span></p>\n";
+    return $html;
   }
 
   function getCell() {

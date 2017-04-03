@@ -68,7 +68,7 @@ var loadGoogleMaps = (function($) {
       $.ajax({
         dataType: 'script',
         data: params,
-        url: 'http://maps.google.com/maps/api/js'
+        url: 'https://maps.google.com/maps/api/js'
       });
 
     }

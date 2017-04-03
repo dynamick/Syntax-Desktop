@@ -574,16 +574,17 @@ function updateSlug($id){
   if ($arr = $res->FetchRow()) {
     extract($arr);
 
-    if (empty($slug)) {
-      if(empty($parent)){
+    // uncomment these lines to update slug independently from the title.
+    //if ( empty($slug) ) {
+      if ( empty($parent) ){
         $title = '';
       } else {
         $title = translate( $title );
       }
       $old_slug = $title;
-    } else {
-      $old_slug = translate( $slug );
-    }
+    //} else {
+    //  $old_slug = translate( $slug );
+    //}
 
     $new_slug = createUniqueSlug( $old_slug, $id );
 

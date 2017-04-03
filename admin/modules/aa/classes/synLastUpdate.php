@@ -24,10 +24,12 @@ class synLastUpdate extends synElement {
 
   //private function
   function _html() {
+    $ret = '<div class="form-control-static">';
     if ( empty($this->value) )
-      $ret = '<i class="fa fa-times-circle"></i> Not defined'; //"<img src=\"img/tree_delete.png\" alt=\"Not defined\" />";
+      $ret .= '<i class="fa fa-times-circle"></i> Not defined';
     else
-      $ret = "<div class=\"form-control-static\">{$this->value}</div>\n";
+      $ret .= $this->dateHumanFormat( $this->value );
+    $ret .= '</div>';
     return $ret;
   }
 
@@ -36,6 +38,16 @@ class synLastUpdate extends synElement {
     return "NOW()";
   }
 
+  private function dateHumanFormat($value) {
+   if (preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/', $value)) {
+      $dateHour = explode(' ',$value);
+      $splitted = explode('-',$dateHour[0]);
+      $value = $splitted[2]."-".$splitted[1]."-".$splitted[0];
+      return $value." ".$dateHour[1];
+    } else {
+      return $value;
+    }
+  }
 
   function configuration( $i = '', $k = 99 ) {
     global

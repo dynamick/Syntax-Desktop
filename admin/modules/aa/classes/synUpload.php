@@ -142,6 +142,7 @@ class synUpload extends synElement {
           {$preview_props}
           overwriteInitial: false,
           uploadUrl: "ihtml/upload2.php?r={$nocache}",
+          uploadClass: "btn btn-warning",
           deleteUrl: "ihtml/delete_photo.php",
           uploadAsync: true,
           uploadExtraData: function() {
