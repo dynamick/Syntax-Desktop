@@ -436,8 +436,12 @@ function checkfeatures(){
 	}
 
   if (function_exists('get_loaded_extensions')) {
-  	if  (!in_array  ('mysql', get_loaded_extensions())) {
-  		$errors[] = array("PHP Config Error","The PHP extension 'mysql' needs to be enabled/installed.");
+  	if  (!in_array  ('mysqli', get_loaded_extensions())) {
+  		$errors[] = array("PHP Config Error","The PHP extension 'mysqli' needs to be enabled/installed.");
+  		$allok = false;
+  	}
+  	if  (!in_array  ('pdo_mysql', get_loaded_extensions())) {
+  		$errors[] = array("PHP Config Error","The PHP extension 'pdo_mysql' needs to be enabled/installed.");
   		$allok = false;
   	}
   } else {
