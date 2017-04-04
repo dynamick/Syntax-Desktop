@@ -399,7 +399,7 @@ EOBOTTOMBAR;
       $contenitore->setKeyValue($insertId);
 
       $err = $err && $contenitore->execute_callbacks('insert');
-
+      
       //error check
       if (!$err) {
         //echo "<script>alert(\"$err\"); history.go(-1);</script>";

@@ -34,8 +34,9 @@ if (!is_writeable(PMBP_GLOBAL_CONF)) echo "<div class=\"red_left\">".I_CONF_ERRO
 if (!is_writeable("./".PMBP_EXPORT_DIR)) echo "<div class=\"red_left\">".I_DIR_ERROR."</div>\n";
 
 // if first use or no db-connection possible
-if (!@mysql_connect($CONF['sql_host'],$CONF['sql_user'],$CONF['sql_passwd']))  echo "<div class=\"red_left\">".C_WRONG_SQL."</div>\n";
-if ($CONF['sql_db']) if (!@mysql_select_db($CONF['sql_db'])) echo "<div class=\"red_left\">".C_WRONG_DB."</div>\n";
+$con = @mysqli_connect($CONF['sql_host'],$CONF['sql_user'],$CONF['sql_passwd']);
+if (!$con)  echo "<div class=\"red_left\">".C_WRONG_SQL."</div>\n";
+if ($CONF['sql_db']) if (!@mysqli_select_db($con, $CONF['sql_db'])) echo "<div class=\"red_left\">".C_WRONG_DB."</div>\n";
 
 //echo "<br><div class=\"bold_left\">".I_NAME." ".PMBP_VERSION."</div>";
 echo "<h3>".I_NAME." ".PMBP_VERSION."</h3>";
@@ -55,8 +56,8 @@ if (@ini_get("safe_mode")=="1") $safe_mode=F_YES; else $safe_mode="<span class=\
 if (function_exists("ftp_connect")) $ftp=F_YES; else $ftp="<span class=\"red_left\">".F_NO."</span>";
 if (function_exists("mail")) $mail=F_YES; else $mail="<span class=\"red_left\">".F_NO."</span>";
 if (function_exists("gzopen")) $gzip=F_YES; else $gzip=F_NO;
-if (!function_exists("mysql_get_server_info")) $mysql_s=PMBP_I_NO_RES; else $mysql_s=@mysql_get_server_info();
-if (!function_exists("mysql_get_client_info")) $mysql_c=PMBP_I_NO_RES; else $mysql_c=@mysql_get_client_info();
+if (!function_exists("mysqli_get_server_info")) $mysql_s=PMBP_I_NO_RES; else $mysql_s=@mysqli_get_server_info($con);
+if (!function_exists("mysqli_get_client_info")) $mysql_c=PMBP_I_NO_RES; else $mysql_c=@mysqli_get_client_info($con);
 
 // calculate size of all backups and last backup date
 $all_files=PMBP_get_backup_files();

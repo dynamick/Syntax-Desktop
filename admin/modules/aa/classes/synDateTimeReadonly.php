@@ -17,17 +17,19 @@ class synDateTimeReadonly extends synElement {
     $this->label = $l;
     $this->size  = $s;
     $this->help  = $h;
-    $this->db    = " DATETIME NOT NULL";
+    $this->db    = " DATETIME NULL DEFAULT NULL";
 
     $this->configuration();
   }
 
   //private function
   function _html() {
+    if ($this->value == '0000-00-00 00:00:00' || $this->value == '00-00-0000 00:00:00' || $this->value == '') {
+      $this->value = date('Y-m-d H:i:s');
+    }    
     $ret = <<<EOR
-    <input type="text" size="25" id="{$this->name}" data-name="{$this->name}" class="form-control"
-      value="{$this->dateHumanFormat($this->value)}" disabled />
-
+    <input type="hidden" name="{$this->name}" value="{$this->value}" />
+    <p class='form-control-static'>{$this->dateHumanFormat($this->value)}</p>
 EOR;
     return $ret;
   }

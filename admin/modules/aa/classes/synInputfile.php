@@ -25,7 +25,7 @@ class synInputfile extends synElement {
     $this->label = $l;
     $this->size  = $s;
     $this->help  = $h;
-    $this->db    = " varchar(255) NOT NULL";
+    $this->db    = " varchar(255) DEFAULT NULL";
     $this->mat   = $mat;
   }
 
@@ -142,7 +142,8 @@ EORET;
         $value = $this->value;
       $ext = '';
       if (is_array($value)) {
-        $ext = end(explode('.', $value['name']));
+        $tmp = explode('.', $value['name']);
+        $ext = end($tmp);
       } else {
         if ($ext == '' && isset($_REQUEST[ $this->name.'_old' ]))
           $ext = $_REQUEST[ $this->name.'_old' ];

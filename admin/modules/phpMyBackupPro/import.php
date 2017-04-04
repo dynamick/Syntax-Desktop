@@ -38,7 +38,7 @@ if (!isset($_GET['del_all'])) $_GET['del_all']=FALSE;
 if (!isset($_GET['empty_all'])) $_GET['empty_all']=FALSE;
 
 // if first use or no db-connection possible
-if (!$con=@mysql_connect($CONF['sql_host'],$CONF['sql_user'],$CONF['sql_passwd'])) echo "<div class=\"red\">".I_SQL_ERROR."</div>";
+if (!$con=@mysqli_connect($CONF['sql_host'],$CONF['sql_user'],$CONF['sql_passwd'])) echo "<div class=\"red\">".I_SQL_ERROR."</div>";
 
 // if importing sql
 if ($_GET['import'] || $_GET['imp_ALL']) {
@@ -82,7 +82,7 @@ if ($_GET['import'] || $_GET['imp_ALL']) {
         foreach($import_files as $import_file) {
 
             // check if a db with the name of the backup file still exists and select it
-            $db=@mysql_select_db($dbname=PMBP_file_info("db","./".PMBP_EXPORT_DIR.$import_file));
+            $db=@mysqli_select_db($con, $dbname=PMBP_file_info("db","./".PMBP_EXPORT_DIR.$import_file));
             if (!$db) {
                 printf(".<div class=\"red\">".PMBP_EX_NO_AVAILABLE."</div>\n",$dbname);
             } else {
@@ -141,9 +141,11 @@ if ($_GET['del_ALL']) {
 
 // empty ALL db if the link was clicked
 if ($_GET['empty_ALL']) {
+// TODO:LUCIANO
+/*    
     $all_db=PMBP_get_db_list();
     foreach($all_db as $dbname) {
-        $db=mysql_select_db($dbname,$con);
+        $db=mysqli_select_db($con, $dbname);
         $res=mysql_list_tables($dbname,$con);
         for ($i=0;$i<mysql_num_rows($res);$i++) {
             $row=mysql_fetch_row($res);
@@ -152,13 +154,16 @@ if ($_GET['empty_ALL']) {
         }
     }
 
-    $error=mysql_error();
+    $error=mysql_error($con);
     if ($error) echo $error;
         else echo "<div class=\"green\">".B_EMPTIED_ALL.".</div>\n";
+*/        
 }
 
 // empty db if the link was clicked
 if ($_GET['empty_all']) {
+// TODO:LUCIANO
+/*    
     $db=mysql_select_db($_GET['empty_all']);
     if (!$db) {
         printf(".<div class=\"red\">".PMBP_EX_NO_AVAILABLE."</div>\n",$_GET['empty_all']);
@@ -173,6 +178,7 @@ if ($_GET['empty_all']) {
         if ($error) echo $error;
             else echo "<div class=\"green\">".B_EMPTIED.".</div>\n";
     }
+*/    
 }
 
 // delete all backup files of selected db if the link was clicked

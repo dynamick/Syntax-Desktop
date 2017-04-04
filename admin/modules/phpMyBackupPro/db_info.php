@@ -29,7 +29,7 @@ require_once("login.php");
 if (!isset($_GET['table'])) $_GET['table']=FALSE;
 
 // connect to mySQL
-$con=@mysql_connect($CONF['sql_host'],$CONF['sql_user'],$CONF['sql_passwd']);
+$con=@mysqli_connect($CONF['sql_host'],$CONF['sql_user'],$CONF['sql_passwd']);
 
     // get start time to calculate duration
     if (function_exists("microtime")) {
@@ -43,10 +43,10 @@ $con=@mysql_connect($CONF['sql_host'],$CONF['sql_user'],$CONF['sql_passwd']);
 if ($_GET['table']) {
 
     // select the db
-    mysql_select_db($_GET['table']);
+    mysqli_select_db($con, $_GET['table']);
 
-    $stati=mysql_query("show table status");
-    while($status=mysql_fetch_array($stati)) {
+    $stati=mysqli_query($con, "show table status");
+    while($status=mysqli_fetch_array($stati)) {
         $table_names[]=$status['Name'];
         $table_rows[]=$status['Rows'];
         $size=PMBP_size_type($status['Data_length']+$status['Index_length']);
@@ -56,8 +56,8 @@ if ($_GET['table']) {
     // get number of fields
     if (is_array($table_names))
     foreach($table_names as $table) {
-        mysql_query("show columns from `".$table."`");
-        $table_fields[]=mysql_affected_rows();
+        mysqli_query($con, "show columns from `".$table."`");
+        $table_fields[]=mysqli_affected_rows($con);
     }
 
     echo "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\"
@@ -119,20 +119,20 @@ if (!$con) {
 	    foreach($all_dbs as $db_name) {
 	
 	        // select the db
-	        mysql_select_db($db_name,$con);
+	        mysqli_select_db($con, $db_name);
 	        
 	        $num_tables=$num_rows=$data_size=0;
 	        
 	        // get number of rows and size of tables
-	        $stati=mysql_query("show table status",$con);
-	        while ($status=@mysql_fetch_array($stati)) {
+	        $stati=mysqli_query($con, "show table status");
+	        while ($status=@mysqli_fetch_array($stati)) {
 	            $data_size+=($status['Data_length']+$status['Index_length']);
 	            $num_rows+=$status['Rows'];
 	        }
 	        $size=PMBP_size_type($data_size);
 	
 	        // get number of tables
-	        $num_tables=mysql_affected_rows($con);
+	        $num_tables=mysqli_affected_rows($con);
 	    
 	        // first field for the db name
 	        echo "<tr ".PMBP_change_color("#FFFFFF","#000000").">";
@@ -145,8 +145,8 @@ if (!$con) {
 	        echo "<td class=\"list\">".$size['value']." ".$size['type']."</td>\n";
 # - caution
 	        
-          $stati=mysql_query("show table status");
-          while($status=mysql_fetch_array($stati)) {
+          $stati=mysqli_query($con, "show table status");
+          while($status=mysqli_fetch_array($stati)) {
             $table_names[]=$status['Name'];
             $table_rows[]=$status['Rows'];
             $size=PMBP_size_type($status['Data_length']+$status['Index_length']);
@@ -156,8 +156,8 @@ if (!$con) {
           // get number of fields
           if (is_array($table_names))
           foreach($table_names as $table) {
-            mysql_query("show columns from `".$table."`");
-            $table_fields[]=mysql_affected_rows();
+            mysqli_query($con, "show columns from `".$table."`");
+            $table_fields[]=mysqli_affected_rows($con);
           }
 
           for($i=0;$i<count($table_names);$i++) {

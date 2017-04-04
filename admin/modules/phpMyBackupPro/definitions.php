@@ -49,7 +49,7 @@ define('PMBP_IMAGE_DIR',"images/");
 define('PMBP_WEBSITE',"http://www.phpMyBackupPro.net");
 
 // check for MySQL module
-if (!function_exists("mysql_connect")) {
+if (!function_exists("mysqli_connect")) {
     echo "The MySQL module for PHP seems not to be installed correctly.<br>
     You can configure the MySQL module in php.ini. Read the HTTP servers (eg. Apache) log files for more infomation.";
     exit;    
@@ -76,12 +76,12 @@ require_once($prepath.PMBP_MAIN_INC);
 if (@include_once($prepath.PMBP_GLOBAL_CONF_MU)) {
     if ($PMBP_MU_CONF['sql_user_admin'] && $PMBP_MU_CONF['sql_passwd_admin']) {
         // test MySQL admin data
-        if (!$con=@mysql_connect($CONF['sql_host'],$PMBP_MU_CONF['sql_user_admin'],$PMBP_MU_CONF['sql_passwd_admin'])) {        
+        if (!$con=@mysqli_connect($CONF['sql_host'],$PMBP_MU_CONF['sql_user_admin'],$PMBP_MU_CONF['sql_passwd_admin'])) {        
             echo "MySQL admin data are incorrect in global_conf_mu.php. Please correct them in order to use the multi user mode.";
             exit;
         }
         // if connection issn't closed the user could get access to all data
-        if(!mysql_close($con)) {
+        if(!mysqli_close($con)) {
             echo "phpMyBackupPro stoped loading due to security reasons: The MySQL connection could not be shut down! (".__FILE__.", Line ".__LINE__.")";
             exit;
         }

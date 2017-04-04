@@ -1,7 +1,10 @@
 # MySQL dump of database 'syntax' on host 'localhost'
-# backup date and time: 03/01/17 11:27:07
+# backup date and time: 04/04/17 10:01:40
 # built by phpMyBackupPro v.2.1
 # http://www.phpMyBackupPro.net
+
+# comment:
+# asdasas
 
 
 
@@ -16,7 +19,7 @@ CREATE TABLE `aa_element` (
   `order` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `id` (`classname`)
-) ENGINE=MyISAM AUTO_INCREMENT=34 DEFAULT CHARSET=utf8 COMMENT='Elementi che compongono un contenitore' AUTO_INCREMENT=34;
+) ENGINE=MyISAM AUTO_INCREMENT=35 DEFAULT CHARSET=utf8 COMMENT='Elementi che compongono un contenitore' AUTO_INCREMENT=35;
 
 
 ### data of table `aa_element` ###
@@ -362,7 +365,7 @@ CREATE TABLE `aa_services_element` (
   `ismultilang` varchar(1) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `container` (`container`)
-) ENGINE=MyISAM AUTO_INCREMENT=617 DEFAULT CHARSET=utf8 COMMENT='Containers' AUTO_INCREMENT=617;
+) ENGINE=MyISAM AUTO_INCREMENT=618 DEFAULT CHARSET=utf8 COMMENT='Containers' AUTO_INCREMENT=618;
 
 
 ### data of table `aa_services_element` ###
@@ -454,9 +457,9 @@ insert into `aa_services_element` values ('467', '142', 'id', '1', '1', '', '', 
 insert into `aa_services_element` values ('468', '142', 'title', '2', '', '1', '', '245', '255', '246', '', '', '', '', '10', '', '1');
 insert into `aa_services_element` values ('469', '142', 'date', '15', '', '1', '', '247', '0', '248', '', '', '', '', '20', '', '');
 insert into `aa_services_element` values ('470', '142', 'photo', '10', '', '', '', '249', '0', '250', '/public/mat/album', '1280×1024', 'title|ordine|photos|photo|album', '', '30', '', '');
-insert into `aa_services_element` values ('471', '143', 'id', '1', '1', '', '', '254', '0', '255', '', '', '', '', '0', '', '');
+insert into `aa_services_element` values ('471', '143', 'id', '1', '1', '1', '', '254', '0', '255', '', '', '', '', '0', '', '');
 insert into `aa_services_element` values ('472', '143', 'title', '2', '', '1', '', '256', '255', '257', '', '', '', '', '10', '', '');
-insert into `aa_services_element` values ('474', '143', 'photo', '5', '', '1', '', '258', '0', '259', '/public/mat/album/#{join|value|id_join=20}', '', '', '', '30', '', '');
+insert into `aa_services_element` values ('617', '143', 'photo', '5', '', '1', '', '823', '0', '824', '/public/mat/album/#{join|value|id_join=20}', '', '', '', '30', '', '');
 insert into `aa_services_element` values ('475', '143', 'album', '11', '', '1', '', '260', '11', '261', '', 'SELECT * FROM album', '', '', '40', '', '');
 insert into `aa_services_element` values ('476', '143', 'ordine', '3', '', '1', '1', '262', '0', '263', '', '', '', '', '50', '', '');
 insert into `aa_services_element` values ('477', '3', 'parent_id', '16', '', '1', '', '264', '11', '265', 'name', '', '', '', '20', '', '');
@@ -565,7 +568,7 @@ insert into `aa_services_element` values ('586', '158', 'id', '1', '1', '1', '',
 insert into `aa_services_element` values ('587', '158', 'id_form', '3', '', '1', '', '733', '11', '734', '', '', '', '', '10', '', '');
 insert into `aa_services_element` values ('588', '158', 'hash', '33', '', '', '', '735', '0', '736', '', '', '', '', '20', '', '');
 insert into `aa_services_element` values ('589', '158', 'timestamp', '20', '', '1', '', '737', '0', '738', '', '', '', '', '30', '', '');
-insert into `aa_services_element` values ('590', '143', 'date', '30', '', '', '', '753', '0', '754', '', '', '', '', '50', '', '');
+insert into `aa_services_element` values ('590', '143', 'date', '15', '', '', '', '753', '0', '754', '', '', '', '', '50', '', '');
 insert into `aa_services_element` values ('591', '143', 'autore', '21', '', '', '', '755', '255', '756', '', '', '', '', '60', '', '');
 insert into `aa_services_element` values ('592', '143', 'format', '23', '', '', '', '757', '0', '758', '', 'portrait|landscape', '', '', '70', '', '');
 insert into `aa_services_element` values ('593', '142', 'visible', '24', '', '1', '', '760', '0', '761', '', 'SELECT id, lang FROM `aa_lang`', '', '', '25', '', '');
@@ -622,7 +625,7 @@ CREATE TABLE `aa_translation` (
   `it` text NOT NULL,
   `en` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=823 DEFAULT CHARSET=utf8 AUTO_INCREMENT=823;
+) ENGINE=MyISAM AUTO_INCREMENT=825 DEFAULT CHARSET=utf8 AUTO_INCREMENT=825;
 
 
 ### data of table `aa_translation` ###
@@ -1449,6 +1452,8 @@ insert into `aa_translation` values ('819', '', '');
 insert into `aa_translation` values ('820', 'Ordine', 'Ordine');
 insert into `aa_translation` values ('821', '', '');
 insert into `aa_translation` values ('822', 'Marchi', 'Marchi');
+insert into `aa_translation` values ('823', 'Photo', 'Photo');
+insert into `aa_translation` values ('824', '', '');
 
 
 ### structure of table `aa_users` ###
@@ -1468,7 +1473,7 @@ CREATE TABLE `aa_users` (
 
 ### data of table `aa_users` ###
 
-insert into `aa_users` values ('3347', 'root', '13b536fa58f13746adcb73fbd83b3772', '1', '1', '1');
+insert into `aa_users` values ('3347', 'root', 'bc2681c011c5f7abccae2431335191e1', '1', '1', '1');
 
 
 ### structure of table `album` ###
@@ -1478,7 +1483,7 @@ DROP TABLE IF EXISTS `album`;
 CREATE TABLE `album` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
-  `date` datetime NOT NULL,
+  `date` datetime DEFAULT NULL,
   `photo` varchar(255) NOT NULL,
   `visible` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
@@ -1844,7 +1849,7 @@ CREATE TABLE `news` (
   `title` varchar(255) NOT NULL,
   `text` text NOT NULL,
   `image` varchar(255) NOT NULL,
-  `date` datetime NOT NULL,
+  `date` datetime DEFAULT NULL,
   `visible` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 AUTO_INCREMENT=5;
@@ -1864,24 +1869,24 @@ DROP TABLE IF EXISTS `photos`;
 
 CREATE TABLE `photos` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) NOT NULL,
-  `photo` varchar(255) NOT NULL,
-  `album` int(11) NOT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `album` int(11) NOT NULL DEFAULT '0',
   `ordine` int(11) NOT NULL DEFAULT '0',
-  `date` datetime NOT NULL,
-  `autore` varchar(255) NOT NULL,
+  `date` datetime DEFAULT NULL,
+  `autore` varchar(255) DEFAULT NULL,
   `format` enum('portrait','landscape') NOT NULL DEFAULT 'portrait',
+  `photo` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `album` (`album`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 AUTO_INCREMENT=5;
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 AUTO_INCREMENT=6;
 
 
 ### data of table `photos` ###
 
-insert into `photos` values ('1', '8ab6a787b8ba3df15cb4c458f2f6f8c1087e6166_2048', 'jpg', '4', '10', '2015-03-07 12:16:10', '8685', 'landscape');
-insert into `photos` values ('2', '9298626292fbf4371490aad63064dcbddb429f9f_2048', 'jpg', '4', '20', '2015-03-07 12:16:11', '8685', 'landscape');
-insert into `photos` values ('3', 'a3bed77987333ce78e33dba9aec6adc103375f9e_2048', 'jpg', '4', '30', '2015-03-07 12:16:11', '8685', 'landscape');
-insert into `photos` values ('4', 'fc64058e4f18255d34dbc6a6ece1f6cc961b6254_5', 'jpg', '4', '40', '2015-03-07 12:16:11', '8685', 'landscape');
+insert into `photos` values ('1', '8ab6a787b8ba3df15cb4c458f2f6f8c1087e6166_2048', '4', '10', '2015-03-07 12:16:10', '8685', 'landscape', 'jpg');
+insert into `photos` values ('2', '9298626292fbf4371490aad63064dcbddb429f9f_2048', '4', '20', '2015-03-07 12:16:11', '8685', 'landscape', 'jpg');
+insert into `photos` values ('3', 'a3bed77987333ce78e33dba9aec6adc103375f9e_2048', '4', '30', '2015-03-07 12:16:11', '8685', 'landscape', 'jpg');
+insert into `photos` values ('4', 'fc64058e4f18255d34dbc6a6ece1f6cc961b6254_5', '4', '40', '2015-03-07 12:16:11', '8685', 'landscape', 'jpg');
 
 
 ### structure of table `redirect` ###

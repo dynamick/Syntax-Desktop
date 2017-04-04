@@ -51,7 +51,7 @@ class MySQL_Restore
     if (!$this->connected)
     {
       $host = $this->server . ':' . $this->port;
-      $this->link_id = mysql_connect($host, $this->username, $this->password);
+      $this->link_id = mysqli_connect($host, $this->username, $this->password);
     }
     if ($this->link_id)
     {
@@ -61,19 +61,19 @@ class MySQL_Restore
       }
       elseif ($this->link_id !== -1)
       {
-        $value = mysql_select_db($this->database, $this->link_id);
+        $value = mysqli_select_db($this->link_id, $this->database);
       }
       else
       {
-        $value = mysql_select_db($this->database);
+        $value = mysqli_select_db($this->link_id, $this->database);
       }
 
       // setto la connessione in UTF8
-      mysql_set_charset('utf8', $this->link_id);
+      mysqli_set_charset($this->link_id, 'utf8');
     }
     if (!$value)
     {
-      $this->error = mysql_error();
+      $this->error = mysqli_error($this->link_id);
     }
     return $value;
   }
@@ -83,15 +83,15 @@ class MySQL_Restore
   {
     if ($this->link_id !== -1)
     {
-      $result = mysql_query($sql, $this->link_id);
+      $result = mysqli_query($this->link_id, $sql);
     }
     else
     {
-      $result = mysql_query($sql);
+      $result = mysqli_query($this->link_id, $sql);
     }
     if (!$result)
     {
-      $this->error = mysql_error();
+      $this->error = mysqli_error($this->link_id);
     }
     return $result;
   }

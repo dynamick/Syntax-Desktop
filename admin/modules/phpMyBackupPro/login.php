@@ -66,11 +66,11 @@ if ($CONF['login'] && !$_SESSION['multi_user_mode']) {
             // distinguish between multi and single user mode
             if ($_SESSION['multi_user_mode'])
             {
-                $con=@mysql_connect($PMBP_MU_CONF['sql_host_admin'],$PMBP_MU_CONF['sql_user_admin'],$PMBP_MU_CONF['sql_passwd_admin']);
-                mysql_select_db("mysql");
-                $res=mysql_query("select * from user where (User='".$_POST['username']."' or User='') and password=password('".$_POST['password']."')");
-                $success=mysql_fetch_array($res);
-                @mysql_close($con);
+                $con=@mysqli_connect($PMBP_MU_CONF['sql_host_admin'],$PMBP_MU_CONF['sql_user_admin'],$PMBP_MU_CONF['sql_passwd_admin']);
+                mysqli_select_db($con, "mysql");
+                $res=mysqli_query($con, "select * from user where (User='".$_POST['username']."' or User='') and password=password('".$_POST['password']."')");
+                $success=mysqli_fetch_array($res);
+                @mysqli_close($con);
             } else {
                 if ($CONF['sql_user']==$_POST['username'] && $CONF['sql_passwd']==$_POST['password']) {
                     $success=TRUE;

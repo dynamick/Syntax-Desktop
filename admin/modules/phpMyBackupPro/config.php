@@ -162,11 +162,13 @@ foreach($CONF as $key=>$value) {
 
 // if no db connection possible
 if (isset($_SESSION['sql_host_org'])) {
-    if (!@mysql_connect($_SESSION['sql_host_org'],$_SESSION['sql_user_org'],$_SESSION['sql_passwd_org'])) echo "<div class=\"red\">".C_WRONG_SQL."</div>";     
-    if ($_SESSION['sql_db_org']) if (!@mysql_select_db($_SESSION['sql_db_org'])) echo "<div class=\"red\">".C_WRONG_DB."</div>";    
+    $con = @mysqli_connect($_SESSION['sql_host_org'],$_SESSION['sql_user_org'],$_SESSION['sql_passwd_org']); 
+    if (!$con) echo "<div class=\"red\">".C_WRONG_SQL."</div>";     
+    if ($_SESSION['sql_db_org']) if (!@mysqli_select_db($con, $_SESSION['sql_db_org'])) echo "<div class=\"red\">".C_WRONG_DB."</div>";    
 } else {
-    if (!@mysql_connect($CONF['sql_host'],$CONF['sql_user'],$CONF['sql_passwd'])) echo "<div class=\"red\">".C_WRONG_SQL."</div>";
-    if ($CONF['sql_db']) if (!@mysql_select_db($CONF['sql_db'])) echo "<div class=\"red\">".C_WRONG_DB."</div>";
+    $con = @mysqli_connect($CONF['sql_host'],$CONF['sql_user'],$CONF['sql_passwd']); 
+    if (!$con) echo "<div class=\"red\">".C_WRONG_SQL."</div>";
+    if ($CONF['sql_db']) if (!@mysqli_select_db($con, $CONF['sql_db'])) echo "<div class=\"red\">".C_WRONG_DB."</div>";
 }
 
 // only if 'good internet connection' and if no ftp connection possible

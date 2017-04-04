@@ -67,9 +67,9 @@ if (!isset($_GET['start']) || !isset($_GET['foffset'])) {
 
 // connect to the database
 if (!isset($firstSession)) {
-    $con=@mysql_connect($CONF['sql_host'],$CONF['sql_user'],$CONF['sql_passwd']); 
+    $con=@mysqli_connect($CONF['sql_host'],$CONF['sql_user'],$CONF['sql_passwd']); 
     if (!$con) $error=C_WRONG_SQL;
-    if (!$error) $db=@mysql_select_db($_GET['dbn']);
+    if (!$error) $db=@mysqli_select_db($con, $_GET['dbn']);
     if (!$db) $error=C_WRONG_DB." (".$_GET['dbn'].")";
 }
 
@@ -123,7 +123,7 @@ if (!$error) {
 
     // clean up
     if (!isset($firstSession)) {
-        if ($con) @mysql_close();
+        if ($con) @mysqli_close($con);
         @gzclose($file);
     }
     

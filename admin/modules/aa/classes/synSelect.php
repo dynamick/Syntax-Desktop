@@ -27,7 +27,6 @@ class synSelect extends synElement {
     $this->label = $l;
     $this->size  = $s;
     $this->help  = $h;
-    //$this->db    = " int(".$this->size.") NOT NULL";
     $this->db    = ' INT(' . $this->size . ') NOT NULL DEFAULT 0';
   }
 

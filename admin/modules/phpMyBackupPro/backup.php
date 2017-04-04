@@ -132,7 +132,7 @@ if ($mode=="web") {
     PMBP_print_header(basename($_SERVER['REQUEST_URI']));
 
     // if first use or no db-connection possible
-    if (!@mysql_connect($CONF['sql_host'],$CONF['sql_user'],$CONF['sql_passwd'])) echo "<div class=\"red\">".I_SQL_ERROR."</div><br>\n";
+    if (!@mysqli_connect($CONF['sql_host'],$CONF['sql_user'],$CONF['sql_passwd'])) echo "<div class=\"red\">".I_SQL_ERROR."</div><br>\n";
 
     // check if ftp connection is possible
     if ($CONF['ftp_use'] || $CONF['dir_backup']) {

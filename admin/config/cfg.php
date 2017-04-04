@@ -19,7 +19,6 @@ if (!file_exists($dir.'config.php')) {
 require_once $dir . '/config.php';
 require_once $dir . '../includes/php/ADODB-PDO.php';
 require_once $dir . '../includes/php/utility.php';
-require_once $dir . '../includes/php/class.ImageToolbox.php';
 require_once $dir . '../includes/php/class.queryBuilder.php';
 
 $db = NewADOConnection('mysql');

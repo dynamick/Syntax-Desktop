@@ -229,7 +229,7 @@ function PMBP_print_export_form($dirs1=FALSE) {
     echo F_COMMENTS.":";
     echo "</td>\n</tr><tr>\n<td>\n";
     echo "<select name=\"db[]\" multiple=\"multiple\" size=\"10\">\n";
-    if (!$con=@mysql_connect($CONF['sql_host'],$CONF['sql_user'],$CONF['sql_passwd']));
+    if (!$con=@mysqli_connect($CONF['sql_host'],$CONF['sql_user'],$CONF['sql_passwd']));
 
     // find the availabe compression methods and set which are disabled and which is selected
     if (!@function_exists("gzopen") || !@function_exists("gzcompress")) $disable_gzip=" disabled"; else $disable_gzip="";
@@ -448,7 +448,7 @@ function PMBP_exec_sql($file,$con,$linespersession=false,$noFile=false) {
 	$comment[1] = "-- ";
 
     // set utf8 charset!
-    mysql_query ( 'SET NAMES UTF8' );
+    mysqli_query ($con, 'SET NAMES UTF8' );
 
     while (($linenumber < $_GET["start"]+$linespersession || $query!="") && ($dumpline = gzgets($file,65536)))
     {
@@ -501,8 +501,8 @@ function PMBP_exec_sql($file,$con,$linespersession=false,$noFile=false) {
 
         // execute query if end of query detected (; as last character) AND NOT in parents
         if (preg_match('/;$/', trim($dumpline)) && !$inparents) {
-            if (!mysql_query(trim($query), $con)) {
-                $error = SQ_ERROR." ".($linenumber+1)."<br>".nl2br(htmlentities(trim($query)))."\n<br>".htmlentities(mysql_error());
+            if (!mysqli_query($con, trim($query))) {
+                $error = SQ_ERROR." ".($linenumber+1)."<br>".nl2br(htmlentities(trim($query)))."\n<br>".htmlentities(mysqli_error($con));
                 break;
             }
 
@@ -537,7 +537,7 @@ function PMBP_dump($db,$tables,$data,$drop,$zip,$comment) {
     $error=FALSE;
 
     // set max string size before writing to file
-    if (@ini_get("memory_limit")) $max_size=900000*ini_get("memory_limit");
+    if (@ini_get("memory_limit")) $max_size=900000*intval(ini_get("memory_limit"));
         else $max_size=$PMBP_SYS_VAR['memory_limit'];
 
     // set backupfile name
@@ -546,9 +546,9 @@ function PMBP_dump($db,$tables,$data,$drop,$zip,$comment) {
         else $backupfile=$db.".".$time.".sql";
     $backupfile=PMBP_EXPORT_DIR.$backupfile;
 
-    if ($con=@mysql_connect($CONF['sql_host'],$CONF['sql_user'],$CONF['sql_passwd'])) {
+    if ($con=@mysqli_connect($CONF['sql_host'],$CONF['sql_user'],$CONF['sql_passwd'])) {
         // setto la connessione in UTF8
-        mysql_set_charset('utf8', $con);
+        mysqli_set_charset($con, 'utf8');
 
         //create comment
         $out="# MySQL dump of database '".$db."' on host '".$CONF['sql_host']."'\n";
@@ -571,17 +571,17 @@ function PMBP_dump($db,$tables,$data,$drop,$zip,$comment) {
         }
 
         // select db
-        @mysql_select_db($db);
+        @mysqli_select_db($con, $db);
 
         // get auto_increment values and names of all tables
-        $res=mysql_query("show table status");
+        $res=mysqli_query($con, "show table status");
         $all_tables=array();
-        while($row=mysql_fetch_array($res)) $all_tables[]=$row;
+        while($row=mysqli_fetch_array($res)) $all_tables[]=$row;
 
         // get table structures
         foreach ($all_tables as $table) {
-            $res1=mysql_query("SHOW CREATE TABLE `".$table['Name']."`");
-            $tmp=mysql_fetch_array($res1);
+            $res1=mysqli_query($con, "SHOW CREATE TABLE `".$table['Name']."`");
+            $tmp=mysqli_fetch_array($res1);
             $table_sql[$table['Name']]=$tmp["Create Table"];
         }
 
@@ -646,17 +646,17 @@ function PMBP_dump($db,$tables,$data,$drop,$zip,$comment) {
                     $out.="### data of table `".$tablename."` ###\n\n";
 
                     // check if field types are NULL or NOT NULL
-                    $res3=mysql_query("show columns from `".$tablename."`");
+                    $res3=mysqli_query($con, "show columns from `".$tablename."`");
 
-                    $res2=mysql_query("select * from `".$tablename."`");
-                    for ($j=0;$j<mysql_num_rows($res2);$j++){
+                    $res2=mysqli_query($con, "select * from `".$tablename."`");
+                    for ($j=0;$j<mysqli_num_rows($res2);$j++){
                         $out .= "insert into `".$tablename."` values (";
-                        $row2=mysql_fetch_row($res2);
+                        $row2=mysqli_fetch_row($res2);
                         // run through each field
-                        for ($k=0;$k<$nf=mysql_num_fields($res2);$k++) {
+                        for ($k=0;$k<$nf=mysqli_num_fields($res2);$k++) {
                             // identify null values and save them as null instead of ''
                             //if (is_null($row2[$k])) $out .="null"; else $out .="'".mysql_escape_string($row2[$k])."'";
-                            if (is_null($row2[$k])) $out .="null"; else $out .="'".mysql_real_escape_string($row2[$k])."'";
+                            if (is_null($row2[$k])) $out .="null"; else $out .="'".mysqli_real_escape_string($con, $row2[$k])."'";
                             if ($k<($nf-1)) $out .=", ";
                         }
                         $out .=");\n";
@@ -934,7 +934,7 @@ function PMBP_email_store($attachments,$backup_info) {
     // send to all every addresses
     foreach($all_emails as $email) {
         // verify email
-        if (!eregi("^\ *[äöüÄÖÜa-zA-Z0-9_-]+(\.[äöüÄÖÜa-zA-Z0-9\._-]+)*@([äöüÄÖÜa-zA-Z0-9-]+\.)+([a-z]{2,4})$",$email)) {
+        if (!eregi("^\ *[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½a-zA-Z0-9_-]+(\.[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½a-zA-Z0-9\._-]+)*@([ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½a-zA-Z0-9-]+\.)+([a-z]{2,4})$",$email)) {
             $out.="<div class=\"red\">".F_MAIL_1."</div>\n";
             continue;
         }
@@ -962,7 +962,7 @@ function PMBP_get_backup_files() {
     $all_files=FALSE;
     $result_files=FALSE;
     $handle=@opendir("./".PMBP_EXPORT_DIR);
-    $remove_time=time()-($CONF['del_time']*86400);
+    $remove_time=time()-(intval($CONF['del_time'])*86400);
     while ($file=@readdir($handle)) {
         if ($file!="." && $file!=".." && preg_match("'\.sql|\.sql\.gz|\.sql\.zip'",$file)) {
 
@@ -1099,18 +1099,19 @@ function PMBP_get_db_list() {
 
     // if there is given the name of a single database
     if ($CONF['sql_db']) {
-        @mysql_connect($CONF['sql_host'],$CONF['sql_user'],$CONF['sql_passwd']);
-        if (@mysql_select_db($CONF['sql_db'])) $dbs=array($CONF['sql_db']);
+        $con = @mysqli_connect($CONF['sql_host'],$CONF['sql_user'],$CONF['sql_passwd']);
+        if (@mysqli_select_db($con, $CONF['sql_db'])) $dbs=array($CONF['sql_db']);
             else $dbs=array();
         return $dbs;
     }
 
     // else try to get a list of all available databases on the server
     $list=array();
-    @mysql_connect($CONF['sql_host'],$CONF['sql_user'],$CONF['sql_passwd']);
-    $db_list=@mysql_list_dbs();
-    while ($row=@mysql_fetch_array($db_list))
-        if (@mysql_select_db($row['Database'])) $list[]=$row['Database'];
+    // TODO:LUCIANO
+    //@mysqli_connect($CONF['sql_host'],$CONF['sql_user'],$CONF['sql_passwd']);
+    //$db_list=@mysql_list_dbs();
+    //while ($row=@mysql_fetch_array($db_list))
+    //    if (@mysql_select_db($row['Database'])) $list[]=$row['Database'];
     return $list;
 }
 

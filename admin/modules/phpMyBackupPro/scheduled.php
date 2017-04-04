@@ -40,7 +40,7 @@ if (!isset($_POST['packed'])) $_POST['packed']=FALSE;
 PMBP_print_header(basename($_SERVER['REQUEST_URI']));
 
 // if first use or no db-connection possible
-if (!@mysql_connect($CONF['sql_host'],$CONF['sql_user'],$CONF['sql_passwd'])) echo "<div class=\"red\">".I_SQL_ERROR."</div><br>";
+if (!@mysqli_connect($CONF['sql_host'],$CONF['sql_user'],$CONF['sql_passwd'])) echo "<div class=\"red\">".I_SQL_ERROR."</div><br>";
 
 // check if a db or directory was posted
 if (isset($_POST['dirs'])) {

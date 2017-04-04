@@ -46,11 +46,9 @@ if (!isset($_POST['sql_file'])) $_POST['sql_file']=FALSE;
 if (!isset($_FILES['sql_file'])) $_FILES['sql_file']=FALSE;
 
 // if first use or no db-connection is possible
-if (!$con=@mysql_connect($CONF['sql_host'],$CONF['sql_user'],$CONF['sql_passwd'])) echo "<div class=\"red_left\">".I_SQL_ERROR."</div><br>";
-    
+if (!$con=@mysqli_connect($CONF['sql_host'],$CONF['sql_user'],$CONF['sql_passwd'])) echo "<div class=\"red_left\">".I_SQL_ERROR."</div><br>";
 // if sql_query was send to db
 if (($_POST['sql_query'] || $_FILES['sql_file']) && $_POST['db']) {
-
     // get start time to calculate duration
     if (function_exists("microtime")) {
         $microtime=explode(" ",microtime());
@@ -125,7 +123,7 @@ if (($_POST['sql_query'] || $_FILES['sql_file']) && $_POST['db']) {
 	    // $key > 0 when the source was a file
 	    foreach($file_and_post as $key=>$sql_queries) {
 	        // select the db
-	        if (!$key) mysql_select_db($_POST['db']);
+	        if (!$key) mysqli_select_db($con, $_POST['db']);
 	
 	        // replace these strings in the sql query. Do you know any more or a better way?
 	        if (!$key) {
@@ -141,25 +139,24 @@ if (($_POST['sql_query'] || $_FILES['sql_file']) && $_POST['db']) {
 	        $queries=explode("|:-:--:-:|",$all_queries);
 	
 	        // to remove empty rows
-	        $all_queries="";
-	        foreach($queries as $number=>$query)
+	        $all_queries=[];
+	        foreach($queries as $number=>$query) {
 	            if (strlen($query)>1) $all_queries[$number]=$query;
+            }
 	
 	        // execute sql queries
 	        $i=0;
 	        $sql_error=FALSE;
-	
-
             if (is_array($all_queries)) {
                 foreach($all_queries as $query) {            
                     $i++;
                     if (!$key) echo "<div class=\"bold_left\">".SQ_RESULT." ".$i.":</div>\n";
     
                     // error if: no result AND error is not 'empty result' OR: error is empty result and its the first error
-                    if ((!$res=mysql_query($query) AND mysql_errno()!=1065) OR (mysql_errno()==1065 AND !$sql_error)){
-                        echo $query."\n<div class=\"red_left\">".mysql_error()."</div><br>\n";
+                    if ((!$res=mysqli_query($con, $query) AND mysqli_errno($con)!=1065) OR (mysqli_errno($con)==1065 AND !$sql_error)){
+                        echo $query."\n<div class=\"red_left\">".mysqli_error($con)."</div><br>\n";
                         if ($key) $sql_error.="F".$i.", "; else $sql_error.=$i.", ";
-                    } elseif (mysql_errno()!=1065) {
+                    } elseif (mysqli_errno($con)!=1065) {
     
                         // print result table
                         if (!$key) {
@@ -167,13 +164,14 @@ if (($_POST['sql_query'] || $_FILES['sql_file']) && $_POST['db']) {
     
                             // print field names
                             echo "<tr>\n";
-                            for($j=0,$field_names="";$field_names[]=@mysql_field_name($res,$j);$j++)
-                                echo "<th class=\"active\">".$field_names[$j]."</th>";
+                            for($j=0,$field_names=[];$field_names[]=@mysqli_fetch_field_direct($res,$j);$j++){
+                                echo "<th class=\"active\">".$field_names[$j]->name."</th>";
+                            }
                             echo "</tr>\n";
     
                             // print query results
                             $result_exists=FALSE;
-                            while($result=@mysql_fetch_array($res,MYSQL_NUM)) {
+                            while($result=@mysqli_fetch_array($res,MYSQLI_NUM)) {
                                 $result_exists=TRUE;
                                 if (!$key) echo "<tr ".PMBP_change_color("#FFFFFF","#000000").">";
                                 foreach($result as $field)
@@ -184,9 +182,9 @@ if (($_POST['sql_query'] || $_FILES['sql_file']) && $_POST['db']) {
                             // print number of rows or if empty mysql result print number of affected rows
                             if (!$result_exists) {
                                 if (!$key) echo "<tr>\n<td>".SQ_SUCCESS."</td>\n</tr>\n";
-                                if (!$affected=@mysql_affected_rows()) $affected=0;
+                                if (!$affected=@mysqli_affected_rows($con)) $affected=0;
                             } else {
-                                if (!$affected=@mysql_num_rows($res)) $affected=0;
+                                if (!$affected=@mysqli_num_rows($res)) $affected=0;
                             }
                             
                             echo "<tr>\n<td colspan=\"".$j."\">".SQ_AFFECTED.": ".$affected."</td>\n</tr>\n";
@@ -235,7 +233,7 @@ echo SQ_SELECT_DB.":<br><select name=\"db\">";
 echo "</select>\n<br>";
 
 // print sql textarea and submit button
-$html .= "<br>".SQ_INSERT.":<br>\n<textarea name=\"sql_query\" id=\"sql\" rows=\"10\" cols=\"80\">".$sql_print."&nbsp;</textarea>";
+$html  = "<br>".SQ_INSERT.":<br>\n<textarea name=\"sql_query\" id=\"sql\" rows=\"10\" cols=\"80\">".$sql_print."&nbsp;</textarea>";
 $html .= "<input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"3000000\">";
 $html .= "<br><br>".SQ_FILE.":<br>\n<input type=\"file\" name=\"sql_file\">".$_POST['sql_file'];
 $html .= "<br><br>\n<input type=\"submit\" value=\"".SQ_SEND."\" class=\"button\">\n";
