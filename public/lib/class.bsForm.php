@@ -468,7 +468,7 @@ EOSC;
 
 
   function insertButtons($buttons){
-    $ret  = "<div class=\"form-group\">\n";
+    $ret  = "<div class=\"form-group form-action\">\n";
     $ret .= implode(PHP_EOL, $this->hiddenfields).PHP_EOL;
     if ($buttons == true) {
       if ($this->submit_button==true) {
