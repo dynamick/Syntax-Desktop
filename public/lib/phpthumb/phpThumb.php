@@ -10,7 +10,7 @@
 //                                                         ///
 //////////////////////////////////////////////////////////////
 
-error_reporting(E_ALL);
+error_reporting(E_ALL & ~(E_NOTICE | E_DEPRECATED | E_WARNING));
 ini_set('display_errors', '1');
 ini_set('magic_quotes_runtime', '0');
 if (ini_get('magic_quotes_runtime')) {
