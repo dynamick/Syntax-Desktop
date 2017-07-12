@@ -146,4 +146,40 @@ $(function() {
       });
     });
   }
+
+  var $syndocument = $('.syndocument'); 
+  if ($syndocument.length > 0) {
+    $syndocument.each( function(){
+      var _this = $(this), _input = _this.find('input[type="text"]'), 
+        _trigger = _this.find('.btn-browse'), _modal = _this.find('.modal'),
+        _clean = _this.find('.btn-clean'), _download = _this.find('.btn-download'),
+        kc_url = _this.data('kc-url'), 
+        _update_function = function(url) {
+          if ( url == '' ) 
+            _download.hide();
+          else
+            _download.show();
+          _download.attr('href', url);
+        };
+      _clean.click(function(){
+        _input.val('');
+        _update_function('');
+      });
+      _trigger.click(function(){
+        window.KCFinder = {
+          callBack: function(url) {
+            window.KCFinder = null;
+            _modal.modal('hide');
+            _input.val( url );
+            _update_function(url);
+          }
+        };
+        _modal.removeData('bs.modal');
+        _modal.find('.modal-body').html( '<iframe name="kcfinder_iframe" src="' + kc_url + '"' +
+          ' frameborder="0" width="100%" height="100%" marginwidth="0" marginheight="0" scrolling="no" />' );
+        _modal.modal('show');
+      });
+      _update_function(_input.val());
+    });
+  }  
 });
