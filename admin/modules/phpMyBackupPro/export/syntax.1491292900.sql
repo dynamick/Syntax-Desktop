@@ -57,6 +57,7 @@ insert into `aa_element` values ('31', 'Icon picker', 'synIcon', '140');
 insert into `aa_element` values ('32', 'Address Picker', 'synAddressPicker', '180');
 insert into `aa_element` values ('33', 'Json Hash', 'synJsonHash', '190');
 insert into `aa_element` values ('34', 'Picture Selector', 'synPicture', '200');
+insert into `aa_element` values ('35', 'Document Selector', 'synDocument', '210');
 
 
 ### structure of table `aa_group_services` ###
