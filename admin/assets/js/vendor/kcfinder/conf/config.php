@@ -90,15 +90,15 @@ return array(
 
 // MISC SETTINGS
 
-    'filenameChangeChars' => array(/*
+    'filenameChangeChars' => array(
         ' ' => "_",
         ':' => "."
-    */),
+    ),
 
-    'dirnameChangeChars' => array(/*
+    'dirnameChangeChars' => array(
         ' ' => "_",
         ':' => "."
-    */),
+    ),
 
     'mime_magic' => "",
 

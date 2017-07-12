@@ -77,15 +77,15 @@ EORET;
     global $synAbsolutePath;
     $ret          = '';
     $show         = null;
-    $filename     = $this->translate( $this->value );
+    $filename     = urldecode($this->translate( $this->value ));
     if ( !empty($filename) ) {
       $file_exists  = is_file( $synAbsolutePath . $filename );
       $ext          = pathinfo( $synAbsolutePath . $filename, PATHINFO_EXTENSION );
-      $filename_tmp = basename( $filename ); 
+      $basename     = basename( $filename ); 
       if ( $file_exists ) {
-        $ret  = "<a class=\"\" {$show} href=\"{$filename}\" target=\"_blank\" >{$filename_tmp}</a>";
+        $ret  = "<a class=\"btn btn-link\" href=\"{$filename}\" target=\"_blank\">{$basename}</a>";
       } else {
-        $ret = "<span class=\"text-muted\">Error {$filename_tmp}</span>";
+        $ret = "<span class=\"text-muted\">Error: {$basename}</span>";
       }
     } else {
       $ret = '<span class="text-muted">Empty</span>';
