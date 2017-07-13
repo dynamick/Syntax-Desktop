@@ -141,8 +141,11 @@ EOHTML;
   //update the values of each element, given an associative array
   function updateValues($arr) {
     foreach($this->element as $k=>$v) {
-      if (isset($arr[$v->name]))
-        $this->element[$k]->setValue($arr[$v->name]);
+      $value = null;
+      if ( isset($arr[$v->name]) ) {
+        $value = $arr[$v->name];
+      }
+      $this->element[$k]->setValue( $value );
     }
   }
 
