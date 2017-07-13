@@ -23,7 +23,7 @@ class synTextAreaSimple extends synElement {
     $this->label = $l;
     $this->size  = $s;
     $this->help  = $h;
-    $this->db    = ' text NOT NULL';
+    $this->db    = ' TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL';
   }
 
   //set the Type of TextArea
