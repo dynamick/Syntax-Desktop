@@ -55,7 +55,8 @@ class synUserCreate extends synElement {
   }
 
   function getCell() {
-    return "<span>".username($this->value)."</span>";
+    //return "<span>".username($this->value)."</span>";
+    return username( $this->value );
   }
 
   //function for the auto-configuration
