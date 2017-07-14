@@ -143,6 +143,16 @@ form.has-toolbar .help-block {
   /*text-shadow: 2px 2px #fff;*/
 }
 
+.gost {
+  background-color: transparent;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 0;
+  box-shadow: none;
+  padding-left: 0;
+  /*text-shadow: 2px 2px #fff;*/
+}
+
 .tokenfield {
   min-height:38px;
 }

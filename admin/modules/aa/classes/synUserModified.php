@@ -31,9 +31,10 @@ class synUserModified extends synElement {
     $html = '';
     //if primaryKey is not empty it means we're modifying an exisiting record: put the editing user's id
     if ( isset($_REQUEST["synPrimaryKey"]) ) {
-      $html .= "<input type='hidden' name='{$this->name}' maxsize='{$this->size}' value='".getSynUser()."'/>";
+      $html .= "<p class='form-control-static gost'>" . username($this->value) . "&nbsp;<span class='badge'>" . groupname($this->value) . "</span></p>\n";
     }
-    $html .= "<p class='form-control-static'>" . username($this->value) . "&nbsp;<span class='badge'>" . groupname($this->value) . "</span></p>\n";
+    $html .= "<input type='hidden' name='{$this->name}' maxsize='{$this->size}' value='".getSynUser()."'/>";
+    
     return $html;
   }
 

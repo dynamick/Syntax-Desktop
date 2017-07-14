@@ -28,34 +28,18 @@ class synUserCreate extends synElement {
 
   //private function
   function _html() {
-    $disabled = ($this->value!="" ? " disabled=\"disabled\"" : "");
-    // if empty, get the name of the actual user
-    if(!isset($_REQUEST["synPrimaryKey"]) or $_REQUEST["synPrimaryKey"]=="") {
-      $value = getSynUser();
-    } else{
-       $value = $this->value;
+    $html = "";
+    if(!isset($_REQUEST["synPrimaryKey"]) || $_REQUEST["synPrimaryKey"]=='' || $this->value == '') {
+      $this->value = getSynUser();
+      $html .= "<input type='hidden' name='{$this->name}' maxsize='{$this->size}' value='{$this->value}'/>";
     }
-    if ($value) {
-      $html  = "<input type='hidden' name='{$this->name}' maxsize='{$this->size}' value='{$value}'{$disabled}/>";
-      $html .= "<p class='form-control-static'>" . username($value) . "&nbsp;<span class='badge'>" . groupname($value) . "</span></p>\n";
-      return $html;
-    }
-  }
+    $html .= "<p class='form-control-static gost'>" . username($this->value) . "&nbsp;<span class='badge'>" . groupname($this->value) . "</span></p>\n";
+    
+    return $html;
 
-  //return the sql statement (i.e. `name`='gigi')
-  function getSQL() {
-    $ret="";
-    //if primaryKey is empty, then it's a new record: put the creator's id
-    if($_REQUEST['synPrimaryKey']=="") {
-      if ($this->getValue()!="") {
-        $ret=$this->getSQLname()."=".fixEncoding($this->getSQLValue());
-      }
-    }
-    return $ret;
   }
 
   function getCell() {
-    //return "<span>".username($this->value)."</span>";
     return username( $this->value );
   }
 

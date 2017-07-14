@@ -1,10 +1,10 @@
 <?php
-//ALTER TABLE `` ADD `` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ;
 /*************************************
-* class TEXT                         *
-* Create a input type="text" obj     *
+* class DATECREATION                 *
+* Date of record's creation          *
+* (it cannot be modified!)           *
 **************************************/
-class synLastUpdate extends synElement {
+class synDateCreation extends synElement {
 
   //constructor(name, value, label, size, help)
   function __construct($n="", $v=null , $l=null, $s=null, $h="") {
@@ -22,19 +22,16 @@ class synLastUpdate extends synElement {
     $this->configuration();
   }
 
+  //private function
   function _html() {
-    $html = '';
-    $this->value = date('Y-m-d H:i:s');
-
-    //if primaryKey is not empty
-    if ( isset($_REQUEST["synPrimaryKey"]) ) {
-      $html .= "<p class=\"form-control-static gost\">{$this->value}</p>";
-      
+    $input = '';
+    if(!isset($_REQUEST["synPrimaryKey"]) || $_REQUEST["synPrimaryKey"]=='' || $this->value == '') {
+      $this->value = date('Y-m-d H:i:s');
+      $input = "<input type='hidden' name='{$this->name}' value='{$this->value}' />";
     }
-    $html .= "<input type='hidden' name='{$this->name}' value='{$this->value}' />";
-    return $html;
+    $ret = "<p class='form-control-static gost'>{$this->value}</span>{$input}";
+    return $ret;
   }
-
 
   //get the selected/typed value
   function getValue() {
