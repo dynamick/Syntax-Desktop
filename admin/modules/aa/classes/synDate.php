@@ -24,8 +24,8 @@ class synDate extends synElement {
     $this->label = $l;
     $this->size  = $s;
     $this->help  = $h;
-    $default     = ($this->path ? " DEFAULT '{$this->path}'" : '');
-    $this->db    = ' DATE NOT NULL'.$default;
+    $default     = ($this->path ? " DEFAULT '{$this->path}'" : ' DEFAULT NULL');
+    $this->db    = ' DATE NULL '.$default;
 
     $this->configuration();
   }

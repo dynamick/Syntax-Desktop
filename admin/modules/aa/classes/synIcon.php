@@ -22,7 +22,9 @@ class synIcon extends synElement {
       // 13/3/2015 provata questa impostazione. Quando una riga non ha valore
       // sul getRow() prende il valore della prededente. Percheeeè?????!!!
       //$this->db    = " VARCHAR(30) DEFAULT NULL";
-    $this->db    = " VARCHAR({$this->size}) NOT NULL";
+    //07/2017
+    //$this->db    = " VARCHAR({$this->size}) NOT NULL";
+    $this->db    = " VARCHAR({$this->size}) NULL DEFAULT NULL";
 
     $this->configuration();
   }

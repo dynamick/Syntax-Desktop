@@ -15,9 +15,9 @@ class synTextDecimal extends synElement {
     $this->name  = $n;
     if ($v==null) { global $$n; $this->value = $$n; } else $this->value = $v;
     $this->label = $l;
-    $this->size  = $s;
+    $this->size  = ( $s > 65 ) ? 65 : $s; //  Too-big precision 255 specified for 'checkbox'. Maximum is 65.
     $this->help  = $h;
-    $this->db    = " DEC(".$this->size.",2) NOT NULL";
+    $this->db    = " DEC(".$this->size.",2) NOT NULL DEFAULT 0";
 
     $this->configuration();
   }

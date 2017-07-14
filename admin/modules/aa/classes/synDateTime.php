@@ -24,7 +24,7 @@ class synDateTime extends synElement {
     $this->label = $l;
     $this->size  = $s;
     $this->help  = $h;
-    $this->db    = ' DATETIME NULL DEFAULT NULL;';
+    $this->db    = ' DATETIME NULL DEFAULT NULL';
 
     $this->configuration();
   }
