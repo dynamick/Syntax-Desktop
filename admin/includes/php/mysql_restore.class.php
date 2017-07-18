@@ -50,8 +50,7 @@ class MySQL_Restore
     $value = false;
     if (!$this->connected)
     {
-      $host = $this->server . ':' . $this->port;
-      $this->link_id = mysqli_connect($host, $this->username, $this->password);
+      $this->link_id = mysqli_connect($this->server, $this->username, $this->password);
     }
     if ($this->link_id)
     {
