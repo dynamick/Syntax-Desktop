@@ -1,23 +1,28 @@
 <?php
-include_once("class.phpmailer-lite.php");
-
 /*
  * ================================
  * classe per inviare email in HTML
  * ================================
  * - fa uso di template (devono essere messi in /public/templates)
- * - dipende da phpmailer-lite
+ * - dipende da phpmailer
+ * - preferibilmente usare metodo SMTP
  */
 
-class synMailer extends PHPMailerLite {
+class synMailer extends PHPMailer {
 
   protected $template;
   protected $template_path;
 
   public function __construct($from='', $dest='', $subject='', $multiple_recipients=''){
-    // dati mittente
-    $this->From     = $from['mail'];
-    $this->FromName = $from['name'];
+    global $synAdministrator, $synWebsiteTitle, $smtp_conf;
+
+    $this->From     = isset($smtp_conf['auth']) ? $smtp_conf['auth'] : $synAdministrator;
+    $this->FromName = $synWebsiteTitle;
+
+    // aggiungo mittente come reply-to
+    if ( !empty($from) ) { 
+      $this->AddReplyTo( $from['mail'], $from['name'] ); 
+    }
 
     // dati destinatario
     if (is_array($multiple_recipients) && !empty($multiple_recipients)) {
@@ -48,13 +53,26 @@ class synMailer extends PHPMailerLite {
     // setta il ContentType della mail
     $this->IsHTML(true);
 
-    // Method to send mail: ("mail", "sendmail", or "smtp")
-    $this->isMail(); // metodo mail sembra non accettare 'to' multipli
-    //$this->IsSendmail();
-    //$this->IsQmail();
+    
+    if ( isset($smtp_conf) && !empty($smtp_conf) ) {
+      // CONFIGURAZIONE SMTP
+      $this->IsSMTP();
+      $this->Host       = $smtp_conf['host'];
+      $this->Port       = $smtp_conf['port'];
+      $this->SMTPAuth   = $smtp_conf['auth'];
+      $this->SMTPSecure = $smtp_conf['secure'];    
+      $this->Username   = $smtp_conf['user'];
+      $this->Password   = $smtp_conf['pass'];
+      $this->SMTPdebug  = false;
+
+    } else {
+      $this->isMail(); // metodo mail sembra non accettare 'to' multipli
+      //$this->IsSendmail();
+      //$this->IsQmail();
+    }
 
     // path dei template
-    $this->template_path = $_SERVER['DOCUMENT_ROOT'].'/public/templates/';
+    $this->template_path = $_SERVER['DOCUMENT_ROOT'] . '/public/templates/';
   }
 
 
@@ -76,7 +94,7 @@ class synMailer extends PHPMailerLite {
       $this->AltBody = strip_tags($template);
 
       if(!$template){
-        echo $template.' not found!!!<hr>'; die();
+        echo $template . ' not found!!!<hr>'; die();
       }
 
     } catch(Exception $e) {
@@ -117,7 +135,7 @@ class synMailer extends PHPMailerLite {
    */
   private function _getEmailTemplate($filename, $variables, $lang) {
     extract($variables); // array delle variabili
-    $template = $this->template_path.$lang.'_'.$filename.'.php';
+    $template = $this->template_path . $lang . '_' . $filename . '.php';
     if (is_file($template)) {
       ob_start();
         include $template;
