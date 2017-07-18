@@ -85,6 +85,20 @@ $(function() {
       if ( typeof status != 'undefined' )
         sendNotify({ type:1, message:'Event: onLoadError, data: ' + status });
     }
+    //TODO: find a way to update pageNumber cookie after pageSize has changed
+    /*, onPageChange: function(number, size) {
+      //var opts = $table.bootstrapTable('getOptions');
+      var opts = $table.bootstrapTable('getCookies'), pageList = opts['pageList'], cookiePage = opts['pageNumber'];
+        console.log(number, size);
+      if ( pageList != size ) {
+        console.log(number, size);
+        console.log(opts['pageNumber'], opts['pageList']);
+        console.log(opts);
+        //function (that, cookieName, cookieValue) {
+        $table.bootstrapTable('setCookies', 'bs.table.pageNumber', number);
+      }
+      //alert('page change');
+    }*/
   });
 
   // init image preview
