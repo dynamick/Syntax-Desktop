@@ -1,14 +1,14 @@
 <?php
 require_once('../../config/cfg.php');
 
-# compatibility check
+// compatibility check
 if (!class_exists('SimpleXMLElement')) {
   echo "<b>SimpleXMLElement</b> functions not available!<br />This is PHP ".phpversion().", version 5+ required.<br>\n";
   die();
 }
 
 if(!isset($_POST['submitted']) or $_POST['submitted']!=1){
-# non sottomesso ---------------------------------------------------------------
+// non sottomesso ---------------------------------------------------------------
   $rows = '';
   $qry = "SELECT * FROM `aa_services`";
   $res = $db->execute($qry);
@@ -16,42 +16,86 @@ if(!isset($_POST['submitted']) or $_POST['submitted']!=1){
   while($arr = $res->fetchrow()){
     extract($arr);
 
-    $rows .= "<p><input type=\"checkbox\" name=\"selected[]\" value=\"{$id}\">";
-    $rows .= "<img src=\"{$synAdminPath}/modules/aa/{$icon}\" alt=\"{$id}\" width=\"16\" height=\"16\"> ";
-    $rows .= translateDesktop($name)." (<code>{$syntable}</code>)</p>\n";
+    $faicon = null;
+    if ($icon && substr( $icon, 0, 2 ) == 'fa') {
+      $faicon = "<i class=\"fa {$icon}\"></i>";
+    }
+    $name = translateDesktop($name);
+    $rows .= <<<EOROW
+    <tr>
+      <td style="width:1px"><input type="checkbox" name="selected[]" value="{$id}"></td>
+      <td style="width:1px">{$faicon}</td>
+      <td>{$name}</td>
+      <td class="text-right"><code>{$syntable}</code></td>
+    </tr>
+EOROW;
   }
 
   $html = <<<EOHTML
-    <p>Seleziona i servizi da esportare:</p>
-    <form action="" method="post">
-  {$rows}
-    <p>
-      <input type="hidden" name="submitted" value="1">
-      <button type="reset">Annulla</button>
-      <button type="submit">Procedi</button>
-    </p>
-    </form>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Export XML</title>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:700,300,400,600&amp;subset=latin,cyrillic">
+    <link rel="stylesheet" type="text/css" href="../../assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../assets/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../assets/css/syntax.css" />    
+  </head>
+  <body>
+    <div class="container-fluid">
+      <h3>Seleziona i servizi da esportare:</h3>
+      <form action="" method="post">
+        <table class="table table-striped">
+        {$rows}
+        </table>
+        <p>
+          <input type="hidden" name="submitted" value="1">
+          <button type="reset" class="btn btn-default">Annulla</button>
+          <button type="submit" class="btn btn-primary">Procedi</button>
+        </p>
+      </form>
+    </div>
+    <script type="text/javascript" src="../../assets/js/vendor/jquery.js"></script>
+    <script>
+      $(function(){
+        $("input[type='checkbox']").change( function() {
+          var _this = $(this), _tr = _this.closest('tr');
+          if ( _this.is(":checked")) {
+            _tr.addClass("info"); 
+          } else {
+            _tr.removeClass("info");
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
 EOHTML;
   echo $html;
 
 
 } else {
-# sottomesso -------------------------------------------------------------------
+// sottomesso -------------------------------------------------------------------
   $db->SetFetchMode(ADODB_FETCH_ASSOC);
 
-  # indice delle lingue
+  // indice delle lingue
   $tc = $db->MetaColumns('aa_translation');
   $langkeys = array_keys($tc);
 
-  #echo '<pre>', print_r($_POST), '<pre>';
+  // echo '<pre>', print_r($_POST), '<pre>';
   $selected = implode(',',$_POST['selected']);
   $xml = new SimpleXMLElement('<root></root>');
   //$xml = new SimpleXMLElement();
   
+  $filename_arr = array();
+  $filename_arr[] = sanitizePath($synWebsiteTitle);
+
   $qry = "SELECT * FROM `aa_services` WHERE id IN ({$selected})";
   $res = $db->execute($qry);
   while($arr = $res->fetchrow()){
-    # ciclo sui servizi
+    // ciclo sui servizi
     $service = $xml->addChild('service');
     $container = $service->addChild('container');
 
@@ -61,7 +105,8 @@ EOHTML;
     $r = $db->execute($q);
     $a = $r->fetchrow();
     $arr['name'] = array_combine($langkeys, $a);
-    
+    $filename_arr[] = $arr['syntable'];
+        
     // description
     $description = $arr['description'];
     $q = "SELECT * FROM aa_translation WHERE id={$description}";
@@ -91,7 +136,7 @@ EOHTML;
     $qe = "SELECT * FROM `aa_services_element` WHERE container={$arr['id']} ORDER BY `order`";
     $re = $db->execute($qe);
     while($ae = $re->fetchrow()){
-      # ciclo sugli elementi
+      // ciclo sugli elementi
       $element = $elements->addChild('element');
 
       //label
@@ -133,14 +178,17 @@ EOHTML;
     
   } // fine ciclo servizi
 
-  # download xml
-  $filename = sanitizePath($synWebsiteTitle);
+  // download xml
+  $filename = implode('__', $filename_arr); //sanitizePath($synWebsiteTitle);
   header("Pragma: public");
   header("Expires: 0");
   header("Content-Description: File Transfer");
   header("Content-Disposition: attachment; filename={$filename}.xml;");
 
   header('Content-Type: text/xml');
-  echo $xml->asXML();
+  //echo $xml->asXML();
+  $dom = dom_import_simplexml($xml)->ownerDocument;
+  $dom->formatOutput = true;
+  echo $dom->saveXML();  
 }
 ?>

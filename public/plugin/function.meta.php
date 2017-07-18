@@ -4,7 +4,7 @@ function smarty_function_meta($params, &$smarty){
 
   $lang             = getLangInitial();
   $langId           = getLangId();
-  $default_server   = 'http://' . $_SERVER['SERVER_NAME'];
+  $default_server   = getLanguageDomain( $langId );
   $req              = isset( $_GET['id'] )
                     ? intval( $_GET['id'] )
                     : 0;
@@ -64,7 +64,7 @@ function smarty_function_meta($params, &$smarty){
       if ( isset($_GET['title']) ){
         $page_path .= createItemPath( $_GET['title'], $req );
       }
-      $canonical = $default_server . $page_path;
+      $canonical = $page_path;
     }
   }
 
@@ -92,15 +92,15 @@ function smarty_function_meta($params, &$smarty){
     // page visible in current lang, let spiders index it
     $meta[] = '<meta name="robots" content="index, follow">';
 
-    if ( empty( $alternate ) && empty( $item )) {
+    if ( empty( $alternate ) && empty( $item ) ) {
       foreach( $visible as $lang_visible ){
-        // for each language different from the selected one, provide an alternate href (if is visible)
+        // for each language different from the selected one, provide an alternate href (if it's visible)
         if ( !empty($visible)
           && $lang_visible != $langId
-          && in_array($langId, $languages['list'])
+          && isset( $languages['list'][$lang_visible] )
           ){
           $initial  = $languages['list'][$lang_visible];
-          $href     = getLanguageDomain( $langId) . createPath( $page_id, $initial );
+          $href     = getLanguageDomain( $lang_visible ) . createPath( $page_id, $initial );
           $meta[]   = '<link rel="alternate" hreflang="' . $initial . '" href="' . attributize( $href ) . '">';
         }
       }

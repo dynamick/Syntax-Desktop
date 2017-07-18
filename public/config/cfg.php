@@ -31,12 +31,13 @@ require $pub.'lib/class.synSmarty.php';
 //require $pub.'lib/class.ImageToolbox.php';
 require $pub.'lib/class.formBuilder.php';
 require $pub.'lib/class.bsForm.php';
+require $pub.'lib/phpmailer/class.phpmailer.php';
 require $pub.'lib/class.synMailer.php';
 require $pub.'lib/class.synUser.php';
 require $pub.'lib/class.synAccount.php';
 //require $pub.'lib/class.feedCreator.php';
 require $pub.'lib/class.synPagerPublic.php';
-//require $pub.'lib/phpmailer/class.phpmailer.php';
+
 require $pub.'lib/lang.functions.php';
 require $pub.'lib/page.functions.php';
 require $pub.'lib/date.functions.php';
@@ -101,4 +102,16 @@ define('ACCOUNT_KEY',   'syntax_user'); // nome del cookie
 define('ADMIN_NAME',    'Admin');
 define('ADMIN_MAIL',    'assistenza@kleis.it');
 
+// configurazione SMTP
+$smtp_conf = array();
+/*
+$smtp_conf = array(
+  'host'    => 'ssl://smtp.gmail.com',
+  'port'    => '465',
+  'auth'    => true,
+  'secure'  => '', // gmail -> '', aruba -> 'ssl'
+  'user'    => 'user',
+  'pass'    => 'password'
+);
+*/
 ?>
