@@ -2,14 +2,28 @@
 ini_set('display_errors','On');
 require_once('../../config/cfg.php');
 
-# compatibility check
+//# compatibility check
 if (!class_exists('SimpleXMLElement')) {
   echo "<b>SimpleXMLElement</b> functions not available!<br />This is PHP ".phpversion().", version 5+ required.<br>\n";
   die();
 }
+?><html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Export XML</title>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:700,300,400,600&amp;subset=latin,cyrillic">
+    <link rel="stylesheet" type="text/css" href="../../assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../assets/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../assets/css/syntax.css" />    
+  </head>
+  <body>
+    <div class="container-fluid">  
+<?php
 
 if(!isset($_POST['submitted']) or $_POST['submitted']!=1){
-# non sottomesso ---------------------------------------------------------------
+// non sottomesso ---------------------------------------------------------------
 
   // qry gruppi/menu
   $grp = '';
@@ -28,7 +42,7 @@ EOQRY;
 
       $grp .= "<tr>\n";
       $grp .= "  <th align=\"left\"><input class=\"toggle\" type=\"checkbox\" name=\"group[]\" value=\"{$groupid}\" /> {$groupname}</th>\n";
-      $grp .= "  <td><select class=\"toggleable\" name=\"menuitem[{$groupid}]\" disabled=\"disabled\">\n";
+      $grp .= "  <td><select class=\"form-control input-sm toggleable\" name=\"menuitem[{$groupid}]\" disabled=\"disabled\">\n";
       do {
         $service = $arr['id'];
         $name = translate($arr['name']);
@@ -47,6 +61,7 @@ EOQRY;
 
 
   $html = <<<EOHTML
+  <h3>Importazione servizi da file .xml</h3>
   <form action="" method="post" enctype="multipart/form-data">
   <ol>
     <li>
@@ -55,28 +70,31 @@ EOQRY;
     </li>
     <li>
       <label>Seleziona i gruppi e il relativo menu a cui aggiungere i nuovi servizi:</label>
-      <table cellpadding="4">
+      <table class="table table-condensed table-bordered">
       {$grp}
       </table>
     </li>
     <li>
       <p>Procedi con l'importazione:</p>
       <input type="hidden" name="submitted" value="1">
-      <button type="reset">Annulla</button>
-      <button type="submit">Procedi</button>
+      <button type="reset" class="btn btn-default">Annulla</button>
+      <button type="submit" class="btn btn-primary">Procedi</button>
     </li>
   </ol>
   </form>
-  <script type="text/javascript" src="http://www.google.com/jsapi"></script>
-  <script type="text/javascript">google.load("jquery", "1");</script>
+  <script type="text/javascript" src="../../assets/js/vendor/jquery.js"></script>  
   <script type="text/javascript">
-    $(document).ready(function(){
+    $(function(){
       $('.toggle').click(function(){
-        _this = $(this);
+        var _this = $(this), _tr = _this.closest('tr'), _toggleables = _tr.find('.toggleable');
         if(_this.is(":checked")){
-          _this.parents('tr').find('.toggleable').attr('disabled', false);
+          //_this.parents('tr').find('.toggleable').attr('disabled', false);
+          _tr.addClass('info'); 
+          _toggleables.attr('disabled', false);
         } else {
-          _this.parents('tr').find('.toggleable').attr('disabled', true);
+          //_this.parents('tr').find('.toggleable').attr('disabled', true);
+          _tr.removeClass('info');
+          _toggleables.attr('disabled', true);
         }
       });
     })
@@ -244,7 +262,7 @@ EOQRY;
       // $contenitore->dbSynchronize();
     }
   } else {
-    echo '<p><b>Errore:</b> il file fornito non è un xml valido.</p>';
+    echo "<div class=\"alert alert-danger\" role=\"alert\"><b>Errore:</b> il file fornito non è un xml valido.</div>";
   }
 }
 
@@ -287,5 +305,7 @@ EOQ;
   //var_dump($check); die();
   return $exists;
 }
-
 ?>
+    </div>
+  </body>
+</html> 
