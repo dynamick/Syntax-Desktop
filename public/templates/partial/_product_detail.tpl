@@ -11,7 +11,7 @@
   <div class="row">
     <div class="col-lg-8">
       {if !empty($product.src)}
-        <div class="img-products owl-carousel owl-theme dots-on-image">
+        <div class="img-products{if $product.src|@count > 1} owl-carousel owl-theme dots-on-image{/if}">
           {foreach $product.src as $img}
             <div class="item">
               <figure>
