@@ -26,7 +26,7 @@ class synPicture extends synElement {
     $this->label = $l;
     $this->size  = $s;
     $this->help  = $h;
-    $this->db    = " varchar(255) NOT NULL";
+    $this->db    = " varchar(255) NULL DEFAULT NULL";
     $this->mat   = $mat;
     $this->thumb = "{$synPublicPath}/thumb.php?src=%s&amp;w=250&amp;h=250&amp;far=1";
   }

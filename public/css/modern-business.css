@@ -23,23 +23,35 @@ body {
     opacity: 0.8;
 }
 
-/* Home Page Carousel */
+/* Page Carousel */
 
-header.carousel {
-    height: 50%;
+header.top-headers{
+  position: relative;
 }
 
-header.carousel .item,
-header.carousel .item.active,
-header.carousel .carousel-inner {
-    height: 100%;
+header.top-headers.internal .item{
+  height: 30vh;
 }
 
-header.carousel .fill {
-    width: 100%;
-    height: 100%;
-    background-position: center;
-    background-size: cover;
+header.top-headers .item{
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 60vh;
+  display: flex;
+  align-items: center;
+} 
+
+header.top-headers .item .header-caption{
+  color:#fff;
+  text-shadow: 1px 1px 1px #000;
+}
+
+.dots-on-image .owl-dots{
+  position: absolute;
+  bottom:20px;
+  left: 0;
+  right:0;
 }
 
 /* 404 Page Styles */

@@ -22,7 +22,7 @@ class synSlug extends synElement {
     $this->label = $l;
     $this->size  = $s;
     $this->help  = $h;
-    $this->db    = ' VARCHAR(' . $this->size . ') NOT NULL';
+    $this->db    = ' VARCHAR(' . $this->size . ') NULL DEFAULT NULL';
 
     $this->configuration();
     $this->initCallback();

@@ -22,6 +22,7 @@ $script = array(
 	'vendor/bootstrap.min.js',
   'vendor/jquery.colorbox-min.js',
   'vendor/jquery.validate.min.js',
+  'vendor/owl.carousel.min.js',
   'jquery.cookieDisclaimer.js',
 	'main.js'
 );

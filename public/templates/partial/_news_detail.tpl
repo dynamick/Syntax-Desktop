@@ -31,11 +31,16 @@
             <img class="img-responsive img-thumbnail" src="{thumb src=$item.src w=900 h=300 zc=1}" alt="{$item.alt}" />
           </figure>{/if}
 
+          {if $item.text}
           <hr>
-
           <div class="rich-text">
-          {$item.text}
+            {$item.text}
           </div>
+          {/if}
+
+          {if $item.file}
+          <hr><a class="btn btn-primary" href="{$item.file}" target="_blank"> <i class="fa fa-download"></i> Scarica allegato</a>
+          {/if}
 
           <hr>
 

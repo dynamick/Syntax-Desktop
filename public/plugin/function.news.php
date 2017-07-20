@@ -13,7 +13,7 @@ function smarty_function_news($params, &$smarty) {
 
   if ( $req == 0) {
     // -------------------------------- NEWS LIST ----------------------------- //
-    $maxitems = 10;
+    $maxitems = 12;
     $pager    = null;
     $list     = null;
 
@@ -54,23 +54,23 @@ EOQ;
         $safeurl = rawurlencode($permalink);
         $safettl = rawurlencode($title);
         $social_share = social_share( $safeurl, $safettl );
-
+        
         if ($image) {
-          $src = "{$synPublicPath}/mat/news_image_id{$id}.{$image}";
+          $src = $image;
         } else {
           $src = $synPublicPath.'/mat/default.png';
         }
 
         $list[] = array(
-          'id' => $id,
-          'url' => $url,
-          'src' => $src,
-          'alt' => $alt,
-          'date' => $date,
-          'fdate' => $fdate,
-          'title' => $title,
-          'abstract' => $abstract,
-          'social_share' => $social_share
+          'id'            => $id,
+          'url'           => $url,
+          'src'           => $src,
+          'alt'           => $alt,
+          'date'          => $date,
+          'fdate'         => $fdate,
+          'title'         => $title,
+          'abstract'      => $abstract,
+          'social_share'  => $social_share
         );
       }
 
@@ -87,7 +87,7 @@ EOQ;
   } else {
     // ---------------------------- NEWS DETAIL ------------------------------ //
     $qry = <<<EOQ
-    SELECT n.id, n.image, n.date, n.visible, n.title AS title_id,
+    SELECT n.id, n.image, n.attached, n.date, n.visible, n.title AS title_id,
            t1.{$lang} AS title, t2.{$lang} AS text
 
       FROM news n
@@ -108,25 +108,30 @@ EOQ;
       $src          = null;
 
       if ($image) {
-        $src = "{$synPublicPath}/mat/news_image_id{$id}.{$image}";
-
+        $src = $image;
       } else {
         $src = $synPublicPath.'/mat/default.png';
+      }
+
+      $file = '';
+      if ($attached) {
+        $file = $attached;
       }
 
       $social_share = social_share( $safeurl, $safettl );
       $navlinks = getPrevNextLinks( $db, $date, $newsPath, $lang );
 
       $output = array(
-        'id' => $id,
-        'title' => $title,
-        'text' => $text,
-        'src' => $src,
-        'date' => $date,
-        'fdate' => $fdate,
-        'permalink' => $permalink,
-        'navlinks' => $navlinks,
-        'social_share' => $social_share
+        'id'            => $id,
+        'title'         => $title,
+        'text'          => $text,
+        'src'           => $src,
+        'file'          => $file,
+        'date'          => $date,
+        'fdate'         => $fdate,
+        'permalink'     => $permalink,
+        'navlinks'      => $navlinks,
+        'social_share'  => $social_share
       );
 
       $visible_arr = explode( '|', $visible );

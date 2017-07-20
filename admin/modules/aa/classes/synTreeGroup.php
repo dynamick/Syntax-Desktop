@@ -22,7 +22,7 @@ class synTreeGroup extends synElement {
     $this->label = $l;
     $this->size  = $s;
     $this->help  = $h;
-    $this->db    = " varchar(".$this->size.") NOT NULL";
+    $this->db    = " varchar(".$this->size.") NULL DEFAULT NULL";
   }
 
   //private function

@@ -153,7 +153,7 @@ global $cmd;
         $_SESSION["synServiceDescriptionLang"] = $tmp_serviceDescriptionLang;
       }
       if ($tmp_serviceNElement == 0) {
-        $tmp_serviceNElement = 2;
+        $tmp_serviceNElement = 3;
         $_SESSION["synNElement"] = $tmp_serviceNElement;
       }
       if ($tmp_serviceDBSync == "1")
@@ -166,8 +166,8 @@ global $cmd;
       echo inputBlock( $str['servicename'],         $synHtml->text(" name=\"synServiceTitleLang\" value=\"{$tmp_serviceTitleLang}\" autofocus"));
       echo inputBlock( $str['tablename'],           $synHtml->text(" name=\"synServiceTable\" value=\"{$tmp_serviceTable}\" {$disabled}"));
       echo inputBlock( $str['servicedescription'],  $synHtml->text(" name=\"synServiceDescriptionLang\" value=\"{$tmp_serviceDescriptionLang}\" "));
-      echo inputBlock( $str['serviceparameter'],    $synHtml->text(" name=\"synNElement\" value=\"{$tmp_serviceNElement}\" onchange=\"if (this.value<2) {alert('Warning: service with less 2 fields are meaningless'); }\" "));
-      echo inputBlock( $str['dbsync'],             $synHtml->check(" name=\"synDbSync\" value=\"1\" class=\"syn-check\" {$sync_checked} "));
+      echo inputBlock( $str['serviceparameter'],    $synHtml->text(" name=\"synNElement\" value=\"{$tmp_serviceNElement}\" onchange=\"if (this.value<3) {alert('Warning: service with less 3 fields are meaningless'); }\" "));
+      echo inputBlock( $str['dbsync'],              $synHtml->check(" name=\"synDbSync\" value=\"1\" class=\"syn-check\" {$sync_checked} "));
       echo inputBlock( $str['serviceicon'],         $synHtml->text(" name=\"synServiceIcon\" value=\"{$tmp_serviceIcon}\"", ' icp'));
 
       echo $synHtml->hidden(' name="cmd" value="10" ');
@@ -237,6 +237,7 @@ global $cmd;
       echo "<td class=\"mandatory\"><b>".$str["fieldtype"]."</b></td><td><b>".$str["fieldlabel"]."</b></td><td><b>".$str["fieldhelp"]."</b></td><td><b>".$str["fieldorder"]."</b></td><td><b>".$str["roworder"]."</b></td></tr>";
 
       //initialize the key field
+
       if (!isset($_SESSION["synElmName"]) and !isset($_SESSION["synElmType"])) {
         sess("synElmName");
         sess("synElmType");
@@ -244,12 +245,36 @@ global $cmd;
         $synElmName[0] = "id";
         $_SESSION["synElmType"][0] = 1;
         $synElmType[0] = 1 /*synKey*/;
+
         for ($i=1; $i < $_SESSION["synNElement"]; $i++) {
           $_SESSION["synElmName"][$i] = "";
           $synElmName[$i] = "";
           $_SESSION["synElmType"][$i] = 2 /*synText*/;
           $synElmType[$i] = 2 /*synText*/;
         }
+
+        //$visible_field = $_SESSION["synNElement"] -2;
+        $order_field = $_SESSION["synNElement"] -1;
+
+        //$_SESSION["synElmName"][$visible_field] = "visibile";
+        //$synElmName[$visible_field] = "visibile";
+        //$_SESSION["synElmType"][$visible_field] = 24;
+        //$synElmType[$visible_field] = 24 /*synKey*/;
+        //$_SESSION["synElmQry"][$visible_field] = "SELECT id,lang FROM aa_lang";
+        //$_SESSION['synVisible'][$visible_field] = 1;
+
+        $synInitOrder = $order_field +1;
+        sess("synInitOrder");
+
+        $_SESSION["synElmName"][$order_field] = "ordine";
+        $synElmName[$order_field] = "ordine";
+        $_SESSION["synElmType"][$order_field] = 3;
+        $synElmType[$order_field] = 3 /*synKey*/;
+        $_SESSION['synVisible'][$order_field] = 1;
+        $_SESSION['synEditable'][$order_field] = 1;
+ 
+        //$_SESSION['synInitOrder'] = $order_field;
+
       }
 
       for ($i=0; $i<$_SESSION["synNElement"]; $i++) {
@@ -262,7 +287,7 @@ global $cmd;
         echo "<tr id=\"row{$i}\"><td>$i</td>\n";
         echo "<td><a onclick=\"hide('row{$i}')\" class=\"btn btn-danger btn-sm\"><i class=\"fa fa-trash\"></i></a></td>";
         foreach($elm->configuration($i) as $k=>$v)
-          echo "<td style='text-align:center'>".$elm->configuration($i, $k)."</td>\n";
+          echo "<td style='text-align:center aaaaaa'>".$elm->configuration($i, $k)."</td>\n";
         echo "</tr>\n";
       }
       //echo "<tr><td colspan=\"8\"> <br> <span style='color: red'><strong>Red</strong></span> fields are mandatory </td></tr>";

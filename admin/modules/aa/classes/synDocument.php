@@ -26,7 +26,7 @@ class synDocument extends synElement {
     $this->label = $l;
     $this->size  = $s;
     $this->help  = $h;
-    $this->db    = " varchar(255) NOT NULL";
+    $this->db    = " varchar(255) NULL DEFAULT NULL";
     $this->mat   = $mat;
   }
 

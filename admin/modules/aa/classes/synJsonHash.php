@@ -23,7 +23,7 @@ class synJsonHash extends synElement {
     $this->label = $l;
     $this->size  = $s;
     $this->help  = $h;
-    $this->db    = ' text NOT NULL';
+    $this->db    = ' text NULL DEFAULT NULL';
   }
 
   //set the Type of TextArea

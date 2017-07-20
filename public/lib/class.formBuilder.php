@@ -601,7 +601,7 @@ EOSC;
     return $ret;
   }
 
-  function insertDisclaimer($type){
+  function insertDisclaimer($type=''){
     $ret = '';
     if ($this->privacy) {
       if ($this->privacy_page) {

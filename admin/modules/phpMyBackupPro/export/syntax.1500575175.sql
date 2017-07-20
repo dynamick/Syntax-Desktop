@@ -1,10 +1,7 @@
 # MySQL dump of database 'syntax' on host 'localhost'
-# backup date and time: 04/04/17 10:01:40
+# backup date and time: 07/20/17 20:26:15
 # built by phpMyBackupPro v.2.1
 # http://www.phpMyBackupPro.net
-
-# comment:
-# asdasas
 
 
 
@@ -14,12 +11,12 @@ DROP TABLE IF EXISTS `aa_element`;
 
 CREATE TABLE `aa_element` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `classname` varchar(255) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `classname` varchar(255) DEFAULT NULL,
   `order` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `id` (`classname`)
-) ENGINE=MyISAM AUTO_INCREMENT=35 DEFAULT CHARSET=utf8 COMMENT='Elementi che compongono un contenitore' AUTO_INCREMENT=35;
+) ENGINE=MyISAM AUTO_INCREMENT=37 DEFAULT CHARSET=utf8 COMMENT='Elementi che compongono un contenitore' AUTO_INCREMENT=37;
 
 
 ### data of table `aa_element` ###
@@ -58,6 +55,7 @@ insert into `aa_element` values ('32', 'Address Picker', 'synAddressPicker', '18
 insert into `aa_element` values ('33', 'Json Hash', 'synJsonHash', '190');
 insert into `aa_element` values ('34', 'Picture Selector', 'synPicture', '200');
 insert into `aa_element` values ('35', 'Document Selector', 'synDocument', '210');
+insert into `aa_element` values ('36', 'Date Creation', 'synDateCreation', '220');
 
 
 ### structure of table `aa_group_services` ###
@@ -68,19 +66,19 @@ CREATE TABLE `aa_group_services` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `order` int(11) NOT NULL DEFAULT '0',
   `parent` int(255) NOT NULL,
-  `name` varchar(255) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
   `group` int(11) NOT NULL DEFAULT '0',
   `service` int(11) NOT NULL DEFAULT '0',
-  `filter` varchar(255) NOT NULL,
-  `insert` varchar(255) NOT NULL,
-  `modify` varchar(255) NOT NULL,
-  `delete` varchar(255) NOT NULL,
-  `link` varchar(255) NOT NULL,
-  `icon` varchar(255) NOT NULL,
-  `ip` varchar(30) NOT NULL,
+  `filter` varchar(255) DEFAULT NULL,
+  `insert` varchar(255) DEFAULT NULL,
+  `modify` varchar(255) DEFAULT NULL,
+  `delete` varchar(255) DEFAULT NULL,
+  `link` varchar(255) DEFAULT NULL,
+  `icon` varchar(255) DEFAULT NULL,
+  `ip` varchar(30) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `group` (`group`)
-) ENGINE=MyISAM AUTO_INCREMENT=238 DEFAULT CHARSET=utf8 AUTO_INCREMENT=238;
+) ENGINE=MyISAM AUTO_INCREMENT=247 DEFAULT CHARSET=utf8 AUTO_INCREMENT=247;
 
 
 ### data of table `aa_group_services` ###
@@ -88,7 +86,7 @@ CREATE TABLE `aa_group_services` (
 insert into `aa_group_services` values ('9', '3010', '18', '10', '1', '2', '', '1', '1', '1', '', 'user.png', '');
 insert into `aa_group_services` values ('15', '3020', '18', '11', '1', '3', '', '1', '1', '1', '', 'accept.png', '');
 insert into `aa_group_services` values ('18', '30', '0', '9', '1', '0', '', '1', '1', '1', '', 'star.png', '');
-insert into `aa_group_services` values ('54', '1010', '152', '7', '1', '116', '', '1', '1', '1', '', 'application_double.png', '');
+insert into `aa_group_services` values ('54', '20', '152', '7', '1', '116', '', '1', '1', '1', '', 'application_double.png', '');
 insert into `aa_group_services` values ('64', '3030', '18', '8', '1', '124', '', '1', '1', '1', '', 'image.png', '');
 insert into `aa_group_services` values ('76', '1020', '152', '740', '1', '127', '', '1', '1', '1', '', 'email.png', '');
 insert into `aa_group_services` values ('125', '10', '128', '603', '2', '2', '', '', '', '', '', '.svn', '');
@@ -133,10 +131,10 @@ insert into `aa_group_services` values ('207', '20', '0', '391', '2', '0', '', '
 insert into `aa_group_services` values ('208', '15', '0', '393', '2', '0', '', '1', '1', '1', '', 'arrow_rotate_anticlockwise.png', '');
 insert into `aa_group_services` values ('209', '10', '210', '392', '3', '2', '', '', '1', '', '', '.svn', '');
 insert into `aa_group_services` values ('210', '40', '0', '557', '3', '0', '', '', '', '', '', 'accept.png', '');
-insert into `aa_group_services` values ('211', '10', '213', '556', '3', '116', '', '', '', '', '', 'accept.png', '');
+insert into `aa_group_services` values ('211', '10', '213', '556', '3', '116', '', '1', '1', '1', '', 'accept.png', '');
 insert into `aa_group_services` values ('213', '10', '0', '744', '3', '0', '', '', '', '', '', '', '');
 insert into `aa_group_services` values ('225', '1070', '152', '408', '1', '151', '', '1', '1', '1', '', '', '');
-insert into `aa_group_services` values ('226', '0', '213', '409', '3', '151', '', '1', '1', '1', '', '', '');
+insert into `aa_group_services` values ('226', '100', '213', '409', '3', '151', '', '', '1', '', '', '', '');
 insert into `aa_group_services` values ('227', '0', '131', '410', '2', '151', '', '1', '1', '1', '', '', '');
 insert into `aa_group_services` values ('228', '4030', '153', '413', '1', '0', '', '', '', '', '/admin/modules/sitemap/sitemap.php', 'chart_organisation.png', '');
 insert into `aa_group_services` values ('229', '1060', '152', '437', '1', '152', '', '1', '1', '1', '', '', '');
@@ -147,6 +145,13 @@ insert into `aa_group_services` values ('233', '3060', '18', '728', '1', '157', 
 insert into `aa_group_services` values ('234', '3095', '18', '739', '1', '158', '', '', '1', '1', '', 'accept.png', '');
 insert into `aa_group_services` values ('235', '3105', '18', '802', '1', '159', '', '1', '1', '1', '', '', '');
 insert into `aa_group_services` values ('236', '3115', '18', '803', '1', '160', '', '1', '1', '1', '', '', '');
+insert into `aa_group_services` values ('238', '0', '152', '841', '1', '161', null, '1', '1', '1', null, null, null);
+insert into `aa_group_services` values ('239', '0', '18', '884', '1', '162', null, '1', '1', '1', null, null, null);
+insert into `aa_group_services` values ('240', '20', '213', '895', '3', '127', '', '1', '1', '1', '', '', '');
+insert into `aa_group_services` values ('241', '10', '246', '910', '1', '163', '', '1', '1', '1', '', null, '');
+insert into `aa_group_services` values ('242', '20', '246', '933', '1', '164', '', '1', '1', '1', '', null, '');
+insert into `aa_group_services` values ('243', '30', '246', '950', '1', '165', '', '1', '1', '1', '', null, '');
+insert into `aa_group_services` values ('246', '30', '152', '979', '1', '0', '', '', '', '', '', '', '');
 
 
 ### structure of table `aa_groups` ###
@@ -155,7 +160,7 @@ DROP TABLE IF EXISTS `aa_groups`;
 
 CREATE TABLE `aa_groups` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
   `parent_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 AUTO_INCREMENT=4;
@@ -174,13 +179,13 @@ DROP TABLE IF EXISTS `aa_lang`;
 
 CREATE TABLE `aa_lang` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `lang` varchar(255) NOT NULL,
-  `initial` varchar(10) NOT NULL,
-  `flag` varchar(255) NOT NULL,
-  `active` varchar(255) NOT NULL,
+  `lang` varchar(255) DEFAULT NULL,
+  `initial` varchar(10) DEFAULT NULL,
+  `flag` varchar(255) DEFAULT NULL,
+  `active` varchar(255) DEFAULT NULL,
   `order` int(11) NOT NULL DEFAULT '0',
-  `default` varchar(255) NOT NULL,
-  `domain` varchar(255) NOT NULL,
+  `default` varchar(255) DEFAULT NULL,
+  `domain` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 AUTO_INCREMENT=3;
 
@@ -198,13 +203,13 @@ DROP TABLE IF EXISTS `aa_logs`;
 CREATE TABLE `aa_logs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `timestamp` datetime NOT NULL,
-  `ip_address` varchar(255) NOT NULL,
-  `user_agent` varchar(255) NOT NULL,
-  `request_uri` varchar(255) NOT NULL,
-  `response` text NOT NULL,
+  `ip_address` varchar(255) DEFAULT NULL,
+  `user_agent` varchar(255) DEFAULT NULL,
+  `request_uri` varchar(255) DEFAULT NULL,
+  `response` text,
   `redirect_id` int(11) NOT NULL DEFAULT '0',
-  `dispatched` varchar(255) NOT NULL,
-  `referer` varchar(255) NOT NULL,
+  `dispatched` varchar(255) DEFAULT NULL,
+  `referer` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 AUTO_INCREMENT=4;
 
@@ -220,43 +225,48 @@ DROP TABLE IF EXISTS `aa_page`;
 
 CREATE TABLE `aa_page` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) NOT NULL,
-  `text` text NOT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `text` text,
   `parent` int(11) NOT NULL,
   `template` int(11) NOT NULL,
-  `visible` varchar(255) NOT NULL,
+  `visible` varchar(255) DEFAULT NULL,
   `order` int(11) NOT NULL DEFAULT '0',
   `owner` int(11) NOT NULL,
-  `url` varchar(255) NOT NULL,
-  `metatitle` varchar(75) NOT NULL,
-  `metadescription` varchar(150) NOT NULL,
-  `metakeywords` varchar(175) NOT NULL,
-  `slug` varchar(1024) NOT NULL,
+  `url` varchar(255) DEFAULT NULL,
+  `metatitle` varchar(75) DEFAULT NULL,
+  `metadescription` varchar(150) DEFAULT NULL,
+  `metakeywords` varchar(175) DEFAULT NULL,
+  `slug` varchar(1024) DEFAULT NULL,
+  `gallery` int(11) NOT NULL DEFAULT '0',
+  `created_by` varchar(255) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `edit_by` varchar(255) DEFAULT NULL,
+  `edit_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=60 DEFAULT CHARSET=utf8 AUTO_INCREMENT=60;
+) ENGINE=MyISAM AUTO_INCREMENT=61 DEFAULT CHARSET=utf8 AUTO_INCREMENT=61;
 
 
 ### data of table `aa_page` ###
 
-insert into `aa_page` values ('22', '1', '2', '0', '14', '1|2', '5', '1', '', '575', '576', '577', '632');
-insert into `aa_page` values ('39', '203', '204', '22', '4', '1|2', '10', '1', '', '4', '5', '587', '633');
-insert into `aa_page` values ('40', '206', '207', '22', '4', '', '20', '1', '', '635', '636', '637', '634');
-insert into `aa_page` values ('41', '209', '210', '22', '4', '1|2', '40', '1', '', '588', '589', '590', '638');
-insert into `aa_page` values ('42', '211', '212', '22', '13', '1|2', '50', '1', '', '591', '592', '593', '639');
-insert into `aa_page` values ('43', '213', '214', '22', '4', '1|2', '15', '1', '', '594', '595', '596', '640');
-insert into `aa_page` values ('44', '216', '217', '41', '4', '1|2', '10', '1', '', '606', '607', '608', '656');
-insert into `aa_page` values ('45', '219', '220', '41', '4', '1|2', '20', '1', '', '609', '610', '611', '657');
-insert into `aa_page` values ('46', '221', '222', '41', '4', '1|2', '15', '1', '', '612', '613', '614', '658');
-insert into `aa_page` values ('50', '274', '275', '57', '8', '', '1010', '1', '', '642', '643', '644', '641');
-insert into `aa_page` values ('51', '277', '278', '57', '4', '', '1020', '1', '', '646', '647', '648', '645');
-insert into `aa_page` values ('52', '394', '395', '57', '9', '', '90', '1', '', '650', '651', '652', '649');
-insert into `aa_page` values ('53', '396', '397', '22', '10', '1|2', '70', '1', '', '597', '598', '599', '653');
-insert into `aa_page` values ('54', '398', '399', '22', '11', '1|2', '80', '1', '', '600', '601', '602', '654');
-insert into `aa_page` values ('55', '489', '490', '22', '12', '1|2', '45', '1', '', '603', '604', '605', '655');
-insert into `aa_page` values ('56', '564', '565', '41', '4', '1|2', '330', '1', '', '572', '573', '574', '659');
-insert into `aa_page` values ('57', '688', '690', '0', '4', '', '1000', '1', '', '691', '692', '693', '689');
-insert into `aa_page` values ('58', '566', '568', '57', '15', '', '9090', '1', '', '569', '570', '571', '567');
-insert into `aa_page` values ('59', '745', '747', '57', '4', '', '3030', '1', '', '748', '749', '750', '746');
+insert into `aa_page` values ('22', '1', '2', '0', '14', '1|2', '5', '1', '', '575', '576', '577', '632', '0', '650', '2017-07-19 14:05:10', '650', '2017-07-20 19:57:55');
+insert into `aa_page` values ('39', '203', '204', '22', '4', '1|2', '10', '1', '', '4', '5', '587', '633', '4', '650', '2017-07-19 14:05:30', '650', '2017-07-20 19:54:49');
+insert into `aa_page` values ('40', '206', '207', '22', '4', '', '20', '1', '', '635', '636', '637', '634', '0', '650', '2017-07-19 14:05:35', '650', '2017-07-20 19:54:51');
+insert into `aa_page` values ('41', '209', '210', '22', '4', '1|2', '40', '1', '', '588', '589', '590', '638', '0', '650', '2017-07-19 14:05:36', '650', '2017-07-20 19:54:52');
+insert into `aa_page` values ('42', '211', '212', '22', '13', '1|2', '50', '1', '', '591', '592', '593', '639', '0', '650', '2017-07-19 14:05:38', '650', '2017-07-20 19:54:54');
+insert into `aa_page` values ('43', '213', '214', '22', '4', '1|2', '15', '1', '', '594', '595', '596', '640', '0', '650', '2017-07-19 14:05:40', '650', '2017-07-20 19:54:56');
+insert into `aa_page` values ('44', '216', '217', '41', '4', '1|2', '10', '1', '', '606', '607', '608', '656', '0', '650', '2017-07-19 14:05:42', '650', '2017-07-20 19:54:58');
+insert into `aa_page` values ('45', '219', '220', '41', '4', '1|2', '20', '1', '', '609', '610', '611', '657', '0', '650', '2017-07-19 14:05:44', '650', '2017-07-20 19:55:00');
+insert into `aa_page` values ('46', '221', '222', '41', '4', '1|2', '15', '1', '', '612', '613', '614', '658', '0', '650', '2017-07-19 14:05:46', '650', '2017-07-20 19:55:02');
+insert into `aa_page` values ('60', '911', '913', '22', '16', '1|2', '40', '1', '', '914', '915', '916', '912', '0', '650', '2017-07-20 19:24:14', '650', '2017-07-20 19:55:22');
+insert into `aa_page` values ('51', '277', '278', '57', '4', '', '1020', '1', '', '646', '647', '648', '645', '0', '650', '2017-07-19 14:05:50', '650', '2017-07-20 19:55:04');
+insert into `aa_page` values ('52', '394', '395', '57', '9', '', '90', '1', '', '650', '651', '652', '649', '0', '650', '2017-07-19 14:05:52', '650', '2017-07-20 19:55:06');
+insert into `aa_page` values ('53', '396', '397', '22', '10', '1|2', '70', '1', '', '597', '598', '599', '653', '0', '650', '2017-07-19 14:05:54', '650', '2017-07-20 19:55:08');
+insert into `aa_page` values ('54', '398', '399', '22', '11', '1|2', '80', '1', '', '600', '601', '602', '654', '0', '650', '2017-07-19 14:05:56', '650', '2017-07-20 19:55:10');
+insert into `aa_page` values ('55', '489', '490', '22', '12', '1|2', '45', '1', '', '603', '604', '605', '655', '0', '650', '2017-07-19 14:05:58', '650', '2017-07-20 19:58:02');
+insert into `aa_page` values ('56', '564', '565', '41', '4', '1|2', '330', '1', '', '572', '573', '574', '659', '0', '650', '2017-07-19 14:06:00', '650', '2017-07-20 19:55:14');
+insert into `aa_page` values ('57', '688', '690', '0', '4', '', '1000', '1', '', '691', '692', '693', '689', '0', '650', '2017-07-19 14:05:18', '650', '2017-07-20 19:55:15');
+insert into `aa_page` values ('58', '566', '568', '57', '15', '', '9090', '1', '', '569', '570', '571', '567', '0', '650', '2017-07-19 14:05:22', '650', '2017-07-20 19:55:17');
+insert into `aa_page` values ('59', '745', '747', '57', '4', '', '3030', '1', '', '748', '749', '750', '746', '0', '650', '2017-07-19 14:05:24', '650', '2017-07-20 19:55:19');
 
 
 ### structure of table `aa_service_joins` ###
@@ -265,14 +275,14 @@ DROP TABLE IF EXISTS `aa_service_joins`;
 
 CREATE TABLE `aa_service_joins` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) NOT NULL,
+  `title` varchar(255) DEFAULT NULL,
   `from` int(11) NOT NULL DEFAULT '0',
   `to` int(11) NOT NULL DEFAULT '0',
-  `description` varchar(255) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
   `container` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `container` (`container`)
-) ENGINE=MyISAM AUTO_INCREMENT=26 DEFAULT CHARSET=utf8 AUTO_INCREMENT=26;
+) ENGINE=MyISAM AUTO_INCREMENT=29 DEFAULT CHARSET=utf8 AUTO_INCREMENT=29;
 
 
 ### data of table `aa_service_joins` ###
@@ -286,6 +296,9 @@ insert into `aa_service_joins` values ('22', 'Campi', '528', '539', '', '152');
 insert into `aa_service_joins` values ('23', 'Opzioni', '538', '553', '', '153');
 insert into `aa_service_joins` values ('24', 'Dati inviati', '528', '587', '', '152');
 insert into `aa_service_joins` values ('25', 'Occurences', '598', '608', '', '159');
+insert into `aa_service_joins` values ('26', 'Headers', '347', '622', '', '116');
+insert into `aa_service_joins` values ('27', 'Prodotti', '645', '657', '', '163');
+insert into `aa_service_joins` values ('28', 'Foto', '651', '661', '', '164');
 
 
 ### structure of table `aa_services` ###
@@ -294,18 +307,18 @@ DROP TABLE IF EXISTS `aa_services`;
 
 CREATE TABLE `aa_services` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `path` varchar(255) NOT NULL,
-  `icon` varchar(255) NOT NULL,
-  `description` text NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `path` varchar(255) DEFAULT NULL,
+  `icon` varchar(255) DEFAULT NULL,
+  `description` text,
   `parent` int(11) NOT NULL DEFAULT '0',
-  `syntable` varchar(255) NOT NULL,
+  `syntable` varchar(255) DEFAULT NULL,
   `order` int(11) NOT NULL DEFAULT '0',
-  `dbsync` varchar(255) NOT NULL,
+  `dbsync` varchar(255) DEFAULT NULL,
   `initOrder` int(8) NOT NULL DEFAULT '0',
-  `multilang` varchar(255) NOT NULL,
+  `multilang` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=161 DEFAULT CHARSET=utf8 PACK_KEYS=1 AUTO_INCREMENT=161;
+) ENGINE=MyISAM AUTO_INCREMENT=167 DEFAULT CHARSET=utf8 PACK_KEYS=1 AUTO_INCREMENT=167;
 
 
 ### data of table `aa_services` ###
@@ -314,9 +327,9 @@ insert into `aa_services` values ('2', '26', '', 'fa-user-plus', '27', '2', 'aa_
 insert into `aa_services` values ('3', '28', '', 'fa-users', '29', '2', 'aa_groups', '20', '1', '477', '');
 insert into `aa_services` values ('4', '34', '', 'fa-bars', '35', '2', 'aa_group_services', '60', '1', '74', '');
 insert into `aa_services` values ('5', '20', '', 'fa-bolt', '21', '2', 'aa_services', '30', '1', '52', '1');
-insert into `aa_services` values ('116', '36', '', 'fa-files-o', '37', '2', 'aa_page', '70', '1', '350', '1');
+insert into `aa_services` values ('116', '36', '', 'fa-files-o', '37', '2', 'aa_page', '70', '1', '350', '');
 insert into `aa_services` values ('124', '38', '', 'fa-th-large', '39', '2', 'aa_template', '80', '1', '378', '');
-insert into `aa_services` values ('127', '40', '', 'fa-newspaper-o', '41', '2', 'news', '100', '1', '-460', '1');
+insert into `aa_services` values ('127', '40', '', 'fa-newspaper-o', '41', '2', 'news', '100', '1', '460', '');
 insert into `aa_services` values ('128', '32', '', 'fa-hand-o-right', '33', '2', 'aa_service_joins', '50', '1', '405', '');
 insert into `aa_services` values ('129', '30', '', 'fa-table', '31', '2', 'aa_services_element', '40', '1', '423', '1');
 insert into `aa_services` values ('136', '22', '', 'fa-language', '23', '2', 'aa_lang', '120', '1', '560', '');
@@ -340,6 +353,11 @@ insert into `aa_services` values ('157', '718', '', 'fa-share-square', '719', '0
 insert into `aa_services` values ('158', '729', '', 'fa-envelope-o', '730', '2', 'dati_inviati', '0', '1', '-589', '');
 insert into `aa_services` values ('159', '772', '', 'fa-refresh', '773', '0', 'redirect', '0', '1', '598', '');
 insert into `aa_services` values ('160', '783', '', 'fa-paper-plane', '784', '0', 'aa_logs', '0', '1', '603', '');
+insert into `aa_services` values ('161', '825', null, 'fa-image', '826', '0', 'headers', '0', '1', '624', '');
+insert into `aa_services` values ('162', '866', null, 'fa-map-marker', '867', '0', 'sedi', '0', '1', '644', '');
+insert into `aa_services` values ('163', '896', null, 'fa-folder', '897', '0', 'categorie_prodotti', '0', '1', '650', '');
+insert into `aa_services` values ('164', '919', null, 'fa-file-o', '920', '0', 'prodotti', '0', '1', '656', '');
+insert into `aa_services` values ('165', '938', null, 'fa-image', '939', '0', 'foto_prodotti', '0', '1', '662', '');
 
 
 ### structure of table `aa_services_element` ###
@@ -349,24 +367,24 @@ DROP TABLE IF EXISTS `aa_services_element`;
 CREATE TABLE `aa_services_element` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `container` int(11) NOT NULL DEFAULT '0',
-  `name` varchar(255) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
   `type` int(255) NOT NULL DEFAULT '0',
-  `iskey` varchar(1) NOT NULL,
-  `isvisible` varchar(1) NOT NULL,
-  `iseditable` varchar(1) NOT NULL,
-  `label` varchar(255) NOT NULL,
+  `iskey` varchar(1) DEFAULT NULL,
+  `isvisible` varchar(1) DEFAULT NULL,
+  `iseditable` varchar(1) DEFAULT NULL,
+  `label` varchar(255) DEFAULT NULL,
   `size` int(8) NOT NULL DEFAULT '0',
-  `help` text NOT NULL,
-  `path` varchar(255) NOT NULL,
-  `qry` text NOT NULL,
-  `value` varchar(255) NOT NULL,
-  `joins` varchar(255) NOT NULL,
+  `help` text,
+  `path` varchar(255) DEFAULT NULL,
+  `qry` text,
+  `value` varchar(255) DEFAULT NULL,
+  `joins` varchar(255) DEFAULT NULL,
   `order` int(8) NOT NULL DEFAULT '0',
-  `filter` varchar(255) NOT NULL,
-  `ismultilang` varchar(1) NOT NULL,
+  `filter` varchar(255) DEFAULT NULL,
+  `ismultilang` varchar(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `container` (`container`)
-) ENGINE=MyISAM AUTO_INCREMENT=618 DEFAULT CHARSET=utf8 COMMENT='Containers' AUTO_INCREMENT=618;
+) ENGINE=MyISAM AUTO_INCREMENT=675 DEFAULT CHARSET=utf8 COMMENT='Containers' AUTO_INCREMENT=675;
 
 
 ### data of table `aa_services_element` ###
@@ -395,7 +413,7 @@ insert into `aa_services_element` values ('74', '4', 'order', '3', '', '1', '1',
 insert into `aa_services_element` values ('75', '4', 'parent', '16', '', '1', '', '154', '255', '155', 'name', '', '', '', '65', '', '');
 insert into `aa_services_element` values ('80', '4', 'filter', '2', '', '1', '1', '150', '255', '151', '', '', '', '', '45', '', '');
 insert into `aa_services_element` values ('141', '5', 'initOrder', '3', '', '', '', '126', '8', '127', '', '', '', '', '90', '', '');
-insert into `aa_services_element` values ('347', '116', 'id', '1', '1', '', '', '164', '0', '165', '', '', '', '', '0', '', '');
+insert into `aa_services_element` values ('347', '116', 'id', '1', '1', '1', '', '164', '0', '165', '', '', '', '', '0', '', '');
 insert into `aa_services_element` values ('348', '116', 'title', '2', '', '1', '', '166', '255', '167', '', '', '', '', '10', '', '1');
 insert into `aa_services_element` values ('349', '116', 'text', '6', '', '', '', '168', '350', '169', 'Default', '', '', '', '20', '', '1');
 insert into `aa_services_element` values ('350', '116', 'parent', '16', '', '1', '', '170', '11', '171', 'title', '', '', '', '30', '', '');
@@ -406,7 +424,7 @@ insert into `aa_services_element` values ('380', '124', 'timestamp', '15', '', '
 insert into `aa_services_element` values ('381', '124', 'filename', '13', '', '1', '', '184', '255', '185', '1', '/public/templates', '', '', '30', '', '');
 insert into `aa_services_element` values ('478', '116', 'owner', '18', '', '1', '', '266', '0', '267', '', '', '', '', '80', '', '');
 insert into `aa_services_element` values ('397', '116', 'visible', '24', '', '1', '', '174', '255', '175', '', 'SELECT id, lang FROM `aa_lang` ', '1', '', '50', '', '');
-insert into `aa_services_element` values ('398', '127', 'id', '1', '1', '', '', '76', '0', '77', '', '', '', '', '0', '', '');
+insert into `aa_services_element` values ('398', '127', 'id', '1', '1', '1', '', '76', '0', '77', '', '', '', '', '0', '', '');
 insert into `aa_services_element` values ('403', '116', 'order', '3', '', '1', '1', '176', '11', '177', '', '', '', '', '60', '', '');
 insert into `aa_services_element` values ('404', '128', 'id', '1', '1', '', '', '128', '0', '129', '', '', '', '', '0', '', '');
 insert into `aa_services_element` values ('405', '128', 'title', '2', '', '1', '1', '130', '255', '131', '', '', '', '', '10', '', '');
@@ -446,7 +464,7 @@ insert into `aa_services_element` values ('455', '137', 'it', '8', '', '1', '1',
 insert into `aa_services_element` values ('456', '137', 'en', '8', '', '1', '1', '90', '0', '91', '', '', '', '', '20', '', '');
 insert into `aa_services_element` values ('457', '127', 'title', '2', '', '1', '', '186', '255', '187', '', '', '', '', '10', '', '1');
 insert into `aa_services_element` values ('458', '127', 'text', '6', '', '', '', '188', '255', '189', 'Default', '', '', '', '20', '', '1');
-insert into `aa_services_element` values ('459', '127', 'image', '5', '', '1', '', '190', '0', '191', '/public/mat', '', '', '', '30', '', '');
+insert into `aa_services_element` values ('459', '127', 'image', '34', '', '1', '', '190', '255', '191', '', '', '', '', '30', '', '');
 insert into `aa_services_element` values ('460', '127', 'date', '15', '', '1', '', '194', '0', '195', '', '', '', '', '40', '', '');
 insert into `aa_services_element` values ('461', '140', 'id', '1', '1', '', '', '227', '0', '228', '', '', '', '', '0', '', '');
 insert into `aa_services_element` values ('462', '140', 'title', '2', '', '1', '', '229', '255', '230', '', '', '', '', '10', '', '');
@@ -589,6 +607,57 @@ insert into `aa_services_element` values ('607', '160', 'response', '8', '', '',
 insert into `aa_services_element` values ('608', '160', 'redirect_id', '3', '', '', '', '797', '11', '798', '', '', '', '', '60', '', '');
 insert into `aa_services_element` values ('609', '160', 'dispatched', '9', '', '1', '', '799', '255', '800', '', '', '1', '', '70', '', '');
 insert into `aa_services_element` values ('610', '160', 'referer', '2', '', '', '', '804', '255', '805', '', '', '', '', '45', '', '');
+insert into `aa_services_element` values ('618', '161', 'id', '1', '1', '1', '', '827', '0', '828', '', '', '', '', '0', '', '');
+insert into `aa_services_element` values ('619', '161', 'titolo', '2', '', '1', '', '829', '255', '830', '', '', '', '', '10', '', '1');
+insert into `aa_services_element` values ('620', '161', 'sottotitolo', '2', '', '1', '', '831', '255', '832', '', '', '', '', '20', '', '1');
+insert into `aa_services_element` values ('621', '161', 'img', '34', '', '1', '', '833', '255', '834', '', '', '', '', '30', '', '');
+insert into `aa_services_element` values ('622', '161', 'id_pagina', '11', '', '', '', '835', '11', '836', '1', 'SELECT * FROM aa_page', '', '', '60', '', '');
+insert into `aa_services_element` values ('623', '161', 'visibile', '24', '', '1', '', '837', '0', '838', '', 'SELECT id,lang FROM aa_lang', '', '', '40', '', '');
+insert into `aa_services_element` values ('624', '161', 'ordine', '3', '', '1', '1', '839', '11', '840', '', '', '', '', '50', '', '');
+insert into `aa_services_element` values ('625', '116', 'gallery', '11', '', '1', '', '842', '11', '843', '1', 'SELECT * FROM album', '', '', '25', '', '');
+insert into `aa_services_element` values ('626', '116', 'created_by', '21', '', '', '', '844', '255', '845', '', '', '', '', '140', '', '');
+insert into `aa_services_element` values ('627', '116', 'created_at', '36', '', '', '', '846', '0', '847', '', '', '', '', '150', '', '');
+insert into `aa_services_element` values ('628', '116', 'edit_by', '22', '', '', '', '848', '255', '849', '', '', '', '', '160', '', '');
+insert into `aa_services_element` values ('629', '116', 'edit_at', '20', '', '1', '', '850', '0', '851', '', '', '', '', '170', '', '');
+insert into `aa_services_element` values ('630', '127', 'attached', '35', '', '1', '', '852', '255', '853', '', '', '', '', '35', '', '');
+insert into `aa_services_element` values ('631', '127', 'created_by', '21', '', '', '', '854', '255', '855', '', '', '', '', '70', '', '');
+insert into `aa_services_element` values ('632', '127', 'created_at', '36', '', '', '', '856', '0', '857', '', '', '', '', '80', '', '');
+insert into `aa_services_element` values ('633', '127', 'edit_by', '22', '', '', '', '858', '255', '859', '', '', '', '', '90', '', '');
+insert into `aa_services_element` values ('634', '127', 'edit_at', '20', '', '1', '', '860', '0', '861', '', '', '', '', '100', '', '');
+insert into `aa_services_element` values ('635', '162', 'id', '1', '1', '1', '', '868', '0', '869', '', '', '', '', '0', '', '');
+insert into `aa_services_element` values ('636', '162', 'sede', '2', '', '1', '', '870', '255', '871', '', '', '', '', '10', '', '1');
+insert into `aa_services_element` values ('638', '162', 'indirizzo', '2', '', '1', '', '874', '255', '875', '', '', '', '', '30', '', '1');
+insert into `aa_services_element` values ('639', '162', 'lat', '2', '', '1', '', '876', '255', '877', '', '', '', '', '40', '', '');
+insert into `aa_services_element` values ('640', '162', 'long', '2', '', '1', '', '878', '255', '879', '', '', '', '', '50', '', '');
+insert into `aa_services_element` values ('644', '162', 'ordine', '3', '', '1', '1', '887', '11', '888', '', '', '', '', '70', '', '');
+insert into `aa_services_element` values ('643', '162', 'visibile', '24', '', '1', '', '885', '0', '886', '', 'SELECT id,lang FROM aa_lang', '', '', '60', '', '');
+insert into `aa_services_element` values ('645', '163', 'id', '1', '1', '1', '', '898', '0', '899', '', '', '', '', '0', '', '');
+insert into `aa_services_element` values ('646', '163', 'titolo', '2', '', '1', '', '900', '255', '901', '', '', '', '', '10', '', '1');
+insert into `aa_services_element` values ('647', '163', 'descrizione', '6', '', '', '', '902', '150', '903', 'Default', '', '', '', '20', '', '1');
+insert into `aa_services_element` values ('648', '163', 'img', '34', '', '1', '', '904', '255', '905', '', '', '', '', '30', '', '');
+insert into `aa_services_element` values ('649', '163', 'visibile', '24', '', '1', '', '906', '0', '907', '', 'select id,lang from aa_lang', '', '', '40', '', '');
+insert into `aa_services_element` values ('650', '163', 'ordine', '3', '', '1', '1', '908', '11', '909', '', '', '', '', '50', '', '');
+insert into `aa_services_element` values ('651', '164', 'id', '1', '1', '1', '', '921', '0', '922', '', '', '', '', '0', '', '');
+insert into `aa_services_element` values ('652', '164', 'titolo', '2', '', '1', '', '923', '255', '924', '', '', '', '', '10', '', '1');
+insert into `aa_services_element` values ('653', '164', 'descrizione', '6', '', '', '', '925', '150', '926', 'Default', '', '', '', '20', '', '1');
+insert into `aa_services_element` values ('654', '164', 'allegato', '35', '', '1', '', '927', '255', '928', '', '', '', '', '30', '', '');
+insert into `aa_services_element` values ('655', '164', 'visibile', '24', '', '1', '', '929', '0', '930', '', 'select id,lang from aa_lang', '', '', '40', '', '');
+insert into `aa_services_element` values ('656', '164', 'ordine', '3', '', '1', '1', '931', '11', '932', '', '', '', '', '50', '', '');
+insert into `aa_services_element` values ('657', '164', 'id_categoria', '11', '', '', '', '934', '11', '935', '1', 'SELECT * FROM categorie_prodotti', '', '', '60', '', '');
+insert into `aa_services_element` values ('658', '165', 'id', '1', '1', '1', '', '940', '0', '941', '', '', '', '', '0', '', '');
+insert into `aa_services_element` values ('659', '165', 'titolo', '2', '', '', '', '942', '255', '943', '', '', '', '', '10', '', '');
+insert into `aa_services_element` values ('660', '165', 'img', '5', '', '1', '', '944', '0', '945', '/public/mat/products/#{join|value|id_join=28}', '', '', '', '20', '', '');
+insert into `aa_services_element` values ('661', '165', 'id_prodotto', '11', '', '1', '', '946', '11', '947', '1', 'SELECT * FROM prodotti', '', '', '30', '', '');
+insert into `aa_services_element` values ('662', '165', 'ordine', '3', '', '1', '1', '948', '11', '949', '', '', '', '', '40', '', '');
+insert into `aa_services_element` values ('663', '164', 'foto', '10', '', '', '', '951', '0', '952', '/public/mat/products/', 'null', 'titolo|ordine|foto_prodotti|img|id_prodotto', '', '25', '', '');
+insert into `aa_services_element` values ('664', '163', 'created_by', '21', '', '', '', '953', '255', '954', '', '', '', '', '60', '', '');
+insert into `aa_services_element` values ('665', '163', 'created_at', '36', '', '', '', '955', '0', '956', '', '', '', '', '70', '', '');
+insert into `aa_services_element` values ('666', '163', 'edit_by', '22', '', '', '', '957', '255', '958', '', '', '', '', '80', '', '');
+insert into `aa_services_element` values ('667', '163', 'edit_at', '20', '', '1', '', '959', '0', '960', '', '', '', '', '90', '', '');
+insert into `aa_services_element` values ('668', '164', 'created_by', '21', '', '', '', '961', '255', '962', '', '', '', '', '80', '', '');
+insert into `aa_services_element` values ('669', '164', 'created_at', '36', '', '', '', '963', '0', '964', '', '', '', '', '90', '', '');
+insert into `aa_services_element` values ('670', '164', 'edit_by', '22', '', '', '', '965', '255', '966', '', '', '', '', '100', '', '');
+insert into `aa_services_element` values ('671', '164', 'edit_at', '20', '', '1', '', '967', '0', '968', '', '', '', '', '110', '', '');
 
 
 ### structure of table `aa_template` ###
@@ -597,24 +666,24 @@ DROP TABLE IF EXISTS `aa_template`;
 
 CREATE TABLE `aa_template` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) NOT NULL DEFAULT '',
-  `timestamp` datetime NOT NULL,
-  `filename` varchar(255) NOT NULL DEFAULT '',
+  `title` varchar(255) DEFAULT '',
+  `timestamp` datetime DEFAULT NULL,
+  `filename` varchar(255) DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 AUTO_INCREMENT=16;
+) ENGINE=MyISAM AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 AUTO_INCREMENT=17;
 
 
 ### data of table `aa_template` ###
 
-insert into `aa_template` values ('4', 'standard template', '2004-04-28 16:27:54', 'default.tpl');
+insert into `aa_template` values ('4', 'Standard template', '2004-04-28 16:27:54', 'default.tpl');
 insert into `aa_template` values ('10', 'Documents', '2010-03-24 15:51:19', 'documents.tpl');
-insert into `aa_template` values ('8', 'RSS', '2008-06-18 18:02:16', 'rss.tpl');
+insert into `aa_template` values ('16', 'Prodotti', '2017-07-20 19:23:13', 'prodotti.tpl');
 insert into `aa_template` values ('9', 'Account', '2010-03-23 16:19:38', 'account.tpl');
 insert into `aa_template` values ('11', 'Gallery', '2010-03-24 16:22:14', 'gallery.tpl');
-insert into `aa_template` values ('12', 'news', '2010-12-21 16:13:44', 'news.tpl');
-insert into `aa_template` values ('13', 'form', '2010-12-21 16:13:51', 'form.tpl');
-insert into `aa_template` values ('14', 'index', '2013-12-11 14:33:08', 'index.tpl');
-insert into `aa_template` values ('15', 'search results', '2015-03-03 11:13:30', 'search.tpl');
+insert into `aa_template` values ('12', 'News', '2010-12-21 16:13:44', 'news.tpl');
+insert into `aa_template` values ('13', 'Form', '2010-12-21 16:13:51', 'form.tpl');
+insert into `aa_template` values ('14', 'Index', '2013-12-11 14:33:08', 'index.tpl');
+insert into `aa_template` values ('15', 'Search results', '2015-03-03 11:13:30', 'search.tpl');
 
 
 ### structure of table `aa_translation` ###
@@ -623,16 +692,16 @@ DROP TABLE IF EXISTS `aa_translation`;
 
 CREATE TABLE `aa_translation` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `it` text NOT NULL,
-  `en` text NOT NULL,
+  `it` text,
+  `en` text,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=825 DEFAULT CHARSET=utf8 AUTO_INCREMENT=825;
+) ENGINE=MyISAM AUTO_INCREMENT=980 DEFAULT CHARSET=utf8 AUTO_INCREMENT=980;
 
 
 ### data of table `aa_translation` ###
 
 insert into `aa_translation` values ('1', 'Home', 'Home');
-insert into `aa_translation` values ('2', '<p><img alt=\"Syntax Desktop package\" src=\"/public/mat/image/syntax-box.gif\" style=\"border-width: 0px; border-style: solid; float: right; width: 170px; height: 221px;\" />Syntax Desktop è un sistema professionale di gestione dei contenuti Open Source. In pratica, è uno strumento che permette agli utenti di poter modificare il proprio sito come, dove e quando vogliono.</p>\r\n\r\n<p>Syntax Desktop ti aiuta a creare e gestire complessi siti web senza conoscere l\'HTML. Un editor WYSIWYG integrato con un\'interfaccia utente simile a quella delle ben note applicazioni office aiuta l\'utente a creare i contenuti, mentre un template engine gestisce tutte le parti del sito per avere un controllo completo dell\'applicazione.</p>\r\n\r\n<p>Syntax Desktop è basato su tecnologia PHP. É per questo motivo che funziona sulla gran parte delle moderne infrastrutture IT esistenti. Syntax Desktop gira su ambienti completamente \"open source\" (p.e. Linux, Apache, MySQL), ma funziona tranquillamente anche su componenti commerciali (p.e. Windows, IIS, Oracle DB, MS Access).</p>\r\n\r\n<p>Inoltre una grande virtù di Syntax è la sua predisposizione ad essere indicizzato dai motori di ricerca. Syntax è stato infatti progettato nell\'ottica di generare pagine amiche dei motori di ricerca.</p>\r\n\r\n<p>Per conoscere di più Syntax Desktop, visualizza il <a href=\"http://www.dynamick.it/syntax-desktop/tour.php\">tour guidato</a> che ti mostrerà&nbsp; le principali funzionalità dell\'applicazione. Per un\'approfondimento ulteriore, leggi il <a href=\"http://www.syntaxdesktop.com/docs\">manuale utente</a>.</p>\r\n', '<p><img alt=\"Syntax Desktop package\" src=\"/public/mat/image/syntax-box.gif\" style=\"border-width: 0px; border-style: solid; float: right; width: 170px; height: 221px;\" /></p>\r\n\r\n<p><strong>Syntax Desktop</strong> is a professional open source <strong>Content Management System</strong> (CMS).&nbsp; It is a tool that allows users to modify the web site contents how, when and where they want.<br />\r\n<br />\r\nSyntax Desktop helps you to create and manage large web sites <strong>without any knowledge</strong> of HTML. There\'s an integrated WYSIWYG editor with a friendly user interface similar to common office applications. You can create the contents and a template engine manages all the parts of the site allowing complete control of the application.<br />\r\n<br />\r\nSyntax Desktop is based on<strong> PHP technology</strong>. It is a web application, so it works on a wide range of modern existing IT infrastructures.&nbsp; Syntax Desktop runs with other \"open source\" technologies (i.e. Linux, Apache, MySQL), but it works also on commercial products (i.e. Windows, IIS, Oracle DB, MS Access).<br />\r\n<br />\r\nMoreover, a great virtue of Syntax is its predisposition to being indexed from <strong>search engines</strong>.&nbsp; Syntax is constructed to generate pages optimized for search engines.<br />\r\n<br />\r\nFor more information about Syntax Desktop, you can watch the flash <a href=\"http://www.dynamick.it/syntax-desktop/tour.php\">guided tour</a>. You can find other information by reading the <a href=\"http://www.syntaxdesktop.com/docs/\">user manual</a>.</p>\r\n');
+insert into `aa_translation` values ('2', '<p><img alt=\"Syntax Desktop package\" src=\"/public/mat/image/syntax-box.gif\" style=\"border-style:solid; border-width:0px; float:right; height:221px; width:170px\" />Syntax Desktop &egrave; un sistema professionale di gestione dei contenuti Open Source. In pratica, &egrave; uno strumento che permette agli utenti di poter modificare il proprio sito come, dove e quando vogliono.</p>\r\n\r\n<p>Syntax Desktop ti aiuta a creare e gestire complessi siti web senza conoscere l&#39;HTML. Un editor WYSIWYG integrato con un&#39;interfaccia utente simile a quella delle ben note applicazioni office aiuta l&#39;utente a creare i contenuti, mentre un template engine gestisce tutte le parti del sito per avere un controllo completo dell&#39;applicazione.</p>\r\n\r\n<p>Syntax Desktop &egrave; basato su tecnologia PHP. &Eacute; per questo motivo che funziona sulla gran parte delle moderne infrastrutture IT esistenti. Syntax Desktop gira su ambienti completamente &quot;open source&quot; (p.e. Linux, Apache, MySQL), ma funziona tranquillamente anche su componenti commerciali (p.e. Windows, IIS, Oracle DB, MS Access).</p>\r\n\r\n<p>Inoltre una grande virt&ugrave; di Syntax &egrave; la sua predisposizione ad essere indicizzato dai motori di ricerca. Syntax &egrave; stato infatti progettato nell&#39;ottica di generare pagine amiche dei motori di ricerca.</p>\r\n\r\n<p>Per conoscere di pi&ugrave; Syntax Desktop, visualizza il <a href=\"http://www.dynamick.it/syntax-desktop/tour.php\">tour guidato</a> che ti mostrer&agrave;&nbsp; le principali funzionalit&agrave; dell&#39;applicazione. Per un&#39;approfondimento ulteriore, leggi il <a href=\"http://www.syntaxdesktop.com/docs\">manuale utente</a>.</p>\r\n', '<p><img alt=\"Syntax Desktop package\" src=\"/public/mat/image/syntax-box.gif\" style=\"border-width: 0px; border-style: solid; float: right; width: 170px; height: 221px;\" /></p>\r\n\r\n<p><strong>Syntax Desktop</strong> is a professional open source <strong>Content Management System</strong> (CMS).&nbsp; It is a tool that allows users to modify the web site contents how, when and where they want.<br />\r\n<br />\r\nSyntax Desktop helps you to create and manage large web sites <strong>without any knowledge</strong> of HTML. There\'s an integrated WYSIWYG editor with a friendly user interface similar to common office applications. You can create the contents and a template engine manages all the parts of the site allowing complete control of the application.<br />\r\n<br />\r\nSyntax Desktop is based on<strong> PHP technology</strong>. It is a web application, so it works on a wide range of modern existing IT infrastructures.&nbsp; Syntax Desktop runs with other \"open source\" technologies (i.e. Linux, Apache, MySQL), but it works also on commercial products (i.e. Windows, IIS, Oracle DB, MS Access).<br />\r\n<br />\r\nMoreover, a great virtue of Syntax is its predisposition to being indexed from <strong>search engines</strong>.&nbsp; Syntax is constructed to generate pages optimized for search engines.<br />\r\n<br />\r\nFor more information about Syntax Desktop, you can watch the flash <a href=\"http://www.dynamick.it/syntax-desktop/tour.php\">guided tour</a>. You can find other information by reading the <a href=\"http://www.syntaxdesktop.com/docs/\">user manual</a>.</p>\r\n');
 insert into `aa_translation` values ('3', 'Token non valido!', 'Invalid token!');
 insert into `aa_translation` values ('4', '', '');
 insert into `aa_translation` values ('5', '', '');
@@ -823,36 +892,38 @@ insert into `aa_translation` values ('189', '', '');
 insert into `aa_translation` values ('190', 'Image', 'Image');
 insert into `aa_translation` values ('191', '', '');
 insert into `aa_translation` values ('192', 'Benvenuto in Syntax Desktop!', 'Welcome in Syntax!');
-insert into `aa_translation` values ('193', '<p>\r\n  Questo è il testo della prima news!</p>\r\n<p>\r\n  Lorem ipsum dolor sit amet consectetuer neque a elit dui suscipit. Vestibulum Sed risus pretium orci Pellentesque nunc montes ut leo mauris. Habitant Pellentesque felis cursus interdum non Maecenas pede semper Ut In. Volutpat nunc Curabitur condimentum et interdum hendrerit dictum elit eu habitasse. Quis netus sit commodo mus consectetuer a at tellus urna justo. Condimentum.<br />\r\n <br />\r\n  Justo Nam et Vivamus Mauris tristique felis a adipiscing eu Fusce. Fringilla ac ipsum neque Curabitur condimentum elit morbi malesuada Sed urna. Pretium faucibus sit Sed auctor magna pellentesque fringilla Praesent dolor convallis. Tincidunt venenatis fringilla justo In amet tellus auctor penatibus Suspendisse Mauris. Tellus metus Vivamus id ac Phasellus tellus Morbi Suspendisse Aliquam orci. Laoreet laoreet justo mus.</p>\r\n', '<p>This is the first news.</p>\r\n<p>Lorem ipsum dolor sit amet consectetuer neque a elit dui suscipit. Vestibulum Sed risus pretium orci Pellentesque nunc montes ut leo mauris. Habitant Pellentesque felis cursus interdum non Maecenas pede semper Ut In. Volutpat nunc Curabitur condimentum et interdum hendrerit dictum elit eu habitasse. Quis netus sit commodo mus consectetuer a at tellus urna justo. Condimentum.<br />\r\n<br />\r\nJusto Nam et Vivamus Mauris tristique felis a adipiscing eu Fusce. Fringilla ac ipsum neque Curabitur condimentum elit morbi malesuada Sed urna. Pretium faucibus sit Sed auctor magna pellentesque fringilla Praesent dolor convallis. Tincidunt venenatis fringilla justo In amet tellus auctor penatibus Suspendisse Mauris. Tellus metus Vivamus id ac Phasellus tellus Morbi Suspendisse Aliquam orci. Laoreet laoreet justo mus.</p>');
+insert into `aa_translation` values ('193', '<p>Questo &egrave; il testo della prima news!</p>\r\n\r\n<p>Lorem ipsum dolor sit amet consectetuer neque a elit dui suscipit. Vestibulum Sed risus pretium orci Pellentesque nunc montes ut leo mauris. Habitant Pellentesque felis cursus interdum non Maecenas pede semper Ut In. Volutpat nunc Curabitur condimentum et interdum hendrerit dictum elit eu habitasse. Quis netus sit commodo mus consectetuer a at tellus urna justo. Condimentum.<br />\r\n<br />\r\nJusto Nam et Vivamus Mauris tristique felis a adipiscing eu Fusce. Fringilla ac ipsum neque Curabitur condimentum elit morbi malesuada Sed urna. Pretium faucibus sit Sed auctor magna pellentesque fringilla Praesent dolor convallis. Tincidunt venenatis fringilla justo In amet tellus auctor penatibus Suspendisse Mauris. Tellus metus Vivamus id ac Phasellus tellus Morbi Suspendisse Aliquam orci. Laoreet laoreet justo mus.</p>\r\n', '<p>This is the first news.</p>\r\n<p>Lorem ipsum dolor sit amet consectetuer neque a elit dui suscipit. Vestibulum Sed risus pretium orci Pellentesque nunc montes ut leo mauris. Habitant Pellentesque felis cursus interdum non Maecenas pede semper Ut In. Volutpat nunc Curabitur condimentum et interdum hendrerit dictum elit eu habitasse. Quis netus sit commodo mus consectetuer a at tellus urna justo. Condimentum.<br />\r\n<br />\r\nJusto Nam et Vivamus Mauris tristique felis a adipiscing eu Fusce. Fringilla ac ipsum neque Curabitur condimentum elit morbi malesuada Sed urna. Pretium faucibus sit Sed auctor magna pellentesque fringilla Praesent dolor convallis. Tincidunt venenatis fringilla justo In amet tellus auctor penatibus Suspendisse Mauris. Tellus metus Vivamus id ac Phasellus tellus Morbi Suspendisse Aliquam orci. Laoreet laoreet justo mus.</p>');
 insert into `aa_translation` values ('194', 'Date', 'Date');
 insert into `aa_translation` values ('195', '', '');
 insert into `aa_translation` values ('196', 'Tour Guidati', 'Guided Tour');
 insert into `aa_translation` values ('197', 'Intefaccia utente', 'User Interface');
 insert into `aa_translation` values ('198', 'Servizi', 'Services');
 insert into `aa_translation` values ('199', 'Supporto alle Foreign Keys nella Versione 2', 'Version 2 support Foreign Keys');
-insert into `aa_translation` values ('200', '<p>\r\n  Se hai innoDB, Syntax Desktop userà le foreign keys. Questa caratteristica mantiene le tabelle del database pulite e logicamente coerenti.</p>\r\n', 'If you have innoDB, Syntax Desktop will use the foreign keys. This feature will keep your database tables clean and logically coerent.');
+insert into `aa_translation` values ('200', '<p>Se hai innoDB, Syntax Desktop user&agrave; le foreign keys. Questa caratteristica mantiene le tabelle del database pulite e logicamente coerenti.</p>\r\n', 'If you have innoDB, Syntax Desktop will use the foreign keys. This feature will keep your database tables clean and logically coerent.');
 insert into `aa_translation` values ('201', 'Il primo concorso italiano open source', 'The first italian open source contest');
-insert into `aa_translation` values ('202', '<p>\r\n  Syntax Desktop è stato ammesso alla seconda fase del concorso italiano Open Source Contest. La sfida si concluderà il 31 dicembre 2004.</p>\r\n', 'Syntax Desktop is admitted to the second phase of the italian contest \"Open Source Contest\". The competition will finish on December, 31 (2004).\r\n');
+insert into `aa_translation` values ('202', '<p>Syntax Desktop &egrave; stato ammesso alla seconda fase del concorso italiano Open Source Contest. La sfida si concluder&agrave; il 31 dicembre 2004.</p>\r\n', 'Syntax Desktop is admitted to the second phase of the italian contest \"Open Source Contest\". The competition will finish on December, 31 (2004).\r\n');
 insert into `aa_translation` values ('203', 'Intro', 'Intro');
-insert into `aa_translation` values ('204', '<p><strong>Introduzione</strong></p>\r\n\r\n<p>Syntax Desktop è un sistema di gestione dei contenuti semplice e flessibile. Nato come strumento di aiuto per il lavoro, ora è un pacchetto pubblico usato&nbsp;in numerosi siti.</p>\r\n\r\n<p>Il nome ha un\'origine bizzarra, come capita spesso in questi casi. Syntax deriva da una coincidenza di 3 fatti:</p>\r\n\r\n<ul>\r\n  <li><strong>Syntax</strong> sarebbe stato il nome dell\'azienda, mai nata, che doveva sorgere dalle macerie della webagency&nbsp;presso cui lavoravo</li>\r\n <li><strong>Syntax supervisor</strong> è la carica che mi è stata data in un esame universitario&nbsp;di gruppo in cui avevo partecipato diciamo così, <em>marginalmente</em>... da allora i miei colleghi d\'università mi hanno chiamato così!</li>\r\n <li>Il nome Syntax mi piace, finisce con la <strong>X</strong>, molto di moda in questi tempi (vd. windows xp, dreamweaver mx, Mac OsX, ecc...)</li>\r\n</ul>\r\n\r\n<p>Ovviamente poi, essendo l\'interfaccia simile ad una scrivania virtuale, il nome finale è risultato: \"Syntax Desktop\".</p>\r\n\r\n<p>Il lavoro nasce da un\'idea di un mio ex-collega, <strong>Dimitri Giardina</strong>, che mi ha insegnato inizialmente l\'uso di PHP. Ovviamente del vecchio progetto non esiste più nulla, ma una citazione ritengo sia giusto averla fatta.</p>\r\n\r\n<p>Il progetto vuole essere un sistema completo per la gestione di siti web. É per questo motivo che alcune funzioni sono state implementate, altre invece sono lasciate all\'utente finale. Syntax contiene infatti un <strong>motore di generazione di pagine</strong> di amministrazione che permette di gestire qualsiasi tipo di dato strutturato.</p>\r\n', '<p><strong>Introduction</strong></p>\r\n\r\n<p>Syntax Desktop is a Content Management System simple and flexible. It was born as a support tool in my office work, but now became a very used software in many web sites.</p>\r\n\r\n<p>The name born from three ideas:</p>\r\n\r\n<ul>\r\n <li>Syntax&nbsp;should be the name of a company never created</li>\r\n  <li>Some of my friend call me Syntax Supervisor, because of a university exams project, where I do very little</li>\r\n <li>I like the name \"syntax\" beacuse it ends with an X, very cool in this period (i.e. windows xp, dreamweaver mx, Mac OsX, etc...)</li>\r\n</ul>\r\n\r\n<p>Obviously,&nbsp;the&nbsp;name&nbsp;was extended with a \"desktop\" because the&nbsp;is similar to a virtual writing desk.</p>\r\n\r\n<p>The&nbsp;project&nbsp;was born from an idea of&nbsp;my former-connects, <strong>Dimitri Giardina </strong>,&nbsp;the person who&nbsp;initially taught the use of PHP.&nbsp;</p>\r\n\r\n<p>Syntax Desktop&nbsp;wants to be a complete system for the web content manegement.&nbsp;For this reason&nbsp;some functions have been implemented, others instead are left the final customer. Syntax contains in fact&nbsp;an<strong>&nbsp;administration&nbsp;pages builder engine</strong> that allow to manage whichever type of structured data.</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p><font color=\"#ff0000\">HELP ME!<br />\r\nIf you want to help me, send the right english translation of this page at </font><a href=\"mailto:info@dynamick.it\"><font color=\"#ff0000\">info@dynamick.it</font></a><font color=\"#ff0000\"> .<br />\r\nThank you!</font></p>\r\n');
+insert into `aa_translation` values ('204', '<p><strong>Introduzione</strong></p>\r\n\r\n<p>Syntax Desktop &egrave; un sistema di gestione dei contenuti semplice e flessibile. Nato come strumento di aiuto per il lavoro, ora &egrave; un pacchetto pubblico usato&nbsp;in numerosi siti.</p>\r\n\r\n<p>Il nome ha un&#39;origine bizzarra, come capita spesso in questi casi. Syntax deriva da una coincidenza di 3 fatti:</p>\r\n\r\n<ul>\r\n	<li><strong>Syntax</strong> sarebbe stato il nome dell&#39;azienda, mai nata, che doveva sorgere dalle macerie della webagency&nbsp;presso cui lavoravo</li>\r\n	<li><strong>Syntax supervisor</strong> &egrave; la carica che mi &egrave; stata data in un esame universitario&nbsp;di gruppo in cui avevo partecipato diciamo cos&igrave;, <em>marginalmente</em>... da allora i miei colleghi d&#39;universit&agrave; mi hanno chiamato cos&igrave;!</li>\r\n	<li>Il nome Syntax mi piace, finisce con la <strong>X</strong>, molto di moda in questi tempi (vd. windows xp, dreamweaver mx, Mac OsX, ecc...)</li>\r\n</ul>\r\n\r\n<p>Ovviamente poi, essendo l&#39;interfaccia simile ad una scrivania virtuale, il nome finale &egrave; risultato: &quot;Syntax Desktop&quot;.</p>\r\n\r\n<p>Il lavoro nasce da un&#39;idea di un mio ex-collega, <strong>Dimitri Giardina</strong>, che mi ha insegnato inizialmente l&#39;uso di PHP. Ovviamente del vecchio progetto non esiste pi&ugrave; nulla, ma una citazione ritengo sia giusto averla fatta.</p>\r\n\r\n<p>Il progetto vuole essere un sistema completo per la gestione di siti web. &Eacute; per questo motivo che alcune funzioni sono state implementate, altre invece sono lasciate all&#39;utente finale. Syntax contiene infatti un <strong>motore di generazione di pagine</strong> di amministrazione che permette di gestire qualsiasi tipo di dato strutturato.</p>\r\n', '<p><strong>Introduction</strong></p>\r\n\r\n<p>Syntax Desktop is a Content Management System simple and flexible. It was born as a support tool in my office work, but now became a very used software in many web sites.</p>\r\n\r\n<p>The name born from three ideas:</p>\r\n\r\n<ul>\r\n <li>Syntax&nbsp;should be the name of a company never created</li>\r\n  <li>Some of my friend call me Syntax Supervisor, because of a university exams project, where I do very little</li>\r\n <li>I like the name \"syntax\" beacuse it ends with an X, very cool in this period (i.e. windows xp, dreamweaver mx, Mac OsX, etc...)</li>\r\n</ul>\r\n\r\n<p>Obviously,&nbsp;the&nbsp;name&nbsp;was extended with a \"desktop\" because the&nbsp;is similar to a virtual writing desk.</p>\r\n\r\n<p>The&nbsp;project&nbsp;was born from an idea of&nbsp;my former-connects, <strong>Dimitri Giardina </strong>,&nbsp;the person who&nbsp;initially taught the use of PHP.&nbsp;</p>\r\n\r\n<p>Syntax Desktop&nbsp;wants to be a complete system for the web content manegement.&nbsp;For this reason&nbsp;some functions have been implemented, others instead are left the final customer. Syntax contains in fact&nbsp;an<strong>&nbsp;administration&nbsp;pages builder engine</strong> that allow to manage whichever type of structured data.</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p><font color=\"#ff0000\">HELP ME!<br />\r\nIf you want to help me, send the right english translation of this page at </font><a href=\"mailto:info@dynamick.it\"><font color=\"#ff0000\">info@dynamick.it</font></a><font color=\"#ff0000\"> .<br />\r\nThank you!</font></p>\r\n');
 insert into `aa_translation` values ('205', 'Il tuo codice di attivazione é errato o scaduto. Per favore controlla la tua e-mail e segui le istruzioni.', 'Your activation code is either incorrect or outdated. Please check your e-mail and follow instructions.');
 insert into `aa_translation` values ('206', 'Installazione', 'Installation');
-insert into `aa_translation` values ('207', '<p><strong>Configurazione di php.ini</strong></p>\r\n\r\n<p>Assicuratevi di avere questi parametri settati nel file php.ini:</p>\r\n\r\n<ul>\r\n <li>error_reporting = E_ALL &amp; ~E_NOTICE&nbsp;</li>\r\n  <li>short_open_tag = On</li>\r\n  <li>register_globals = On&nbsp;</li>\r\n  <li>allow_call_time_pass_reference = On</li>\r\n</ul>\r\n\r\n<h4><strong>Permessi sui file</strong></h4>\r\n\r\n<p>Dopo aver copiato Syntax Deskto nella root del vostro Server, verificate di avere i permessi di scrittura (777) sulle seguenti cartelle:</p>\r\n\r\n<ul>\r\n <li>/admin/config/</li>\r\n <li>/admin/modules/phpMyBackupPro/export/</li>\r\n  <li>/public/mat/</li>\r\n <li>/cache/</li>\r\n</ul>\r\n\r\n<h4><strong>Installazione</strong></h4>\r\n\r\n<ol>\r\n  <li>Occorre prima di tutto creare un database mysql, possibilmente di tipo InnoDB, in modo da poter gestire le Foreign keys;</li>\r\n <li>Navigate in <u>www.miosito/admin/setup.php</u> e seguite le istruzioni. Se tutti i parametri sono corretti, Syntax creerà tutte le tabelle e i file di configurazione necessari.</li>\r\n <li>Syntax Desktop è pronto per essere usato! Si raccomanda di eliminare setup.php e rimuovere i permessi di scrittura su /admin/config/.</li>\r\n</ol>\r\n', '<p>\r\n  <strong>Installation</strong></p>\r\n<p>\r\n  The installation simply require&nbsp;adjusting the /syntax desktop/config/cfg.php file</p>\r\n<p>\r\n <strong>Configuring database&nbsp;</strong><br />\r\n It is necessary first to create a&nbsp;mysql database (possibly&nbsp;an InnoDB). After that, you have to adjust these few lines in the cfg.php:</p>\r\n<p>\r\n  <font color=\"#006600\">//ACCOUNT </font><br />\r\n $synDbHost=\"localhost\";<br />\r\n $synDbUser=\"root\";<br />\r\n  $synDbPassword=\"\";<br />\r\n  $synDbName=\"syntax\";</p>\r\n<p>\r\n <strong>Other configuration values</strong><br />\r\n You have to configure other parameters:</p>\r\n<p>\r\n  <font color=\"#006600\">//Upload image directory<br />\r\n  //YOU MUST PUT TRAILING SLASH;<br />\r\n  //the initial relative path is syntax desktop installation dir<br />\r\n  //(i.e. relative path=\"/syntax desktop/\" $mat=\"../mat\" ---&gt; result \"/syntax desktop/\"+\"../mat/\")</font><br />\r\n  $mat=\"../mat/\";<br />\r\n $thumb=\"../mat/thumb/\";</p>\r\n<p>\r\n  <font color=\"#006600\">//admin email</font><br />\r\n  $synAdministrator=\"info@dynamick.it\";</p>\r\n<p>\r\n  <font color=\"#006600\">//site address \"http://www.dynamick.it\"</font><br />\r\n  $synWebsite=\"/\";</p>\r\n<p>\r\n <font color=\"#006600\">//rows per page</font><br />\r\n  $synRowsPerPage=17;</p>\r\n<p>\r\n  <font color=\"#006600\">//version</font><br />\r\n  $synVersion=\"2 Beta\";</p>\r\n<p>\r\n  <strong>php.ini parameters</strong><br />\r\n You have to&nbsp;verify to have these values in your php.ini<br />\r\n  <br />\r\n  error_reporting = E_ALL &amp; ~E_NOTICE&nbsp;<br />\r\n register_globals = On&nbsp;<br />\r\n allow_call_time_pass_reference = On&nbsp;</p>\r\n<p>\r\n  <strong>Changing write permission</strong><br />\r\n  Give the write rights to these files:<br />\r\n /syntax desktop/config/cfg.php<br />\r\n  /syntax desktop/public/configs/files.txt<br />\r\n  /syntax desktop/includes/php/smarty/templates_c<br />\r\n /syntax desktop/modules/dump/backup/</p>\r\n<p>\r\n <strong>Run Syntax Desktop!</strong><br />\r\n  You can now launch Syntax Desktop in your browser.&nbsp;Syntax will ask you to choose the dump to load on yours database. Otherwise it will ask you to reshape the parameters of database connection.</p>\r\n<p>\r\n  &nbsp;</p>\r\n<p>\r\n <font color=\"#ff0000\">HELP ME!<br />\r\n  If you want to help me, send the right english translation of this page at </font><a href=\"mailto:info@dynamick.it\"><font color=\"#ff0000\">info@dynamick.it</font></a><font color=\"#ff0000\"> .<br />\r\n Thank you!</font></p>\r\n');
+insert into `aa_translation` values ('207', '<p><strong>Configurazione di php.ini</strong></p>\r\n\r\n<p>Assicuratevi di avere questi parametri settati nel file php.ini:</p>\r\n\r\n<ul>\r\n	<li>error_reporting = E_ALL &amp; ~E_NOTICE&nbsp;</li>\r\n	<li>short_open_tag = On</li>\r\n	<li>register_globals = On&nbsp;</li>\r\n	<li>allow_call_time_pass_reference = On</li>\r\n</ul>\r\n\r\n<h4><strong>Permessi sui file</strong></h4>\r\n\r\n<p>Dopo aver copiato Syntax Deskto nella root del vostro Server, verificate di avere i permessi di scrittura (777) sulle seguenti cartelle:</p>\r\n\r\n<ul>\r\n	<li>/admin/config/</li>\r\n	<li>/admin/modules/phpMyBackupPro/export/</li>\r\n	<li>/public/mat/</li>\r\n	<li>/cache/</li>\r\n</ul>\r\n\r\n<h4><strong>Installazione</strong></h4>\r\n\r\n<ol>\r\n	<li>Occorre prima di tutto creare un database mysql, possibilmente di tipo InnoDB, in modo da poter gestire le Foreign keys;</li>\r\n	<li>Navigate in www.miosito/admin/setup.php e seguite le istruzioni. Se tutti i parametri sono corretti, Syntax creer&agrave; tutte le tabelle e i file di configurazione necessari.</li>\r\n	<li>Syntax Desktop &egrave; pronto per essere usato! Si raccomanda di eliminare setup.php e rimuovere i permessi di scrittura su /admin/config/.</li>\r\n</ol>\r\n', '<p>\r\n  <strong>Installation</strong></p>\r\n<p>\r\n  The installation simply require&nbsp;adjusting the /syntax desktop/config/cfg.php file</p>\r\n<p>\r\n <strong>Configuring database&nbsp;</strong><br />\r\n It is necessary first to create a&nbsp;mysql database (possibly&nbsp;an InnoDB). After that, you have to adjust these few lines in the cfg.php:</p>\r\n<p>\r\n  <font color=\"#006600\">//ACCOUNT </font><br />\r\n $synDbHost=\"localhost\";<br />\r\n $synDbUser=\"root\";<br />\r\n  $synDbPassword=\"\";<br />\r\n  $synDbName=\"syntax\";</p>\r\n<p>\r\n <strong>Other configuration values</strong><br />\r\n You have to configure other parameters:</p>\r\n<p>\r\n  <font color=\"#006600\">//Upload image directory<br />\r\n  //YOU MUST PUT TRAILING SLASH;<br />\r\n  //the initial relative path is syntax desktop installation dir<br />\r\n  //(i.e. relative path=\"/syntax desktop/\" $mat=\"../mat\" ---&gt; result \"/syntax desktop/\"+\"../mat/\")</font><br />\r\n  $mat=\"../mat/\";<br />\r\n $thumb=\"../mat/thumb/\";</p>\r\n<p>\r\n  <font color=\"#006600\">//admin email</font><br />\r\n  $synAdministrator=\"info@dynamick.it\";</p>\r\n<p>\r\n  <font color=\"#006600\">//site address \"http://www.dynamick.it\"</font><br />\r\n  $synWebsite=\"/\";</p>\r\n<p>\r\n <font color=\"#006600\">//rows per page</font><br />\r\n  $synRowsPerPage=17;</p>\r\n<p>\r\n  <font color=\"#006600\">//version</font><br />\r\n  $synVersion=\"2 Beta\";</p>\r\n<p>\r\n  <strong>php.ini parameters</strong><br />\r\n You have to&nbsp;verify to have these values in your php.ini<br />\r\n  <br />\r\n  error_reporting = E_ALL &amp; ~E_NOTICE&nbsp;<br />\r\n register_globals = On&nbsp;<br />\r\n allow_call_time_pass_reference = On&nbsp;</p>\r\n<p>\r\n  <strong>Changing write permission</strong><br />\r\n  Give the write rights to these files:<br />\r\n /syntax desktop/config/cfg.php<br />\r\n  /syntax desktop/public/configs/files.txt<br />\r\n  /syntax desktop/includes/php/smarty/templates_c<br />\r\n /syntax desktop/modules/dump/backup/</p>\r\n<p>\r\n <strong>Run Syntax Desktop!</strong><br />\r\n  You can now launch Syntax Desktop in your browser.&nbsp;Syntax will ask you to choose the dump to load on yours database. Otherwise it will ask you to reshape the parameters of database connection.</p>\r\n<p>\r\n  &nbsp;</p>\r\n<p>\r\n <font color=\"#ff0000\">HELP ME!<br />\r\n  If you want to help me, send the right english translation of this page at </font><a href=\"mailto:info@dynamick.it\"><font color=\"#ff0000\">info@dynamick.it</font></a><font color=\"#ff0000\"> .<br />\r\n Thank you!</font></p>\r\n');
 insert into `aa_translation` values ('208', 'Email non valida', 'Invalid email address');
 insert into `aa_translation` values ('209', 'Personalizzazioni', 'Customization');
-insert into `aa_translation` values ('210', '<p><strong>Personalizzazioni</strong></p>\r\n\r\n<p>Per poter adattare syntax al proprio sito, si devono avere conoscenze, se pur minime,&nbsp;di html e php. La cartella public all\'interno di Syntax contiene tutte le informazioni che dovete modificare per poter personalizzare il vostro sito.</p>\r\n\r\n<p>La gestione dei template è affidata al sistema <a href=\"http://smarty.php.net/\">smarty</a>. Quindi per poter costruire il proprio template occorre avere conoscenze di questo intuitivo sistema. Trovate documentazione presso il sito ufficiale di smarty: <a href=\"http://smarty.php.net/\">http://smarty.php.net/</a></p>\r\n\r\n<p>Nello specifico, la cartella public/ contiene:</p>\r\n\r\n<ul>\r\n <li>configs - attualmente in costruzione</li>\r\n <li>css - cartella preposta a contenere i fogli di stile del sito</li>\r\n  <li>img - la cartella delle immagini</li>\r\n <li>plugin - questa cartella contiene tutti i plugin che rendono dinamico il sito. Sono plugin di <a href=\"http://smarty.php.net/\">smarty</a>.</li>\r\n <li>templates - i file che contengono i template sono localizzati in questa cartella</li>\r\n</ul>\r\n\r\n<p>Queste sono le cartelle di default, ma nulla vieta di crearne di nuove.</p>\r\n', '<p>\r\n Now you have to customize your Syntax Desktop to adapt your requirements. It is necessary some HTML and PHP basis to administrate completely this cms.</p>\r\n<p>\r\n The \"public\" folder&nbsp;inside syntax path contains all the information&nbsp;you&nbsp;can modify for create your new site.</p>\r\n<p>\r\n  The&nbsp;template system is based&nbsp;on&nbsp;<a href=\"http://216.239.39.104/translate_c?hl=en&amp;u=http://smarty.php.net/\"><font color=\"#000000\">smarty </font></a>.&nbsp;You can&nbsp;find some documentation&nbsp;at the official smarty web site: <a href=\"http://216.239.39.104/translate_c?hl=en&amp;u=http://smarty.php.net/\"><font color=\"#000000\">http://smarty.php.net/</font></a></p>\r\n<p>\r\n The&nbsp; \"public\" folder contains this directories:</p>\r\n<ul>\r\n  <li>\r\n    configs - currently under construction</li>\r\n <li>\r\n    css - contains the cascading style sheets&nbsp;of your site&nbsp;</li>\r\n  <li>\r\n    img - this folder&nbsp;contains the&nbsp;images</li>\r\n  <li>\r\n    plugin - this folder contains all the smarty plugins.</li>\r\n  <li>\r\n    templates - this folder contains the templates of your website</li>\r\n <li>\r\n    mat - contains the uploaded document</li>\r\n <li>\r\n    backup - mysql dump repository</li>\r\n</ul>\r\n<p>\r\n These are some default directories&nbsp;but you to create new ones.</p>\r\n<p>\r\n  &nbsp;</p>\r\n<p>\r\n <font color=\"#ff0000\">HELP ME!<br />\r\n  If you want to help me, send the right english translation of this page at </font><a href=\"mailto:info@dynamick.it\"><font color=\"#ff0000\">info@dynamick.it</font></a><font color=\"#ff0000\"> .<br />\r\n Thank you!</font></p>\r\n');
+insert into `aa_translation` values ('210', '<p><strong>Personalizzazioni</strong></p>\r\n\r\n<p>Per poter adattare syntax al proprio sito, si devono avere conoscenze, se pur minime,&nbsp;di html e php. La cartella public all&#39;interno di Syntax contiene tutte le informazioni che dovete modificare per poter personalizzare il vostro sito.</p>\r\n\r\n<p>La gestione dei template &egrave; affidata al sistema <a href=\"http://smarty.php.net/\">smarty</a>. Quindi per poter costruire il proprio template occorre avere conoscenze di questo intuitivo sistema. Trovate documentazione presso il sito ufficiale di smarty: <a href=\"http://smarty.php.net/\">http://smarty.php.net/</a></p>\r\n\r\n<p>Nello specifico, la cartella public/ contiene:</p>\r\n\r\n<ul>\r\n	<li>configs - attualmente in costruzione</li>\r\n	<li>css - cartella preposta a contenere i fogli di stile del sito</li>\r\n	<li>img - la cartella delle immagini</li>\r\n	<li>plugin - questa cartella contiene tutti i plugin che rendono dinamico il sito. Sono plugin di <a href=\"http://smarty.php.net/\">smarty</a>.</li>\r\n	<li>templates - i file che contengono i template sono localizzati in questa cartella</li>\r\n</ul>\r\n\r\n<p>Queste sono le cartelle di default, ma nulla vieta di crearne di nuove.</p>\r\n', '<p>\r\n Now you have to customize your Syntax Desktop to adapt your requirements. It is necessary some HTML and PHP basis to administrate completely this cms.</p>\r\n<p>\r\n The \"public\" folder&nbsp;inside syntax path contains all the information&nbsp;you&nbsp;can modify for create your new site.</p>\r\n<p>\r\n  The&nbsp;template system is based&nbsp;on&nbsp;<a href=\"http://216.239.39.104/translate_c?hl=en&amp;u=http://smarty.php.net/\"><font color=\"#000000\">smarty </font></a>.&nbsp;You can&nbsp;find some documentation&nbsp;at the official smarty web site: <a href=\"http://216.239.39.104/translate_c?hl=en&amp;u=http://smarty.php.net/\"><font color=\"#000000\">http://smarty.php.net/</font></a></p>\r\n<p>\r\n The&nbsp; \"public\" folder contains this directories:</p>\r\n<ul>\r\n  <li>\r\n    configs - currently under construction</li>\r\n <li>\r\n    css - contains the cascading style sheets&nbsp;of your site&nbsp;</li>\r\n  <li>\r\n    img - this folder&nbsp;contains the&nbsp;images</li>\r\n  <li>\r\n    plugin - this folder contains all the smarty plugins.</li>\r\n  <li>\r\n    templates - this folder contains the templates of your website</li>\r\n <li>\r\n    mat - contains the uploaded document</li>\r\n <li>\r\n    backup - mysql dump repository</li>\r\n</ul>\r\n<p>\r\n These are some default directories&nbsp;but you to create new ones.</p>\r\n<p>\r\n  &nbsp;</p>\r\n<p>\r\n <font color=\"#ff0000\">HELP ME!<br />\r\n  If you want to help me, send the right english translation of this page at </font><a href=\"mailto:info@dynamick.it\"><font color=\"#ff0000\">info@dynamick.it</font></a><font color=\"#ff0000\"> .<br />\r\n Thank you!</font></p>\r\n');
 insert into `aa_translation` values ('211', 'Contatti', 'Contacts');
 insert into `aa_translation` values ('212', '<p>Per problemi o suggerimenti, scrivete sul forum presente su <a href=\"http://sourceforge.net/forum/?group_id=107986\" target=\"_blank\">sourceforge</a>.</p>\r\n\r\n<p>Per contattarmi direttamente, scrivete pure a <a href=\"mailto:info@dynamick.it\">info_AT_dynamick.it</a></p>\r\n', '<p>\r\n If you find some bug, or you have to ask something, write your message on the&nbsp;<a href=\"http://sourceforge.net/forum/?group_id=107986\" target=\"_blank\">sourceforge</a> forum.</p>\r\n<p>\r\n  You can also contact me&nbsp;via email at &nbsp;<a href=\"mailto:info@dynamick.it\">info_AT_dynamick.it</a></p>\r\n<p>\r\n  Have a good work!</p>\r\n');
 insert into `aa_translation` values ('213', 'Requisiti', 'Requirements');
-insert into `aa_translation` values ('214', '<p><strong>Requisiti</strong></p>\r\n\r\n<p>Syntax Desktop è un\'applicazione web-based che necessita di questi requisiti per poter funzionare.</p>\r\n\r\n<p><strong>Lato server</strong></p>\r\n\r\n<ol>\r\n <li>Webserver - Attualmente l\'applicazione è stata testata esclusivamente con Apache, ma questo non implica che funzioni solo con questo webserver</li>\r\n  <li>PHP - Interprete php. Testato con la versione 4</li>\r\n  <li>MySql - Testato con database mysql. Syntax usa il wrapper AdoDB, un layer che si occupa dell\'accesso al db. Questo implica che anche altri tipi di database potrebbero funzionare.<br />\r\n É preferito l\'uso di tabelle di tipo innoDb per poter utilizzare le foreign keys.</li>\r\n</ol>\r\n\r\n<p><strong>Lato client</strong></p>\r\n\r\n<p><strike>Purtroppo syntax funziona correttamente usando solamente&nbsp;Internet Explorer. Gli altri browser non sono mai stati testati completamente. Mi scuso con questa grave limitazione. Cercherò di aumentare la compatibilità il più presto possibile.</strike> Syntax Desktop funziona correttamente su tutti i moderni browser.</p>\r\n', '<p><strong>Requirement </strong></p>\r\n\r\n<p>Syntax Desktop&nbsp;needs these requirement for being able to work.</p>\r\n\r\n<p><strong>Server side </strong></p>\r\n\r\n<ol>\r\n  <li>Webserver - Currently the application has been&nbsp;tested exclusively with Apache, but this does not imply that other webservers can work.&nbsp;&nbsp;</li>\r\n  <li>PHP - Tested with version 4</li>\r\n  <li>MySql - Tested with MySql database. Syntax it uses the AdoDB library, a layer that&nbsp;take care of the access to the db. This implies that also other types of database could work.<br />\r\n Is preferred the use of innoDb tables&nbsp;type&nbsp;enabling use the foreign keys.</li>\r\n</ol>\r\n\r\n<p><strong>Side client </strong><br />\r\n<strike>Unfortunately syntax works correctly only using Internet Explorer. The others browsers are never&nbsp;been tested&nbsp;completely. In the near future I&nbsp;will try to increase the compatibility.</strike> Syntax Desktop works correctly with all modern browsers.</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p><font color=\"#ff0000\">HELP ME!<br />\r\nIf you want to help me, send the right english translation of this page at </font><a href=\"mailto:info@dynamick.it\"><font color=\"#ff0000\">info@dynamick.it</font></a><font color=\"#ff0000\"> .<br />\r\nThank you!</font></p>\r\n');
+insert into `aa_translation` values ('214', '<p><strong>Requisiti</strong></p>\r\n\r\n<p>Syntax Desktop &egrave; un&#39;applicazione web-based che necessita di questi requisiti per poter funzionare.</p>\r\n\r\n<p><strong>Lato server</strong></p>\r\n\r\n<ol>\r\n	<li>Webserver - Attualmente l&#39;applicazione &egrave; stata testata esclusivamente con Apache, ma questo non implica che funzioni solo con questo webserver</li>\r\n	<li>PHP - Interprete php. Testato con la versione 4</li>\r\n	<li>MySql - Testato con database mysql. Syntax usa il wrapper AdoDB, un layer che si occupa dell&#39;accesso al db. Questo implica che anche altri tipi di database potrebbero funzionare.<br />\r\n	&Eacute; preferito l&#39;uso di tabelle di tipo innoDb per poter utilizzare le foreign keys.</li>\r\n</ol>\r\n\r\n<p><strong>Lato client</strong></p>\r\n\r\n<p><s>Purtroppo syntax funziona correttamente usando solamente&nbsp;Internet Explorer. Gli altri browser non sono mai stati testati completamente. Mi scuso con questa grave limitazione. Cercher&ograve; di aumentare la compatibilit&agrave; il pi&ugrave; presto possibile.</s> Syntax Desktop funziona correttamente su tutti i moderni browser.</p>\r\n', '<p><strong>Requirement </strong></p>\r\n\r\n<p>Syntax Desktop&nbsp;needs these requirement for being able to work.</p>\r\n\r\n<p><strong>Server side </strong></p>\r\n\r\n<ol>\r\n  <li>Webserver - Currently the application has been&nbsp;tested exclusively with Apache, but this does not imply that other webservers can work.&nbsp;&nbsp;</li>\r\n  <li>PHP - Tested with version 4</li>\r\n  <li>MySql - Tested with MySql database. Syntax it uses the AdoDB library, a layer that&nbsp;take care of the access to the db. This implies that also other types of database could work.<br />\r\n Is preferred the use of innoDb tables&nbsp;type&nbsp;enabling use the foreign keys.</li>\r\n</ol>\r\n\r\n<p><strong>Side client </strong><br />\r\n<strike>Unfortunately syntax works correctly only using Internet Explorer. The others browsers are never&nbsp;been tested&nbsp;completely. In the near future I&nbsp;will try to increase the compatibility.</strike> Syntax Desktop works correctly with all modern browsers.</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p><font color=\"#ff0000\">HELP ME!<br />\r\nIf you want to help me, send the right english translation of this page at </font><a href=\"mailto:info@dynamick.it\"><font color=\"#ff0000\">info@dynamick.it</font></a><font color=\"#ff0000\"> .<br />\r\nThank you!</font></p>\r\n');
 insert into `aa_translation` values ('215', 'Input non valido!', 'Invalid input!');
 insert into `aa_translation` values ('216', 'Template', 'Template');
-insert into `aa_translation` values ('217', '<p><strong>Costruzione dei Template</strong></p>\r\n\r\n<p>La prima cosa da fare per costruire il proprio sito è definire i template (o modelli grafici) che racchiuderanno i testi del sito. In SyntaxDesktop, la parte dedicata ai template è gestita dal motore <strong>smarty</strong>. Per maggiori informazioni vistate il sito <a href=\"http://www.smarty.net\">http://www.smarty.net</a>.</p>\r\n\r\n<p>Un template non è altro che un semplice file html o xhtml, statico, che contiene tutti i riferimenti alle immagini e script. All\'interno di questo file è però possibile inserire tag speciali. Questi tag si caraterizzano dal fatto che hanno come carattere di delimitazione la parentesi graffa. Un esempio di tag è questo:<br />\r\n<font color=\"#006600\">{news}</font><br />\r\noppure<br />\r\n<font color=\"#006600\">{$title}</font></p>\r\n\r\n<p>Distinguiamo 2 tipi di tag. Il tag che richiama funzioni ed il tag che richiama variabili. La distinzione tra i due tipi è denotata dal segno dollaro ($) prefissa al nome:</p>\r\n\r\n<ul>\r\n <li>Nel primo caso (<font color=\"#006600\">{news}</font> ) si fa riferimento ad un <strong>plugin</strong>, cioè si richiama una funzione php presente nella cartella <strong>/public/plugins/</strong> dal nome <strong>function.news.php</strong> .</li>\r\n <li>Nel secondo caso (<font color=\"#006600\">{$title}</font>)&nbsp;si fa riferimento ad una <strong>variabile</strong> che si chiama $title.</li>\r\n</ul>\r\n\r\n<p>A template ultimato, lo si deve salvare nella cartella /syntax desktop/public/template/ con l\'estensione .tpl. Per esempio, un nome corretto per un file template potrebbe essere <em>homepage.tpl</em> oppure <em>genericpage.tpl</em>.</p>\r\n\r\n<p>A questo punto attraverso Syntax Desktop si dovrà definire un nuovo template (amministrazione-&gt;template) cliccando il bottone \"nuovo documento\" nella toolbar di destra. Per definire un template occorre spedificare il nome ed il file, scegliendolo dal menu a tendina che compare alla voce files. Per esempio, per definire il template dell\'homepage, scriveremo \"Homepage\" nel campo del nome e sceglieremo il file homepage.tpl nel menu a tendina files.</p>\r\n', '<p><strong>Template creation</strong></p>\r\n\r\n<p>The first step you\'ve to do is the creation of your own template.</p>\r\n\r\n<p>A template&nbsp;is a simple&nbsp;HTML&nbsp;file that it contains all the references to the images and script. Inside a template you can also insert&nbsp;some special tags,&nbsp;smarty tags. These tags&nbsp;are charaterized&nbsp;by curly brakes. Here an example of this kind of tags:<br />\r\n<font color=\"#006600\">{news} </font><br />\r\nor<br />\r\n<font color=\"#006600\">{$title} </font></p>\r\n\r\n<p>We distinguish 2 tag types. The tag that it recalls functions and the tag that recalls variables. The distinction between the two types is denoted from the sign dollar ($) prefixed to the name.<br />\r\nIn the first case (<font color=\"#006600\"> {news} </font>) we reference&nbsp;a plugin, that&nbsp;launch <strong>function.news.php</strong>,<strong> </strong>a php function situated in the <strong>/syntax desktop/public/plugins/</strong>&nbsp;directory.<br />\r\nThe other row&nbsp;(<font color=\"#006600\"> {$title} </font>) reference&nbsp;a variable&nbsp;called $title.</p>\r\n\r\n<p>At the ending, you&nbsp;the template&nbsp;have to be saved in the /syntax desktop/public/template/ folder with&nbsp;<strong>.tpl</strong> extension. As an example, a correct name for a template&nbsp;could be homepage.tpl or genericpage.tpl.</p>\r\n\r\n<p>We have to define a new template inside Syntax Desktop database. Open contents-&gt;section-&gt;template and click&nbsp;\"new document\" in the right toolbar. In order to define template it is necessary to&nbsp;specify the name and the related template file. You have to choose it from the drop-down menu. As an example, in order to define the homepage template, we&nbsp; write \"homepage\" in the name field and&nbsp;choose the rows homepage.tpl in the dropdown menu.</p>\r\n\r\n<p><font color=\"#ff0000\">HELP ME!<br />\r\nIf you want to help me, send the right english translation of this page at </font><a href=\"mailto:info@dynamick.it\"><font color=\"#ff0000\">info@dynamick.it</font></a><font color=\"#ff0000\"> .<br />\r\nThank you!</font></p>\r\n');
+insert into `aa_translation` values ('217', '<p><strong>Costruzione dei Template</strong></p>\r\n\r\n<p>La prima cosa da fare per costruire il proprio sito &egrave; definire i template (o modelli grafici) che racchiuderanno i testi del sito. In SyntaxDesktop, la parte dedicata ai template &egrave; gestita dal motore <strong>smarty</strong>. Per maggiori informazioni vistate il sito <a href=\"http://www.smarty.net\">http://www.smarty.net</a>.</p>\r\n\r\n<p>Un template non &egrave; altro che un semplice file html o xhtml, statico, che contiene tutti i riferimenti alle immagini e script. All&#39;interno di questo file &egrave; per&ograve; possibile inserire tag speciali. Questi tag si caraterizzano dal fatto che hanno come carattere di delimitazione la parentesi graffa. Un esempio di tag &egrave; questo:<br />\r\n{news}<br />\r\noppure<br />\r\n{$title}</p>\r\n\r\n<p>Distinguiamo 2 tipi di tag. Il tag che richiama funzioni ed il tag che richiama variabili. La distinzione tra i due tipi &egrave; denotata dal segno dollaro ($) prefissa al nome:</p>\r\n\r\n<ul>\r\n	<li>Nel primo caso ({news} ) si fa riferimento ad un <strong>plugin</strong>, cio&egrave; si richiama una funzione php presente nella cartella <strong>/public/plugins/</strong> dal nome <strong>function.news.php</strong> .</li>\r\n	<li>Nel secondo caso ({$title})&nbsp;si fa riferimento ad una <strong>variabile</strong> che si chiama $title.</li>\r\n</ul>\r\n\r\n<p>A template ultimato, lo si deve salvare nella cartella /syntax desktop/public/template/ con l&#39;estensione .tpl. Per esempio, un nome corretto per un file template potrebbe essere <em>homepage.tpl</em> oppure <em>genericpage.tpl</em>.</p>\r\n\r\n<p>A questo punto attraverso Syntax Desktop si dovr&agrave; definire un nuovo template (amministrazione-&gt;template) cliccando il bottone &quot;nuovo documento&quot; nella toolbar di destra. Per definire un template occorre spedificare il nome ed il file, scegliendolo dal menu a tendina che compare alla voce files. Per esempio, per definire il template dell&#39;homepage, scriveremo &quot;Homepage&quot; nel campo del nome e sceglieremo il file homepage.tpl nel menu a tendina files.</p>\r\n', '<p><strong>Template creation</strong></p>\r\n\r\n<p>The first step you\'ve to do is the creation of your own template.</p>\r\n\r\n<p>A template&nbsp;is a simple&nbsp;HTML&nbsp;file that it contains all the references to the images and script. Inside a template you can also insert&nbsp;some special tags,&nbsp;smarty tags. These tags&nbsp;are charaterized&nbsp;by curly brakes. Here an example of this kind of tags:<br />\r\n<font color=\"#006600\">{news} </font><br />\r\nor<br />\r\n<font color=\"#006600\">{$title} </font></p>\r\n\r\n<p>We distinguish 2 tag types. The tag that it recalls functions and the tag that recalls variables. The distinction between the two types is denoted from the sign dollar ($) prefixed to the name.<br />\r\nIn the first case (<font color=\"#006600\"> {news} </font>) we reference&nbsp;a plugin, that&nbsp;launch <strong>function.news.php</strong>,<strong> </strong>a php function situated in the <strong>/syntax desktop/public/plugins/</strong>&nbsp;directory.<br />\r\nThe other row&nbsp;(<font color=\"#006600\"> {$title} </font>) reference&nbsp;a variable&nbsp;called $title.</p>\r\n\r\n<p>At the ending, you&nbsp;the template&nbsp;have to be saved in the /syntax desktop/public/template/ folder with&nbsp;<strong>.tpl</strong> extension. As an example, a correct name for a template&nbsp;could be homepage.tpl or genericpage.tpl.</p>\r\n\r\n<p>We have to define a new template inside Syntax Desktop database. Open contents-&gt;section-&gt;template and click&nbsp;\"new document\" in the right toolbar. In order to define template it is necessary to&nbsp;specify the name and the related template file. You have to choose it from the drop-down menu. As an example, in order to define the homepage template, we&nbsp; write \"homepage\" in the name field and&nbsp;choose the rows homepage.tpl in the dropdown menu.</p>\r\n\r\n<p><font color=\"#ff0000\">HELP ME!<br />\r\nIf you want to help me, send the right english translation of this page at </font><a href=\"mailto:info@dynamick.it\"><font color=\"#ff0000\">info@dynamick.it</font></a><font color=\"#ff0000\"> .<br />\r\nThank you!</font></p>\r\n');
 insert into `aa_translation` values ('218', 'Logout eseguito correttamente.', 'Logout eseguito correttamente.');
 insert into `aa_translation` values ('219', 'Pagine', 'Pages');
-insert into `aa_translation` values ('220', '<p><strong>Generazione delle Pagine</strong></p>\r\n\r\n<p>Siamo pronti a definire le pagine del sito.</p>\r\n\r\n<p>Apriamo la sezione delle Pagine cliccando andando su Gestione Contenuti-&gt;Pagine.</p>\r\n\r\n<p>Nel centro della pagina vediamo l\'elenco delle pagine già&nbsp; definite, mentre sulla sinistra viene visualizzata la struttura ad albero delle pagine. Da questa schermata si possono modificare, cancellare le pagine esistenti oppure crearne di nuove.</p>\r\n\r\n<p>Ogni pagina è caratterizzata da un titolo, che verrà&nbsp; valorizzato nella variabile {$synPageTitle}, da un testo, utilizzato dal plugin {page} e da un template (vd. sezioni precedenti). É possibile anche definire un gruppo di utenti preposti alla gestione della pagina. Il checkbox \"visibile\" serve per visualizzare o meno la pagina all\'interno del menu di navigazione.</p>\r\n\r\n<p><strike>Per visualizzare il sito, non ci resta altro che compilare le pagine, cioè creare sul file system la struttura che abbiamo scelto per il nostro sito.&nbsp;Per ogni pagina verrà creata una cartella col nome della pagina e all\'\'interno verrà inserito un file index.php. Questo in modo ricorsivo, per ricreare la struttura ad albero definita in precedenza</strike>. Per esempio, per visualizzare una pagina che si chiama \"<strong>ultimapagina</strong>\" inserita nella \"<strong>sezione2</strong>\" che a sua volta è sottosta a \"<strong>sezione1</strong>\" sarà sufficiente andare su: <strong>www.miosito.it/sezione1/sezione2/ultimapagina/</strong>. Questa tecnica è stata ideata per evitare url troppo lunghi e con infiniti parametri passati via GET. Il vantaggio è quello di poter essere indicizzati agevolmente dai motori di ricerca, caratteristica fondamentale per i siti di successo.</p>\r\n', '<p>\r\n  <strong>Pages generation</strong></p>\r\n<p>\r\n  We are ready to&nbsp;start the page creation process.<br />\r\n You have to open the Content Management-&gt;Site section-&gt;Pages menu in Syntax Desktop.</p>\r\n<p>\r\n In the center of the page we see the already defined pages, while on the left&nbsp; you can see the same pages in a tree structure. These pages can be modified, deleted or can be created new ones.</p>\r\n<p>\r\n Every page is characterized&nbsp;by a title, ( you can retrieve this field in&nbsp;every template&nbsp;through&nbsp;the smarty variable {$synPageTitle}),&nbsp;by a text, ( you can retrieve this field in every template through the smarty&nbsp;plugin&nbsp;{page}) and by a template (see previous sections).&nbsp;It is also&nbsp;possible&nbsp;define a group of&nbsp;users&nbsp;that can manage the page. The \"visible\" checkbox&nbsp;specify either to show or to hide the page&nbsp;inside the&nbsp;navigation menu.</p>\r\n<p>\r\n In order to complete the page creation you have&nbsp;to compile the pages clicking the red button on the left of page.&nbsp;For every page it will&nbsp;created a folder with the name of the page and&nbsp;it will put inside&nbsp;an index.php file. This will done in a recursive way in order to recreate the page structure defined in the page tree visualization. As&nbsp;example, to&nbsp;display a page&nbsp;named&nbsp;<strong> \"lastpage</strong>\" in \"<strong> section2 </strong>\" that&nbsp;resides inside&nbsp;\"<strong>section1</strong>\" you have to go at <strong>www.mysite.com/section1/section2/lastpage/</strong>. This technique&nbsp;avoid&nbsp;too much long URL and&nbsp;fill with&nbsp;infinites GET parameters. In this way the search engines can easily index your pages,&nbsp;the main&nbsp;characteristic for the success web site.</p>\r\n<p>\r\n &nbsp;</p>\r\n<p>\r\n <font color=\"#ff0000\">HELP ME!<br />\r\n  If you want to help me, send the right english translation of this page at </font><a href=\"mailto:info@dynamick.it\"><font color=\"#ff0000\">info@dynamick.it</font></a><font color=\"#ff0000\"> .<br />\r\n Thank you!</font></p>\r\n');
+insert into `aa_translation` values ('220', '<p><strong>Generazione delle Pagine</strong></p>\r\n\r\n<p>Siamo pronti a definire le pagine del sito.</p>\r\n\r\n<p>Apriamo la sezione delle Pagine cliccando andando su Gestione Contenuti-&gt;Pagine.</p>\r\n\r\n<p>Nel centro della pagina vediamo l&#39;elenco delle pagine gi&agrave;&nbsp; definite, mentre sulla sinistra viene visualizzata la struttura ad albero delle pagine. Da questa schermata si possono modificare, cancellare le pagine esistenti oppure crearne di nuove.</p>\r\n\r\n<p>Ogni pagina &egrave; caratterizzata da un titolo, che verr&agrave;&nbsp; valorizzato nella variabile {$synPageTitle}, da un testo, utilizzato dal plugin {page} e da un template (vd. sezioni precedenti). &Eacute; possibile anche definire un gruppo di utenti preposti alla gestione della pagina. Il checkbox &quot;visibile&quot; serve per visualizzare o meno la pagina all&#39;interno del menu di navigazione.</p>\r\n\r\n<p><s>Per visualizzare il sito, non ci resta altro che compilare le pagine, cio&egrave; creare sul file system la struttura che abbiamo scelto per il nostro sito.&nbsp;Per ogni pagina verr&agrave; creata una cartella col nome della pagina e all&#39;&#39;interno verr&agrave; inserito un file index.php. Questo in modo ricorsivo, per ricreare la struttura ad albero definita in precedenza</s>. Per esempio, per visualizzare una pagina che si chiama &quot;<strong>ultimapagina</strong>&quot; inserita nella &quot;<strong>sezione2</strong>&quot; che a sua volta &egrave; sottosta a &quot;<strong>sezione1</strong>&quot; sar&agrave; sufficiente andare su: <strong>www.miosito.it/sezione1/sezione2/ultimapagina/</strong>. Questa tecnica &egrave; stata ideata per evitare url troppo lunghi e con infiniti parametri passati via GET. Il vantaggio &egrave; quello di poter essere indicizzati agevolmente dai motori di ricerca, caratteristica fondamentale per i siti di successo.</p>\r\n', '<p>\r\n  <strong>Pages generation</strong></p>\r\n<p>\r\n  We are ready to&nbsp;start the page creation process.<br />\r\n You have to open the Content Management-&gt;Site section-&gt;Pages menu in Syntax Desktop.</p>\r\n<p>\r\n In the center of the page we see the already defined pages, while on the left&nbsp; you can see the same pages in a tree structure. These pages can be modified, deleted or can be created new ones.</p>\r\n<p>\r\n Every page is characterized&nbsp;by a title, ( you can retrieve this field in&nbsp;every template&nbsp;through&nbsp;the smarty variable {$synPageTitle}),&nbsp;by a text, ( you can retrieve this field in every template through the smarty&nbsp;plugin&nbsp;{page}) and by a template (see previous sections).&nbsp;It is also&nbsp;possible&nbsp;define a group of&nbsp;users&nbsp;that can manage the page. The \"visible\" checkbox&nbsp;specify either to show or to hide the page&nbsp;inside the&nbsp;navigation menu.</p>\r\n<p>\r\n In order to complete the page creation you have&nbsp;to compile the pages clicking the red button on the left of page.&nbsp;For every page it will&nbsp;created a folder with the name of the page and&nbsp;it will put inside&nbsp;an index.php file. This will done in a recursive way in order to recreate the page structure defined in the page tree visualization. As&nbsp;example, to&nbsp;display a page&nbsp;named&nbsp;<strong> \"lastpage</strong>\" in \"<strong> section2 </strong>\" that&nbsp;resides inside&nbsp;\"<strong>section1</strong>\" you have to go at <strong>www.mysite.com/section1/section2/lastpage/</strong>. This technique&nbsp;avoid&nbsp;too much long URL and&nbsp;fill with&nbsp;infinites GET parameters. In this way the search engines can easily index your pages,&nbsp;the main&nbsp;characteristic for the success web site.</p>\r\n<p>\r\n &nbsp;</p>\r\n<p>\r\n <font color=\"#ff0000\">HELP ME!<br />\r\n  If you want to help me, send the right english translation of this page at </font><a href=\"mailto:info@dynamick.it\"><font color=\"#ff0000\">info@dynamick.it</font></a><font color=\"#ff0000\"> .<br />\r\n Thank you!</font></p>\r\n');
 insert into `aa_translation` values ('221', 'Tag Predefiniti', 'Predefined tags');
-insert into `aa_translation` values ('222', '<p><strong>Tag Predefiniti</strong></p>\r\n\r\n<p>Elenchiamo di seguito i tag pronti all\'uso definiti da SyntaxDesktop.</p>\r\n\r\n<p><strong>Variabili</strong></p>\r\n\r\n<p>{$synPageTitle}</p>\r\n\r\n<ul>\r\n  <li><strong><font color=\"#009900\">{$synPageTitle}</font></strong>: restituisce il nome della pagina. Utile nell\'\'head della pagina quando si deve specificare il titolo. Per esempio:</li>\r\n  <li><strong><font color=\"#009900\">{$synPageId}</font></strong>: restituisce l\'\'id della pagina</li>\r\n <li><font color=\"#009900\"><strong>{$synPath}</strong></font>: restituisce il path di installazione di syntax desktop. Normalmente è \"syntax desktop\" ma il path di installazione è lasciato a discrezione dell\'\'utente. Questo tag è utile quando si devono puntare le immagini. Le immagini infatti, per pulizia della document root, è meglio riporle nella cartella /public/img/ . Per esempio, nei tag img, usiamo:</li>\r\n  <li><strong><font color=\"#009900\">{$synAbsPath}</font></strong>: contiene il path assoluto della cartella di installazione di syntax sul file system del web server.</li>\r\n</ul>\r\n\r\n<p><strong>Plugins</strong></p>\r\n\r\n<div><font color=\"#0099ff\">{page}</font></div>\r\n\r\n<ul>\r\n <li><font color=\"#009900\"><strong>{page}</strong></font>: funzione fondamentale, da porre in ogni template, che ha il compito di restituire il&nbsp;testo della pagina. Per esempio:<br />\r\n  In questo caso abbiamo definito un template banale in cui tutto il testo verrà racchiuso all\'interno di un.</li>\r\n</ul>\r\n', '<p>\r\n <strong>Predefined tags</strong></p>\r\n<p>\r\n We list&nbsp;the predefined&nbsp;tag you can use in your templates.</p>\r\n<p>\r\n  <strong>Variables</strong></p>\r\n<ul>\r\n  <li>\r\n    <strong><font color=\"#009900\">{$synPageTitle}</font></strong>: it returns the page name. Useful when used in the title tag in the head of the page. I.e.:</li>\r\n  <li>\r\n    <strong><font color=\"#009900\">{$synPageId}</font></strong>: it returns the page id</li>\r\n <li>\r\n    <font color=\"#009900\"><strong>{$synPath}</strong></font>: it returns the installation path of Syntax Desktop. Usually this variable contains&nbsp;\"syntax desktop\", but the installation path can be changed. This tag is very usefull when you use images or scripts. Images, in fact, have to be saved in the /syntax desktop/public/img/ directory, so you don\'t waste the site root. I.e.:<br />\r\n   <font color=\"#0099ff\"><img alt=\"example image\" src=\"{$synPath}/public/img/esempio.jpg\" /></font></li>\r\n <li>\r\n    <strong><font color=\"#009900\">{$synAbsPath}</font></strong>: it returns the absolute installation path of Syntax Desktop.</li>\r\n</ul>\r\n<p>\r\n  <strong>Plugins</strong></p>\r\n<ul>\r\n  <li>\r\n    <font color=\"#009900\"><strong>{page}</strong></font>: it returns the page contents. You must&nbsp;put this predefined plugin where you want the page text to be displayed. I.e.:<br />\r\n    In this example, we\'ve created a simple template where the page text is displayed inside a div tag.</li>\r\n</ul>\r\n<p>\r\n &nbsp;</p>\r\n<p>\r\n <font color=\"#ff0000\">HELP ME!<br />\r\n  If you want to help me, send the right english translation of this page at </font><a href=\"mailto:info@dynamick.it\"><font color=\"#ff0000\">info@dynamick.it</font></a><font color=\"#ff0000\"> .<br />\r\n Thank you!</font></p>\r\n');
+insert into `aa_translation` values ('222', '<p><strong>Tag Predefiniti</strong></p>\r\n\r\n<p>Elenchiamo di seguito i tag pronti all&#39;uso definiti da SyntaxDesktop.</p>\r\n\r\n<p><strong>Variabili</strong></p>\r\n\r\n<p>{$synPageTitle}</p>\r\n\r\n<ul>\r\n	<li><strong>{$synPageTitle}</strong>: restituisce il nome della pagina. Utile nell&#39;&#39;head della pagina quando si deve specificare il titolo. Per esempio:</li>\r\n	<li><strong>{$synPageId}</strong>: restituisce l&#39;&#39;id della pagina</li>\r\n	<li><strong>{$synPath}</strong>: restituisce il path di installazione di syntax desktop. Normalmente &egrave; &quot;syntax desktop&quot; ma il path di installazione &egrave; lasciato a discrezione dell&#39;&#39;utente. Questo tag &egrave; utile quando si devono puntare le immagini. Le immagini infatti, per pulizia della document root, &egrave; meglio riporle nella cartella /public/img/ . Per esempio, nei tag img, usiamo:</li>\r\n	<li><strong>{$synAbsPath}</strong>: contiene il path assoluto della cartella di installazione di syntax sul file system del web server.</li>\r\n</ul>\r\n\r\n<p><strong>Plugins</strong></p>\r\n\r\n<div>{page}</div>\r\n\r\n<ul>\r\n	<li><strong>{page}</strong>: funzione fondamentale, da porre in ogni template, che ha il compito di restituire il&nbsp;testo della pagina. Per esempio:<br />\r\n	In questo caso abbiamo definito un template banale in cui tutto il testo verr&agrave; racchiuso all&#39;interno di un.</li>\r\n</ul>\r\n', '<p>\r\n <strong>Predefined tags</strong></p>\r\n<p>\r\n We list&nbsp;the predefined&nbsp;tag you can use in your templates.</p>\r\n<p>\r\n  <strong>Variables</strong></p>\r\n<ul>\r\n  <li>\r\n    <strong><font color=\"#009900\">{$synPageTitle}</font></strong>: it returns the page name. Useful when used in the title tag in the head of the page. I.e.:</li>\r\n  <li>\r\n    <strong><font color=\"#009900\">{$synPageId}</font></strong>: it returns the page id</li>\r\n <li>\r\n    <font color=\"#009900\"><strong>{$synPath}</strong></font>: it returns the installation path of Syntax Desktop. Usually this variable contains&nbsp;\"syntax desktop\", but the installation path can be changed. This tag is very usefull when you use images or scripts. Images, in fact, have to be saved in the /syntax desktop/public/img/ directory, so you don\'t waste the site root. I.e.:<br />\r\n   <font color=\"#0099ff\"><img alt=\"example image\" src=\"{$synPath}/public/img/esempio.jpg\" /></font></li>\r\n <li>\r\n    <strong><font color=\"#009900\">{$synAbsPath}</font></strong>: it returns the absolute installation path of Syntax Desktop.</li>\r\n</ul>\r\n<p>\r\n  <strong>Plugins</strong></p>\r\n<ul>\r\n  <li>\r\n    <font color=\"#009900\"><strong>{page}</strong></font>: it returns the page contents. You must&nbsp;put this predefined plugin where you want the page text to be displayed. I.e.:<br />\r\n    In this example, we\'ve created a simple template where the page text is displayed inside a div tag.</li>\r\n</ul>\r\n<p>\r\n &nbsp;</p>\r\n<p>\r\n <font color=\"#ff0000\">HELP ME!<br />\r\n  If you want to help me, send the right english translation of this page at </font><a href=\"mailto:info@dynamick.it\"><font color=\"#ff0000\">info@dynamick.it</font></a><font color=\"#ff0000\"> .<br />\r\n Thank you!</font></p>\r\n');
+insert into `aa_translation` values ('854', 'Creato da', 'Creato da');
+insert into `aa_translation` values ('855', '', '');
 insert into `aa_translation` values ('223', 'Tentativi di login', 'Login_attempts');
 insert into `aa_translation` values ('224', 'Login falliti consecutivamente. Un numero alto indica un tentativo di violazione dell\'account.', '');
 insert into `aa_translation` values ('225', 'Conteggio login', 'Conteggio login');
@@ -1196,7 +1267,9 @@ insert into `aa_translation` values ('561', '', '');
 insert into `aa_translation` values ('562', 'Metakeywords', 'Metakeywords');
 insert into `aa_translation` values ('563', '', '');
 insert into `aa_translation` values ('564', 'Stili', 'Stili');
-insert into `aa_translation` values ('565', '<h1>Titolo 1</h1>\r\n\r\n<h2>Titolo 2</h2>\r\n\r\n<h3>Titolo 3</h3>\r\n\r\n<p>Lorem ipsum dolor sit amet consectetuer lacinia auctor fringilla urna ligula. Sed at et dis odio lorem nibh Ut est <strong>neque Curabitur</strong>. Orci Proin ac semper consectetuer sed rutrum gravida vitae interdum congue. Neque Curabitur elit faucibus morbi est convallis congue eros convallis Sed. Nam felis justo nisl Vestibulum Curabitur Phasellus porttitor convallis tristique ridiculus. Massa quis dui Vestibulum enim scelerisque ac wisi id lacus ut. <a href=\"http://www.google.com\">Ante semper tellus</a>.</p>\r\n\r\n<p><img alt=\"\" src=\"/public/mat/image/syntax-box.gif\" style=\"width: 77px; height: 100px; float: left;\" />Dictumst id penatibus morbi <strong>parturient Vivamus</strong> orci et ligula feugiat dui. Massa habitasse pretium Suspendisse tincidunt laoreet id felis Pellentesque tellus eu. Ac Phasellus montes Morbi sodales Aenean sociis pellentesque Vestibulum sagittis volutpat. Consectetuer et ante et ac velit quis malesuada est Aenean est. Donec Nulla Sed tellus quis semper tellus consectetuer et nascetur et. Tellus fames mus nulla Curabitur eu eget Curabitur magna metus Vestibulum. <a href=\"http://www.google.com\">Nisl consequat</a>.</p>\r\n\r\n<p><img alt=\"\" src=\"/public/mat/image/syntax-box.gif\" style=\"width: 77px; height: 100px; float: right;\" />Ut scelerisque <em>Proin porttitor Quisque</em> gravida facilisis dignissim euismod at leo. Ante eu condimentum nonummy sem sagittis ut cursus amet senectus Aliquam. Nam vitae risus Nullam interdum at dolor dapibus laoreet Praesent auctor. Lobortis Vestibulum porttitor nibh nunc eu lacinia Curabitur Maecenas condimentum lorem. <strike>Volutpat sem justo ipsum nibh semper tempor</strike>.</p>\r\n\r\n<h4>Titolo 4</h4>\r\n\r\n<ul>\r\n  <li>Orci Curabitur feugiat mauris convallis</li>\r\n  <li>porttitor sagittis condimentum vitae Praesent</li>\r\n  <li>Neque cursus nisl Phasellus laoreet habitasse tristique</li>\r\n  <li>lacus adipiscing hendrerit velit. Phasellus vel fames commodo</li>\r\n  <li>Fermentum a sit egestas dolor tincidunt libero</li>\r\n <li>Curabitur Nulla tincidunt pellentesque augue at penatibus</li>\r\n  <li>Phasellus eros lorem tempus libero tortor Lorem wisi felis</li>\r\n</ul>\r\n\r\n<hr />\r\n<h5>Titolo 5</h5>\r\n\r\n<ol>\r\n <li>Quis elit nonummy laoreet et dolor</li>\r\n <li>Sed lorem Curabitur at a</li>\r\n <li>Libero odio id congue pretium convallis tristique</li>\r\n  <li>Platea lacinia molestie lacinia congue a interdum</li>\r\n  <li>Ultrices fringilla vel Morbi vitae at nascetur tellus</li>\r\n</ol>\r\n\r\n<p>Mi quis laoreet Vivamus malesuada lacinia dapibus nibh augue Lorem tellus. Mauris wisi et venenatis nec purus sapien lacus hendrerit dictum amet. Pellentesque orci Curabitur commodo ultrices mauris Vestibulum tincidunt in dui et. Pellentesque sit habitasse orci mi volutpat dis sit lorem quis tellus. Dolor adipiscing leo nibh Suspendisse pretium malesuada netus enim condimentum iaculis. Mauris interdum Pellentesque et a urna.</p>\r\n\r\n<table border=\"1\" cellpadding=\"1\" cellspacing=\"1\" style=\"width: 100%;\">\r\n <tbody>\r\n   <tr>\r\n      <td>massa condimentum</td>\r\n      <td>1000</td>\r\n     <td>150</td>\r\n      <td>1000000</td>\r\n    </tr>\r\n   <tr>\r\n      <td>pharetra quis Aenean</td>\r\n     <td>2000</td>\r\n     <td>250</td>\r\n      <td>2000000</td>\r\n    </tr>\r\n   <tr>\r\n      <td>Curabitur congue lacinia</td>\r\n     <td>3000</td>\r\n     <td>350</td>\r\n      <td>3000000</td>\r\n    </tr>\r\n   <tr>\r\n      <td>Phasellus ut malesuada</td>\r\n     <td>4000</td>\r\n     <td>450</td>\r\n      <td>4000000</td>\r\n    </tr>\r\n   <tr>\r\n      <td>Ultrices fringilla</td>\r\n     <td>5000</td>\r\n     <td>550</td>\r\n      <td>5000000</td>\r\n    </tr>\r\n </tbody>\r\n</table>\r\n\r\n<h6>Titolo 6</h6>\r\n\r\n<blockquote>\r\n<p>There are painters who transform the sun to a yellow spot, but there are others who with the help of their art and their intelligence, transform a yellow spot into the sun.<br />\r\n-Pablo Picasso</p>\r\n</blockquote>\r\n\r\n<pre>\r\n&nbsp; global $db;\r\n&nbsp; $ret = array();\r\n&nbsp; while(list($l)=$res-&gt;FetchRow()) \r\n    $ret[] = $l;\r\n&nbsp; return $ret;\r\n</pre>\r\n\r\n<address>Quis elit nonummy laoreet et dolor<br />\r\nSed lorem Curabitur at a<br />\r\nLibero odio id congue pretium convallis tristique</address>\r\n', '<h1>\r\n  Titolo 1</h1>\r\n<h2>\r\n Titolo 2</h2>\r\n<h3>\r\n Titolo 3</h3>\r\n<p>\r\n  Lorem ipsum dolor sit amet consectetuer lacinia auctor fringilla urna ligula. Sed at et dis odio lorem nibh Ut est <strong>neque Curabitur</strong>. Orci Proin ac semper consectetuer sed rutrum gravida vitae interdum congue. Neque Curabitur elit faucibus morbi est convallis congue eros convallis Sed. Nam felis justo nisl Vestibulum Curabitur Phasellus porttitor convallis tristique ridiculus. Massa quis dui Vestibulum enim scelerisque ac wisi id lacus ut. <a href=\"http://www.google.com\">Ante semper tellus</a>.</p>\r\n<p>\r\n Dictumst id penatibus morbi <strong>parturient Vivamus</strong> orci et ligula feugiat dui. Massa habitasse pretium Suspendisse tincidunt laoreet id felis Pellentesque tellus eu. Ac Phasellus montes Morbi sodales Aenean sociis pellentesque Vestibulum sagittis volutpat. Consectetuer et ante et ac velit quis malesuada est Aenean est. Donec Nulla Sed tellus quis semper tellus consectetuer et nascetur et. Tellus fames mus nulla Curabitur eu eget Curabitur magna metus Vestibulum. <a href=\"http://www.google.com\">Nisl consequat</a>.</p>\r\n<p>\r\n  Ut scelerisque <em>Proin porttitor Quisque</em> gravida facilisis dignissim euismod at leo. Ante eu condimentum nonummy sem sagittis ut cursus amet senectus Aliquam. Nam vitae risus Nullam interdum at dolor dapibus laoreet Praesent auctor. Lobortis Vestibulum porttitor nibh nunc eu lacinia Curabitur Maecenas condimentum lorem. <strike>Volutpat sem justo ipsum nibh semper tempor</strike>.</p>\r\n<h4>\r\n  Titolo 4</h4>\r\n<ul>\r\n <li>\r\n    Orci Curabitur feugiat mauris convallis</li>\r\n  <li>\r\n    porttitor sagittis condimentum vitae Praesent</li>\r\n  <li>\r\n    Neque cursus nisl Phasellus laoreet habitasse tristique</li>\r\n  <li>\r\n    lacus adipiscing hendrerit velit. Phasellus vel fames commodo</li>\r\n  <li>\r\n    Fermentum a sit egestas dolor tincidunt libero</li>\r\n <li>\r\n    Curabitur Nulla tincidunt pellentesque augue at penatibus</li>\r\n  <li>\r\n    Phasellus eros lorem tempus libero tortor Lorem wisi felis</li>\r\n</ul>\r\n<hr />\r\n<h5>\r\n  Titolo 5</h5>\r\n<ol>\r\n <li>\r\n    Quis elit nonummy laoreet et dolor</li>\r\n <li>\r\n    Sed lorem Curabitur at a</li>\r\n <li>\r\n    Libero odio id congue pretium convallis tristique</li>\r\n  <li>\r\n    Platea lacinia molestie lacinia congue a interdum</li>\r\n  <li>\r\n    Ultrices fringilla vel Morbi vitae at nascetur tellus</li>\r\n</ol>\r\n<p>\r\n  Mi quis laoreet Vivamus malesuada lacinia dapibus nibh augue Lorem tellus. Mauris wisi et venenatis nec purus sapien lacus hendrerit dictum amet. Pellentesque orci Curabitur commodo ultrices mauris Vestibulum tincidunt in dui et. Pellentesque sit habitasse orci mi volutpat dis sit lorem quis tellus. Dolor adipiscing leo nibh Suspendisse pretium malesuada netus enim condimentum iaculis. Mauris interdum Pellentesque et a urna.</p>\r\n<table border=\"1\" cellpadding=\"1\" cellspacing=\"1\" style=\"width: 100%;\">\r\n <tbody>\r\n   <tr>\r\n      <td>\r\n        massa condimentum</td>\r\n      <td>\r\n        1000</td>\r\n     <td>\r\n        150</td>\r\n      <td>\r\n        1000000</td>\r\n    </tr>\r\n   <tr>\r\n      <td>\r\n        pharetra quis Aenean</td>\r\n     <td>\r\n        2000</td>\r\n     <td>\r\n        250</td>\r\n      <td>\r\n        2000000</td>\r\n    </tr>\r\n   <tr>\r\n      <td>\r\n        Curabitur congue lacinia</td>\r\n     <td>\r\n        3000</td>\r\n     <td>\r\n        350</td>\r\n      <td>\r\n        3000000</td>\r\n    </tr>\r\n   <tr>\r\n      <td>\r\n        Phasellus ut malesuada</td>\r\n     <td>\r\n        4000</td>\r\n     <td>\r\n        450</td>\r\n      <td>\r\n        4000000</td>\r\n    </tr>\r\n   <tr>\r\n      <td>\r\n        Ultrices fringilla</td>\r\n     <td>\r\n        5000</td>\r\n     <td>\r\n        550</td>\r\n      <td>\r\n        5000000</td>\r\n    </tr>\r\n </tbody>\r\n</table>\r\n<p>\r\n &nbsp;</p>\r\n');
+insert into `aa_translation` values ('565', '<h1>Titolo 1</h1>\r\n\r\n<h2>Titolo 2</h2>\r\n\r\n<h3>Titolo 3</h3>\r\n\r\n<p>Lorem ipsum dolor sit amet consectetuer lacinia auctor fringilla urna ligula. Sed at et dis odio lorem nibh Ut est <strong>neque Curabitur</strong>. Orci Proin ac semper consectetuer sed rutrum gravida vitae interdum congue. Neque Curabitur elit faucibus morbi est convallis congue eros convallis Sed. Nam felis justo nisl Vestibulum Curabitur Phasellus porttitor convallis tristique ridiculus. Massa quis dui Vestibulum enim scelerisque ac wisi id lacus ut. <a href=\"http://www.google.com\">Ante semper tellus</a>.</p>\r\n\r\n<p><img alt=\"\" src=\"/public/mat/image/syntax-box.gif\" style=\"float:left; height:100px; width:77px\" />Dictumst id penatibus morbi <strong>parturient Vivamus</strong> orci et ligula feugiat dui. Massa habitasse pretium Suspendisse tincidunt laoreet id felis Pellentesque tellus eu. Ac Phasellus montes Morbi sodales Aenean sociis pellentesque Vestibulum sagittis volutpat. Consectetuer et ante et ac velit quis malesuada est Aenean est. Donec Nulla Sed tellus quis semper tellus consectetuer et nascetur et. Tellus fames mus nulla Curabitur eu eget Curabitur magna metus Vestibulum. <a href=\"http://www.google.com\">Nisl consequat</a>.</p>\r\n\r\n<p><img alt=\"\" src=\"/public/mat/image/syntax-box.gif\" style=\"float:right; height:100px; width:77px\" />Ut scelerisque <em>Proin porttitor Quisque</em> gravida facilisis dignissim euismod at leo. Ante eu condimentum nonummy sem sagittis ut cursus amet senectus Aliquam. Nam vitae risus Nullam interdum at dolor dapibus laoreet Praesent auctor. Lobortis Vestibulum porttitor nibh nunc eu lacinia Curabitur Maecenas condimentum lorem. <s>Volutpat sem justo ipsum nibh semper tempor</s>.</p>\r\n\r\n<h4>Titolo 4</h4>\r\n\r\n<ul>\r\n	<li>Orci Curabitur feugiat mauris convallis</li>\r\n	<li>porttitor sagittis condimentum vitae Praesent</li>\r\n	<li>Neque cursus nisl Phasellus laoreet habitasse tristique</li>\r\n	<li>lacus adipiscing hendrerit velit. Phasellus vel fames commodo</li>\r\n	<li>Fermentum a sit egestas dolor tincidunt libero</li>\r\n	<li>Curabitur Nulla tincidunt pellentesque augue at penatibus</li>\r\n	<li>Phasellus eros lorem tempus libero tortor Lorem wisi felis</li>\r\n</ul>\r\n\r\n<hr />\r\n<h5>Titolo 5</h5>\r\n\r\n<ol>\r\n	<li>Quis elit nonummy laoreet et dolor</li>\r\n	<li>Sed lorem Curabitur at a</li>\r\n	<li>Libero odio id congue pretium convallis tristique</li>\r\n	<li>Platea lacinia molestie lacinia congue a interdum</li>\r\n	<li>Ultrices fringilla vel Morbi vitae at nascetur tellus</li>\r\n</ol>\r\n\r\n<p>Mi quis laoreet Vivamus malesuada lacinia dapibus nibh augue Lorem tellus. Mauris wisi et venenatis nec purus sapien lacus hendrerit dictum amet. Pellentesque orci Curabitur commodo ultrices mauris Vestibulum tincidunt in dui et. Pellentesque sit habitasse orci mi volutpat dis sit lorem quis tellus. Dolor adipiscing leo nibh Suspendisse pretium malesuada netus enim condimentum iaculis. Mauris interdum Pellentesque et a urna.</p>\r\n\r\n<table border=\"1\" cellpadding=\"1\" cellspacing=\"1\" style=\"width:100%\">\r\n	<tbody>\r\n		<tr>\r\n			<td>massa condimentum</td>\r\n			<td>1000</td>\r\n			<td>150</td>\r\n			<td>1000000</td>\r\n		</tr>\r\n		<tr>\r\n			<td>pharetra quis Aenean</td>\r\n			<td>2000</td>\r\n			<td>250</td>\r\n			<td>2000000</td>\r\n		</tr>\r\n		<tr>\r\n			<td>Curabitur congue lacinia</td>\r\n			<td>3000</td>\r\n			<td>350</td>\r\n			<td>3000000</td>\r\n		</tr>\r\n		<tr>\r\n			<td>Phasellus ut malesuada</td>\r\n			<td>4000</td>\r\n			<td>450</td>\r\n			<td>4000000</td>\r\n		</tr>\r\n		<tr>\r\n			<td>Ultrices fringilla</td>\r\n			<td>5000</td>\r\n			<td>550</td>\r\n			<td>5000000</td>\r\n		</tr>\r\n	</tbody>\r\n</table>\r\n\r\n<h6>Titolo 6</h6>\r\n\r\n<blockquote>\r\n<p>There are painters who transform the sun to a yellow spot, but there are others who with the help of their art and their intelligence, transform a yellow spot into the sun.<br />\r\n-Pablo Picasso</p>\r\n</blockquote>\r\n\r\n<pre>\r\n&nbsp; global $db;\r\n&nbsp; $ret = array();\r\n&nbsp; while(list($l)=$res-&gt;FetchRow()) \r\n    $ret[] = $l;\r\n&nbsp; return $ret;\r\n</pre>\r\n\r\n<address>Quis elit nonummy laoreet et dolor<br />\r\nSed lorem Curabitur at a<br />\r\nLibero odio id congue pretium convallis tristique</address>\r\n', '<h1>\r\n  Titolo 1</h1>\r\n<h2>\r\n Titolo 2</h2>\r\n<h3>\r\n Titolo 3</h3>\r\n<p>\r\n  Lorem ipsum dolor sit amet consectetuer lacinia auctor fringilla urna ligula. Sed at et dis odio lorem nibh Ut est <strong>neque Curabitur</strong>. Orci Proin ac semper consectetuer sed rutrum gravida vitae interdum congue. Neque Curabitur elit faucibus morbi est convallis congue eros convallis Sed. Nam felis justo nisl Vestibulum Curabitur Phasellus porttitor convallis tristique ridiculus. Massa quis dui Vestibulum enim scelerisque ac wisi id lacus ut. <a href=\"http://www.google.com\">Ante semper tellus</a>.</p>\r\n<p>\r\n Dictumst id penatibus morbi <strong>parturient Vivamus</strong> orci et ligula feugiat dui. Massa habitasse pretium Suspendisse tincidunt laoreet id felis Pellentesque tellus eu. Ac Phasellus montes Morbi sodales Aenean sociis pellentesque Vestibulum sagittis volutpat. Consectetuer et ante et ac velit quis malesuada est Aenean est. Donec Nulla Sed tellus quis semper tellus consectetuer et nascetur et. Tellus fames mus nulla Curabitur eu eget Curabitur magna metus Vestibulum. <a href=\"http://www.google.com\">Nisl consequat</a>.</p>\r\n<p>\r\n  Ut scelerisque <em>Proin porttitor Quisque</em> gravida facilisis dignissim euismod at leo. Ante eu condimentum nonummy sem sagittis ut cursus amet senectus Aliquam. Nam vitae risus Nullam interdum at dolor dapibus laoreet Praesent auctor. Lobortis Vestibulum porttitor nibh nunc eu lacinia Curabitur Maecenas condimentum lorem. <strike>Volutpat sem justo ipsum nibh semper tempor</strike>.</p>\r\n<h4>\r\n  Titolo 4</h4>\r\n<ul>\r\n <li>\r\n    Orci Curabitur feugiat mauris convallis</li>\r\n  <li>\r\n    porttitor sagittis condimentum vitae Praesent</li>\r\n  <li>\r\n    Neque cursus nisl Phasellus laoreet habitasse tristique</li>\r\n  <li>\r\n    lacus adipiscing hendrerit velit. Phasellus vel fames commodo</li>\r\n  <li>\r\n    Fermentum a sit egestas dolor tincidunt libero</li>\r\n <li>\r\n    Curabitur Nulla tincidunt pellentesque augue at penatibus</li>\r\n  <li>\r\n    Phasellus eros lorem tempus libero tortor Lorem wisi felis</li>\r\n</ul>\r\n<hr />\r\n<h5>\r\n  Titolo 5</h5>\r\n<ol>\r\n <li>\r\n    Quis elit nonummy laoreet et dolor</li>\r\n <li>\r\n    Sed lorem Curabitur at a</li>\r\n <li>\r\n    Libero odio id congue pretium convallis tristique</li>\r\n  <li>\r\n    Platea lacinia molestie lacinia congue a interdum</li>\r\n  <li>\r\n    Ultrices fringilla vel Morbi vitae at nascetur tellus</li>\r\n</ol>\r\n<p>\r\n  Mi quis laoreet Vivamus malesuada lacinia dapibus nibh augue Lorem tellus. Mauris wisi et venenatis nec purus sapien lacus hendrerit dictum amet. Pellentesque orci Curabitur commodo ultrices mauris Vestibulum tincidunt in dui et. Pellentesque sit habitasse orci mi volutpat dis sit lorem quis tellus. Dolor adipiscing leo nibh Suspendisse pretium malesuada netus enim condimentum iaculis. Mauris interdum Pellentesque et a urna.</p>\r\n<table border=\"1\" cellpadding=\"1\" cellspacing=\"1\" style=\"width: 100%;\">\r\n <tbody>\r\n   <tr>\r\n      <td>\r\n        massa condimentum</td>\r\n      <td>\r\n        1000</td>\r\n     <td>\r\n        150</td>\r\n      <td>\r\n        1000000</td>\r\n    </tr>\r\n   <tr>\r\n      <td>\r\n        pharetra quis Aenean</td>\r\n     <td>\r\n        2000</td>\r\n     <td>\r\n        250</td>\r\n      <td>\r\n        2000000</td>\r\n    </tr>\r\n   <tr>\r\n      <td>\r\n        Curabitur congue lacinia</td>\r\n     <td>\r\n        3000</td>\r\n     <td>\r\n        350</td>\r\n      <td>\r\n        3000000</td>\r\n    </tr>\r\n   <tr>\r\n      <td>\r\n        Phasellus ut malesuada</td>\r\n     <td>\r\n        4000</td>\r\n     <td>\r\n        450</td>\r\n      <td>\r\n        4000000</td>\r\n    </tr>\r\n   <tr>\r\n      <td>\r\n        Ultrices fringilla</td>\r\n     <td>\r\n        5000</td>\r\n     <td>\r\n        550</td>\r\n      <td>\r\n        5000000</td>\r\n    </tr>\r\n </tbody>\r\n</table>\r\n<p>\r\n &nbsp;</p>\r\n');
+insert into `aa_translation` values ('852', 'Allegato', 'Allegato');
+insert into `aa_translation` values ('853', '', '');
 insert into `aa_translation` values ('566', 'Ricerca', 'Ricerca');
 insert into `aa_translation` values ('567', 'ricerca', 'ricerca');
 insert into `aa_translation` values ('568', '', '');
@@ -1378,7 +1451,7 @@ insert into `aa_translation` values ('743', 'Gestione Pagine', 'Gestione Pagine'
 insert into `aa_translation` values ('744', 'Gestione Pagine', 'Gestione Pagine');
 insert into `aa_translation` values ('745', 'Privacy', 'Privacy');
 insert into `aa_translation` values ('746', 'privacy', 'privacy');
-insert into `aa_translation` values ('747', '<h3>Informativa sulla privacy</h3>\r\n\r\n<p>I dati personali trattati da <strong>Syntax Demo</strong> (da qui in avanti: \"il Titolare\"), sono raccolti direttamente presso il soggetto interessato oppure presso terzi nell\'ipotesi in cui il Titolare acquisisca dati da società esterne per informazioni commerciali, ricerche di mercato, offerte dirette di prodotti o servizi. Se i dati non sono raccolti presso l\'interessato, l\'informativa, comprensiva delle categorie dei dati trattati, è data al medesimo interessato, all\'atto della registrazione dei dati o, quando è prevista la loro comunicazione, non oltre la prima comunicazione. In ogni caso, tutti questi dati vengono trattati nel rispetto della legge e degli obblighi di riservatezza cui è ispirata l\'attività del Titolare.</p>\r\n\r\n<h4>Finalità e modalità del trattamento.</h4>\r\n\r\n<p>I dati personali forniti dall\'interessato saranno oggetto di trattamento informatico e manuale da parte del Titolare, e/o di società di fiducia del Titolare per le seguenti finalità: raccolta di informazioni precontrattuali, inclusa la valutazione economico finanziaria e di prodotto; corretta gestione del rapporto contrattuale e delle relative obbligazioni, ove presenti; adempimento degli obblighi di legge, contabili, fiscali e di ogni altra natura comunque connessi alle finalità di cui ai precedenti punti; raccolta di informazioni utili per migliorare i servizi e i prodotti del Titolare attraverso, per esempio, attività di rilevazione del grado di soddisfazione dei Clienti sulla qualità dei servizi resi; conoscenza di nuovi servizi e prodotti attraverso, per esempio, l\'invio di materiale pubblicitario concernente prodotti o servizi propri o di terzi. Il Titolare potrà avvalersi di soggetti di propria fiducia che svolgono compiti di natura tecnica od organizzativa quali, a titolo esemplificativo: la prestazione di servizi di stampa, imbustamento, trasmissione, trasporto e smistamento di comunicazioni. I trattamenti avvengono mediante elaborazioni manuali o strumenti elettronici, o comunque automatizzati, secondo logiche strettamente correlate alle finalità stesse e comunque in modo tale da garantire la riservatezza e la sicurezza dei dati personali.</p>\r\n\r\n<h4>Categorie di soggetti ai quali i dati possono essere comunicati e trasferiti</h4>\r\n\r\n<p>Oltre che ai soggetti indicati nel paragrafo precedente, i dati personali relativi al soggetto interessato potranno essere comunicati e trasferiti: a soggetti terzi autorizzati dal Titolare&nbsp; ad espletare attività di marketing e di promozione per conto del Titolare.</p>\r\n\r\n<h4>Diritti dell\'interessato</h4>\r\n\r\n<p>L\'art. 7, del d.lgs. 196/2003 conferisce agli interessati l\'esercizio di specifici diritti. In particolare, l\'interessato può ottenere dal Titolare la conferma dell\'esistenza o meno di propri dati personali che lo riguardano e la loro comunicazione in forma intelligibile.<br />\r\nL\'interessato può altresì chiedere di conoscere l\'origine dei dati, le finalità e modalità del trattamento, nonchè la logica applicata in caso di trattamento effettuato con l\'ausilio di strumenti elettronici, l\'indicazione degli estremi identificativi del titolare, dei responsabili nominati e dei soggetti o delle categorie di soggetti ai quali i dati possono essere comunicati o che possono venirne a conoscenza. L\'interessato ha diritto di ottenere l\'aggiornamento, la rettificazione, l\'integrazione, la cancellazione, la trasformazione in via anonima o il blocco dei dati trattati in violazione di legge.</p>\r\n\r\n<p>L\'interessato ha diritto di opporsi, in tutto o in parte, per motivi legittimi al trattamento dei dati personali che lo riguardano. I diritti in oggetto potranno essere esercitati, anche per il tramite di un incaricato, mediante richiesta con lettera raccomandata inviata al Titolare o con posta elettronica (vedere pagina \"Contatti\").</p>\r\n\r\n<p>Il Titolare, per garantire l\'effettivo esercizio dei diritti dell\'interessato, adotta misure idonee volte ad agevolare l\'accesso ai dati personali da parte dell\'interessato medesimo e a semplificare le modalità e a ridurre i tempi per il riscontro al richiedente.</p>\r\n', '<h3>Privacy Policy</h3>\r\n\r\n<p>The personal data processed by Syntax Demo (henceforth: \"the Holder\"), are collected from the person concerned or from third parties in the event that the Holder acquires data from external companies for commercial information, market research, direct offers of products or services. If the data are not collected from the subject, the information, including the categories of processed data, is given subject at the time of registration of the data or, when their communication is envisaged, no later than the first communication. In any case, all this data is processed in accordance with the law and the obligations of confidentiality which inspires the activities of the Holder.</p>\r\n\r\n<h4>Purposes and methods of treatment.</h4>\r\n\r\n<p>The personal informations will be supplied to the Holder, and / or trusted company of the Holder for the following purposes: collection of pre-contractual information, including financial and economic evaluation of the product; proper management of the contract and its obligations, if any; fulfillment of legal obligations, accounting, tax and any other nature related to the purposes mentioned above; collection of useful information to improve services and products of the Holder through, for example, activity for detection of the degree of customer satisfaction on the quality of services rendered; knowledge of new services and products through, for example, sendindg advertising material concerning products or services or third parties. The Holder may use, subject to its confidence that perform tasks of a technical or organizational, but not limited to: the provision of printing services, packaging, transmission, transport and sorting of communications. The treatments will be processed manually or electronically, or automated, according to logic strictly related to the purposes and in any event so as to ensure the confidentiality and security of personal data.</p>\r\n\r\n<h4>Categories of persons to whom the data may be communicated and transferred</h4>\r\n\r\n<p>In addition to the persons specified in the preceding paragraph, the personal data concerning the subject may be disclosed and transferred: to third parties authorized by the Holder to carry out marketing and promotions on behalf of the Holder.</p>\r\n\r\n<h4>Rights of the person concerned</h4>\r\n\r\n<p>Article. 7 of Legislative Decree no. 196/2003 grants the parties concerned the exercise of certain rights. In particular, the user can get from the confirmation of the existence of personal data concerning him and their communication in intelligible form.</p>\r\n\r\n<p>The party can also ask to know the origin of the data, the purposes and methods of treatment, and the logic applied in case of treatment with the help of electronic means, the indication of the identity of the owner, manager appointed and the persons or classes of persons to whom the data may be communicated or who can learn about them. You have the right to obtain the updating, rectification, integration, cancellation, transformation in anonymous form or blocking of data processed in violation of the law.</p>\r\n\r\n<p>You have the right to object, in whole or in part, for legitimate reasons the processing of personal data concerning him. These rights may be exercised, including by means of a person, by registered letter sent to the Holder or by e-mail (please refer to the \"Contacts\" page).</p>\r\n\r\n<p>The Holder, to ensure the effective exercise of the rights of the person concerned, shall take appropriate measures to facilitate access to personal data by the interested parties and to streamline the procedures and reduce the time for replying to the applicant.</p>\r\n');
+insert into `aa_translation` values ('747', '<h3>Informativa sulla privacy</h3>\r\n\r\n<p>I dati personali trattati da <strong>Syntax Demo</strong> (da qui in avanti: &quot;il Titolare&quot;), sono raccolti direttamente presso il soggetto interessato oppure presso terzi nell&#39;ipotesi in cui il Titolare acquisisca dati da societ&agrave; esterne per informazioni commerciali, ricerche di mercato, offerte dirette di prodotti o servizi. Se i dati non sono raccolti presso l&#39;interessato, l&#39;informativa, comprensiva delle categorie dei dati trattati, &egrave; data al medesimo interessato, all&#39;atto della registrazione dei dati o, quando &egrave; prevista la loro comunicazione, non oltre la prima comunicazione. In ogni caso, tutti questi dati vengono trattati nel rispetto della legge e degli obblighi di riservatezza cui &egrave; ispirata l&#39;attivit&agrave; del Titolare.</p>\r\n\r\n<h4>Finalit&agrave; e modalit&agrave; del trattamento.</h4>\r\n\r\n<p>I dati personali forniti dall&#39;interessato saranno oggetto di trattamento informatico e manuale da parte del Titolare, e/o di societ&agrave; di fiducia del Titolare per le seguenti finalit&agrave;: raccolta di informazioni precontrattuali, inclusa la valutazione economico finanziaria e di prodotto; corretta gestione del rapporto contrattuale e delle relative obbligazioni, ove presenti; adempimento degli obblighi di legge, contabili, fiscali e di ogni altra natura comunque connessi alle finalit&agrave; di cui ai precedenti punti; raccolta di informazioni utili per migliorare i servizi e i prodotti del Titolare attraverso, per esempio, attivit&agrave; di rilevazione del grado di soddisfazione dei Clienti sulla qualit&agrave; dei servizi resi; conoscenza di nuovi servizi e prodotti attraverso, per esempio, l&#39;invio di materiale pubblicitario concernente prodotti o servizi propri o di terzi. Il Titolare potr&agrave; avvalersi di soggetti di propria fiducia che svolgono compiti di natura tecnica od organizzativa quali, a titolo esemplificativo: la prestazione di servizi di stampa, imbustamento, trasmissione, trasporto e smistamento di comunicazioni. I trattamenti avvengono mediante elaborazioni manuali o strumenti elettronici, o comunque automatizzati, secondo logiche strettamente correlate alle finalit&agrave; stesse e comunque in modo tale da garantire la riservatezza e la sicurezza dei dati personali.</p>\r\n\r\n<h4>Categorie di soggetti ai quali i dati possono essere comunicati e trasferiti</h4>\r\n\r\n<p>Oltre che ai soggetti indicati nel paragrafo precedente, i dati personali relativi al soggetto interessato potranno essere comunicati e trasferiti: a soggetti terzi autorizzati dal Titolare&nbsp; ad espletare attivit&agrave; di marketing e di promozione per conto del Titolare.</p>\r\n\r\n<h4>Diritti dell&#39;interessato</h4>\r\n\r\n<p>L&#39;art. 7, del d.lgs. 196/2003 conferisce agli interessati l&#39;esercizio di specifici diritti. In particolare, l&#39;interessato pu&ograve; ottenere dal Titolare la conferma dell&#39;esistenza o meno di propri dati personali che lo riguardano e la loro comunicazione in forma intelligibile.<br />\r\nL&#39;interessato pu&ograve; altres&igrave; chiedere di conoscere l&#39;origine dei dati, le finalit&agrave; e modalit&agrave; del trattamento, nonch&egrave; la logica applicata in caso di trattamento effettuato con l&#39;ausilio di strumenti elettronici, l&#39;indicazione degli estremi identificativi del titolare, dei responsabili nominati e dei soggetti o delle categorie di soggetti ai quali i dati possono essere comunicati o che possono venirne a conoscenza. L&#39;interessato ha diritto di ottenere l&#39;aggiornamento, la rettificazione, l&#39;integrazione, la cancellazione, la trasformazione in via anonima o il blocco dei dati trattati in violazione di legge.</p>\r\n\r\n<p>L&#39;interessato ha diritto di opporsi, in tutto o in parte, per motivi legittimi al trattamento dei dati personali che lo riguardano. I diritti in oggetto potranno essere esercitati, anche per il tramite di un incaricato, mediante richiesta con lettera raccomandata inviata al Titolare o con posta elettronica (vedere pagina &quot;Contatti&quot;).</p>\r\n\r\n<p>Il Titolare, per garantire l&#39;effettivo esercizio dei diritti dell&#39;interessato, adotta misure idonee volte ad agevolare l&#39;accesso ai dati personali da parte dell&#39;interessato medesimo e a semplificare le modalit&agrave; e a ridurre i tempi per il riscontro al richiedente.</p>\r\n', '<h3>Privacy Policy</h3>\r\n\r\n<p>The personal data processed by Syntax Demo (henceforth: \"the Holder\"), are collected from the person concerned or from third parties in the event that the Holder acquires data from external companies for commercial information, market research, direct offers of products or services. If the data are not collected from the subject, the information, including the categories of processed data, is given subject at the time of registration of the data or, when their communication is envisaged, no later than the first communication. In any case, all this data is processed in accordance with the law and the obligations of confidentiality which inspires the activities of the Holder.</p>\r\n\r\n<h4>Purposes and methods of treatment.</h4>\r\n\r\n<p>The personal informations will be supplied to the Holder, and / or trusted company of the Holder for the following purposes: collection of pre-contractual information, including financial and economic evaluation of the product; proper management of the contract and its obligations, if any; fulfillment of legal obligations, accounting, tax and any other nature related to the purposes mentioned above; collection of useful information to improve services and products of the Holder through, for example, activity for detection of the degree of customer satisfaction on the quality of services rendered; knowledge of new services and products through, for example, sendindg advertising material concerning products or services or third parties. The Holder may use, subject to its confidence that perform tasks of a technical or organizational, but not limited to: the provision of printing services, packaging, transmission, transport and sorting of communications. The treatments will be processed manually or electronically, or automated, according to logic strictly related to the purposes and in any event so as to ensure the confidentiality and security of personal data.</p>\r\n\r\n<h4>Categories of persons to whom the data may be communicated and transferred</h4>\r\n\r\n<p>In addition to the persons specified in the preceding paragraph, the personal data concerning the subject may be disclosed and transferred: to third parties authorized by the Holder to carry out marketing and promotions on behalf of the Holder.</p>\r\n\r\n<h4>Rights of the person concerned</h4>\r\n\r\n<p>Article. 7 of Legislative Decree no. 196/2003 grants the parties concerned the exercise of certain rights. In particular, the user can get from the confirmation of the existence of personal data concerning him and their communication in intelligible form.</p>\r\n\r\n<p>The party can also ask to know the origin of the data, the purposes and methods of treatment, and the logic applied in case of treatment with the help of electronic means, the indication of the identity of the owner, manager appointed and the persons or classes of persons to whom the data may be communicated or who can learn about them. You have the right to obtain the updating, rectification, integration, cancellation, transformation in anonymous form or blocking of data processed in violation of the law.</p>\r\n\r\n<p>You have the right to object, in whole or in part, for legitimate reasons the processing of personal data concerning him. These rights may be exercised, including by means of a person, by registered letter sent to the Holder or by e-mail (please refer to the \"Contacts\" page).</p>\r\n\r\n<p>The Holder, to ensure the effective exercise of the rights of the person concerned, shall take appropriate measures to facilitate access to personal data by the interested parties and to streamline the procedures and reduce the time for replying to the applicant.</p>\r\n');
 insert into `aa_translation` values ('748', '', '');
 insert into `aa_translation` values ('749', '', '');
 insert into `aa_translation` values ('750', '', '');
@@ -1455,6 +1528,157 @@ insert into `aa_translation` values ('821', '', '');
 insert into `aa_translation` values ('822', 'Marchi', 'Marchi');
 insert into `aa_translation` values ('823', 'Photo', 'Photo');
 insert into `aa_translation` values ('824', '', '');
+insert into `aa_translation` values ('825', 'Headers', 'Headers');
+insert into `aa_translation` values ('826', '', '');
+insert into `aa_translation` values ('827', 'Id', 'Id');
+insert into `aa_translation` values ('828', '', '');
+insert into `aa_translation` values ('829', 'Titolo', 'Titolo');
+insert into `aa_translation` values ('830', '', '');
+insert into `aa_translation` values ('831', 'Sottotitolo', 'Sottotitolo');
+insert into `aa_translation` values ('832', '', '');
+insert into `aa_translation` values ('833', 'Img', 'Img');
+insert into `aa_translation` values ('834', '', '');
+insert into `aa_translation` values ('835', 'Id_pagina', 'Id_pagina');
+insert into `aa_translation` values ('836', '', '');
+insert into `aa_translation` values ('837', 'Visibile', 'Visibile');
+insert into `aa_translation` values ('838', '', '');
+insert into `aa_translation` values ('839', 'Ordine', 'Ordine');
+insert into `aa_translation` values ('840', '', '');
+insert into `aa_translation` values ('841', 'Headers', 'Headers');
+insert into `aa_translation` values ('842', 'Gallery', 'Gallery');
+insert into `aa_translation` values ('843', '', '');
+insert into `aa_translation` values ('844', 'Creato da', 'Creato da');
+insert into `aa_translation` values ('845', '', '');
+insert into `aa_translation` values ('846', 'Creato il', 'Creato il');
+insert into `aa_translation` values ('847', '', '');
+insert into `aa_translation` values ('848', 'Modificato da', 'Modificato da');
+insert into `aa_translation` values ('849', '', '');
+insert into `aa_translation` values ('850', 'Modificato il', 'Modificato il');
+insert into `aa_translation` values ('851', '', '');
+insert into `aa_translation` values ('856', 'Creato il', 'Creato il');
+insert into `aa_translation` values ('857', '', '');
+insert into `aa_translation` values ('858', 'Modificato da', 'Modificato da');
+insert into `aa_translation` values ('859', '', '');
+insert into `aa_translation` values ('860', 'Modificato il', 'Modificato il');
+insert into `aa_translation` values ('861', '', '');
+insert into `aa_translation` values ('862', 'Where does it come from?', 'Where does it come from?');
+insert into `aa_translation` values ('863', 'Contrary to popular belief, Lorem Ipsum is not simply random text.', 'Contrary to popular belief, Lorem Ipsum is not simply random text.');
+insert into `aa_translation` values ('864', '', '');
+insert into `aa_translation` values ('898', 'Id', 'Id');
+insert into `aa_translation` values ('865', '', '');
+insert into `aa_translation` values ('896', 'Categorie prodotti', 'Categorie prodotti');
+insert into `aa_translation` values ('897', '', '');
+insert into `aa_translation` values ('866', 'Sedi', 'Sedi');
+insert into `aa_translation` values ('867', '', '');
+insert into `aa_translation` values ('868', 'Id', 'Id');
+insert into `aa_translation` values ('869', '', '');
+insert into `aa_translation` values ('870', 'Sede', 'Sede');
+insert into `aa_translation` values ('871', '', '');
+insert into `aa_translation` values ('872', 'Telefono', 'Telefono');
+insert into `aa_translation` values ('873', '', '');
+insert into `aa_translation` values ('874', 'Indirizzo', 'Indirizzo');
+insert into `aa_translation` values ('875', '', '');
+insert into `aa_translation` values ('876', 'Lat', 'Lat');
+insert into `aa_translation` values ('877', '', '');
+insert into `aa_translation` values ('878', 'Long', 'Long');
+insert into `aa_translation` values ('879', '', '');
+insert into `aa_translation` values ('880', 'Visibile', 'Visibile');
+insert into `aa_translation` values ('881', '', '');
+insert into `aa_translation` values ('882', 'Ordine', 'Ordine');
+insert into `aa_translation` values ('883', '', '');
+insert into `aa_translation` values ('884', 'Sedi', 'Sedi');
+insert into `aa_translation` values ('885', 'Visibile', 'Visibile');
+insert into `aa_translation` values ('886', '', '');
+insert into `aa_translation` values ('887', 'Ordine', 'Ordine');
+insert into `aa_translation` values ('888', '', '');
+insert into `aa_translation` values ('889', 'Verona', 'Verona');
+insert into `aa_translation` values ('890', 'Piazzale Olimpia, 37138 Verona VR', 'Piazzale Olimpia, 37138 Verona VR');
+insert into `aa_translation` values ('891', 'Milano', 'Milano');
+insert into `aa_translation` values ('892', 'Piazzale Angelo Moratti, 20151 Milano MI', 'Piazzale Angelo Moratti, 20151 Milano MI');
+insert into `aa_translation` values ('893', 'Torino', 'Torino');
+insert into `aa_translation` values ('894', 'Via Filadelfia, 96/b, 10134 Torino TO', 'Via Filadelfia, 96/b, 10134 Torino TO');
+insert into `aa_translation` values ('895', 'News', 'News');
+insert into `aa_translation` values ('899', '', '');
+insert into `aa_translation` values ('900', 'Titolo', 'Titolo');
+insert into `aa_translation` values ('901', '', '');
+insert into `aa_translation` values ('902', 'Descrizione', 'Descrizione');
+insert into `aa_translation` values ('903', '', '');
+insert into `aa_translation` values ('904', 'Img', 'Img');
+insert into `aa_translation` values ('905', '', '');
+insert into `aa_translation` values ('906', 'Visibile', 'Visibile');
+insert into `aa_translation` values ('907', '', '');
+insert into `aa_translation` values ('908', 'Ordine', 'Ordine');
+insert into `aa_translation` values ('909', '', '');
+insert into `aa_translation` values ('910', 'Categorie prodotti', 'Categorie prodotti');
+insert into `aa_translation` values ('911', 'Prodotti', 'Prodotti');
+insert into `aa_translation` values ('912', 'prodotti', 'prodotti');
+insert into `aa_translation` values ('913', '', '');
+insert into `aa_translation` values ('914', '', '');
+insert into `aa_translation` values ('915', '', '');
+insert into `aa_translation` values ('916', '', '');
+insert into `aa_translation` values ('917', 'Categoria 1', 'Categoria 1');
+insert into `aa_translation` values ('918', '<p><strong>Lorem Ipsum</strong>&nbsp;is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry&#39;s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</p>\r\n', '<p><strong>Lorem Ipsum</strong>&nbsp;is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry&#39;s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</p>\r\n');
+insert into `aa_translation` values ('919', 'Prodotti', 'Prodotti');
+insert into `aa_translation` values ('920', '', '');
+insert into `aa_translation` values ('921', 'Id', 'Id');
+insert into `aa_translation` values ('922', '', '');
+insert into `aa_translation` values ('923', 'Titolo', 'Titolo');
+insert into `aa_translation` values ('924', '', '');
+insert into `aa_translation` values ('925', 'Descrizione', 'Descrizione');
+insert into `aa_translation` values ('926', '', '');
+insert into `aa_translation` values ('927', 'Allegato', 'Allegato');
+insert into `aa_translation` values ('928', '', '');
+insert into `aa_translation` values ('929', 'Visibile', 'Visibile');
+insert into `aa_translation` values ('930', '', '');
+insert into `aa_translation` values ('931', 'Ordine', 'Ordine');
+insert into `aa_translation` values ('932', '', '');
+insert into `aa_translation` values ('933', 'Prodotti', 'Prodotti');
+insert into `aa_translation` values ('934', 'Id_categoria', 'Id_categoria');
+insert into `aa_translation` values ('935', '', '');
+insert into `aa_translation` values ('936', 'Prodotto 1', 'Prodotto 1');
+insert into `aa_translation` values ('937', '<p><strong>Lorem Ipsum</strong>&nbsp;is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry&#39;s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</p>\r\n', '<p><strong>Lorem Ipsum</strong>&nbsp;is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry&#39;s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</p>\r\n');
+insert into `aa_translation` values ('938', 'Foto prodotti', 'Foto prodotti');
+insert into `aa_translation` values ('939', '', '');
+insert into `aa_translation` values ('940', 'Id', 'Id');
+insert into `aa_translation` values ('941', '', '');
+insert into `aa_translation` values ('942', 'Titolo', 'Titolo');
+insert into `aa_translation` values ('943', '', '');
+insert into `aa_translation` values ('944', 'Img', 'Img');
+insert into `aa_translation` values ('945', '', '');
+insert into `aa_translation` values ('946', 'Id_prodotto', 'Id_prodotto');
+insert into `aa_translation` values ('947', '', '');
+insert into `aa_translation` values ('948', 'Ordine', 'Ordine');
+insert into `aa_translation` values ('949', '', '');
+insert into `aa_translation` values ('950', 'Foto prodotti', 'Foto prodotti');
+insert into `aa_translation` values ('951', 'Foto', 'Foto');
+insert into `aa_translation` values ('952', '', '');
+insert into `aa_translation` values ('953', 'Creato da', 'Creato da');
+insert into `aa_translation` values ('954', '', '');
+insert into `aa_translation` values ('955', 'Creato il', 'Creato il');
+insert into `aa_translation` values ('956', '', '');
+insert into `aa_translation` values ('957', 'Modificato da', 'Modificato da');
+insert into `aa_translation` values ('958', '', '');
+insert into `aa_translation` values ('959', 'Modificato il', 'Modificato il');
+insert into `aa_translation` values ('960', '', '');
+insert into `aa_translation` values ('961', 'Creato da', 'Creato da');
+insert into `aa_translation` values ('962', '', '');
+insert into `aa_translation` values ('963', 'Creato il', 'Creato il');
+insert into `aa_translation` values ('964', '', '');
+insert into `aa_translation` values ('965', 'Modificato da', 'Modificato da');
+insert into `aa_translation` values ('966', '', '');
+insert into `aa_translation` values ('967', 'Modificato il', 'Modificato il');
+insert into `aa_translation` values ('968', '', '');
+insert into `aa_translation` values ('969', 'ciao', 'ciao');
+insert into `aa_translation` values ('970', '', '');
+insert into `aa_translation` values ('971', 'Id', 'Id');
+insert into `aa_translation` values ('972', '', '');
+insert into `aa_translation` values ('973', 'Axsaxasxas', 'Axsaxasxas');
+insert into `aa_translation` values ('974', '', '');
+insert into `aa_translation` values ('975', 'Ordine', 'Ordine');
+insert into `aa_translation` values ('976', '', '');
+insert into `aa_translation` values ('977', 'Produzione', 'Produzione');
+insert into `aa_translation` values ('978', 'Categorie', 'Categorie');
+insert into `aa_translation` values ('979', 'Produzione', 'Produzione');
 
 
 ### structure of table `aa_users` ###
@@ -1463,18 +1687,18 @@ DROP TABLE IF EXISTS `aa_users`;
 
 CREATE TABLE `aa_users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `login` varchar(255) NOT NULL,
-  `passwd` varchar(255) NOT NULL,
+  `login` varchar(255) DEFAULT NULL,
+  `passwd` varchar(255) DEFAULT NULL,
   `id_group` int(255) NOT NULL,
   `lang` int(11) NOT NULL,
   `owner` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3348 DEFAULT CHARSET=utf8 AUTO_INCREMENT=3348;
+) ENGINE=MyISAM AUTO_INCREMENT=651 DEFAULT CHARSET=utf8 AUTO_INCREMENT=651;
 
 
 ### data of table `aa_users` ###
 
-insert into `aa_users` values ('3347', 'root', 'bc2681c011c5f7abccae2431335191e1', '1', '1', '1');
+insert into `aa_users` values ('650', 'root', 'a9dec8f20b1d887ac0e31217dd2c8879', '1', '1', '1');
 
 
 ### structure of table `album` ###
@@ -1483,10 +1707,10 @@ DROP TABLE IF EXISTS `album`;
 
 CREATE TABLE `album` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) NOT NULL,
+  `title` varchar(255) DEFAULT NULL,
   `date` datetime DEFAULT NULL,
-  `photo` varchar(255) NOT NULL,
-  `visible` varchar(255) NOT NULL,
+  `photo` varchar(255) DEFAULT NULL,
+  `visible` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 AUTO_INCREMENT=5;
 
@@ -1496,13 +1720,37 @@ CREATE TABLE `album` (
 insert into `album` values ('4', '759', '2010-03-24 16:25:00', 'title|ordine|photos|photo|album', '1|2');
 
 
+### structure of table `categorie_prodotti` ###
+
+DROP TABLE IF EXISTS `categorie_prodotti`;
+
+CREATE TABLE `categorie_prodotti` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `titolo` varchar(255) DEFAULT NULL,
+  `descrizione` text,
+  `img` varchar(255) DEFAULT NULL,
+  `visibile` varchar(255) NOT NULL,
+  `ordine` int(11) NOT NULL DEFAULT '0',
+  `created_by` varchar(255) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `edit_by` varchar(255) DEFAULT NULL,
+  `edit_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 AUTO_INCREMENT=2;
+
+
+### data of table `categorie_prodotti` ###
+
+insert into `categorie_prodotti` values ('1', '917', '918', '/public/mat/image/1.jpeg', '1|2', '10', '650', '2017-07-20 19:52:03', '650', '2017-07-20 19:52:07');
+
+
 ### structure of table `categories` ###
 
 DROP TABLE IF EXISTS `categories`;
 
 CREATE TABLE `categories` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `category` varchar(255) NOT NULL,
+  `category` varchar(255) DEFAULT NULL,
   `order` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 AUTO_INCREMENT=2;
@@ -1520,7 +1768,7 @@ DROP TABLE IF EXISTS `dati_inviati`;
 CREATE TABLE `dati_inviati` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_form` int(11) NOT NULL DEFAULT '0',
-  `hash` text NOT NULL,
+  `hash` text,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 AUTO_INCREMENT=2;
@@ -1536,8 +1784,8 @@ DROP TABLE IF EXISTS `dictionary`;
 
 CREATE TABLE `dictionary` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `label` varchar(255) NOT NULL,
-  `value` text NOT NULL,
+  `label` varchar(255) DEFAULT NULL,
+  `value` text,
   PRIMARY KEY (`id`),
   KEY `label` (`label`)
 ) ENGINE=InnoDB AUTO_INCREMENT=151 DEFAULT CHARSET=utf8 AUTO_INCREMENT=151;
@@ -1694,12 +1942,12 @@ DROP TABLE IF EXISTS `documents`;
 
 CREATE TABLE `documents` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) NOT NULL,
-  `description` varchar(150) NOT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `description` varchar(150) DEFAULT NULL,
   `date` date NOT NULL,
-  `file` varchar(255) NOT NULL,
+  `file` varchar(255) DEFAULT NULL,
   `category_id` int(11) NOT NULL DEFAULT '0',
-  `enabled_groups` varchar(255) NOT NULL,
+  `enabled_groups` varchar(255) DEFAULT NULL,
   `status` enum('public','protected','private','secret','suspended') NOT NULL DEFAULT 'public',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 AUTO_INCREMENT=3;
@@ -1717,9 +1965,9 @@ DROP TABLE IF EXISTS `field_options`;
 CREATE TABLE `field_options` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_field` int(11) NOT NULL,
-  `label` varchar(255) NOT NULL,
-  `value` varchar(255) NOT NULL,
-  `selezionato` varchar(255) NOT NULL,
+  `label` varchar(255) DEFAULT NULL,
+  `value` varchar(255) DEFAULT NULL,
+  `selezionato` varchar(255) DEFAULT NULL,
   `ordine` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
@@ -1736,12 +1984,12 @@ DROP TABLE IF EXISTS `form_fields`;
 CREATE TABLE `form_fields` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_form` int(11) NOT NULL DEFAULT '0',
-  `titolo` varchar(255) NOT NULL,
-  `label` varchar(255) NOT NULL,
+  `titolo` varchar(255) DEFAULT NULL,
+  `label` varchar(255) DEFAULT NULL,
   `tipo` enum('text','textarea','checkbox','radio','select','file','password','hidden') NOT NULL DEFAULT 'text',
-  `value` varchar(255) NOT NULL,
+  `value` varchar(255) DEFAULT NULL,
   `formato` enum('text','date','digits','email') NOT NULL DEFAULT 'text',
-  `obbligatorio` varchar(255) NOT NULL DEFAULT '',
+  `obbligatorio` varchar(255) DEFAULT '',
   `fieldset` int(11) NOT NULL DEFAULT '0',
   `ordine` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
@@ -1768,8 +2016,8 @@ DROP TABLE IF EXISTS `form_fieldsets`;
 CREATE TABLE `form_fieldsets` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_form` int(11) NOT NULL,
-  `titolo` varchar(255) NOT NULL,
-  `ordine` varchar(255) NOT NULL,
+  `titolo` varchar(255) DEFAULT NULL,
+  `ordine` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
@@ -1784,15 +2032,15 @@ DROP TABLE IF EXISTS `forms`;
 
 CREATE TABLE `forms` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `descrizione` text NOT NULL,
-  `destinatario` varchar(255) NOT NULL,
-  `privacy` varchar(255) NOT NULL,
+  `descrizione` text,
+  `destinatario` varchar(255) DEFAULT NULL,
+  `privacy` varchar(255) DEFAULT NULL,
   `captcha` enum('nessuno','basic','synCaptcha','honeypot') NOT NULL DEFAULT 'nessuno',
-  `risposta` text NOT NULL,
+  `risposta` text,
   `data` datetime NOT NULL,
-  `visibile` varchar(255) NOT NULL,
+  `visibile` varchar(255) DEFAULT NULL,
   `pagina` int(255) NOT NULL DEFAULT '0',
-  `titolo` varchar(255) NOT NULL,
+  `titolo` varchar(255) DEFAULT NULL,
   `privacy_page` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 AUTO_INCREMENT=3;
@@ -1804,13 +2052,33 @@ insert into `forms` values ('1', '484', 'assistenza@kleis.it', '1', 'honeypot', 
 insert into `forms` values ('2', '579', 'assistenza@kleis.it', '1', 'nessuno', '580', '2012-04-12 15:31:08', '', '0', '578', '0');
 
 
+### structure of table `foto_prodotti` ###
+
+DROP TABLE IF EXISTS `foto_prodotti`;
+
+CREATE TABLE `foto_prodotti` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `titolo` varchar(255) DEFAULT NULL,
+  `img` varchar(255) DEFAULT NULL,
+  `id_prodotto` int(11) NOT NULL DEFAULT '0',
+  `ordine` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 AUTO_INCREMENT=9;
+
+
+### data of table `foto_prodotti` ###
+
+insert into `foto_prodotti` values ('7', '2', 'jpeg', '1', '10');
+insert into `foto_prodotti` values ('8', '1', 'jpeg', '1', '20');
+
+
 ### structure of table `groups` ###
 
 DROP TABLE IF EXISTS `groups`;
 
 CREATE TABLE `groups` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `group` varchar(255) NOT NULL,
+  `group` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 AUTO_INCREMENT=3;
 
@@ -1821,17 +2089,39 @@ insert into `groups` values ('1', 'Standard Group');
 insert into `groups` values ('2', 'Other Group');
 
 
+### structure of table `headers` ###
+
+DROP TABLE IF EXISTS `headers`;
+
+CREATE TABLE `headers` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `titolo` varchar(255) DEFAULT NULL,
+  `sottotitolo` varchar(255) DEFAULT NULL,
+  `img` varchar(255) DEFAULT NULL,
+  `visibile` varchar(255) DEFAULT NULL,
+  `ordine` int(11) NOT NULL DEFAULT '0',
+  `id_pagina` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 AUTO_INCREMENT=3;
+
+
+### data of table `headers` ###
+
+insert into `headers` values ('1', '862', '863', '/public/mat/image/1.jpeg', '1|2', '10', '22');
+insert into `headers` values ('2', '864', '865', '/public/mat/image/2.jpeg', '1|2', '20', '22');
+
+
 ### structure of table `media` ###
 
 DROP TABLE IF EXISTS `media`;
 
 CREATE TABLE `media` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `filename` varchar(255) NOT NULL,
-  `path` varchar(255) NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `caption` varchar(255) NOT NULL,
-  `author` varchar(255) NOT NULL,
+  `filename` varchar(255) DEFAULT NULL,
+  `path` varchar(255) DEFAULT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `caption` varchar(255) DEFAULT NULL,
+  `author` varchar(255) DEFAULT NULL,
   `modified_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
@@ -1847,21 +2137,26 @@ DROP TABLE IF EXISTS `news`;
 
 CREATE TABLE `news` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) NOT NULL,
-  `text` text NOT NULL,
-  `image` varchar(255) NOT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `text` text,
+  `image` varchar(255) DEFAULT NULL,
   `date` datetime DEFAULT NULL,
-  `visible` varchar(255) NOT NULL,
+  `visible` varchar(255) DEFAULT NULL,
+  `attached` varchar(255) DEFAULT NULL,
+  `created_by` varchar(255) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `edit_by` varchar(255) DEFAULT NULL,
+  `edit_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 AUTO_INCREMENT=5;
 
 
 ### data of table `news` ###
 
-insert into `news` values ('1', '192', '193', '', '2004-11-19 00:00:00', '1|2');
-insert into `news` values ('2', '199', '200', '', '2004-12-27 12:00:00', '1|2');
-insert into `news` values ('3', '201', '202', '', '2004-12-27 00:00:00', '1|2');
-insert into `news` values ('4', '237', '238', '', '2005-04-19 08:30:00', '1|2');
+insert into `news` values ('1', '192', '193', '/public/mat/image/1.jpeg', '2004-11-19 00:00:00', '1|2', '/public/mat/file/dummy-file.pdf', '650', '2017-07-19 14:18:13', '650', '2017-07-20 19:59:39');
+insert into `news` values ('2', '199', '200', '', '2004-12-27 12:00:00', '1|2', '', '650', '2017-07-19 14:18:23', '650', '2017-07-19 14:18:23');
+insert into `news` values ('3', '201', '202', '', '2004-12-27 00:00:00', '1|2', '', '650', '2017-07-19 14:18:19', '650', '2017-07-20 19:58:50');
+insert into `news` values ('4', '237', '238', '', '2005-04-19 08:30:00', '1|2', '', '650', '2017-07-19 14:18:28', '650', '2017-07-19 14:18:28');
 
 
 ### structure of table `photos` ###
@@ -1890,14 +2185,40 @@ insert into `photos` values ('3', 'a3bed77987333ce78e33dba9aec6adc103375f9e_2048
 insert into `photos` values ('4', 'fc64058e4f18255d34dbc6a6ece1f6cc961b6254_5', '4', '40', '2015-03-07 12:16:11', '8685', 'landscape', 'jpg');
 
 
+### structure of table `prodotti` ###
+
+DROP TABLE IF EXISTS `prodotti`;
+
+CREATE TABLE `prodotti` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `titolo` varchar(255) DEFAULT NULL,
+  `descrizione` text,
+  `allegato` varchar(255) DEFAULT NULL,
+  `visibile` varchar(255) NOT NULL,
+  `ordine` int(11) NOT NULL DEFAULT '0',
+  `id_categoria` int(11) NOT NULL DEFAULT '0',
+  `foto` varchar(255) NOT NULL,
+  `created_by` varchar(255) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `edit_by` varchar(255) DEFAULT NULL,
+  `edit_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 AUTO_INCREMENT=2;
+
+
+### data of table `prodotti` ###
+
+insert into `prodotti` values ('1', '936', '937', '/public/mat/file/dummy-file.pdf', '1|2', '10', '1', 'titolo|ordine|foto_prodotti|img|id_prodotto', '650', '2017-07-20 19:53:15', '650', '2017-07-20 19:53:15');
+
+
 ### structure of table `redirect` ###
 
 DROP TABLE IF EXISTS `redirect`;
 
 CREATE TABLE `redirect` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `from` varchar(255) NOT NULL,
-  `to` varchar(255) NOT NULL,
+  `from` varchar(255) DEFAULT NULL,
+  `to` varchar(255) DEFAULT NULL,
   `header` enum('301','302','404') NOT NULL DEFAULT '301',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 AUTO_INCREMENT=2;
@@ -1907,6 +2228,29 @@ CREATE TABLE `redirect` (
 
 
 
+### structure of table `sedi` ###
+
+DROP TABLE IF EXISTS `sedi`;
+
+CREATE TABLE `sedi` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `sede` varchar(255) DEFAULT NULL,
+  `indirizzo` varchar(255) DEFAULT NULL,
+  `lat` varchar(255) DEFAULT NULL,
+  `long` varchar(255) DEFAULT NULL,
+  `visibile` varchar(255) DEFAULT NULL,
+  `ordine` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 AUTO_INCREMENT=4;
+
+
+### data of table `sedi` ###
+
+insert into `sedi` values ('1', '889', '890', '45.426245', '10.9575121', '1|2', '10');
+insert into `sedi` values ('2', '891', '892', '45.4627285', '9.1427131', '1|2', '20');
+insert into `sedi` values ('3', '893', '894', '45.0734834', '7.640587', '1|2', '30');
+
+
 ### structure of table `social_network` ###
 
 DROP TABLE IF EXISTS `social_network`;
@@ -1914,8 +2258,8 @@ DROP TABLE IF EXISTS `social_network`;
 CREATE TABLE `social_network` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `social` enum('facebook','google-plus','linkedin','pinterest','twitter','flickr','youtube','instagram') NOT NULL DEFAULT 'facebook',
-  `url` varchar(255) NOT NULL,
-  `visible` varchar(255) NOT NULL,
+  `url` varchar(255) DEFAULT NULL,
+  `visible` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 AUTO_INCREMENT=3;
 
@@ -1948,7 +2292,7 @@ DROP TABLE IF EXISTS `tags`;
 
 CREATE TABLE `tags` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `tag` varchar(255) NOT NULL,
+  `tag` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 

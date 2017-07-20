@@ -12,6 +12,8 @@
   <link href="{$synPublicPath}/css/vendor/font-awesome.min.css" rel="stylesheet" type="text/css" />
   <!-- Custom CSS -->
   <link href="{$synPublicPath}/css/vendor/colorbox.css" rel="stylesheet" type="text/css" />
+  <link href="{$synPublicPath}/css/vendor/owl.carousel.min.css" rel="stylesheet" type="text/css" />
+  <link href="{$synPublicPath}/css/vendor/owl.theme.default.min.css" rel="stylesheet" type="text/css" />
   <link href="{$synPublicPath}/css/modern-business.css" rel="stylesheet" type="text/css" />
   <link href="{$synPublicPath}/css/syntax.css" rel="stylesheet" type="text/css" />
 

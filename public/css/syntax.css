@@ -19,3 +19,7 @@
 .section-colored {margin:0; padding:40px 0;}
 .section-colored {padding:80px 0; background-color: #e1e1e1; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) inset;}
 form > .hp {display:none;}
+
+.map-container{
+  height: 400px;
+}

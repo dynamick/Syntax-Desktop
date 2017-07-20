@@ -29,7 +29,8 @@ class synUserCreate extends synElement {
   //private function
   function _html() {
     $html = "";
-    if(!isset($_REQUEST["synPrimaryKey"]) || $_REQUEST["synPrimaryKey"]=='' || $this->value == '') {
+    $check_user = username($this->value); //controllo se l'utente esiste altrimenti ribattezzo il creatore con l'utente attuale
+    if(!isset($_REQUEST["synPrimaryKey"]) || $_REQUEST["synPrimaryKey"]=='' || $this->value == '' || $check_user === null) {
       $this->value = getSynUser();
       $html .= "<input type='hidden' name='{$this->name}' maxsize='{$this->size}' value='{$this->value}'/>";
     }

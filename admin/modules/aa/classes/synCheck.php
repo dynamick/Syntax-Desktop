@@ -27,7 +27,7 @@ class synCheck extends synElement {
     $this->label = $l;
     $this->size  = $s;
     $this->help  = $h;
-    $this->db    = " varchar(".$this->size.") NOT NULL";
+    $this->db    = " varchar(".$this->size.") NULL DEFAULT NULL";
     if (isset($_REQUEST[$n])) $this->selected = $_REQUEST[$n];
     //$this->container = getContainer();
   }
