@@ -107,7 +107,6 @@ define('ADMIN_MAIL',    'assistenza@kleis.it');
 define('GMAPS_API',     'AIzaSyBbV3Qf4JBM54aazvYSD1pRLW1fHHtXmPs');
 
 // configurazione SMTP
-$smtp_conf = array();
 /*
 $smtp_conf = array(
   'host'    => 'ssl://smtp.gmail.com',
