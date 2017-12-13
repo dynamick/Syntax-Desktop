@@ -1,5 +1,5 @@
 # MySQL dump of database 'syntax' on host 'localhost'
-# backup date and time: 07/20/17 20:26:15
+# backup date and time: 12/13/17 15:44:51
 # built by phpMyBackupPro v.2.1
 # http://www.phpMyBackupPro.net
 
@@ -16,7 +16,7 @@ CREATE TABLE `aa_element` (
   `order` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `id` (`classname`)
-) ENGINE=MyISAM AUTO_INCREMENT=37 DEFAULT CHARSET=utf8 COMMENT='Elementi che compongono un contenitore' AUTO_INCREMENT=37;
+) ENGINE=MyISAM AUTO_INCREMENT=38 DEFAULT CHARSET=utf8 COMMENT='Elementi che compongono un contenitore' AUTO_INCREMENT=38;
 
 
 ### data of table `aa_element` ###
@@ -56,6 +56,7 @@ insert into `aa_element` values ('33', 'Json Hash', 'synJsonHash', '190');
 insert into `aa_element` values ('34', 'Picture Selector', 'synPicture', '200');
 insert into `aa_element` values ('35', 'Document Selector', 'synDocument', '210');
 insert into `aa_element` values ('36', 'Date Creation', 'synDateCreation', '220');
+insert into `aa_element` values ('37', 'Document Selector', 'synDocumentSelector', '230');
 
 
 ### structure of table `aa_group_services` ###
@@ -384,7 +385,7 @@ CREATE TABLE `aa_services_element` (
   `ismultilang` varchar(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `container` (`container`)
-) ENGINE=MyISAM AUTO_INCREMENT=675 DEFAULT CHARSET=utf8 COMMENT='Containers' AUTO_INCREMENT=675;
+) ENGINE=MyISAM AUTO_INCREMENT=676 DEFAULT CHARSET=utf8 COMMENT='Containers' AUTO_INCREMENT=676;
 
 
 ### data of table `aa_services_element` ###
@@ -637,27 +638,28 @@ insert into `aa_services_element` values ('647', '163', 'descrizione', '6', '', 
 insert into `aa_services_element` values ('648', '163', 'img', '34', '', '1', '', '904', '255', '905', '', '', '', '', '30', '', '');
 insert into `aa_services_element` values ('649', '163', 'visibile', '24', '', '1', '', '906', '0', '907', '', 'select id,lang from aa_lang', '', '', '40', '', '');
 insert into `aa_services_element` values ('650', '163', 'ordine', '3', '', '1', '1', '908', '11', '909', '', '', '', '', '50', '', '');
-insert into `aa_services_element` values ('651', '164', 'id', '1', '1', '1', '', '921', '0', '922', '', '', '', '', '0', '', '');
-insert into `aa_services_element` values ('652', '164', 'titolo', '2', '', '1', '', '923', '255', '924', '', '', '', '', '10', '', '1');
-insert into `aa_services_element` values ('653', '164', 'descrizione', '6', '', '', '', '925', '150', '926', 'Default', '', '', '', '20', '', '1');
-insert into `aa_services_element` values ('654', '164', 'allegato', '35', '', '1', '', '927', '255', '928', '', '', '', '', '30', '', '');
-insert into `aa_services_element` values ('655', '164', 'visibile', '24', '', '1', '', '929', '0', '930', '', 'select id,lang from aa_lang', '', '', '40', '', '');
-insert into `aa_services_element` values ('656', '164', 'ordine', '3', '', '1', '1', '931', '11', '932', '', '', '', '', '50', '', '');
-insert into `aa_services_element` values ('657', '164', 'id_categoria', '11', '', '', '', '934', '11', '935', '1', 'SELECT * FROM categorie_prodotti', '', '', '60', '', '');
+insert into `aa_services_element` values ('651', '164', 'id', '1', '1', '1', '', '921', '0', '922', '', '', '', '', '10', '', '');
+insert into `aa_services_element` values ('652', '164', 'titolo', '2', '', '1', '', '923', '255', '924', '', '', '', '', '20', '', '1');
+insert into `aa_services_element` values ('653', '164', 'descrizione', '6', '', '', '', '925', '150', '926', 'Default', '', '', '', '30', '', '1');
+insert into `aa_services_element` values ('654', '164', 'allegato', '35', '', '1', '', '927', '255', '928', '', '', '', '', '50', '', '');
+insert into `aa_services_element` values ('655', '164', 'visibile', '24', '', '1', '', '929', '0', '930', '', 'select id,lang from aa_lang', '', '', '70', '', '');
+insert into `aa_services_element` values ('656', '164', 'ordine', '3', '', '1', '1', '931', '11', '932', '', '', '', '', '80', '', '');
+insert into `aa_services_element` values ('657', '164', 'id_categoria', '11', '', '', '', '934', '11', '935', '1', 'SELECT * FROM categorie_prodotti', '', '', '90', '', '');
 insert into `aa_services_element` values ('658', '165', 'id', '1', '1', '1', '', '940', '0', '941', '', '', '', '', '0', '', '');
 insert into `aa_services_element` values ('659', '165', 'titolo', '2', '', '', '', '942', '255', '943', '', '', '', '', '10', '', '');
 insert into `aa_services_element` values ('660', '165', 'img', '5', '', '1', '', '944', '0', '945', '/public/mat/products/#{join|value|id_join=28}', '', '', '', '20', '', '');
 insert into `aa_services_element` values ('661', '165', 'id_prodotto', '11', '', '1', '', '946', '11', '947', '1', 'SELECT * FROM prodotti', '', '', '30', '', '');
 insert into `aa_services_element` values ('662', '165', 'ordine', '3', '', '1', '1', '948', '11', '949', '', '', '', '', '40', '', '');
-insert into `aa_services_element` values ('663', '164', 'foto', '10', '', '', '', '951', '0', '952', '/public/mat/products/', 'null', 'titolo|ordine|foto_prodotti|img|id_prodotto', '', '25', '', '');
+insert into `aa_services_element` values ('663', '164', 'foto', '10', '', '', '', '951', '0', '952', '/public/mat/products/', 'null', 'titolo|ordine|foto_prodotti|img|id_prodotto', '', '40', '', '');
 insert into `aa_services_element` values ('664', '163', 'created_by', '21', '', '', '', '953', '255', '954', '', '', '', '', '60', '', '');
 insert into `aa_services_element` values ('665', '163', 'created_at', '36', '', '', '', '955', '0', '956', '', '', '', '', '70', '', '');
 insert into `aa_services_element` values ('666', '163', 'edit_by', '22', '', '', '', '957', '255', '958', '', '', '', '', '80', '', '');
 insert into `aa_services_element` values ('667', '163', 'edit_at', '20', '', '1', '', '959', '0', '960', '', '', '', '', '90', '', '');
-insert into `aa_services_element` values ('668', '164', 'created_by', '21', '', '', '', '961', '255', '962', '', '', '', '', '80', '', '');
-insert into `aa_services_element` values ('669', '164', 'created_at', '36', '', '', '', '963', '0', '964', '', '', '', '', '90', '', '');
-insert into `aa_services_element` values ('670', '164', 'edit_by', '22', '', '', '', '965', '255', '966', '', '', '', '', '100', '', '');
-insert into `aa_services_element` values ('671', '164', 'edit_at', '20', '', '1', '', '967', '0', '968', '', '', '', '', '110', '', '');
+insert into `aa_services_element` values ('668', '164', 'created_by', '21', '', '', '', '961', '255', '962', '', '', '', '', '100', '', '');
+insert into `aa_services_element` values ('669', '164', 'created_at', '36', '', '', '', '963', '0', '964', '', '', '', '', '110', '', '');
+insert into `aa_services_element` values ('670', '164', 'edit_by', '22', '', '', '', '965', '255', '966', '', '', '', '', '120', '', '');
+insert into `aa_services_element` values ('671', '164', 'edit_at', '20', '', '1', '', '967', '0', '968', '', '', '', '', '130', '', '');
+insert into `aa_services_element` values ('675', '164', 'documents', '37', '', '', '', '980', '255', '981', '', '', '', '', '60', '', '');
 
 
 ### structure of table `aa_template` ###
@@ -695,7 +697,7 @@ CREATE TABLE `aa_translation` (
   `it` text,
   `en` text,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=980 DEFAULT CHARSET=utf8 AUTO_INCREMENT=980;
+) ENGINE=MyISAM AUTO_INCREMENT=982 DEFAULT CHARSET=utf8 AUTO_INCREMENT=982;
 
 
 ### data of table `aa_translation` ###
@@ -1679,6 +1681,8 @@ insert into `aa_translation` values ('976', '', '');
 insert into `aa_translation` values ('977', 'Produzione', 'Produzione');
 insert into `aa_translation` values ('978', 'Categorie', 'Categorie');
 insert into `aa_translation` values ('979', 'Produzione', 'Produzione');
+insert into `aa_translation` values ('980', 'Documents', 'Documents');
+insert into `aa_translation` values ('981', '', '');
 
 
 ### structure of table `aa_users` ###
@@ -1944,7 +1948,7 @@ CREATE TABLE `documents` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) DEFAULT NULL,
   `description` varchar(150) DEFAULT NULL,
-  `date` date NOT NULL,
+  `date` date DEFAULT NULL,
   `file` varchar(255) DEFAULT NULL,
   `category_id` int(11) NOT NULL DEFAULT '0',
   `enabled_groups` varchar(255) DEFAULT NULL,
@@ -2202,13 +2206,14 @@ CREATE TABLE `prodotti` (
   `created_at` datetime DEFAULT NULL,
   `edit_by` varchar(255) DEFAULT NULL,
   `edit_at` datetime DEFAULT NULL,
+  `documents` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 AUTO_INCREMENT=2;
 
 
 ### data of table `prodotti` ###
 
-insert into `prodotti` values ('1', '936', '937', '/public/mat/file/dummy-file.pdf', '1|2', '10', '1', 'titolo|ordine|foto_prodotti|img|id_prodotto', '650', '2017-07-20 19:53:15', '650', '2017-07-20 19:53:15');
+insert into `prodotti` values ('1', '936', '937', '/public/mat/file/dummy-file.pdf', '1|2', '10', '1', 'titolo|ordine|foto_prodotti|img|id_prodotto', '650', '2017-07-20 19:53:15', '650', '2017-12-13 15:44:09', '');
 
 
 ### structure of table `redirect` ###
@@ -2298,6 +2303,23 @@ CREATE TABLE `tags` (
 
 
 ### data of table `tags` ###
+
+
+
+### structure of table `test` ###
+
+DROP TABLE IF EXISTS `test`;
+
+CREATE TABLE `test` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `aaa` varchar(255) DEFAULT NULL,
+  `bbb` varchar(255) DEFAULT NULL,
+  `ccc` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
+
+### data of table `test` ###
 
 
 
