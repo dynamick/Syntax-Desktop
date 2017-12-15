@@ -1,7 +1,7 @@
 <?php
 
 function smarty_function_form($params, &$smarty) {
-  global $db, $synWebsiteTitle, $synPublicPath;
+  global $db, $synWebsiteTitle, $synPublicPath, $reCaptchaKey;
 
   s_start(); // session_start
   $labels       = array(
@@ -14,7 +14,8 @@ function smarty_function_form($params, &$smarty) {
                   'verifica_valore',
                   'cancella',
                   'invia',
-                  'codice_sicurezza'
+                  'codice_sicurezza',
+                  'conferma_recaptcha'
                 );
   $t            = multiTranslateDictionary( $labels );
   $form         = safe_get( $params['id'], NULL );
@@ -91,7 +92,9 @@ function smarty_function_form($params, &$smarty) {
       'reset_button'        => true,
       'captcha'             => $form_var['captcha'],
       'captchaConfig'       => array( 'width' => 270, 'height' => 50 ),
+      'reCaptchaKey'        => $reCaptchaKey,
       'captchaLabel'        => $t['codice_sicurezza'],
+      'reCaptchaLabel'      => $t['conferma_recaptcha'],
       'informativa'         => nl2br($t['informativa_privacy']),
       'privacy'             => $form_var['privacy'],
       'privacy_page'        => $privacy_page,

@@ -42,6 +42,7 @@ require $pub.'lib/lang.functions.php';
 require $pub.'lib/page.functions.php';
 require $pub.'lib/date.functions.php';
 require $pub.'lib/misc.functions.php';
+require $pub.'lib/ReCaptcha.php';
 require $pub.'lib/utility.php';
 
 $db = NewADOConnection('mysql');
@@ -105,6 +106,14 @@ define('ADMIN_NAME',    'Admin');
 define('ADMIN_MAIL',    'assistenza@kleis.it');
 
 define('GMAPS_API',     'AIzaSyBbV3Qf4JBM54aazvYSD1pRLW1fHHtXmPs');
+
+// reCaptchaKey
+/*
+$reCaptchaKey = array(
+  'siteKey'   => '',
+  'secretKey' => ''
+);
+*/
 
 // configurazione SMTP
 /*

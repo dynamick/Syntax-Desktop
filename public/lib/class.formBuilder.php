@@ -19,7 +19,9 @@ class formBuilder {
   protected $approvazione_link;
   protected $captcha = 'nessuno';
   protected $captchaConfig = array();
+  protected $reCaptchaKey = array();
   protected $captchaLabel = 'Codice di sicurezza';
+  protected $reCaptchaLabel = 'Conferma reCaptcha';
   protected $cblabelclass = 'cblabel';
   protected $checkfields;
   protected $class;
@@ -585,14 +587,33 @@ EOSC;
   }
 
 
-  private function setReCaptcha(){
-    require_once('./recaptchalib.php');
-    $publickey = '6LeldL8SAAAAALRJlfPAx3T1ZlGK8CwpyJtfUuP1';
-    $ret = recaptcha_get_html($publickey);
-    $this->validateRules[] = 'recaptcha_response_field:{ required:true, remote:{url:"/public/server/validate_recaptcha.php", type:"post", data:{recaptcha_challenge_field: function(){ return $("#recaptcha_challenge_field").val();} }}}';
+  function setReCaptcha(){
+    
+    if ( !isset($this->reCaptchaKey)
+      || empty($this->reCaptchaKey)
+      || !isset( $this->reCaptchaKey['siteKey'], $this->reCaptchaKey['secretKey'] )
+    ){
+      echo 'reCaptchaKey non trovate'; die();
+    }
+    
+    $ret = <<<EOSC
+      <script src='https://www.google.com/recaptcha/api.js'></script>
+      <div class="form-group"> 
+        <div class="g-recaptcha" data-sitekey="{$this->reCaptchaKey['siteKey']}" data-callback="recaptchaCallback"></div>
+        <input type="hidden" class="hiddenRecaptcha required" name="hiddenRecaptcha" id="hiddenRecaptcha{$this->id}">         
+      </div>
+EOSC;
+    
+    $this->validateIgnore[] = '.ignore';
+    $this->validateRules[] = 'hiddenRecaptcha: { required: function () { if (grecaptcha.getResponse() == "") { return true; } else { return false; } } }';
+    $this->validateFunctions[] = <<<EOPD
+      function recaptchaCallback() {
+        $('#hiddenRecaptcha{$this->id}').valid();
+      };
+EOPD;
+
     return $ret;
   }
-
 
   function setHoneypot(){
     $ret = <<<EOSC
@@ -700,6 +721,10 @@ EOPD;
       $params[] = "    unhighlight: function(element, errorClass, validClass){ $(element).removeClass('error').siblings('span.{$this->cblabelclass}').removeClass('error-field'); }";
     }
 
+    if(is_array($this->validateIgnore) && count($this->validateIgnore)>0){
+      $params[] = "    ignore:'".implode(" ", $this->validateIgnore)."'";
+    }
+
     // regole particolari
     if(is_array($this->validateRules) && count($this->validateRules)>0){
       $params[] = "    rules:{".implode(",\n", $this->validateRules)."}";
@@ -735,6 +760,11 @@ EOSB;
     $js .= "    $.validator.messages.equalTo=\"".$this->error4."\";\n";
     $js .= "    $(\"#form{$this->id}\").validate({\n  ".implode(",\n  ", $params)."\n    });\n";
     $js .= "  });\n";
+
+    if(is_array($this->validateFunctions) && count($this->validateFunctions)>0){
+      $js .= implode("\n", $this->validateFunctions);
+    }
+    
     $js .= ($this->xhtml==true ? "//]]>\n" : '')."</script>\n";
 
     return $js;

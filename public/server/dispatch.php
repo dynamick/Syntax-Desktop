@@ -1,6 +1,6 @@
 <?php
   error_reporting(E_ALL & ~(E_NOTICE | E_DEPRECATED | E_WARNING));
-  ini_set('display_errors', 0);
+  ini_set('display_errors', 1);
 
   require_once('../config/cfg.php');
 
@@ -155,6 +155,28 @@ EOSQL;
       if ( $form_captcha == 'honeypot' ) {
         if ( !empty($_POST['twitter_account']) )
           $spammer = true;
+      } elseif ($form_captcha == 'reCaptcha') {
+        
+        if ( !isset($reCaptchaKey)
+          || empty($reCaptchaKey)
+          || !isset( $reCaptchaKey['siteKey'], $reCaptchaKey['secretKey'] )
+          ){
+          echo 'reCaptchaKey non trovate'; die();
+        }
+
+        if ( !empty($_POST['g-recaptcha-response']) ){
+          $recaptcha = new \ReCaptcha\ReCaptcha($reCaptchaKey['secretKey']);
+          $resp = $recaptcha->verify($_POST['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
+          if (!$resp->isSuccess()){
+            foreach ($resp->getErrorCodes() as $code) {
+              echo '<kbd>' , $code , '</kbd> ';
+            }
+            die();
+          }
+        }else{
+          $error ++;
+          $_SESSION['form'.$form_id]['error']['reCaptcha'] = 'empty';
+        }
       } else {
         if ( !isset($_SESSION['security_code']) ) {
           $spammer = true;
@@ -193,6 +215,8 @@ EOSQL;
       unset(
         $_POST['MAX_FILE_SIZE'],
         $_POST['captcha'],
+        $_POST['g-recaptcha-response'],
+        $_POST['hiddenRecaptcha'],
         $_POST['privacy'],
         $_POST['action'],
         $_POST['formId'],
