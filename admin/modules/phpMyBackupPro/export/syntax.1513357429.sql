@@ -1,5 +1,5 @@
 # MySQL dump of database 'syntax' on host 'localhost'
-# backup date and time: 12/13/17 15:44:51
+# backup date and time: 12/15/17 18:03:49
 # built by phpMyBackupPro v.2.1
 # http://www.phpMyBackupPro.net
 
@@ -533,7 +533,7 @@ insert into `aa_services_element` values ('529', '152', 'pagina', '12', '', '1',
 insert into `aa_services_element` values ('530', '152', 'descrizione', '6', '', '', '', '423', '150', '424', 'Default', '', '', '', '20', '', '1');
 insert into `aa_services_element` values ('531', '152', 'destinatario', '2', '', '1', '', '425', '255', '426', '', '', '', '', '30', '', '');
 insert into `aa_services_element` values ('533', '152', 'privacy', '9', '', '', '', '427', '255', '428', '', '', '1', '', '50', '', '');
-insert into `aa_services_element` values ('534', '152', 'captcha', '23', '', '', '', '429', '0', '430', '', 'nessuno|basic|synCaptcha|honeypot', '', '', '60', '', '');
+insert into `aa_services_element` values ('534', '152', 'captcha', '23', '', '', '', '429', '0', '430', '', 'nessuno|basic|synCaptcha|honeypot|reCaptcha', '', '', '60', '', '');
 insert into `aa_services_element` values ('535', '152', 'risposta', '6', '', '', '', '431', '150', '432', 'Default', '', '', '', '70', '', '1');
 insert into `aa_services_element` values ('536', '152', 'data', '15', '', '1', '', '433', '0', '434', '', '', '', '', '80', '', '');
 insert into `aa_services_element` values ('537', '152', 'visibile', '9', '', '1', '', '435', '255', '436', '', '', '1', '', '90', '', '');
@@ -1189,7 +1189,7 @@ insert into `aa_translation` values ('481', 'Opzione pre-selezionata di default'
 insert into `aa_translation` values ('482', 'Ordine', 'Ordine');
 insert into `aa_translation` values ('483', '', '');
 insert into `aa_translation` values ('484', '<p>Compila il form per inviarci un messaggio:</p>\r\n', 'Compila il form per inviarci un messaggio:');
-insert into `aa_translation` values ('485', '<h3>Messaggio inviato</h3>\r\n\r\n<p>La tua richiesta è stata inviata, il nostro staff risponderà appena possibile.<br />\r\nGrazie</p>\r\n', '<h3>Messaggio inviato</h3>\r\n<p>La tua richiesta &egrave; stata inviata, il nostro staff risponder&agrave; appena possibile.<br />\r\nGrazie</p>');
+insert into `aa_translation` values ('485', '<h3>Messaggio inviato</h3>\r\n\r\n<p>La tua richiesta &egrave; stata inviata, il nostro staff risponder&agrave; appena possibile.<br />\r\nGrazie</p>\r\n', '<h3>Messaggio inviato</h3>\r\n<p>La tua richiesta &egrave; stata inviata, il nostro staff risponder&agrave; appena possibile.<br />\r\nGrazie</p>');
 insert into `aa_translation` values ('486', 'Nome', 'Nome');
 insert into `aa_translation` values ('487', 'Email', 'Email');
 insert into `aa_translation` values ('488', 'Messaggio', 'Messaggio');
@@ -2039,9 +2039,9 @@ CREATE TABLE `forms` (
   `descrizione` text,
   `destinatario` varchar(255) DEFAULT NULL,
   `privacy` varchar(255) DEFAULT NULL,
-  `captcha` enum('nessuno','basic','synCaptcha','honeypot') NOT NULL DEFAULT 'nessuno',
+  `captcha` enum('nessuno','basic','synCaptcha','honeypot','reCaptcha') NOT NULL DEFAULT 'nessuno',
   `risposta` text,
-  `data` datetime NOT NULL,
+  `data` datetime DEFAULT NULL,
   `visibile` varchar(255) DEFAULT NULL,
   `pagina` int(255) NOT NULL DEFAULT '0',
   `titolo` varchar(255) DEFAULT NULL,
@@ -2052,7 +2052,7 @@ CREATE TABLE `forms` (
 
 ### data of table `forms` ###
 
-insert into `forms` values ('1', '484', 'assistenza@kleis.it', '1', 'honeypot', '485', '2010-12-16 17:18:37', '1', '42', '493', '59');
+insert into `forms` values ('1', '484', 'assistenza@kleis.it', '1', 'nessuno', '485', '2010-12-16 17:18:37', '1', '42', '493', '59');
 insert into `forms` values ('2', '579', 'assistenza@kleis.it', '1', 'nessuno', '580', '2012-04-12 15:31:08', '', '0', '578', '0');
 
 
