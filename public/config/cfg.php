@@ -103,7 +103,7 @@ define('DEFAULT_GROUP',  1); // gruppo utenti default
 
 define('ACCOUNT_KEY',   'syntax_user'); // nome del cookie
 define('ADMIN_NAME',    'Admin');
-define('ADMIN_MAIL',    'assistenza@kleis.it');
+define('ADMIN_MAIL',    'dev@kleis.digital');
 
 define('GMAPS_API',     'AIzaSyBbV3Qf4JBM54aazvYSD1pRLW1fHHtXmPs');
 

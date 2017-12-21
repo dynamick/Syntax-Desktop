@@ -55,7 +55,7 @@ function smarty_function_account($params, &$smarty) {
 
     // destinatari per notifiche NUOVA REGISTRAZIONE
     $recipients = array(
-      'assistenza@kleis.it'
+      ADMIN_MAIL
       );
 
   switch($command){
