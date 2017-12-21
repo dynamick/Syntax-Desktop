@@ -1,5 +1,5 @@
 # MySQL dump of database 'syntax' on host 'localhost'
-# backup date and time: 12/15/17 18:03:49
+# backup date and time: 12/21/17 15:45:30
 # built by phpMyBackupPro v.2.1
 # http://www.phpMyBackupPro.net
 
@@ -697,7 +697,7 @@ CREATE TABLE `aa_translation` (
   `it` text,
   `en` text,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=982 DEFAULT CHARSET=utf8 AUTO_INCREMENT=982;
+) ENGINE=MyISAM AUTO_INCREMENT=997 DEFAULT CHARSET=utf8 AUTO_INCREMENT=997;
 
 
 ### data of table `aa_translation` ###
@@ -1683,6 +1683,21 @@ insert into `aa_translation` values ('978', 'Categorie', 'Categorie');
 insert into `aa_translation` values ('979', 'Produzione', 'Produzione');
 insert into `aa_translation` values ('980', 'Documents', 'Documents');
 insert into `aa_translation` values ('981', '', '');
+insert into `aa_translation` values ('982', 'Registrazione avvenuta con successo. Controlla il tuo indirizzo e-mail per attivare il tuo account.', 'Your registration has been successfully completed. Check your email in order to activate your account.');
+insert into `aa_translation` values ('983', 'Registrazione avvenuta con successo.', 'Your registration has been successfully completed.');
+insert into `aa_translation` values ('984', 'Attivazione account.', 'Account activation.');
+insert into `aa_translation` values ('985', 'Account attivato correttamente.', 'The account has been successfully activated.');
+insert into `aa_translation` values ('986', 'Una nuova e-mail di attivazione è stata inviata a %s. Segui le istruzioni nella e-mail per attivare il tuo account.', null);
+insert into `aa_translation` values ('987', 'Il tuo codice di attivazione é errato o scaduto. Per favore controlla la tua e-mail e segui le istruzioni.', null);
+insert into `aa_translation` values ('988', 'Email aggiornata.', null);
+insert into `aa_translation` values ('989', 'Hai cambiato con successo il tuo indirizzo email.', null);
+insert into `aa_translation` values ('990', 'Il tuo codice di attivazione é errato o scaduto. Per favore controlla la tua e-mail e segui le istruzioni.', 'Your activation code is incorrect or expired. Please check your email and follow the instructions.');
+insert into `aa_translation` values ('991', 'Una e-mail di conferma é stata inviata a %s. Segui le istruzioni contenute nella e-mail per cambiare il tuo indirizzo e-mail.', 'A confirmation email has been sent to %s. Follow the instructions in the email in order to change your email address.');
+insert into `aa_translation` values ('992', 'Password aggiornata.', 'Password successfully updated.');
+insert into `aa_translation` values ('993', 'Aggiornamento riuscito.', 'Update successfully completed.');
+insert into `aa_translation` values ('994', 'Reimpostare la password.', 'Reset your password.');
+insert into `aa_translation` values ('995', 'Conferma password', 'Confirm the password');
+insert into `aa_translation` values ('996', 'Inserisci conferma password', 'Enter password confirmation');
 
 
 ### structure of table `aa_users` ###
@@ -1792,7 +1807,7 @@ CREATE TABLE `dictionary` (
   `value` text,
   PRIMARY KEY (`id`),
   KEY `label` (`label`)
-) ENGINE=InnoDB AUTO_INCREMENT=151 DEFAULT CHARSET=utf8 AUTO_INCREMENT=151;
+) ENGINE=InnoDB AUTO_INCREMENT=152 DEFAULT CHARSET=utf8 AUTO_INCREMENT=152;
 
 
 ### data of table `dictionary` ###
@@ -1873,22 +1888,22 @@ insert into `dictionary` values ('77', 'telefono', '');
 insert into `dictionary` values ('79', 'auth_incorrect_login', '');
 insert into `dictionary` values ('80', 'auth_incorrect_password', '');
 insert into `dictionary` values ('81', 'auth_incorrect_input', '');
-insert into `dictionary` values ('83', 'message_new_email_activated', '');
-insert into `dictionary` values ('84', 'message_new_email_failed', '');
-insert into `dictionary` values ('85', 'message_new_password_sent', '');
-insert into `dictionary` values ('86', 'message_email_updated', '');
-insert into `dictionary` values ('87', 'message_password_updated', '');
-insert into `dictionary` values ('88', 'message_update_ok', '');
-insert into `dictionary` values ('89', 'message_registration_completed_1', '');
-insert into `dictionary` values ('90', 'message_registration_completed_2', '');
-insert into `dictionary` values ('91', 'message_activation_email_sent', '');
-insert into `dictionary` values ('92', 'message_activation_ok', '');
-insert into `dictionary` values ('93', 'message_activation_failed', '');
+insert into `dictionary` values ('83', 'message_new_email_activated', '989');
+insert into `dictionary` values ('84', 'message_new_email_failed', '990');
+insert into `dictionary` values ('85', 'message_new_password_sent', '991');
+insert into `dictionary` values ('86', 'message_email_updated', '988');
+insert into `dictionary` values ('87', 'message_password_updated', '992');
+insert into `dictionary` values ('88', 'message_update_ok', '993');
+insert into `dictionary` values ('89', 'message_registration_completed_1', '982');
+insert into `dictionary` values ('90', 'message_registration_completed_2', '983');
+insert into `dictionary` values ('91', 'message_activation_email_sent', '986');
+insert into `dictionary` values ('92', 'message_activation_ok', '985');
+insert into `dictionary` values ('93', 'message_activation_failed', '987');
 insert into `dictionary` values ('94', 'message_extension_queued', '');
 insert into `dictionary` values ('95', 'email_change_email_subject', '');
-insert into `dictionary` values ('96', 'email_activate_subject', '');
+insert into `dictionary` values ('96', 'email_activate_subject', '984');
 insert into `dictionary` values ('97', 'email_change_password_subject', '');
-insert into `dictionary` values ('98', 'email_reset_password_subject', '');
+insert into `dictionary` values ('98', 'email_reset_password_subject', '994');
 insert into `dictionary` values ('99', 'error_email_used', '716');
 insert into `dictionary` values ('100', 'error_incorrect_old_password', '715');
 insert into `dictionary` values ('101', 'error_incorrect_password', '714');
@@ -1925,7 +1940,7 @@ insert into `dictionary` values ('133', 'account_old_pwd_hint', '700');
 insert into `dictionary` values ('135', 'password_hint', '701');
 insert into `dictionary` values ('136', 'vecchia_password', '');
 insert into `dictionary` values ('137', 'account_password_confirm_hint', '702');
-insert into `dictionary` values ('138', 'conferma_password', '');
+insert into `dictionary` values ('138', 'conferma_password', '995');
 insert into `dictionary` values ('139', 'account_save', '703');
 insert into `dictionary` values ('140', 'account_reset', '704');
 insert into `dictionary` values ('141', 'account_new_email', '705');
@@ -1938,6 +1953,7 @@ insert into `dictionary` values ('147', 'cookie_disclaimer', '751');
 insert into `dictionary` values ('148', 'read_more', '752');
 insert into `dictionary` values ('149', 'reserved_area', '768');
 insert into `dictionary` values ('150', 'informativa_privacy_link', '771');
+insert into `dictionary` values ('151', 'conferma_password_hint', '996');
 
 
 ### structure of table `documents` ###
@@ -2341,9 +2357,9 @@ CREATE TABLE `users` (
   `group` varchar(255) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
   `newsletter` varchar(255) DEFAULT NULL,
-  `created_at` datetime NOT NULL,
-  `last_update` datetime NOT NULL,
-  `last_access` datetime NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `last_update` datetime DEFAULT NULL,
+  `last_access` datetime DEFAULT NULL,
   `last_ip` varchar(255) DEFAULT NULL,
   `new_password_key` varchar(255) DEFAULT NULL,
   `new_password_requested` varchar(255) DEFAULT NULL,
