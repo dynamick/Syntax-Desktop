@@ -1,5 +1,5 @@
 # MySQL dump of database 'syntax' on host 'localhost'
-# backup date and time: 12/15/17 18:03:49
+# backup date and time: 12/21/17 17:51:13
 # built by phpMyBackupPro v.2.1
 # http://www.phpMyBackupPro.net
 
@@ -499,7 +499,7 @@ insert into `aa_services_element` values ('492', '146', 'media_id', '11', '', '1
 insert into `aa_services_element` values ('493', '146', 'tag_id', '11', '', '1', '', '315', '11', '316', '', 'SELECT * FROM tags', '', '', '20', '', '');
 insert into `aa_services_element` values ('494', '147', 'id', '1', '1', '', '', '321', '0', '322', '', '', '', '', '0', '', '');
 insert into `aa_services_element` values ('495', '147', 'group', '2', '', '1', '1', '323', '255', '324', '', '', '', '', '10', '', '');
-insert into `aa_services_element` values ('496', '148', 'id', '1', '1', '', '', '329', '0', '330', '', '', '', '', '0', '', '');
+insert into `aa_services_element` values ('496', '148', 'id', '1', '1', '1', '', '329', '0', '330', '', '', '', '', '0', '', '');
 insert into `aa_services_element` values ('497', '148', 'name', '2', '', '1', '', '331', '255', '332', '', '', '', '', '10', '', '');
 insert into `aa_services_element` values ('498', '148', 'surname', '2', '', '1', '', '333', '255', '334', '', '', '', '', '20', '', '');
 insert into `aa_services_element` values ('499', '148', 'company', '2', '', '', '', '335', '255', '336', '', '', '', '', '30', '', '');
@@ -511,7 +511,7 @@ insert into `aa_services_element` values ('504', '148', 'province', '2', '', '',
 insert into `aa_services_element` values ('505', '148', 'confirmation_code', '2', '', '', '', '347', '255', '348', '', '', '', '', '90', '', '');
 insert into `aa_services_element` values ('506', '148', 'activated', '9', '', '1', '', '349', '255', '350', '', '', '1', '', '100', '', '');
 insert into `aa_services_element` values ('507', '148', 'group', '24', '', '1', '', '351', '11', '352', '', 'SELECT * FROM groups', '', '', '110', '', '');
-insert into `aa_services_element` values ('508', '148', 'created_at', '30', '', '1', '', '353', '0', '354', '', '', '', '', '145', '', '');
+insert into `aa_services_element` values ('508', '148', 'created', '30', '', '1', '', '353', '0', '354', '', '', '', '', '145', '', '');
 insert into `aa_services_element` values ('509', '148', 'password', '4', '', '', '', '355', '255', '356', '', '', '', '', '130', '', '');
 insert into `aa_services_element` values ('510', '148', 'newsletter', '9', '', '', '', '357', '255', '358', '', '', '1', '', '140', '', '');
 insert into `aa_services_element` values ('511', '149', 'id', '1', '1', '', '', '363', '0', '364', '', '', '', '', '0', '', '');
@@ -697,7 +697,7 @@ CREATE TABLE `aa_translation` (
   `it` text,
   `en` text,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=982 DEFAULT CHARSET=utf8 AUTO_INCREMENT=982;
+) ENGINE=MyISAM AUTO_INCREMENT=997 DEFAULT CHARSET=utf8 AUTO_INCREMENT=997;
 
 
 ### data of table `aa_translation` ###
@@ -927,9 +927,9 @@ insert into `aa_translation` values ('222', '<p><strong>Tag Predefiniti</strong>
 insert into `aa_translation` values ('854', 'Creato da', 'Creato da');
 insert into `aa_translation` values ('855', '', '');
 insert into `aa_translation` values ('223', 'Tentativi di login', 'Login_attempts');
-insert into `aa_translation` values ('224', 'Login falliti consecutivamente. Un numero alto indica un tentativo di violazione dell\'account.', '');
+insert into `aa_translation` values ('224', 'Login falliti consecutivamente. Un numero alto indica un tentativo di violazione dell\\\'account.', '');
 insert into `aa_translation` values ('225', 'Conteggio login', 'Conteggio login');
-insert into `aa_translation` values ('226', 'Numero di login riusciti dalla creazione dell\\\'account.', 'Numero di login riusciti dalla creazione dell\\\'account.');
+insert into `aa_translation` values ('226', 'Numero di login riusciti dalla creazione dell\\\\\\\'account.', 'Numero di login riusciti dalla creazione dell\\\'account.');
 insert into `aa_translation` values ('227', 'Id', 'Id');
 insert into `aa_translation` values ('228', '', '');
 insert into `aa_translation` values ('229', 'Title', 'Title');
@@ -1286,7 +1286,7 @@ insert into `aa_translation` values ('576', '', '');
 insert into `aa_translation` values ('577', '', '');
 insert into `aa_translation` values ('578', 'Lavora con noi', 'Lavora con noi');
 insert into `aa_translation` values ('579', '<p>Vuoi far parte di un gruppo di lavoro giovane e dinamico? Inviaci il tuo curriculum vitae: ti richiameremo non appena si apriranno posizioni inerenti il tuo profilo.</p>\r\n', '<p>\r\n  Vuoi far parte di un gruppo di lavoro giovane e dinamico? Inviaci il tuo curriculum vitae: ti richiameremo non appena si apriranno posizioni inerenti il tuo profilo.</p>\r\n');
-insert into `aa_translation` values ('580', '<p>I tuoi dati sono stati inviati correttamente. Grazie per la disponibilità!</p>\r\n', '<p>\r\n  I tuoi dati sono stati inviati correttamente. Grazie per la disponibilit&agrave;!</p>\r\n');
+insert into `aa_translation` values ('580', '<p>I tuoi dati sono stati inviati correttamente. Grazie per la disponibilit&agrave;!</p>\r\n', '<p>\r\n  I tuoi dati sono stati inviati correttamente. Grazie per la disponibilit&agrave;!</p>\r\n');
 insert into `aa_translation` values ('581', 'Nome', 'Nome');
 insert into `aa_translation` values ('582', 'Cognome', 'Cognome');
 insert into `aa_translation` values ('583', 'E-mail', 'E-mail');
@@ -1683,6 +1683,21 @@ insert into `aa_translation` values ('978', 'Categorie', 'Categorie');
 insert into `aa_translation` values ('979', 'Produzione', 'Produzione');
 insert into `aa_translation` values ('980', 'Documents', 'Documents');
 insert into `aa_translation` values ('981', '', '');
+insert into `aa_translation` values ('982', 'Registrazione avvenuta con successo. Controlla il tuo indirizzo e-mail per attivare il tuo account.', 'Your registration has been successfully completed. Check your email in order to activate your account.');
+insert into `aa_translation` values ('983', 'Registrazione avvenuta con successo.', 'Your registration has been successfully completed.');
+insert into `aa_translation` values ('984', 'Attivazione account.', 'Account activation.');
+insert into `aa_translation` values ('985', 'Account attivato correttamente.', 'The account has been successfully activated.');
+insert into `aa_translation` values ('986', 'Una nuova e-mail di attivazione è stata inviata a %s. Segui le istruzioni nella e-mail per attivare il tuo account.', null);
+insert into `aa_translation` values ('987', 'Il tuo codice di attivazione é errato o scaduto. Per favore controlla la tua e-mail e segui le istruzioni.', null);
+insert into `aa_translation` values ('988', 'Email aggiornata.', null);
+insert into `aa_translation` values ('989', 'Hai cambiato con successo il tuo indirizzo email.', null);
+insert into `aa_translation` values ('990', 'Il tuo codice di attivazione é errato o scaduto. Per favore controlla la tua e-mail e segui le istruzioni.', 'Your activation code is incorrect or expired. Please check your email and follow the instructions.');
+insert into `aa_translation` values ('991', 'Una e-mail di conferma é stata inviata a %s. Segui le istruzioni contenute nella e-mail per cambiare il tuo indirizzo e-mail.', 'A confirmation email has been sent to %s. Follow the instructions in the email in order to change your email address.');
+insert into `aa_translation` values ('992', 'Password aggiornata.', 'Password successfully updated.');
+insert into `aa_translation` values ('993', 'Aggiornamento riuscito.', 'Update successfully completed.');
+insert into `aa_translation` values ('994', 'Reimpostare la password.', 'Reset your password.');
+insert into `aa_translation` values ('995', 'Conferma password', 'Confirm the password');
+insert into `aa_translation` values ('996', 'Inserisci conferma password', 'Enter password confirmation');
 
 
 ### structure of table `aa_users` ###
@@ -1773,9 +1788,9 @@ CREATE TABLE `dati_inviati` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_form` int(11) NOT NULL DEFAULT '0',
   `hash` text,
-  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `timestamp` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 AUTO_INCREMENT=2;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 AUTO_INCREMENT=11;
 
 
 ### data of table `dati_inviati` ###
@@ -1792,7 +1807,7 @@ CREATE TABLE `dictionary` (
   `value` text,
   PRIMARY KEY (`id`),
   KEY `label` (`label`)
-) ENGINE=InnoDB AUTO_INCREMENT=151 DEFAULT CHARSET=utf8 AUTO_INCREMENT=151;
+) ENGINE=InnoDB AUTO_INCREMENT=152 DEFAULT CHARSET=utf8 AUTO_INCREMENT=152;
 
 
 ### data of table `dictionary` ###
@@ -1873,22 +1888,22 @@ insert into `dictionary` values ('77', 'telefono', '');
 insert into `dictionary` values ('79', 'auth_incorrect_login', '');
 insert into `dictionary` values ('80', 'auth_incorrect_password', '');
 insert into `dictionary` values ('81', 'auth_incorrect_input', '');
-insert into `dictionary` values ('83', 'message_new_email_activated', '');
-insert into `dictionary` values ('84', 'message_new_email_failed', '');
-insert into `dictionary` values ('85', 'message_new_password_sent', '');
-insert into `dictionary` values ('86', 'message_email_updated', '');
-insert into `dictionary` values ('87', 'message_password_updated', '');
-insert into `dictionary` values ('88', 'message_update_ok', '');
-insert into `dictionary` values ('89', 'message_registration_completed_1', '');
-insert into `dictionary` values ('90', 'message_registration_completed_2', '');
-insert into `dictionary` values ('91', 'message_activation_email_sent', '');
-insert into `dictionary` values ('92', 'message_activation_ok', '');
-insert into `dictionary` values ('93', 'message_activation_failed', '');
+insert into `dictionary` values ('83', 'message_new_email_activated', '989');
+insert into `dictionary` values ('84', 'message_new_email_failed', '990');
+insert into `dictionary` values ('85', 'message_new_password_sent', '991');
+insert into `dictionary` values ('86', 'message_email_updated', '988');
+insert into `dictionary` values ('87', 'message_password_updated', '992');
+insert into `dictionary` values ('88', 'message_update_ok', '993');
+insert into `dictionary` values ('89', 'message_registration_completed_1', '982');
+insert into `dictionary` values ('90', 'message_registration_completed_2', '983');
+insert into `dictionary` values ('91', 'message_activation_email_sent', '986');
+insert into `dictionary` values ('92', 'message_activation_ok', '985');
+insert into `dictionary` values ('93', 'message_activation_failed', '987');
 insert into `dictionary` values ('94', 'message_extension_queued', '');
 insert into `dictionary` values ('95', 'email_change_email_subject', '');
-insert into `dictionary` values ('96', 'email_activate_subject', '');
+insert into `dictionary` values ('96', 'email_activate_subject', '984');
 insert into `dictionary` values ('97', 'email_change_password_subject', '');
-insert into `dictionary` values ('98', 'email_reset_password_subject', '');
+insert into `dictionary` values ('98', 'email_reset_password_subject', '994');
 insert into `dictionary` values ('99', 'error_email_used', '716');
 insert into `dictionary` values ('100', 'error_incorrect_old_password', '715');
 insert into `dictionary` values ('101', 'error_incorrect_password', '714');
@@ -1925,7 +1940,7 @@ insert into `dictionary` values ('133', 'account_old_pwd_hint', '700');
 insert into `dictionary` values ('135', 'password_hint', '701');
 insert into `dictionary` values ('136', 'vecchia_password', '');
 insert into `dictionary` values ('137', 'account_password_confirm_hint', '702');
-insert into `dictionary` values ('138', 'conferma_password', '');
+insert into `dictionary` values ('138', 'conferma_password', '995');
 insert into `dictionary` values ('139', 'account_save', '703');
 insert into `dictionary` values ('140', 'account_reset', '704');
 insert into `dictionary` values ('141', 'account_new_email', '705');
@@ -1938,6 +1953,7 @@ insert into `dictionary` values ('147', 'cookie_disclaimer', '751');
 insert into `dictionary` values ('148', 'read_more', '752');
 insert into `dictionary` values ('149', 'reserved_area', '768');
 insert into `dictionary` values ('150', 'informativa_privacy_link', '771');
+insert into `dictionary` values ('151', 'conferma_password_hint', '996');
 
 
 ### structure of table `documents` ###
@@ -2052,8 +2068,8 @@ CREATE TABLE `forms` (
 
 ### data of table `forms` ###
 
-insert into `forms` values ('1', '484', 'assistenza@kleis.it', '1', 'nessuno', '485', '2010-12-16 17:18:37', '1', '42', '493', '59');
-insert into `forms` values ('2', '579', 'assistenza@kleis.it', '1', 'nessuno', '580', '2012-04-12 15:31:08', '', '0', '578', '0');
+insert into `forms` values ('1', '484', 'dev@kleis.digital', '1', 'nessuno', '485', '2010-12-16 17:18:37', '1', '42', '493', '59');
+insert into `forms` values ('2', '579', 'dev@kleis.digital', '1', 'nessuno', '580', '2012-04-12 15:31:08', '', '0', '578', '0');
 
 
 ### structure of table `foto_prodotti` ###
@@ -2341,9 +2357,8 @@ CREATE TABLE `users` (
   `group` varchar(255) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
   `newsletter` varchar(255) DEFAULT NULL,
-  `created_at` datetime NOT NULL,
-  `last_update` datetime NOT NULL,
-  `last_access` datetime NOT NULL,
+  `last_update` datetime DEFAULT NULL,
+  `last_access` datetime DEFAULT NULL,
   `last_ip` varchar(255) DEFAULT NULL,
   `new_password_key` varchar(255) DEFAULT NULL,
   `new_password_requested` varchar(255) DEFAULT NULL,
@@ -2353,10 +2368,11 @@ CREATE TABLE `users` (
   `activated` varchar(255) DEFAULT NULL,
   `login_attempts` int(11) NOT NULL DEFAULT '0',
   `login_count` int(11) NOT NULL DEFAULT '0',
+  `created` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 AUTO_INCREMENT=5;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 AUTO_INCREMENT=8;
 
 
 ### data of table `users` ###
 
-insert into `users` values ('4', 'Dummy', 'Dummy', 'SyntaxDesktop', 'info@syntaxdesktop.com', 'via Garibaldi', 'Villafranca', '37069', 'Verona', '', '2', '2ae96aa0273507ab41936958fb4dfd4a', '1', '2010-01-01 00:00:00', '2015-03-02 15:30:41', '2015-03-09 11:18:40', '127.0.0.1', null, null, '', '', '', '1', '0', '6');
+insert into `users` values ('4', 'Dummy', 'Dummy', 'SyntaxDesktop', 'info@syntaxdesktop.com', 'via Garibaldi', 'Villafranca', '37069', 'Verona', '', '2', '2ae96aa0273507ab41936958fb4dfd4a', '1', '2015-03-02 15:30:41', '2015-03-09 11:18:40', '127.0.0.1', null, null, '', '', '', '1', '0', '6', null);

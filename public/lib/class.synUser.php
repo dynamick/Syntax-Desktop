@@ -114,7 +114,7 @@ private   Private properties and methods can be accessed only within the class w
   function create_user($user, $activated = TRUE, $group = 1) {
 
     $now = date("Y-m-d H:i:s");
-    $user['timestamp'] = $now;
+    //$user['timestamp'] = $now;
     $user['activated'] = $activated ? 1 : null;
     //$user['confirmation_code'] = md5($now);
     $user['group'] = $group; //$this->_getDefaultGroup();

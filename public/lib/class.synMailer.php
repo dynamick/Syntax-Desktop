@@ -16,7 +16,7 @@ class synMailer extends PHPMailer {
   public function __construct($from='', $dest='', $subject='', $multiple_recipients=''){
     global $synAdministrator, $synWebsiteTitle, $smtp_conf;
 
-    $this->From     = isset($smtp_conf['auth']) ? $smtp_conf['auth'] : $synAdministrator;
+    $this->From     = isset($smtp_conf['user']) ? $smtp_conf['user'] : $synAdministrator;
     $this->FromName = $synWebsiteTitle;
 
     // aggiungo mittente come reply-to

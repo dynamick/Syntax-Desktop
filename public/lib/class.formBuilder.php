@@ -736,7 +736,7 @@ EOPD;
         var _form = $(form), data = _form.serialize(), action = _form.attr('action');
         $.post(action, data)
           .done(function(res){
-            console.log('message: '+res.message);
+            //console.log('message: '+res.message);
             if (res.status == 'ok'){
               $('#form{$this->id}-wrapper').replaceWith(res.message);
             } else {
