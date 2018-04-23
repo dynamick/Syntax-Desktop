@@ -111,6 +111,7 @@ class synSelectQry extends synElement {
       if ($null==true) $ret[] = '';
       while ($arr=$res->FetchRow()) {
         if ($owner == ''
+        || !isset( $arr[$owner] )        
         || $arr[$owner] == ''
         || in_array($arr[$owner], $_SESSION['synGroupChild'])
         || $this->selected == $arr[0]
