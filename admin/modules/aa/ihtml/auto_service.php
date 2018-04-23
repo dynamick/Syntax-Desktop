@@ -7,10 +7,11 @@ if (!isset($_REQUEST['cmd']))
   $_REQUEST['cmd'] = '';
 
 // auto-load delle classi istanziate
-function __autoload($class) {
+spl_autoload_register(function($class) {
   global $synAbsolutePath;
-  require_once $synAbsolutePath . '/admin/modules/aa/classes/' . $class . '.php';
-}
+  include $synAbsolutePath . '/admin/modules/aa/classes/' . $class . '.php';
+});
+
 
   //definizione variabili globali
   $buttons      = array();
