@@ -31,7 +31,9 @@ $(function() {
       enableClickableOptGroups: true,
       disableIfEmpty: true,
       selectedClass: 'multiselect-selected',
-      checkboxName: optionName,
+      checkboxName: function(option) {
+        return optionName;
+      },
       includeSelectAllOption: true,
       enableFiltering: true,
       enableCaseInsensitiveFiltering: true,
