@@ -778,7 +778,9 @@ function byteConvert( $bytes ) {
 
 function interpolate($template, $hash, $prefix = '#{', $postfix = '}' ) {
   //$tokenize = create_function('$token', 'return "'. $prefix .'".$token."'.$postfix.'";');
-  $tokenize = function($token) { global  $prefix, $postfix; return "'. $prefix .'".$token."'.$postfix.'"; };
+  $tokenize = function($token) use($prefix, $postfix) { 
+    return $prefix . $token . $postfix; 
+  };  
   $keys = array_keys($hash);
   $values = array_values($hash);
   $keys = array_map($tokenize, $keys);
