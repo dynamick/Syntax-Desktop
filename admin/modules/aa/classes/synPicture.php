@@ -61,13 +61,6 @@ class synPicture extends synElement {
           </button>
         </div>
       </div>
-      <div class="modal fade" tabindex="-1" role="dialog" style="background-color:rgba(0,0,0,.3)">
-        <div class="modal-dialog" role="document" style="width:90%;">
-          <div class="modal-content">
-            <div class="modal-body" style="height:90vh;"></div>
-          </div>
-        </div>
-      </div>
     </div>
 EORET;
     $_SESSION['KCFINDER']['disabled'] = false;
