@@ -720,7 +720,8 @@ EOPD;
       $params[] = "    highlight: function(element){ $(element).addClass('error').siblings('span.{$this->cblabelclass}').addClass('error-field');}";
       $params[] = "    unhighlight: function(element, errorClass, validClass){ $(element).removeClass('error').siblings('span.{$this->cblabelclass}').removeClass('error-field'); }";
     }
-
+  
+    //Aggiunto per ReCaptcha
     if(is_array($this->validateIgnore) && count($this->validateIgnore)>0){
       $params[] = "    ignore:'".implode(" ", $this->validateIgnore)."'";
     }
@@ -760,7 +761,8 @@ EOSB;
     $js .= "    $.validator.messages.equalTo=\"".$this->error4."\";\n";
     $js .= "    $(\"#form{$this->id}\").validate({\n  ".implode(",\n  ", $params)."\n    });\n";
     $js .= "  });\n";
-
+  
+    //Aggiunto per ReCaptcha
     if(is_array($this->validateFunctions) && count($this->validateFunctions)>0){
       $js .= implode("\n", $this->validateFunctions);
     }
