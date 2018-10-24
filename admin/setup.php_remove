@@ -85,6 +85,7 @@ function page_contents(&$page) {
         'synAbsolutePath'     => addslashes($_POST['synAbsolutePath']),
         'synPackagePath'      => addslashes($_POST['synPackagePath']),
         'synPluginPath'       => addslashes($_POST['synPluginPath']),
+        'synGoogleAPIKey'     => addslashes($_POST['synGoogleAPIKey']),
         'synInsertValueInAllLang' => $_POST['synInsertValueInAllLang']
       );
 
@@ -345,6 +346,10 @@ return <<<PAGE2
       <label for="synWebsiteTitle">Your site's name</label>
       <span class="help">This will be shown on the admin desktop.</span>
       <input type="text" class="text" name="synWebsiteTitle" id="synWebsiteTitle" value="$dati[synWebsiteTitle]" size="40" maxlength="60" />
+    </p>
+    <p>
+      <label for="synGoogleAPIKey">Your Google API key <a href="https://developers.google.com/maps/documentation/javascript/get-api-key" target="_blank">Get API Key</a></label>
+      <input type="text" class="text" name="synGoogleAPIKey" id="synGoogleAPIKey" value="" size="40" maxlength="60" />
     </p>
     <!-- these aren't customizable... yet -->
     <input type="hidden" name="synVersion" value="$dati[synVersion]" />

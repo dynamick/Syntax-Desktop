@@ -1,5 +1,6 @@
 <?php
 // minifies and packs js libraries
+include('../../config/config.php');
 include('../../includes/php/Minifier.php');
 ob_start("ob_gzhandler");
 
@@ -16,7 +17,7 @@ if ( !$debug ) {
   header( 'Last-Modified: '.gmdate( 'D, d M Y H:i:s', getlastmod()) . ' GMT' );
   header( 'Cache-Control: max-age=315360000' );
 }
-
+echo "var apikey = '{$synGoogleAPIKey}';\n";
 // base scripts
 $base = array(
   'vendor/jquery.js',
@@ -74,7 +75,7 @@ $form = array(
 
   // WARNING - don't update typeahead.bundle until typeahead.addresspicker supports v.0.11!
   'vendor/typeahead.bundle.min.js',
-  'vendor/typeahead-addresspicker.min.js',
+  'vendor/typeahead-addresspicker.js',
   'load-google-maps.js',
   'synAddressPicker.js',
   'vendor/jquery.alphanumeric.js',

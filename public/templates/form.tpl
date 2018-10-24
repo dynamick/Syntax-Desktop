@@ -38,7 +38,7 @@
   {if !empty($sedi)}
     <div id="googleMapNew" class="map-container"></div>
     {capture name=googleMaps}
-    <script src="https://maps.googleapis.com/maps/api/js?key={$smarty.const.GMAPS_API}&language={$synLangInitial}&sensor=false&extension=.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key={$synGoogleAPIKey}&language={$synLangInitial}&sensor=false&extension=.js"></script>
     <script>
       google.maps.event.addDomListener(window, 'load', init_googleMaps);
       var myMarkers = [];

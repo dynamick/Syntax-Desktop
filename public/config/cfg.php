@@ -105,8 +105,6 @@ define('ACCOUNT_KEY',   'syntax_user'); // nome del cookie
 define('ADMIN_NAME',    'Admin');
 define('ADMIN_MAIL',    'dev@kleis.digital');
 
-define('GMAPS_API',     'AIzaSyBbV3Qf4JBM54aazvYSD1pRLW1fHHtXmPs');
-
 // reCaptchaKey
 /*
 $reCaptchaKey = array(
