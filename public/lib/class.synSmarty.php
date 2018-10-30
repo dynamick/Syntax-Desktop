@@ -17,7 +17,7 @@ class synSmarty extends Smarty {
    public $synPageScript = array();
 
    function __construct() {
-      global $synAbsolutePath, $synPublicPath, $synPluginPath, $synWebsiteTitle;
+      global $synAbsolutePath, $synPublicPath, $synPluginPath, $synWebsiteTitle, $synGoogleAPIKey;
       // Class Constructor. These automatically get set with each new instance.
       parent::__construct();
 
@@ -44,6 +44,7 @@ class synSmarty extends Smarty {
 
       $this->assign('synPageScript', $this->synPageScript);
       $this->assign('synLangInitial', $lang);
+      $this->assign('synGoogleAPIKey', $synGoogleAPIKey);
 
    }
 
